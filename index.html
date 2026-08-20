@@ -3,183 +3,167 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An interactive visual guide to the cone bifurcation and spectral coincidences behind the Schiffer construction.">
-    <title>Schiffer — from cylinder to cone</title>
+    <meta name="description" content="A numerical modal visualization of the Schiffer problem on an infinite half-cylinder near its free boundary.">
+    <title>Half-cylinder bifurcation laboratory</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div class="grain" aria-hidden="true"></div>
-    <header class="site-header">
-      <a class="wordmark" href="#top" aria-label="Schiffer visualization home">
-        <span class="mark"></span>
-        <span>Schiffer / Berenstein</span>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Half-cylinder laboratory home">
+        <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
+        <span>Schiffer collar laboratory</span>
       </a>
-      <nav aria-label="Page sections">
-        <a href="#bifurcation">Bifurcation</a>
-        <a href="#coincidences">Coincidences</a>
-        <button id="aboutButton" class="text-button" type="button">How to read this</button>
-      </nav>
+      <div class="status"><i></i><span>computed live</span></div>
+      <button id="methodButton" class="method-button" type="button">Numerical method</button>
     </header>
 
     <main id="top">
-      <section class="hero">
-        <div class="eyebrow"><span>Interactive field note</span><span>01—03</span></div>
-        <h1>Watch a cylinder<br>learn to become a cone.</h1>
-        <p class="lede">A visual model of the bifurcation mechanism: move the spectral parameter, follow a non-trivial branch, then hunt for the fractional-order coincidences that land back on an integer cone.</p>
-        <a class="down" href="#bifurcation"><span>Start the experiment</span><span aria-hidden="true">↓</span></a>
+      <section class="intro">
+        <div class="intro-index">Experiment 01 <span>/</span> Half-cylinder</div>
+        <h1>A boundary begins<br>to move.</h1>
+        <div class="intro-bottom">
+          <p>We look only at a collar of the infinite half-cylinder. Move <i>λ</i> inside <span>(1, 4)</span>, then turn on the branch parameter <i>s</i>. At <i>s</i> = 0 the boundary is flat; away from zero it follows the critical first Fourier mode.</p>
+          <a href="#experiment">Enter the collar <span>↓</span></a>
+        </div>
       </section>
 
-      <section id="bifurcation" class="section bifurcation-section">
-        <div class="section-label">I. THE GEOMETRY</div>
-        <div class="section-heading">
+      <section id="experiment" class="experiment">
+        <header class="experiment-header">
           <div>
-            <p class="kicker">One mechanism, two lenses</p>
-            <h2 id="geometryTitle">The Schiffer lens</h2>
+            <span class="section-number">01</span>
+            <div>
+              <p class="eyebrow">Variable domain / live field</p>
+              <h2>Near-boundary view</h2>
+            </div>
           </div>
-          <div class="mode-toggle" role="group" aria-label="Choose model">
-            <button class="mode-button active" data-mode="schiffer" aria-pressed="true" type="button">Schiffer</button>
-            <button class="mode-button" data-mode="berenstein" aria-pressed="false" type="button">Berenstein</button>
+          <div class="equations" role="group" aria-label="Model equations">
+            <span>(Δ + λ)u ≈ 0</span>
+            <span>u = 1</span>
+            <span>∂<sub>ν</sub>u = 0</span>
+            <small>on Γ<sub>s</sub></small>
           </div>
-        </div>
+        </header>
 
-        <div class="experiment-shell">
-          <aside class="controls" aria-label="Visualization controls">
-            <div class="control-intro">
-              <span class="step-number">01</span>
-              <p id="modeDescription">Start at the symmetric cone-cylinder model. The critical Fourier mode is dormant on the trivial branch.</p>
+        <div class="laboratory">
+          <aside class="controls" aria-label="Simulation controls">
+            <div class="control-heading">
+              <span>Parameters</span>
+              <button id="resetButton" type="button">Reset</button>
             </div>
 
-            <div class="control-block">
-              <span class="control-row"><label for="lambdaRange">spectral ratio <i>λ</i></label><output id="lambdaValue" for="lambdaRange">2.42</output></span>
-              <input id="lambdaRange" type="range" min="1.05" max="3.95" value="2.42" step="0.01">
-              <span class="range-labels"><span>cylinder</span><span>cone</span></span>
+            <div class="control-block primary-control">
+              <div class="control-label">
+                <label for="lambdaRange">spectral parameter <i>λ</i></label>
+                <output id="lambdaValue" for="lambdaRange">2.40</output>
+              </div>
+              <input id="lambdaRange" type="range" min="1.01" max="3.99" value="2.40" step="0.01">
+              <div class="range-scale"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+              <p>Controls the oscillation normal to the wall and the decay rate of every angular mode.</p>
             </div>
 
-            <div class="control-block">
-              <span class="control-row"><label for="amplitudeRange">branch amplitude <i>s</i></label><output id="amplitudeValue" for="amplitudeRange">0.34</output></span>
-              <input id="amplitudeRange" type="range" min="-0.72" max="0.72" value="0.34" step="0.01">
-              <span class="range-labels"><span>− branch</span><span>trivial</span><span>+ branch</span></span>
+            <div class="control-block primary-control">
+              <div class="control-label">
+                <label for="sRange">branch parameter <i>s</i></label>
+                <output id="sValue" for="sRange">0.00</output>
+              </div>
+              <input id="sRange" type="range" min="-0.85" max="0.85" value="0" step="0.005">
+              <div class="range-scale"><span>−0.85</span><span>0</span><span>+0.85</span></div>
+              <p>The wall is <span class="formula">x = s cos(θ − φ)</span>. At zero, the domain is the exact rectangular half-cylinder.</p>
             </div>
 
-            <button id="playBranch" class="play-button" type="button"><span class="play-icon">▶</span><span>Play the bifurcation</span></button>
+            <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Play bifurcation</span></button>
 
-            <div class="readout-grid">
-              <div><span>order</span><strong id="orderReadout">24.37</strong></div>
-              <div><span>radius drop</span><strong id="dropReadout">0.144</strong></div>
-              <div><span>critical mode</span><strong id="modeReadout">k = 1</strong></div>
+            <details class="secondary-controls">
+              <summary>More controls <span>+</span></summary>
+              <div class="control-block compact">
+                <div class="control-label">
+                  <label for="phaseRange">angular phase <i>φ</i></label>
+                  <output id="phaseValue" for="phaseRange">0.00π</output>
+                </div>
+                <input id="phaseRange" type="range" min="0" max="6.283185" value="0" step="0.01">
+                <p>Rotates cosine continuously into sine around the cylinder.</p>
+              </div>
+              <div class="control-block compact">
+                <div class="control-label">
+                  <label for="modeRange">retained modes</label>
+                  <output id="modeValue" for="modeRange">k ≤ 4</output>
+                </div>
+                <input id="modeRange" type="range" min="2" max="6" value="4" step="1">
+              </div>
+            </details>
+
+            <div class="solver-readout">
+              <div><span>normalized PDE residual</span><strong id="residualValue">—</strong></div>
+              <div><span>slowest decay length</span><strong id="decayValue">—</strong></div>
+              <div><span>boundary error</span><strong id="boundaryValue">—</strong></div>
             </div>
           </aside>
 
-          <div class="geometry-stage" role="group" aria-label="Animated cone and cylinder model">
-            <svg id="geometrySvg" viewBox="0 0 840 600" role="img" aria-labelledby="geometrySvgTitle geometrySvgDesc">
-              <title id="geometrySvgTitle">Interactive bifurcation geometry</title>
-              <desc id="geometrySvgDesc">A cylinder-like surface opens into a cone while its boundary develops a first-mode wave.</desc>
-              <defs>
-                <linearGradient id="surfaceGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#eef0e8" stop-opacity="0.76" />
-                  <stop offset="1" stop-color="#b9c8be" stop-opacity="0.12" />
-                </linearGradient>
-                <linearGradient id="accentGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stop-color="#ff6b35" />
-                  <stop offset="1" stop-color="#d93655" />
-                </linearGradient>
-                <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="12" />
-                </filter>
-              </defs>
-              <g id="geometryDrawing"></g>
-            </svg>
-            <div class="stage-caption">
-              <span id="stageState">NON-TRIVIAL BRANCH</span>
-              <span id="stageFormula">R(s) ≈ R₀ − ½ Γ(λ)s²</span>
+          <section class="canvas-panel" aria-labelledby="domainState">
+            <div class="canvas-toolbar">
+              <div>
+                <span class="live-dot"></span>
+                <strong id="domainState">trivial cylinder · s = 0</strong>
+              </div>
+              <div class="legend" role="img" aria-label="Scalar field color scale from minus one to plus one">
+                <span>−1</span><i></i><span>+1</span>
+              </div>
             </div>
+            <div id="canvasWrap" class="canvas-wrap">
+              <canvas id="fieldCanvas" role="img" aria-label="Heat map of the scalar field on a half-cylinder with a moving right boundary"></canvas>
+              <div id="solverBadge" class="solver-badge">solving modes…</div>
+            </div>
+            <div class="axis-footer"><span>x = −5</span><span>inward collar coordinate x</span><span>x = 0</span></div>
+          </section>
+        </div>
+
+        <div class="readout-strip">
+          <div class="readout-copy">
+            <p class="eyebrow">What is being computed</p>
+            <h3>The field adapts to the moving wall.</h3>
+            <p>The base normal profile is corrected by exponentially decaying sine and cosine modes. Their coefficients are solved by least squares against the Helmholtz residual on the current variable domain.</p>
+          </div>
+          <div class="mode-spectrum">
+            <header><span>modal correction</span><span id="modeScale">coefficient magnitude</span></header>
+            <div id="modeBars" class="mode-bars"></div>
+          </div>
+          <div class="boundary-diagram">
+            <svg id="boundaryDiagram" viewBox="0 0 250 190" role="img" aria-label="Current free-boundary graph"></svg>
           </div>
         </div>
       </section>
 
-      <section id="coincidences" class="section coincidence-section">
-        <div class="section-label">II. THE LANDING PROBLEM</div>
-        <div class="section-heading coincidence-heading">
-          <div>
-            <p class="kicker">Let the order be fractional</p>
-            <h2>Coincidences in the large.</h2>
-          </div>
-          <p class="section-note">The bright trace is the signed gap between two asymptotic Bessel phase conditions. Zero means the phases coincide. Drag <i>N</i> and watch both views move together.</p>
+      <section class="interpretation">
+        <span class="section-number">02</span>
+        <div>
+          <p class="eyebrow">How to read the picture</p>
+          <h2>The right edge is the unknown.</h2>
         </div>
-
-        <div class="n-controller">
-          <div class="n-label"><label for="nRange">fractional order <i>N</i></label><output id="nValue" for="nRange">37.420</output></div>
-          <input id="nRange" type="range" min="8" max="120" value="37.42" step="0.005">
-          <button id="nearestButton" type="button">Jump to nearest coincidence</button>
+        <div class="interpretation-copy">
+          <p>The vertical direction is the periodic angle <i>θ</i>. The horizontal direction runs inward along the cylinder. Everything to the right of the bright boundary lies outside the domain.</p>
+          <p>As <i>λ</i> approaches 4, the <i>k</i> = 2 correction decays more slowly: its natural length <span class="formula">1 / √(4 − λ)</span> becomes large. This part is a genuine feature of the cylinder mode equation.</p>
         </div>
-
-        <div class="plots-grid">
-          <article class="plot-card plot-card-large">
-            <header>
-              <div><span class="plot-index">A</span><h3>The whole phase field</h3></div>
-              <span class="plot-legend"><i></i> phase gap Δ(N)</span>
-            </header>
-            <div class="svg-wrap"><svg id="wholePlot" viewBox="0 0 820 390" role="img" aria-label="Phase gap over fractional N"></svg></div>
-            <footer><span>N = 8</span><span>fractional order →</span><span>N = 120</span></footer>
-          </article>
-
-          <article class="plot-card">
-            <header>
-              <div><span class="plot-index">B</span><h3>Near the integer boundary</h3></div>
-              <span class="plot-legend muted"><i></i> exact integer wall</span>
-            </header>
-            <div class="svg-wrap"><svg id="zoomPlot" viewBox="0 0 610 390" role="img" aria-label="Coincidences close to integer orders"></svg></div>
-            <footer><span>integer N</span><span>distance from the cone →</span><span>+0.18</span></footer>
-          </article>
-        </div>
-
-        <div class="coincidence-readout">
-          <div class="phase-orbit" aria-hidden="true"><svg id="orbitSvg" viewBox="0 0 180 180"></svg></div>
-          <div>
-            <p class="kicker">Current sample</p>
-            <h3 id="sampleTitle">Almost, but not yet.</h3>
-            <p id="sampleCopy">The two phase clocks are still separated. Move N until the orange trace crosses the horizontal axis.</p>
-          </div>
-          <dl>
-            <div><dt>phase A</dt><dd id="phaseA">0.000</dd></div>
-            <div><dt>phase B</dt><dd id="phaseB">0.000</dd></div>
-            <div><dt>|Δ(N)|</dt><dd id="gapValue">0.0000</dd></div>
-          </dl>
-        </div>
-      </section>
-
-      <section class="section convergence-section">
-        <div class="section-label">III. THE LIMIT</div>
-        <div class="limit-grid">
-          <div>
-            <p class="kicker">Why the zoom matters</p>
-            <h2>The landing points crowd the cone.</h2>
-          </div>
-          <div class="limit-copy">
-            <p>Each orange point is a fractional-order coincidence found by the phase model. The dashed wall is integer order—the place where the conical lift becomes a smooth planar object.</p>
-            <p>Finding hits arbitrarily close to that wall supplies the small gap that the bifurcating branch can cross. Geometry and spectral arithmetic meet at the same integer.</p>
-          </div>
-        </div>
-        <div class="limit-strip" id="limitStrip" role="group" aria-label="Sequence of shapes converging to an integer cone"></div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>A visual companion to the Schiffer formalization.</p>
-      <p>All simulations run locally in your browser.</p>
+    <footer>
+      <span>Half-cylinder bifurcation laboratory</span>
+      <span>No cone geometry yet.</span>
       <a href="#top">Back to top ↑</a>
     </footer>
 
-    <dialog id="aboutDialog">
-      <button id="closeAbout" aria-label="Close" type="button">×</button>
-      <p class="kicker">How to read this</p>
-      <h2>Intuition first, theorem second.</h2>
-      <p>The geometry is a deliberately stylized model of the Lyapunov–Schmidt branch. Its quadratic radius drop mirrors <span class="formula">R(s) = R₀ − ½Γ(λ)s² + O(s³)</span>.</p>
-      <p>The coincidence plots are computed live from the two leading Bessel phase laws used in the density argument: <span class="formula">j₁,ₙ ≈ π(n + ¼)</span> and <span class="formula">N f(jₙ,ₘ/N) ≈ π(m − ¼)</span>, where <span class="formula">f(c)=√(c²−1)−acos(1/c)</span>.</p>
-      <p>They explain the mechanism and are not a numerical certificate for any particular exact zero.</p>
+    <dialog id="methodDialog">
+      <button id="closeMethod" type="button" aria-label="Close">×</button>
+      <p class="eyebrow">Numerical method</p>
+      <h2>A small Galerkin calculation, in your browser.</h2>
+      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span> and use the inward distance <span class="formula">d = h<sub>s</sub>(θ) − x</span>. The base field is <span class="formula">cos(√λ d)</span>.</p>
+      <p>The critical <span class="formula">k = 1</span> corrector is oscillatory. The higher correctors are <span class="formula">d²e<sup>−qₖd</sup> cos(kθ)</span> and <span class="formula">d²e<sup>−qₖd</sup> sin(kθ)</span>, with <span class="formula">qₖ = √(k² − λ)</span> for <span class="formula">k ≥ 2</span>. The factor <span class="formula">d²</span> makes both boundary conditions exact for every fitted coefficient.</p>
+      <p>At every interaction, the site samples the variable domain and solves a ridge-regularized least-squares system minimizing <span class="formula">||(Δ + λ)u||₂</span>. This is a genuine truncated numerical collar model. It is not a proof that the prescribed wall is an exact global free-boundary solution.</p>
     </dialog>
 
     <script src="app.js"></script>

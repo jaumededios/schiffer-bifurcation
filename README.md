@@ -1,36 +1,43 @@
-# Schiffer / Berenstein — interactive visualization
+# Half-cylinder bifurcation laboratory
 
-A visual, browser-based companion to the cone bifurcation and spectral-density mechanism in the Schiffer construction.
+A focused, browser-based numerical visualization of the Schiffer problem near the boundary of an infinite half-cylinder.
 
-The site contains three linked experiments:
+The domain is
 
-- a morphing cone/cylinder with live spectral ratio and branch-amplitude controls;
-- Schiffer and Berenstein viewing modes;
-- a live phase-coincidence plot over fractional order `N`, with a boundary zoom near integer orders.
+```text
+Ωs = { (x, θ) : x ≤ h_s(θ) },   h_s(θ) = s cos(θ − φ),   θ ∈ S¹.
+```
 
-Everything is plain HTML, CSS, and JavaScript. There is no build step and no runtime dependency.
+At `s = 0`, the heat-map domain is a rectangle representing a collar of the half-cylinder. Moving `s` displaces the right-hand free boundary in the critical first Fourier mode.
+
+## Numerical model
+
+The field is recomputed in the browser whenever `λ`, `s`, `φ`, or the truncation order changes. It uses
+
+```text
+u₀(d) = cos(√λ d),   d = h_s(θ) − x,
+```
+
+together with an oscillatory critical corrector and the exponentially decaying higher modes
+
+```text
+d² exp(−√(k² − λ)d) cos(kθ),
+d² exp(−√(k² − λ)d) sin(kθ),    k ≥ 2.
+```
+
+Their coefficients are chosen by a ridge-regularized least-squares solve minimizing the sampled residual of `(Δ + λ)u = 0` on the current variable domain. The factor `d²` makes `u = 1` and `∂νu = 0` exact at the displayed boundary.
+
+This is a genuine truncated numerical collar model, not a claim that the prescribed boundary is an exact global free-boundary solution.
 
 ## Run locally
 
-Open `index.html` directly, or serve this directory:
+There is no build step or runtime dependency. Open `index.html`, or serve the directory with any static server.
 
 ```sh
 python3 -m http.server 8000
 ```
 
 Then visit <http://localhost:8000>.
-
-## Mathematical status
-
-This is an intuition-first visual model, not a numerical certificate for exact Bessel zeros. The coincidence engine evaluates the leading phase laws used by the proof:
-
-```text
-j_(1,n) ≈ π(n + 1/4)
-N f(j_(N,m)/N) ≈ π(m - 1/4)
-f(c) = √(c² - 1) - acos(1/c)
-```
-
-The geometry uses the branch heuristic `R(s) ≈ R₀ − Γ(λ)s²/2`.
 
 ## License
 
