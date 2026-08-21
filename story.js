@@ -147,6 +147,175 @@
     return value;
   }
 
+  function lerp(left, right, amount) { return left + (right - left) * amount; }
+  function ease(amount) {
+    const clamped = Math.max(0, Math.min(1, amount));
+    return clamped * clamped * (3 - 2 * clamped);
+  }
+
+  function drawNfoldDisk(context, width, height, options = {}) {
+    const cx = options.cx ?? width * .5;
+    const cy = options.cy ?? height * .54;
+    const radius = options.radius ?? Math.min(width * .27, height * .34);
+    const opacity = options.opacity ?? 1;
+    const selection = options.selection ?? 0;
+    const wiggle = options.wiggle ?? 0;
+    const divisions = options.divisions ?? 1;
+    const copies = 28;
+    const samplesPerCopy = 7;
+    context.save(); context.globalAlpha *= opacity;
+
+    for (let index = 0; index < copies * samplesPerCopy; index++) {
+      const a0 = index / (copies * samplesPerCopy) * TAU;
+      const a1 = (index + 1.03) / (copies * samplesPerCopy) * TAU;
+      const middle = (a0 + a1) / 2;
+      const value = Math.cos(copies * middle);
+      const localRadius = radius * (1 - wiggle * landingWall(copies * middle) / 28);
+      context.beginPath(); context.moveTo(cx, cy);
+      context.lineTo(cx + localRadius * Math.cos(a0), cy + localRadius * Math.sin(a0));
+      context.lineTo(cx + localRadius * Math.cos(a1), cy + localRadius * Math.sin(a1));
+      context.closePath();
+      context.fillStyle = value > 0
+        ? `rgba(255,116,73,${.19 + .18 * value})`
+        : `rgba(77,162,163,${.21 - .22 * value})`;
+      context.fill();
+    }
+
+    const halfAngle = Math.PI / copies;
+    if (selection > 0) {
+      context.beginPath(); context.moveTo(cx, cy);
+      context.lineTo(cx + radius * 1.04 * Math.cos(-halfAngle), cy + radius * 1.04 * Math.sin(-halfAngle));
+      context.arc(cx, cy, radius * 1.04, -halfAngle, halfAngle);
+      context.closePath(); context.fillStyle = `rgba(255,116,73,${.08 + .24 * selection})`; context.fill();
+      context.strokeStyle = colors.orange; context.lineWidth = 2.4; context.stroke();
+    }
+
+    if (divisions > 0) {
+      context.strokeStyle = `rgba(241,238,229,${.08 + .22 * divisions})`; context.lineWidth = .7;
+      for (let index = 0; index < copies; index++) {
+        const angle = (index + .5) / copies * TAU;
+        context.beginPath(); context.moveTo(cx, cy);
+        context.lineTo(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)); context.stroke();
+      }
+    }
+
+    context.beginPath();
+    for (let index = 0; index <= 900; index++) {
+      const angle = index / 900 * TAU;
+      const localRadius = radius * (1 - wiggle * landingWall(copies * angle) / 28);
+      const x = cx + localRadius * Math.cos(angle); const y = cy + localRadius * Math.sin(angle);
+      if (!index) context.moveTo(x, y); else context.lineTo(x, y);
+    }
+    context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
+    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillText("the same angular profile repeats 28 times", cx, cy + radius + 34);
+    context.restore();
+  }
+
+  function drawFoldingSector(context, width, height, amount) {
+    const t = ease(amount);
+    const diskOpacity = Math.max(0, 1 - t * 1.7);
+    if (diskOpacity > 0) drawNfoldDisk(context, width, height, { cx: width * .3, radius: Math.min(width * .18, height * .25), selection: 1, opacity: diskOpacity });
+
+    const cx = lerp(width * .62, width * .48, t);
+    const cy = height * .54;
+    const left = lerp(cx - width * .18, width * .15, t);
+    const right = lerp(cx + width * .2, width * .84, t);
+    const half = lerp(24, Math.min(112, height * .22), t);
+    context.save();
+    const gradient = context.createLinearGradient(left, 0, right, 0);
+    gradient.addColorStop(0, "rgba(77,162,163,.13)"); gradient.addColorStop(1, "rgba(255,116,73,.42)");
+    context.beginPath(); context.moveTo(left, cy); context.lineTo(right, cy - half); context.lineTo(right, cy + half); context.closePath();
+    context.fillStyle = gradient; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.8; context.stroke();
+    for (let index = 1; index < 7; index++) {
+      const q = index / 7; const x = lerp(left, right, q); const localHalf = half * q;
+      context.beginPath(); context.ellipse(x, cy, 6 * q, localHalf, 0, 0, TAU);
+      context.strokeStyle = index % 2 ? "rgba(255,116,73,.35)" : "rgba(77,162,163,.5)"; context.lineWidth = 1; context.stroke();
+    }
+    context.beginPath(); context.ellipse(right, cy, lerp(1, 11, t), half, 0, 0, TAU);
+    context.strokeStyle = colors.orange; context.lineWidth = 2.3; context.stroke();
+    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillText(t < .45 ? "the selected sector separates from its 27 copies" : "identify the two radial sides and normalize the rim", width * .5, cy + half + 38);
+    context.restore();
+  }
+
+  function drawConeCylinder(context, width, height, cylinderAmount, waveAmount) {
+    const t = ease(cylinderAmount);
+    const cx = height > 520 ? height * .54 : height * .5;
+    const right = width * .84;
+    const half = Math.min(118, height * .23);
+    const visibleLeft = width * .08;
+    const tip = lerp(width * .16, -width * 2.6, t);
+    const slopeFactor = t + (1 - t) * Math.max(0, (visibleLeft - tip) / (right - tip));
+    const leftHalf = half * slopeFactor;
+    context.save();
+    const gradient = context.createLinearGradient(visibleLeft, 0, right, 0);
+    gradient.addColorStop(0, "rgba(12,22,27,.04)"); gradient.addColorStop(.7, "rgba(77,162,163,.28)"); gradient.addColorStop(1, "rgba(255,116,73,.28)");
+    context.beginPath(); context.moveTo(visibleLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx + half); context.lineTo(visibleLeft, cx + leftHalf); context.closePath();
+    context.fillStyle = gradient; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.7; context.stroke();
+
+    for (let index = -3; index <= 3; index++) {
+      const q = index / 3; const yLeft = cx + q * leftHalf; const yRight = cx + q * half;
+      context.beginPath(); context.moveTo(visibleLeft, yLeft); context.lineTo(right, yRight);
+      context.strokeStyle = index % 2 ? "rgba(77,162,163,.22)" : "rgba(241,238,229,.13)"; context.lineWidth = 1; context.stroke();
+    }
+    for (let index = 0; index < 8; index++) {
+      const q = .45 + index / 12; const x = lerp(visibleLeft, right, q);
+      const localHalf = lerp(leftHalf, half, q);
+      context.beginPath(); context.ellipse(x, cx, 5 + 4 * q, localHalf, 0, 0, TAU);
+      context.strokeStyle = index % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)"; context.lineWidth = 1; context.stroke();
+    }
+
+    context.beginPath();
+    for (let index = 0; index <= 220; index++) {
+      const theta = -Math.PI / 2 + index / 220 * Math.PI;
+      const y = cx + half * Math.sin(theta);
+      const x = right + 10 * Math.cos(theta) + waveAmount * 19 * Math.cos(theta * 2);
+      if (!index) context.moveTo(x, y); else context.lineTo(x, y);
+    }
+    for (let index = 220; index >= 0; index--) {
+      const theta = Math.PI / 2 + index / 220 * Math.PI;
+      const y = cx + half * Math.sin(theta);
+      const x = right + 10 * Math.cos(theta) + waveAmount * 19 * Math.cos(theta * 2);
+      context.lineTo(x, y);
+    }
+    context.strokeStyle = colors.paper; context.lineWidth = 2.4; context.shadowColor = waveAmount ? colors.orange : colors.cyan; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
+    context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    if (t > .58) context.fillText("tip → −∞", visibleLeft + 36, cx - half - 28);
+    context.fillStyle = colors.faint;
+    context.fillText(waveAmount > .5 ? "the free rim now carries the cylinder bifurcation" : (t > .6 ? "on every fixed boundary window, the cone is now a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
+    context.restore();
+  }
+
+  function drawUnfolding(context, width, height, amount) {
+    const t = ease(amount);
+    drawConeCylinder(context, width, height, 0, 1);
+    context.save(); context.globalAlpha = t; context.fillStyle = colors.ink; context.fillRect(0, 0, width, height); context.restore();
+    drawNfoldDisk(context, width, height, { wiggle: 1, divisions: 1 - t, opacity: t });
+    if (t > .08 && t < .92) {
+      context.save(); context.globalAlpha = Math.sin(Math.PI * t) * .55; context.strokeStyle = colors.orange; context.setLineDash([4, 6]);
+      const cx = width * .5; const cy = height * .54; const r0 = Math.min(width * .16, height * .2); const r1 = Math.min(width * .32, height * .38);
+      for (let index = 0; index < 28; index++) {
+        const angle = index / 28 * TAU;
+        context.beginPath(); context.moveTo(cx + r0 * Math.cos(angle), cy + r0 * Math.sin(angle)); context.lineTo(cx + r1 * Math.cos(angle), cy + r1 * Math.sin(angle)); context.stroke();
+      }
+      context.restore();
+    }
+  }
+
+  function drawGeometrySequence(context, width, height, progress) {
+    const scaled = Math.max(0, Math.min(1, progress)) * 6;
+    const segment = Math.min(5, Math.floor(scaled));
+    const local = scaled - segment;
+    if (progress >= 1) { drawNfoldDisk(context, width, height, { wiggle: 1, divisions: 0 }); return; }
+    if (segment === 0) drawNfoldDisk(context, width, height, { selection: ease(local), divisions: 1 });
+    else if (segment === 1) drawFoldingSector(context, width, height, local);
+    else if (segment === 2) drawConeCylinder(context, width, height, local, 0);
+    else if (segment === 3) drawConeCylinder(context, width, height, 1, ease(local));
+    else if (segment === 4) drawConeCylinder(context, width, height, 1 - ease(local), 1);
+    else drawUnfolding(context, width, height, local);
+  }
+
   function drawCollarFrame(context, width, height, opacity) {
     context.save();
     context.globalAlpha = opacity;
@@ -210,31 +379,20 @@
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryFrames = [drawDiskFrame, drawConeFrame, drawCollarFrame, drawLandingFrame];
-  const geometryNames = ["cut one sector", "form the long cone", "perturb the rim collar", "unfold at N = 28"];
-  const geometryStates = ["one of 28 sectors selected", "sector sides identified · long cone normalized", "cylinder model transferred to the cone rim", "integer aperture · all 28 copies close"];
-
-  function geometryPosition(progress) {
-    const scaled = Math.max(0, Math.min(1, progress)) * 3;
-    const left = Math.min(3, Math.floor(scaled));
-    const right = Math.min(3, left + 1);
-    let amount = scaled - left;
-    amount = amount * amount * (3 - 2 * amount);
-    return { left, right, amount };
-  }
+  const geometryNames = ["divide the disk", "select one sector", "identify its sides", "send the tip away", "perturb the cylinder", "restore the cone", "unfold at integer R"];
+  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "sector sides identified · quotient cone formed", "cone tip at infinity · half-cylinder limit", "free boundary perturbed on the half-cylinder", "the same wave returned to the finite cone", "integer aperture · all 28 copies close"];
 
   function renderGeometryStory() {
-    const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 430);
+    const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
     context.clearRect(0, 0, width, height);
     context.fillStyle = colors.ink; context.fillRect(0, 0, width, height);
-    const position = geometryPosition(geometryState.progress);
-    geometryFrames[position.left](context, width, height, 1 - position.amount);
-    if (position.right !== position.left) geometryFrames[position.right](context, width, height, position.amount);
-    const nearest = Math.min(3, Math.round(geometryState.progress * 3));
+    drawGeometrySequence(context, width, height, geometryState.progress);
+    const nearest = Math.min(6, Math.round(geometryState.progress * 6));
+    drawFrameLabel(context, width, `${String(nearest + 1).padStart(2, "0")} / construction`, geometryNames[nearest], nearest === 6 ? "R = N = 28" : "N = 28 running geometry");
     select("#storyGeometryValue").textContent = geometryNames[nearest];
     select("#storyGeometryState").textContent = geometryStates[nearest];
     document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === nearest));
-    canvas.setAttribute("aria-label", `Construction stage ${nearest + 1} of 4: ${geometryStates[nearest]}. The final boundary uses the stored numerical N equals 28 landing coefficients.`);
+    canvas.setAttribute("aria-label", `Construction stage ${nearest + 1} of 7: ${geometryStates[nearest]}. The final boundary uses the stored numerical N equals 28 landing coefficients.`);
   }
 
   function stopGeometryPlayback() {
@@ -253,7 +411,7 @@
     select("#storyGeometryPlayLabel").textContent = "Pause";
     const startProgress = geometryState.progress;
     const start = performance.now();
-    const duration = Math.max(900, 7000 * (1 - startProgress));
+    const duration = Math.max(900, 12000 * (1 - startProgress));
     const tick = (now) => {
       if (!geometryState.playing) return;
       const amount = Math.min(1, (now - start) / duration);

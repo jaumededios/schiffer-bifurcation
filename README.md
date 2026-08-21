@@ -1,4 +1,4 @@
-# Schiffer visual proof story
+# A counterexample to Schiffer's conjecture
 
 A browser-based narrative and numerical visualization of the Schiffer construction: why direct disk bifurcation is obstructed, why the half-cylinder is flexible, how a long flat cone reproduces the cylinder near its rim, how real Bessel order replaces cylinder phase, and how a nonlinear branch lands at integer symmetry order.
 
@@ -17,7 +17,28 @@ The website is ordered as one argument rather than a gallery of simulations:
 9. A global-to-local one-wavelength zoom of the same solution.
 10. A real-data modulo-one plot of 10,000 additional crossings.
 
-The opening geometry animation is explicitly schematic. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot, cone views, nested zoom, and radial comparisons use the stored numerical datasets described below.
+The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects and identifies one sector, sends the cone tip to infinity, perturbs the resulting half-cylinder, restores the cone, and unfolds at integer order. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot, cone views, nested zoom, and radial comparisons use the stored numerical datasets described below.
+
+## Uniform half-cylinder branch
+
+The limiting object used throughout the story is the genuine one-ended cylinder
+
+```text
+Ω_{λ,s} = { (x,θ) ∈ ℝ × S¹ : x < h_{λ,s}(θ) }.
+```
+
+For every compact `K ⊂ (1,4)`, the local construction gives one `ε_K > 0` valid for all `λ ∈ K` and `|s| < ε_K`, with
+
+```text
+(Δ+λ)u_{λ,s} = 0             in Ω_{λ,s},
+u_{λ,s} = 1,  ∂νu_{λ,s} = 0  on ∂Ω_{λ,s},
+
+h_{λ,s}(θ) = s cos θ + O_K(s²),
+u_{λ,s}(x,θ) = cos(√λ x)
+  + s λ/√(λ−1) sin(√(λ−1)x) cos θ + O_K(s²).
+```
+
+The remainders are uniform on each fixed boundary collar. Fall–Minlend–Weth state their published result for compact domains in the flat cylinder; the half-infinite formulation above follows from the same separated-mode, weighted-space, and local bifurcation tools. It is the formulation that directly models the limit of the long cone.
 
 The domain is
 
@@ -28,7 +49,7 @@ h_s(θ) = s cos(θ − φ) + h₂ cos(2(θ − φ)) + h₃ cos(3(θ − φ)),   
 
 At `s = 0`, the heat-map domain is a rectangle representing a collar of the half-cylinder. The first wall coefficient is fixed as the amplitude gauge `h₁ = s`; the mean axial translation is fixed to zero. For every selected `(λ,s)`, the browser solves for `h₂` and `h₃` together with the field coefficients.
 
-## Numerical model
+## Browser numerical model
 
 The field is recomputed in the browser whenever `λ`, `s`, `φ`, or the truncation order changes. Every retained term is an exact separated solution of
 
@@ -60,13 +81,13 @@ This is now a truncated free-boundary calculation rather than a prescribed-cosin
 
 ## Views
 
-The flat view displays the field in the unwrapped coordinates `(x, θ)`. The 3D view embeds the same samples as
+The default 3D view embeds the half-cylinder samples as
 
 ```text
 (x, θ) ↦ (x, R cos θ, R sin θ),
 ```
 
-so the moving free boundary becomes the wavy open rim of a rotatable cylinder. Both views use the same solved field and update from the same controls.
+so the moving free boundary becomes the wavy open rim of a rotatable cylinder. The **Unwrapped** view displays the same field in `(x, θ)` coordinates. Both views use the same solved field and update from the same controls.
 
 ## Finite-cone continuation
 

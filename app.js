@@ -6,7 +6,7 @@ const state = {
   s: 0,
   phase: 0,
   maxMode: 10,
-  view: "flat",
+  view: typeof WebGLRenderingContext === "undefined" ? "flat" : "cylinder",
   solution: null,
   updateFrame: null,
   playing: false,
@@ -890,6 +890,7 @@ window.addEventListener("resize", () => {
 });
 
 solveAndRender();
+setView(state.view);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Finite-cone continuation. The nonlinear branch records and radial Bessel
