@@ -13,6 +13,7 @@
     playButton: "abundancePlayButton",
     playIcon: "abundancePlayIcon",
     playLabel: "abundancePlayLabel",
+    examplesBody: "abundanceExamplesBody",
   };
 
   const COLORS = {
@@ -166,6 +167,67 @@
     return coefficient.toFixed(compact ? 1 : 2) + " × 10" + superscriptInteger(exponent);
   }
 
+  function makeScaleExamples(model) {
+    const bandCount = 5;
+    const minimumRadius = 20;
+    const maximumRadius = Math.ceil(model.columns.R[model.columns.R.length - 1]);
+    const logMinimum = Math.log(minimumRadius);
+    const logMaximum = Math.log(maximumRadius);
+    const examples = [];
+
+    for (let bandIndex = 0; bandIndex < bandCount; bandIndex += 1) {
+      const lower = Math.exp(
+        logMinimum + bandIndex * (logMaximum - logMinimum) / bandCount
+      );
+      const upper = Math.exp(
+        logMinimum + (bandIndex + 1) * (logMaximum - logMinimum) / bandCount
+      );
+      let best = null;
+      for (let index = 0; index < model.columns.R.length; index += 1) {
+        const radius = model.columns.R[index];
+        const insideBand = radius >= lower
+          && (bandIndex === bandCount - 1 ? radius <= upper : radius < upper);
+        if (!insideBand) continue;
+        const gap = model.fractional[index];
+        const score = -Math.log(gap) / Math.log(radius);
+        if (!best || score > best.score) {
+          best = { index: index, radius: radius, gap: gap, score: score };
+        }
+      }
+      if (best) {
+        best.lower = lower;
+        best.upper = upper;
+        examples.push(best);
+      }
+    }
+    return examples;
+  }
+
+  function renderScaleExamples(model, tableBody) {
+    if (!tableBody) return;
+    tableBody.textContent = "";
+    makeScaleExamples(model).forEach(function renderExample(example) {
+      const row = document.createElement("tr");
+      const values = [
+        example.lower.toFixed(1) + " ≤ R < " + example.upper.toFixed(1),
+        example.radius.toFixed(9),
+        formatGap(example.gap, false),
+        example.score.toFixed(3),
+      ];
+      const labels = ["log-order band", "crossing order R", "fractional gap {R}", "score q(R)"];
+      values.forEach(function renderValue(value, columnIndex) {
+        const cell = document.createElement(columnIndex === 1 ? "th" : "td");
+        if (columnIndex === 1) cell.scope = "row";
+        cell.dataset.label = labels[columnIndex];
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+      row.dataset.radius = example.radius.toFixed(9);
+      row.dataset.score = example.score.toFixed(6);
+      tableBody.appendChild(row);
+    });
+  }
+
   function niceStep(maximum, targetTicks) {
     const rough = maximum / targetTicks;
     const power = Math.pow(10, Math.floor(Math.log10(Math.max(rough, 1))));
@@ -191,6 +253,7 @@
     }
 
     const model = makeModel(data);
+    renderScaleExamples(model, elements.examplesBody);
     const context = elements.canvas.getContext("2d");
     if (!context) return null;
 

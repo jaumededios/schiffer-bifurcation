@@ -260,6 +260,14 @@ J₁(ρ) = 0,   J_R(ρ) = 0,   2 ≤ ρ²/R² ≤ 3,
 
 The `N=28` example is overlaid as a separate real reference point. The mathematical explanation uses the McMahon phase for `j_{1,n}` and the Debye phase for `j_{N,m}`. Kronecker's theorem aligns both phases simultaneously; monotonicity of `ν↦j_{ν,m}` then converts the small zero gap into a crossing `N<R<N+δ`. The dots illustrate this mechanism but are not used as evidence for equidistribution.
 
+Below the plot, five examples summarize the scale range of the full 10,000-row search. Define the scale-free approximation exponent
+
+```text
+q(R) = −log{R}/log R,      equivalently {R} = R^(−q(R)).
+```
+
+The interval `20≤R<842` is divided into five equal logarithmic bands, and the table reports the largest `q(R)` in each band. This stratification prevents a dense high-order cluster from supplying every example. The resulting orders are approximately `34.066215`, `47.007880`, `152.000973`, `324.001339`, and `764.000064`. The separate `N=28` example is excluded because its `λ≈3.317` lies outside the exhaustive search window `[2,3]`.
+
 ## Reproduce the numerical data
 
 The numerical sources live in `numerics/` and require Python 3.12, NumPy, and SciPy.

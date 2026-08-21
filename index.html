@@ -758,6 +758,20 @@
           <h3>The finite dots illustrate; the two-phase argument supplies arbitrary precision.</h3>
           <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), the phase alignment produces \(N\ge N_{\min}\) and a crossing \(N&lt;R&lt;N+\delta\) with \(2&lt;\rho^2/R^2&lt;3\). The arithmetic input makes the initial gap smaller than the uniform analytic radius drop; it is this comparison—not visual equidistribution of the dots—that closes the proof.</p>
         </div>
+        <section class="abundance-examples" aria-labelledby="abundanceExamplesTitle">
+          <header>
+            <span>Five scale records from the full search</span>
+            <h3 id="abundanceExamplesTitle">Unusually close, relative to their order.</h3>
+            <p>Write \(\{R\}=R^{-q(R)}\), or \(q(R)=-\log\{R\}/\log R\). Larger \(q\) means a smaller fractional gap after accounting for the scale of \(R\). We divide \(20\le R&lt;842\) into five equal logarithmic bands and retain the largest score in each band, so the list cannot cluster at a single order scale.</p>
+          </header>
+          <div class="abundance-examples-table-wrap">
+            <table class="abundance-examples-table">
+              <thead><tr><th scope="col">log-order band</th><th scope="col">crossing order \(R\)</th><th scope="col">fractional gap \(\{R\}\)</th><th scope="col">score \(q(R)\)</th></tr></thead>
+              <tbody id="abundanceExamplesBody"></tbody>
+            </table>
+          </div>
+          <p class="abundance-examples-note">Computed from the 10,000-row \(2\le\rho^2/R^2\le3\) search. The orange \(N=28\) running example is not ranked here because its spectral ratio is \(\lambda\approx3.317\), outside that window. The ranking describes the finite sample; the two-phase argument above supplies the theorem.</p>
+        </section>
       </section>
     </main>
 
@@ -792,7 +806,7 @@
       <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">N=28</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">R″(0)</span>.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
-      <p>The final scatter plot filters the saved common-zero data to <span class="formula">N≤41</span> and uses a logarithmic horizontal <span class="formula">R</span>-axis. The orange <span class="formula">N=28</span> point is the separate continued example. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite dots illustrate rather than substitute for the near-integer theorem.</p>
+      <p>The final scatter plot filters the saved common-zero data to <span class="formula">N≤41</span> and uses a logarithmic horizontal <span class="formula">R</span>-axis. Below it, a five-row table uses the full search through <span class="formula">R≈841</span>: on each of five equal logarithmic bands in <span class="formula">20≤R&lt;842</span>, it selects the largest scale-free score <span class="formula">q(R)=−log{R}/log R</span>, equivalently <span class="formula">{R}=R<sup>−q(R)</sup></span>. The orange <span class="formula">N=28</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
     </dialog>
 
     <script src="cone-data.js"></script>

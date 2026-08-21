@@ -446,6 +446,21 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .abundance-conclusion > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .abundance-conclusion h3 { margin: 0; font: 300 29px/1.05 var(--serif); }
 .abundance-conclusion p { margin: 0; color: rgba(241,238,229,.46); font-size: 10px; line-height: 1.74; }
+.abundance-examples { border: 1px solid var(--line-light); border-top: 0; }
+.abundance-examples > header { display: grid; grid-template-columns: .6fr 1fr 1.15fr; gap: 45px; align-items: start; padding: 45px 35px; border-bottom: 1px solid var(--line-light); }
+.abundance-examples > header > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.abundance-examples h3 { margin: 0; font: 300 29px/1.05 var(--serif); }
+.abundance-examples > header p { margin: 0; color: rgba(241,238,229,.46); font-size: 10px; line-height: 1.74; }
+.abundance-examples-table-wrap { overflow-x: auto; }
+.abundance-examples-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.abundance-examples-table th, .abundance-examples-table td { padding: 18px 24px; border-right: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); text-align: right; }
+.abundance-examples-table th:last-child, .abundance-examples-table td:last-child { border-right: 0; }
+.abundance-examples-table thead th { color: rgba(241,238,229,.38); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.abundance-examples-table thead th:first-child, .abundance-examples-table tbody td:first-child { text-align: left; }
+.abundance-examples-table tbody th { color: var(--paper); font: 12px var(--mono); font-weight: 400; }
+.abundance-examples-table tbody td { color: rgba(241,238,229,.65); font: 10px var(--mono); }
+.abundance-examples-table tbody td:last-child { color: var(--orange); }
+.abundance-examples-note { max-width: 900px; margin: 0; padding: 25px 35px 32px; color: rgba(241,238,229,.4); font-size: 9px; line-height: 1.7; }
 
 footer { min-height: 190px; padding: 35px 4vw; display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; color: var(--paper); background: var(--ink); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 footer span { opacity: .43; }
@@ -610,6 +625,15 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .abundance-toolbar { padding: 0 12px; }
   .abundance-toolbar > div:last-child { display: none; }
   .abundance-conclusion { grid-template-columns: 1fr; min-height: 0; }
+  .abundance-examples > header { grid-template-columns: 1fr; gap: 18px; }
+  .abundance-examples-table { min-width: 0; table-layout: auto; }
+  .abundance-examples-table thead { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .abundance-examples-table tbody { display: grid; }
+  .abundance-examples-table tbody tr { display: grid; grid-template-columns: 1fr 1.15fr; border-bottom: 1px solid var(--line-light); }
+  .abundance-examples-table tbody tr:last-child { border-bottom: 0; }
+  .abundance-examples-table th, .abundance-examples-table td { min-width: 0; padding: 14px 12px; border-bottom: 0; text-align: left; }
+  .abundance-examples-table th:nth-child(2n), .abundance-examples-table td:nth-child(2n) { border-right: 0; }
+  .abundance-examples-table [data-label]::before { content: attr(data-label); display: block; margin-bottom: 7px; color: rgba(241,238,229,.3); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
   footer { grid-template-columns: 1fr; gap: 18px; }
 }
 
