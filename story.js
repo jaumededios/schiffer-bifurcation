@@ -213,29 +213,157 @@
   }
 
   function drawFoldingSector(context, width, height, amount) {
-    const t = ease(amount);
-    const diskOpacity = Math.max(0, 1 - t * 1.7);
-    if (diskOpacity > 0) drawNfoldDisk(context, width, height, { cx: width * .3, radius: Math.min(width * .18, height * .25), selection: 1, opacity: diskOpacity });
+    const t = Math.max(0, Math.min(1, amount));
+    const moveDisk = ease(t / .2);
+    const extract = ease((t - .06) / .28);
+    const fold = ease((t - .32) / .68);
+    const fullDiskRadius = Math.min(width * .27, height * .34);
+    const smallDiskRadius = Math.min(width * .15, height * .21);
+    const diskCx = lerp(width * .5, width * .2, moveDisk);
+    const diskRadius = lerp(fullDiskRadius, smallDiskRadius, moveDisk);
+    const diskOpacity = 1 - ease((t - .18) / .26);
 
-    const cx = lerp(width * .62, width * .48, t);
-    const cy = height * .54;
-    const left = lerp(cx - width * .18, width * .15, t);
-    const right = lerp(cx + width * .2, width * .84, t);
-    const half = lerp(24, Math.min(112, height * .22), t);
-    context.save();
-    const gradient = context.createLinearGradient(left, 0, right, 0);
-    gradient.addColorStop(0, "rgba(77,162,163,.13)"); gradient.addColorStop(1, "rgba(255,116,73,.42)");
-    context.beginPath(); context.moveTo(left, cy); context.lineTo(right, cy - half); context.lineTo(right, cy + half); context.closePath();
-    context.fillStyle = gradient; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.8; context.stroke();
-    for (let index = 1; index < 7; index++) {
-      const q = index / 7; const x = lerp(left, right, q); const localHalf = half * q;
-      context.beginPath(); context.ellipse(x, cy, 6 * q, localHalf, 0, 0, TAU);
-      context.strokeStyle = index % 2 ? "rgba(255,116,73,.35)" : "rgba(77,162,163,.5)"; context.lineWidth = 1; context.stroke();
+    // Keep the chosen sector visible while its 27 redundant copies recede.
+    // The sector itself is never cross-faded into a cone: the same mesh below
+    // is continuously wrapped until its two radial edges coincide.
+    if (diskOpacity > .001) {
+      drawNfoldDisk(context, width, height, {
+        cx: diskCx,
+        radius: diskRadius,
+        selection: 1,
+        opacity: diskOpacity,
+      });
     }
-    context.beginPath(); context.ellipse(right, cy, lerp(1, 11, t), half, 0, 0, TAU);
-    context.strokeStyle = colors.orange; context.lineWidth = 2.3; context.stroke();
+
+    const cy = height * .54;
+    const targetTip = width * .15;
+    const targetLength = width * .69;
+    const targetHalf = Math.min(118, height * .23);
+    const tip = lerp(diskCx, targetTip, extract);
+    const length = lerp(diskRadius, targetLength, extract);
+    const half = lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, extract);
+    const depthProjection = .1;
+
+    function sheetPoint(radial, angular) {
+      const flatY = radial * half * angular;
+      // At fold=1, angular in [-1,1] traverses a full circle. Its two
+      // endpoints agree, so the two radial sides have become one seam.
+      const coneY = radial * half * Math.sin(Math.PI * angular);
+      const coneZ = radial * half * Math.cos(Math.PI * angular);
+      const y = lerp(flatY, coneY, fold);
+      const z = fold * coneZ;
+      return {
+        x: tip + radial * length + depthProjection * z,
+        y: cy + y,
+        z: z,
+      };
+    }
+
+    context.save();
+
+    // Draw the angular strips back-to-front. At the start they partition one
+    // flat triangle; at the end they are the visible faces of one cone.
+    const strips = [];
+    const stripCount = 30;
+    for (let index = 0; index < stripCount; index++) {
+      const a0 = -1 + 2 * index / stripCount;
+      const a1 = -1 + 2 * (index + 1) / stripCount;
+      strips.push({ a0: a0, a1: a1, depth: Math.cos(Math.PI * (a0 + a1) / 2) });
+    }
+    strips.sort((leftStrip, rightStrip) => leftStrip.depth - rightStrip.depth);
+    strips.forEach((strip, index) => {
+      const p0 = sheetPoint(0, strip.a0);
+      const p1 = sheetPoint(1, strip.a0);
+      const p2 = sheetPoint(1, strip.a1);
+      context.beginPath();
+      context.moveTo(p0.x, p0.y);
+      context.lineTo(p1.x, p1.y);
+      context.lineTo(p2.x, p2.y);
+      context.closePath();
+      const warmth = (strip.a0 + strip.a1 + 2) / 4;
+      context.fillStyle = warmth > .5
+        ? `rgba(255,116,73,${.13 + .16 * strip.depth * fold + .08 * extract})`
+        : `rgba(77,162,163,${.16 + .12 * strip.depth * fold + .08 * extract})`;
+      context.fill();
+      if (index % 3 === 0) {
+        context.strokeStyle = "rgba(241,238,229,.055)";
+        context.lineWidth = .6;
+        context.stroke();
+      }
+    });
+
+    // Radial generators stay attached to the same material points throughout
+    // the fold, making the wrapping motion legible rather than a morph.
+    for (let index = 1; index < 12; index++) {
+      const angular = -1 + 2 * index / 12;
+      const start = sheetPoint(0, angular);
+      const end = sheetPoint(1, angular);
+      context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
+      context.strokeStyle = index % 2
+        ? "rgba(241,238,229,.13)"
+        : "rgba(77,162,163,.28)";
+      context.lineWidth = .8; context.stroke();
+    }
+
+    // Lines transverse to the generators begin as straight segments and curl
+    // into closed ellipses. This is the most direct visual cue for folding.
+    for (let radialIndex = 1; radialIndex <= 7; radialIndex++) {
+      const radial = radialIndex / 7;
+      context.beginPath();
+      for (let index = 0; index <= 120; index++) {
+        const point = sheetPoint(radial, -1 + 2 * index / 120);
+        if (index === 0) context.moveTo(point.x, point.y);
+        else context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = radialIndex % 2
+        ? "rgba(255,116,73,.32)"
+        : "rgba(241,238,229,.18)";
+      context.lineWidth = radialIndex === 7 ? 1.6 : .8;
+      context.stroke();
+    }
+
+    const sideAStart = sheetPoint(0, -1);
+    const sideAEnd = sheetPoint(1, -1);
+    const sideBStart = sheetPoint(0, 1);
+    const sideBEnd = sheetPoint(1, 1);
+    context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
+    context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
+    context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
+    context.strokeStyle = colors.orange; context.lineWidth = 2.5; context.stroke();
+
+    if (fold < .94 && extract > .72) {
+      context.fillStyle = colors.cyan; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillText("RADIAL SIDE A", sideAEnd.x + 8, sideAEnd.y - 7);
+      context.fillStyle = colors.orange;
+      context.fillText("RADIAL SIDE B", sideBEnd.x + 8, sideBEnd.y + 13);
+      const seam = { x: tip + length - depthProjection * half, y: cy };
+      [sideAEnd, sideBEnd].forEach((edge, index) => {
+        const arrowEnd = {
+          x: lerp(edge.x, seam.x, .42),
+          y: lerp(edge.y, seam.y, .42),
+        };
+        context.beginPath(); context.moveTo(edge.x, edge.y); context.lineTo(arrowEnd.x, arrowEnd.y);
+        context.strokeStyle = index ? "rgba(255,116,73,.62)" : "rgba(77,162,163,.62)";
+        context.setLineDash([3, 4]); context.lineWidth = 1; context.stroke(); context.setLineDash([]);
+      });
+    }
+
+    if (fold > .88) {
+      const seamStart = sheetPoint(0, -1);
+      const seamEnd = sheetPoint(1, -1);
+      context.beginPath(); context.moveTo(seamStart.x, seamStart.y); context.lineTo(seamEnd.x, seamEnd.y);
+      context.strokeStyle = colors.orange; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
+      context.fillStyle = colors.orange; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillText("A = B · QUOTIENT SEAM", seamEnd.x + 9, seamEnd.y - 8);
+    }
+
     context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
-    context.fillText(t < .45 ? "the selected sector separates from its 27 copies" : "identify the two radial sides and normalize the rim", width * .5, cy + half + 38);
+    const caption = extract < .72
+      ? "lift the selected sector away from its 27 copies"
+      : fold < .88
+        ? "fold the two radial sides together"
+        : "the two sides meet: the sector is now a quotient cone";
+    context.fillText(caption, width * .5, cy + targetHalf + 47);
     context.restore();
   }
 
@@ -246,21 +374,22 @@
     const half = Math.min(118, height * .23);
     const visibleLeft = width * .08;
     const tip = lerp(width * .16, -width * 2.6, t);
-    const slopeFactor = t + (1 - t) * Math.max(0, (visibleLeft - tip) / (right - tip));
+    const surfaceLeft = Math.max(visibleLeft, tip);
+    const slopeFactor = t + (1 - t) * Math.max(0, (surfaceLeft - tip) / (right - tip));
     const leftHalf = half * slopeFactor;
     context.save();
-    const gradient = context.createLinearGradient(visibleLeft, 0, right, 0);
+    const gradient = context.createLinearGradient(surfaceLeft, 0, right, 0);
     gradient.addColorStop(0, "rgba(12,22,27,.04)"); gradient.addColorStop(.7, "rgba(77,162,163,.28)"); gradient.addColorStop(1, "rgba(255,116,73,.28)");
-    context.beginPath(); context.moveTo(visibleLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx + half); context.lineTo(visibleLeft, cx + leftHalf); context.closePath();
+    context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx + half); context.lineTo(surfaceLeft, cx + leftHalf); context.closePath();
     context.fillStyle = gradient; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.7; context.stroke();
 
     for (let index = -3; index <= 3; index++) {
       const q = index / 3; const yLeft = cx + q * leftHalf; const yRight = cx + q * half;
-      context.beginPath(); context.moveTo(visibleLeft, yLeft); context.lineTo(right, yRight);
+      context.beginPath(); context.moveTo(surfaceLeft, yLeft); context.lineTo(right, yRight);
       context.strokeStyle = index % 2 ? "rgba(77,162,163,.22)" : "rgba(241,238,229,.13)"; context.lineWidth = 1; context.stroke();
     }
     for (let index = 0; index < 8; index++) {
-      const q = .45 + index / 12; const x = lerp(visibleLeft, right, q);
+      const q = .45 + index / 12; const x = lerp(surfaceLeft, right, q);
       const localHalf = lerp(leftHalf, half, q);
       context.beginPath(); context.ellipse(x, cx, 5 + 4 * q, localHalf, 0, 0, TAU);
       context.strokeStyle = index % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)"; context.lineWidth = 1; context.stroke();
@@ -379,8 +508,8 @@
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryNames = ["divide the disk", "select one sector", "identify its sides", "send the tip away", "perturb the cylinder", "restore the cone", "unfold at integer R"];
-  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "sector sides identified · quotient cone formed", "cone tip at infinity · half-cylinder limit", "free boundary perturbed on the half-cylinder", "the same wave returned to the finite cone", "integer aperture · all 28 copies close"];
+  const geometryNames = ["divide the disk", "select one sector", "fold its sides together", "send the tip away", "perturb the cylinder", "restore the cone", "unfold at integer R"];
+  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "the same sector folds · radial sides meet in one quotient seam", "cone tip at infinity · half-cylinder limit", "free boundary perturbed on the half-cylinder", "the same wave returned to the finite cone", "integer aperture · all 28 copies close"];
 
   function renderGeometryStory() {
     const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
