@@ -111,6 +111,37 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .boundary-diagram { display: grid; place-items: center; }
 .boundary-diagram svg { width: 100%; max-width: 250px; }
 
+.cone-experiment { padding-top: 118px; border-top: 1px solid rgba(241,238,229,.1); background: #17282e; }
+.cone-header { padding-bottom: 28px; }
+.cone-header .equations { max-width: 710px; justify-content: flex-end; }
+.cone-lead { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(220px, .65fr); gap: 60px; align-items: end; margin: 0 0 38px 55px; }
+.cone-lead > p { max-width: 780px; margin: 0; color: rgba(241,238,229,.55); font-size: 14px; line-height: 1.75; }
+.cone-lead > p span { color: var(--paper); font-family: var(--mono); font-size: .86em; }
+.candidate-stamp { justify-self: end; width: min(100%, 340px); padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 5px 20px; border-top: 1px solid var(--orange); border-bottom: 1px solid var(--line-light); }
+.candidate-stamp small { grid-column: 1/-1; color: rgba(241,238,229,.38); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.candidate-stamp strong { font: 300 32px var(--serif); }
+.candidate-stamp span { align-self: end; color: var(--orange); font: 9px var(--mono); }
+.candidate-stamp a { grid-column: 1/-1; width: fit-content; margin-top: 8px; color: rgba(241,238,229,.48); font: 7px var(--mono); text-decoration: none; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid rgba(241,238,229,.28); }
+.cone-laboratory { min-height: 760px; }
+.crossing-card { margin-top: 22px; padding: 15px; border: 1px solid rgba(255,116,73,.28); background: rgba(255,116,73,.035); }
+.crossing-card > div { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line-light); }
+.crossing-card span { color: rgba(241,238,229,.4); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.crossing-card strong { color: var(--paper); font: 11px var(--mono); }
+.crossing-card p { margin: 12px 0 0; color: rgba(241,238,229,.44); font-size: 9px; line-height: 1.55; }
+.cone-readout { padding-top: 20px; }
+.cone-canvas-panel { grid-template-rows: 58px minmax(590px, 1fr) 36px; }
+.cone-canvas-wrap { background: radial-gradient(circle at 50% 48%, #233b42 0, #101b20 66%); }
+#coneCanvas { display: block; width: 100%; height: 100%; }
+.cone-data-badge { position: absolute; left: 16px; bottom: 14px; z-index: 3; padding: 7px 9px; color: rgba(241,238,229,.44); background: rgba(12,22,27,.72); border: 1px solid rgba(241,238,229,.12); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .07em; pointer-events: none; }
+.cone-view-notes { display: grid; grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--line-light); border-right: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.cone-note { min-height: 225px; padding: 32px 34px; color: var(--paper); background: transparent; border: 0; border-right: 1px solid var(--line-light); text-align: left; cursor: pointer; transition: background .2s, color .2s; }
+.cone-note:last-child { border-right: 0; }
+.cone-note:hover, .cone-note.active { background: rgba(255,255,255,.045); }
+.cone-note.active { box-shadow: inset 0 3px 0 var(--orange); }
+.cone-note > span { display: block; margin-bottom: 28px; color: var(--orange); font: 8px var(--mono); }
+.cone-note strong { display: block; font: 300 27px var(--serif); }
+.cone-note p { max-width: 390px; margin: 13px 0 0; color: rgba(241,238,229,.45); font-size: 10px; line-height: 1.7; }
+
 .interpretation { display: grid; grid-template-columns: 50px 1fr 1fr; gap: 50px; padding: 110px 7vw; background: var(--paper-2); }
 .interpretation-copy { max-width: 580px; color: var(--muted); font-size: 14px; line-height: 1.75; }
 .interpretation-copy p:first-child { margin-top: 0; }
@@ -120,11 +151,12 @@ footer { min-height: 190px; padding: 35px 4vw; display: grid; grid-template-colu
 footer span { opacity: .43; }
 footer a { text-decoration: none; }
 
-dialog { width: min(650px, calc(100vw - 40px)); padding: 48px; color: var(--ink); background: var(--paper); border: 1px solid var(--ink); box-shadow: 0 30px 120px rgba(0,0,0,.38); }
+dialog { width: min(650px, calc(100vw - 40px)); max-height: calc(100vh - 40px); padding: 48px; overflow: auto; color: var(--ink); background: var(--paper); border: 1px solid var(--ink); box-shadow: 0 30px 120px rgba(0,0,0,.38); }
 dialog::backdrop { background: rgba(19,33,38,.72); backdrop-filter: blur(4px); }
 dialog h2 { margin-bottom: 25px; font-size: 49px; }
 dialog p:not(.eyebrow) { color: var(--muted); font-size: 13px; line-height: 1.72; }
 dialog button { position: absolute; top: 15px; right: 19px; padding: 0; color: var(--ink); background: none; border: 0; font-size: 28px; cursor: pointer; }
+dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
 
 @media (max-width: 1000px) {
   .intro h1 { font-size: clamp(65px, 13vw, 120px); }
@@ -132,6 +164,8 @@ dialog button { position: absolute; top: 15px; right: 19px; padding: 0; color: v
   .readout-strip { grid-template-columns: 1fr 1fr; }
   .boundary-diagram { grid-column: 1/-1; border-top: 1px solid var(--line-light); }
   .boundary-diagram svg { height: 180px; }
+  .cone-lead { margin-left: 0; }
+  .cone-toolbar .legend { display: none; }
 }
 
 @media (max-width: 760px) {
@@ -157,6 +191,18 @@ dialog button { position: absolute; top: 15px; right: 19px; padding: 0; color: v
   .readout-strip > div { border-right: 0; border-bottom: 1px solid var(--line-light); }
   .boundary-diagram { grid-column: auto; }
   .mode-bars { grid-template-columns: 1fr; }
+  .cone-experiment { padding-top: 84px; }
+  .cone-lead { grid-template-columns: 1fr; gap: 24px; }
+  .candidate-stamp { justify-self: stretch; width: 100%; }
+  .cone-canvas-panel { min-height: 640px; grid-template-rows: 88px 515px 36px; }
+  .cone-toolbar { align-items: flex-start; flex-wrap: wrap; padding: 13px 12px; gap: 10px; }
+  .cone-toolbar > div:first-child { width: 100%; }
+  .cone-view-switch { width: 100%; justify-content: space-between; }
+  .cone-view-button { flex: 1; }
+  .cone-view-notes { grid-template-columns: 1fr; }
+  .cone-note { min-height: 185px; border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .cone-note:last-child { border-bottom: 0; }
+  .cone-note > span { margin-bottom: 18px; }
   .interpretation { grid-template-columns: 35px 1fr; padding: 80px 24px; gap: 25px; }
   .interpretation-copy { grid-column: 2; }
   footer { grid-template-columns: 1fr; gap: 18px; }

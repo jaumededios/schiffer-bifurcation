@@ -708,7 +708,7 @@ bindRange("#lambdaRange", "lambda");
 bindRange("#sRange", "s");
 bindRange("#phaseRange", "phase");
 bindRange("#modeRange", "maxMode", (value) => Number.parseInt(value, 10));
-document.querySelectorAll(".view-button").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+document.querySelectorAll(".view-button[data-view]").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
 
 $("#playButton").addEventListener("click", togglePlayback);
 $("#resetButton").addEventListener("click", () => {
@@ -730,3 +730,613 @@ window.addEventListener("resize", () => {
 });
 
 solveAndRender();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Finite-cone continuation. The nonlinear branch records and radial Bessel
+// tables are generated offline; all interpolation, geometry, and rendering run
+// locally in the browser.
+
+const coneNumerics = window.CONE_NUMERICS;
+const coneState = {
+  progress: 0,
+  depth: .08,
+  view: "slice",
+  solution: null,
+  updateFrame: null,
+  playing: false,
+  playFrame: null,
+};
+
+const coneThreeState = {
+  renderer: null,
+  scene: null,
+  camera: null,
+  group: null,
+  pointer: null,
+  lastDepth: null,
+};
+
+function interpolateNumber(left, right, amount) {
+  return left + (right - left) * amount;
+}
+
+function interpolateArray(left, right, amount) {
+  return left.map((value, index) => interpolateNumber(value, right[index], amount));
+}
+
+function coneRecordAt(progress) {
+  const targetS = Math.max(0, Math.min(1, progress)) * coneNumerics.landingS;
+  const records = coneNumerics.records;
+  if (targetS <= records[0].s) return { ...records[0], h: [...records[0].h], a: [...records[0].a] };
+  if (targetS >= records.at(-1).s) return { ...records.at(-1), h: [...records.at(-1).h], a: [...records.at(-1).a] };
+  let upperIndex = 1;
+  while (records[upperIndex].s < targetS) upperIndex++;
+  const left = records[upperIndex - 1];
+  const right = records[upperIndex];
+  const amount = (targetS - left.s) / (right.s - left.s);
+  return {
+    s: targetS,
+    R: interpolateNumber(left.R, right.R, amount),
+    lambda: interpolateNumber(left.lambda, right.lambda, amount),
+    h: interpolateArray(left.h, right.h, amount),
+    a: interpolateArray(left.a, right.a, amount),
+    dirichlet_rms: interpolateNumber(left.dirichlet_rms, right.dirichlet_rms, amount),
+    neumann_rms: interpolateNumber(left.neumann_rms, right.neumann_rms, amount),
+    max_residual: interpolateNumber(left.max_residual, right.max_residual, amount),
+  };
+}
+
+function coneBoundaryGraph(psi, solution = coneState.solution) {
+  let value = 0;
+  for (let k = 0; k < solution.h.length; k++) value += solution.h[k] * Math.cos(k * psi);
+  return value;
+}
+
+function tableValue(grid, values, q) {
+  if (q <= grid[0]) return values[0];
+  if (q >= grid.at(-1)) return values.at(-1);
+  const scaled = (q - grid[0]) / (grid.at(-1) - grid[0]) * (grid.length - 1);
+  const index = Math.min(grid.length - 2, Math.max(0, Math.floor(scaled)));
+  return interpolateNumber(values[index], values[index + 1], scaled - index);
+}
+
+function coneRadialValue(mode, q, solution = coneState.solution) {
+  const orderAmount = Math.max(0, Math.min(1,
+    (coneNumerics.RStar - solution.R) / (coneNumerics.RStar - coneNumerics.targetN)
+  ));
+  const crossing = tableValue(coneNumerics.profileGrid, coneNumerics.profiles.crossing[mode], q);
+  const landing = tableValue(coneNumerics.profileGrid, coneNumerics.profiles.landing[mode], q);
+  return interpolateNumber(crossing, landing, orderAmount);
+}
+
+function coneFieldValue(radius, psi, solution = coneState.solution) {
+  const q = Math.max(0, radius / solution.R);
+  let value = 0;
+  for (let k = 0; k < solution.a.length; k++) {
+    value += solution.a[k] * coneRadialValue(k, q, solution) * Math.cos(k * psi);
+  }
+  return value;
+}
+
+function coneColorFor(value) {
+  return colorFor(Math.max(-2, Math.min(2, value)) * 1.15 / 2);
+}
+
+function resizeConeCanvas() {
+  const canvas = $("#coneCanvas");
+  const wrap = $("#coneCanvasWrap");
+  const displayWidth = Math.max(360, wrap.clientWidth || 900);
+  const displayHeight = Math.max(420, wrap.clientHeight || 620);
+  canvas.width = Math.min(760, Math.round(displayWidth * .86));
+  canvas.height = Math.min(650, Math.round(displayHeight * .86));
+  return { canvas, width: canvas.width, height: canvas.height };
+}
+
+function renderConeSlice() {
+  const { canvas, width, height } = resizeConeCanvas();
+  const context = canvas.getContext("2d");
+  const image = context.createImageData(width, height);
+  const xMin = -5;
+  const xMax = .62;
+  const solution = coneState.solution;
+
+  for (let row = 0; row < height; row++) {
+    const psi = Math.PI - (row + .5) / height * TWO_PI;
+    const wall = -coneBoundaryGraph(psi, solution);
+    for (let column = 0; column < width; column++) {
+      const x = xMin + (column + .5) / width * (xMax - xMin);
+      const pixel = (row * width + column) * 4;
+      if (x > wall) {
+        const stripe = ((column + row) % 18) < 1 ? 2 : 0;
+        image.data[pixel] = 12 + stripe;
+        image.data[pixel + 1] = 22 + stripe;
+        image.data[pixel + 2] = 27 + stripe;
+        image.data[pixel + 3] = 255;
+      } else {
+        const color = coneColorFor(coneFieldValue(solution.R + x, psi, solution));
+        image.data[pixel] = color[0];
+        image.data[pixel + 1] = color[1];
+        image.data[pixel + 2] = color[2];
+        image.data[pixel + 3] = 255;
+      }
+    }
+  }
+  context.putImageData(image, 0, 0);
+
+  const xToPixel = (x) => (x - xMin) / (xMax - xMin) * width;
+  context.save();
+  context.strokeStyle = "rgba(241,238,229,.15)";
+  context.lineWidth = 1;
+  context.setLineDash([4, 6]);
+  [-4, -3, -2, -1, 0].forEach((x) => {
+    context.beginPath(); context.moveTo(xToPixel(x), 0); context.lineTo(xToPixel(x), height); context.stroke();
+  });
+  for (let tick = -2; tick <= 2; tick++) {
+    const y = height * (.5 - tick / 4);
+    context.beginPath(); context.moveTo(0, y); context.lineTo(width, y); context.stroke();
+  }
+  context.restore();
+
+  context.save();
+  context.beginPath();
+  for (let index = 0; index <= 260; index++) {
+    const psi = Math.PI - index / 260 * TWO_PI;
+    const x = xToPixel(-coneBoundaryGraph(psi, solution));
+    const y = index / 260 * height;
+    if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+  }
+  context.strokeStyle = "#fff4dc";
+  context.shadowColor = "rgba(255,116,73,.9)";
+  context.shadowBlur = 9;
+  context.lineWidth = 2.5;
+  context.stroke();
+  context.restore();
+
+  context.save();
+  context.fillStyle = "rgba(241,238,229,.56)";
+  context.font = "9px DM Mono, monospace";
+  context.fillText("ψ = +π", 10, 17);
+  context.fillText("ψ = 0", 10, height / 2 + 4);
+  context.fillText("ψ = −π", 10, height - 12);
+  context.fillStyle = "rgba(241,238,229,.4)";
+  context.fillText(`curvature scale 1/R = ${(1 / solution.R).toFixed(4)}`, 10, 34);
+  context.restore();
+}
+
+function unfoldedCoordinates(angle, solution) {
+  const gap = TWO_PI * (1 - coneNumerics.targetN / solution.R);
+  let normalized = angle;
+  if (normalized < 0) normalized += TWO_PI;
+  const start = gap / 2;
+  const end = TWO_PI - gap / 2;
+  if (normalized < start || normalized > end) return null;
+  const psi = ((normalized - start) * solution.R) % TWO_PI;
+  return { psi, gap, start, end };
+}
+
+function drawUnfoldedSeamInset(context, width, solution, gap) {
+  const boxWidth = Math.min(178, width * .28);
+  const boxHeight = 126;
+  const left = width - boxWidth - 15;
+  const top = 15;
+  context.save();
+  context.fillStyle = "rgba(12,22,27,.88)";
+  context.strokeStyle = "rgba(241,238,229,.18)";
+  context.lineWidth = 1;
+  context.fillRect(left, top, boxWidth, boxHeight);
+  context.strokeRect(left, top, boxWidth, boxHeight);
+  context.fillStyle = "rgba(241,238,229,.55)";
+  context.font = "8px DM Mono, monospace";
+  context.fillText("SEAM MAGNIFIER", left + 11, top + 16);
+  const centerX = left + boxWidth / 2;
+  const centerY = top + boxHeight - 12;
+  const magnification = 50;
+  const shownGap = Math.min(.72, gap * magnification);
+  context.strokeStyle = gap < 1e-8 ? "#4da2a3" : "#ff7449";
+  context.lineWidth = 2;
+  [-shownGap / 2, shownGap / 2].forEach((angle) => {
+    context.beginPath();
+    context.moveTo(centerX, centerY);
+    context.lineTo(centerX + 90 * Math.sin(angle), centerY - 90 * Math.cos(angle));
+    context.stroke();
+  });
+  context.fillStyle = gap < 1e-8 ? "#4da2a3" : "rgba(241,238,229,.7)";
+  context.fillText(gap < 1e-8 ? "CLOSED · R = N" : `×${magnification} · actual ${(gap * 180 / Math.PI).toFixed(3)}°`, left + 11, top + 34);
+  context.restore();
+}
+
+function renderConeUnfolded() {
+  const { canvas, width, height } = resizeConeCanvas();
+  const context = canvas.getContext("2d");
+  const image = context.createImageData(width, height);
+  const solution = coneState.solution;
+  const centerX = width * .49;
+  const centerY = height * .51;
+  const diskRadius = Math.min(width, height) * .425;
+  const gap = Math.max(0, TWO_PI * (1 - coneNumerics.targetN / solution.R));
+
+  for (let row = 0; row < height; row++) {
+    for (let column = 0; column < width; column++) {
+      const dx = column + .5 - centerX;
+      const dy = centerY - row - .5;
+      const radiusRatio = Math.hypot(dx, dy) / diskRadius;
+      const pixel = (row * width + column) * 4;
+      const coordinates = unfoldedCoordinates(Math.atan2(dy, dx), solution);
+      if (!coordinates || radiusRatio > 1.025) {
+        image.data[pixel] = 12;
+        image.data[pixel + 1] = 22;
+        image.data[pixel + 2] = 27;
+        image.data[pixel + 3] = 255;
+        continue;
+      }
+      const wallRatio = 1 - coneBoundaryGraph(coordinates.psi, solution) / solution.R;
+      if (radiusRatio > wallRatio) {
+        image.data[pixel] = 15;
+        image.data[pixel + 1] = 27;
+        image.data[pixel + 2] = 32;
+        image.data[pixel + 3] = 255;
+        continue;
+      }
+      const color = coneColorFor(coneFieldValue(radiusRatio * solution.R, coordinates.psi, solution));
+      image.data[pixel] = color[0];
+      image.data[pixel + 1] = color[1];
+      image.data[pixel + 2] = color[2];
+      image.data[pixel + 3] = 255;
+    }
+  }
+  context.putImageData(image, 0, 0);
+
+  context.save();
+  context.strokeStyle = "rgba(241,238,229,.13)";
+  context.lineWidth = .7;
+  for (let copy = 0; copy <= coneNumerics.targetN; copy++) {
+    const angle = gap / 2 + copy * TWO_PI / solution.R;
+    context.beginPath();
+    context.moveTo(centerX, centerY);
+    context.lineTo(centerX + diskRadius * Math.cos(angle), centerY - diskRadius * Math.sin(angle));
+    context.stroke();
+  }
+  context.strokeStyle = gap < 1e-8 ? "#4da2a3" : "#ff7449";
+  context.lineWidth = 2;
+  [gap / 2, TWO_PI - gap / 2].forEach((angle) => {
+    context.beginPath();
+    context.moveTo(centerX, centerY);
+    context.lineTo(centerX + diskRadius * 1.08 * Math.cos(angle), centerY - diskRadius * 1.08 * Math.sin(angle));
+    context.stroke();
+  });
+  context.restore();
+
+  context.save();
+  context.beginPath();
+  const outlineSamples = 28 * 28;
+  for (let index = 0; index <= outlineSamples; index++) {
+    const angle = gap / 2 + index / outlineSamples * (TWO_PI - gap);
+    const coordinates = unfoldedCoordinates(angle, solution);
+    if (!coordinates) continue;
+    const radius = diskRadius * (1 - coneBoundaryGraph(coordinates.psi, solution) / solution.R);
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY - radius * Math.sin(angle);
+    if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+  }
+  context.strokeStyle = "#fff4dc";
+  context.shadowColor = "rgba(255,116,73,.75)";
+  context.shadowBlur = 6;
+  context.lineWidth = 1.5;
+  context.stroke();
+  context.restore();
+  drawUnfoldedSeamInset(context, width, solution, gap);
+}
+
+function buildConeMeshData(solution, depth, radialSegments = 96, angularSegments = 112) {
+  const positions = [];
+  const colors = [];
+  const indices = [];
+  const rim = [];
+  const referenceRim = [];
+  const rings = [];
+  const generators = [];
+  const collarDepth = 5 + Math.pow(depth, 1.35) * (solution.R - 5);
+  const innerRadius = Math.max(.035, solution.R - collarDepth);
+  const axialFactor = Math.sqrt(1 - 1 / (solution.R * solution.R));
+  const centerRadius = (innerRadius + solution.R) / 2;
+
+  for (let angularIndex = 0; angularIndex <= angularSegments; angularIndex++) {
+    const psi = -Math.PI + angularIndex / angularSegments * TWO_PI;
+    const wallRadius = solution.R - coneBoundaryGraph(psi, solution);
+    for (let radialIndex = 0; radialIndex <= radialSegments; radialIndex++) {
+      const fraction = radialIndex / radialSegments;
+      const radius = innerRadius + fraction * (wallRadius - innerRadius);
+      const embeddedRadius = radius / solution.R;
+      const axial = (radius - centerRadius) * axialFactor;
+      positions.push(axial, embeddedRadius * Math.cos(psi), embeddedRadius * Math.sin(psi));
+      const color = coneColorFor(coneFieldValue(radius, psi, solution));
+      colors.push(color[0] / 255, color[1] / 255, color[2] / 255);
+    }
+    const wallEmbedded = wallRadius / solution.R;
+    rim.push((wallRadius - centerRadius) * axialFactor, wallEmbedded * Math.cos(psi), wallEmbedded * Math.sin(psi));
+    referenceRim.push((solution.R - centerRadius) * axialFactor, Math.cos(psi), Math.sin(psi));
+  }
+
+  const rowLength = radialSegments + 1;
+  for (let angularIndex = 0; angularIndex < angularSegments; angularIndex++) {
+    for (let radialIndex = 0; radialIndex < radialSegments; radialIndex++) {
+      const a = angularIndex * rowLength + radialIndex;
+      const b = a + 1;
+      const c = a + rowLength;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+
+  [.2, .4, .6, .8].forEach((fraction) => {
+    const points = [];
+    for (let angularIndex = 0; angularIndex <= angularSegments; angularIndex++) {
+      const psi = -Math.PI + angularIndex / angularSegments * TWO_PI;
+      const wallRadius = solution.R - coneBoundaryGraph(psi, solution);
+      const radius = innerRadius + fraction * (wallRadius - innerRadius);
+      const embeddedRadius = radius / solution.R;
+      points.push((radius - centerRadius) * axialFactor, embeddedRadius * Math.cos(psi), embeddedRadius * Math.sin(psi));
+    }
+    rings.push(points);
+  });
+  for (let line = 0; line < 8; line++) {
+    const psi = -Math.PI + line / 8 * TWO_PI;
+    const wallRadius = solution.R - coneBoundaryGraph(psi, solution);
+    const points = [];
+    for (let radialIndex = 0; radialIndex <= 64; radialIndex++) {
+      const radius = innerRadius + radialIndex / 64 * (wallRadius - innerRadius);
+      const embeddedRadius = radius / solution.R;
+      points.push((radius - centerRadius) * axialFactor, embeddedRadius * Math.cos(psi), embeddedRadius * Math.sin(psi));
+    }
+    generators.push(points);
+  }
+  return { positions, colors, indices, rim, referenceRim, rings, generators, collarDepth };
+}
+
+function resizeConeThreeRenderer() {
+  if (!coneThreeState.renderer || !coneThreeState.camera) return;
+  const wrap = $("#coneThreeWrap");
+  const width = Math.max(320, wrap.clientWidth || 900);
+  const height = Math.max(320, wrap.clientHeight || 620);
+  coneThreeState.renderer.setSize(width, height, false);
+  coneThreeState.camera.aspect = width / height;
+  coneThreeState.camera.updateProjectionMatrix();
+}
+
+function renderConeThreeFrame() {
+  if (coneThreeState.renderer && coneThreeState.scene && coneThreeState.camera) {
+    coneThreeState.renderer.render(coneThreeState.scene, coneThreeState.camera);
+  }
+}
+
+function installConeThreeInteraction(canvas) {
+  canvas.addEventListener("pointerdown", (event) => {
+    coneThreeState.pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    canvas.setPointerCapture?.(event.pointerId);
+  });
+  canvas.addEventListener("pointermove", (event) => {
+    if (!coneThreeState.pointer || coneThreeState.pointer.id !== event.pointerId || !coneThreeState.group) return;
+    const dx = event.clientX - coneThreeState.pointer.x;
+    const dy = event.clientY - coneThreeState.pointer.y;
+    coneThreeState.group.rotation.y += dx * .006;
+    coneThreeState.group.rotation.x += dy * .006;
+    coneThreeState.pointer.x = event.clientX;
+    coneThreeState.pointer.y = event.clientY;
+    renderConeThreeFrame();
+  });
+  const release = (event) => { if (coneThreeState.pointer?.id === event.pointerId) coneThreeState.pointer = null; };
+  canvas.addEventListener("pointerup", release);
+  canvas.addEventListener("pointercancel", release);
+  canvas.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const factor = event.deltaY > 0 ? 1.08 : .92;
+    const length = Math.max(4.5, Math.min(55, coneThreeState.camera.position.length() * factor));
+    coneThreeState.camera.position.setLength(length);
+    renderConeThreeFrame();
+  }, { passive: false });
+}
+
+function setupConeThreeRenderer() {
+  if (coneThreeState.renderer) return;
+  const THREE = threeState.library;
+  const wrap = $("#coneThreeWrap");
+  coneThreeState.scene = new THREE.Scene();
+  coneThreeState.scene.background = new THREE.Color(0x101b20);
+  coneThreeState.camera = new THREE.PerspectiveCamera(38, 1, .1, 120);
+  coneThreeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+  coneThreeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  wrap.insertBefore(coneThreeState.renderer.domElement, $("#coneThreeLoading"));
+  coneThreeState.group = new THREE.Group();
+  coneThreeState.group.rotation.x = -.22;
+  coneThreeState.group.rotation.y = -.12;
+  coneThreeState.scene.add(coneThreeState.group);
+  resizeConeThreeRenderer();
+  installConeThreeInteraction(coneThreeState.renderer.domElement);
+}
+
+function updateConeCamera(depth, force = false) {
+  if (!coneThreeState.camera || (!force && Math.abs((coneThreeState.lastDepth ?? -1) - depth) < 1e-5)) return;
+  const span = 5 + Math.pow(depth, 1.35) * (coneState.solution.R - 5);
+  const distance = Math.max(7.2, span * 1.35);
+  coneThreeState.camera.position.set(distance * .72, distance * .30, distance * .66);
+  coneThreeState.camera.lookAt(0, 0, 0);
+  coneThreeState.lastDepth = depth;
+}
+
+function updateConeThreeMesh() {
+  if (!threeState.library || !coneThreeState.group || !coneState.solution) return;
+  const THREE = threeState.library;
+  while (coneThreeState.group.children.length) {
+    const child = coneThreeState.group.children[0];
+    coneThreeState.group.remove(child);
+    disposeThreeObject(child);
+  }
+  const data = buildConeMeshData(coneState.solution, coneState.depth);
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(data.positions, 3));
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(data.colors, 3));
+  geometry.setIndex(data.indices);
+  geometry.computeVertexNormals();
+  const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  coneThreeState.group.add(new THREE.Mesh(geometry, material));
+  data.rings.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, 0xf1eee5, .15)));
+  data.generators.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, 0xf1eee5, .10)));
+  coneThreeState.group.add(threeLine(THREE, data.referenceRim, 0x7f9293, .45));
+  coneThreeState.group.add(threeLine(THREE, data.rim, 0xfff4dc, 1));
+  updateConeCamera(coneState.depth);
+  $("#coneThreeLoading").hidden = true;
+  renderConeThreeFrame();
+}
+
+async function renderConeThree() {
+  $("#coneThreeLoading").hidden = false;
+  try {
+    await ensureThreeRenderer();
+    setupConeThreeRenderer();
+    resizeConeThreeRenderer();
+    updateConeThreeMesh();
+  } catch (error) {
+    $("#coneThreeLoading").textContent = "3D renderer could not be loaded";
+    console.error(error);
+  }
+}
+
+function updateConeReadouts() {
+  const solution = coneState.solution;
+  const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
+  $("#coneProgressValue").textContent = `${Math.round(coneState.progress * 100)}%`;
+  $("#coneSInline").textContent = `s = ${solution.s.toFixed(4)}`;
+  $("#coneRValue").textContent = solution.R.toFixed(6);
+  $("#coneLambdaValue").textContent = solution.lambda.toFixed(6);
+  $("#coneGapValue").textContent = gapDegrees < 5e-5 ? "0° · closed" : `${gapDegrees.toFixed(3)}°`;
+  $("#coneDirichletValue").textContent = solution.dirichlet_rms === 0 ? "0 · exact base" : solution.dirichlet_rms.toExponential(2);
+  $("#coneNeumannValue").textContent = solution.neumann_rms === 0 ? "0 · exact base" : solution.neumann_rms.toExponential(2);
+  $("#coneDomainState").textContent = coneState.progress > .999
+    ? "integer landing · 28-fold seam closed"
+    : (coneState.progress < .001 ? "relaxed crossing · seam open" : `continuing branch · R = ${solution.R.toFixed(5)}`);
+  const depthUnits = 5 + Math.pow(coneState.depth, 1.35) * (solution.R - 5);
+  $("#coneZoomValue").textContent = coneState.depth < .16 ? "rim" : (coneState.depth > .94 ? "tip" : `${depthUnits.toFixed(1)} units`);
+}
+
+function updateConeAxis() {
+  const left = $("#coneAxisLeft");
+  const center = $("#coneAxisDescription");
+  const right = $("#coneAxisRight");
+  if (coneState.view === "slice") {
+    left.textContent = "x = −5";
+    center.textContent = "one quotient period ψ ∈ [−π, π]";
+    right.textContent = "rim x = 0";
+  } else if (coneState.view === "cone") {
+    left.textContent = coneState.depth < .16 ? "local collar" : "toward cone tip";
+    center.textContent = "metric cone surface · drag / zoom";
+    right.textContent = "free rim";
+  } else {
+    left.textContent = "28 copies";
+    center.textContent = "each sector angle = 2π/R";
+    right.textContent = coneState.progress > .999 ? "seam closed" : "seam magnified ×50";
+  }
+}
+
+function renderConeActiveView() {
+  if (coneState.view === "slice") renderConeSlice();
+  else if (coneState.view === "unfolded") renderConeUnfolded();
+  else renderConeThree();
+}
+
+function solveAndRenderCone() {
+  coneState.solution = coneRecordAt(coneState.progress);
+  updateConeReadouts();
+  updateConeAxis();
+  renderConeActiveView();
+}
+
+function scheduleConeUpdate() {
+  if (coneState.updateFrame) cancelAnimationFrame(coneState.updateFrame);
+  coneState.updateFrame = requestAnimationFrame(() => {
+    coneState.updateFrame = null;
+    solveAndRenderCone();
+  });
+}
+
+function setConeView(view) {
+  coneState.view = view;
+  document.querySelectorAll(".cone-view-button").forEach((button) => {
+    const active = button.dataset.coneView === view;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  document.querySelectorAll(".cone-note").forEach((button) => button.classList.toggle("active", button.dataset.coneTarget === view));
+  $("#coneCanvas").hidden = view === "cone";
+  $("#coneThreeWrap").hidden = view !== "cone";
+  updateConeAxis();
+  renderConeActiveView();
+}
+
+function stopConePlayback() {
+  coneState.playing = false;
+  if (coneState.playFrame) cancelAnimationFrame(coneState.playFrame);
+  coneState.playFrame = null;
+  $("#conePlayIcon").textContent = "▶";
+  $("#conePlayLabel").textContent = coneState.progress > .999 ? "Replay integer landing" : "Play integer landing";
+}
+
+function toggleConePlayback() {
+  if (coneState.playing) { stopConePlayback(); return; }
+  if (coneState.progress > .999) coneState.progress = 0;
+  coneState.playing = true;
+  $("#conePlayIcon").textContent = "Ⅱ";
+  $("#conePlayLabel").textContent = "Pause";
+  const startProgress = coneState.progress;
+  const start = performance.now();
+  const duration = Math.max(800, 5200 * (1 - startProgress));
+  const tick = (now) => {
+    if (!coneState.playing) return;
+    const t = Math.min(1, (now - start) / duration);
+    const eased = t * t * (3 - 2 * t);
+    coneState.progress = startProgress + (1 - startProgress) * eased;
+    $("#coneProgressRange").value = coneState.progress;
+    setRangeFill($("#coneProgressRange"));
+    solveAndRenderCone();
+    if (t >= 1) { stopConePlayback(); return; }
+    coneState.playFrame = requestAnimationFrame(tick);
+  };
+  coneState.playFrame = requestAnimationFrame(tick);
+}
+
+document.querySelectorAll(".cone-view-button").forEach((button) => button.addEventListener("click", () => setConeView(button.dataset.coneView)));
+document.querySelectorAll(".cone-note").forEach((button) => button.addEventListener("click", () => setConeView(button.dataset.coneTarget)));
+
+setRangeFill($("#coneProgressRange"));
+setRangeFill($("#coneZoomRange"));
+$("#coneProgressRange").addEventListener("input", (event) => {
+  stopConePlayback();
+  coneState.progress = Number(event.target.value);
+  setRangeFill(event.target);
+  scheduleConeUpdate();
+});
+$("#coneZoomRange").addEventListener("input", (event) => {
+  coneState.depth = Number(event.target.value);
+  coneThreeState.lastDepth = null;
+  setRangeFill(event.target);
+  updateConeReadouts();
+  if (coneState.view === "cone") scheduleConeUpdate();
+});
+$("#conePlayButton").addEventListener("click", toggleConePlayback);
+$("#coneResetButton").addEventListener("click", () => {
+  stopConePlayback();
+  coneState.progress = 0;
+  coneState.depth = .08;
+  $("#coneProgressRange").value = coneState.progress;
+  $("#coneZoomRange").value = coneState.depth;
+  setRangeFill($("#coneProgressRange"));
+  setRangeFill($("#coneZoomRange"));
+  solveAndRenderCone();
+});
+
+let coneResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(coneResizeTimer);
+  coneResizeTimer = setTimeout(() => { if (coneState.solution) renderConeActiveView(); }, 140);
+});
+
+solveAndRenderCone();

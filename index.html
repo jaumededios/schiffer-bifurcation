@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A numerical modal visualization of the Schiffer problem on an infinite half-cylinder near its free boundary.">
-    <title>Half-cylinder bifurcation laboratory</title>
+    <meta name="description" content="Interactive numerical visualizations of the Schiffer bifurcation on a half-cylinder and its finite-cone landing.">
+    <title>Schiffer bifurcation laboratory</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23132126'/%3E%3Cpath d='M8 6v20M8 6c9 0 9 7 16 7M8 26c9 0 9-7 16-7' fill='none' stroke='%23f1eee5' stroke-width='1.5'/%3E%3Cpath d='M24 8v16' stroke='%23ff7449' stroke-width='2.5'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -14,11 +15,11 @@
     <div class="noise" aria-hidden="true"></div>
 
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="Half-cylinder laboratory home">
+      <a class="brand" href="#top" aria-label="Schiffer bifurcation laboratory home">
         <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
-        <span>Schiffer collar laboratory</span>
+        <span>Schiffer bifurcation laboratory</span>
       </a>
-      <div class="status"><i></i><span>computed live</span></div>
+      <div class="status"><i></i><span>numerical · interactive</span></div>
       <button id="methodButton" class="method-button" type="button">Numerical method</button>
     </header>
 
@@ -147,8 +148,121 @@
         </div>
       </section>
 
+      <section id="cone-experiment" class="experiment cone-experiment">
+        <header class="experiment-header cone-header">
+          <div>
+            <span class="section-number">02</span>
+            <div>
+              <p class="eyebrow">Finite cone / numerical integer landing</p>
+              <h2>The seam closes.</h2>
+            </div>
+          </div>
+          <div class="equations" role="group" aria-label="Cone model equations">
+            <span>Δ<sub>R</sub> = ∂²<sub>r</sub> + r⁻¹∂<sub>r</sub> + R²r⁻²∂²<sub>ψ</sub></span>
+            <span>J<sub>1</sub>(ρ<sub>*</sub>) = J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>
+            <small>R<sub>*</sub> → N</small>
+          </div>
+        </header>
+
+        <div class="cone-lead">
+          <p>The smallest candidate found by the sub-100 scan starts at the relaxed order <span>R<sub>*</sub> = 28.026397…</span>. It is not yet a planar 28-fold object: twenty-eight unfolded slices leave a narrow seam. Follow the computed branch until <span>R = 28</span> and the seam closes exactly.</p>
+          <div class="candidate-stamp">
+            <small>selected crossing</small>
+            <strong>N = 28</strong>
+            <span>ρ<sub>*</sub> = j<sub>1,16</sub></span>
+            <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">paper / figure 1 ↗</a>
+          </div>
+        </div>
+
+        <div class="laboratory cone-laboratory">
+          <aside class="controls" aria-label="Cone simulation controls">
+            <div class="control-heading">
+              <span>Branch controls</span>
+              <button id="coneResetButton" type="button">Reset</button>
+            </div>
+
+            <div class="crossing-card" aria-label="Numerically selected cone crossing">
+              <div><span>relaxed start</span><strong>28.026397</strong></div>
+              <div><span>integer target</span><strong>28</strong></div>
+              <p>Smallest crossing below 100 with <span class="formula">1 &lt; λ &lt; 4</span> and fractional gap below 0.1.</p>
+            </div>
+
+            <div class="control-block primary-control">
+              <div class="control-label">
+                <label for="coneProgressRange">continue branch</label>
+                <output id="coneProgressValue" for="coneProgressRange">0%</output>
+              </div>
+              <input id="coneProgressRange" type="range" min="0" max="1" value="0" step="0.002">
+              <div class="range-scale"><span>crossing R<sub>*</sub></span><span>integer N</span></div>
+              <p>This follows collocation solutions, not a visual morph. The Fourier amplitude grows to <span class="formula" id="coneSInline">s = 0</span> while the solved order bends downward.</p>
+            </div>
+
+            <div class="control-block primary-control">
+              <div class="control-label">
+                <label for="coneZoomRange">cone depth</label>
+                <output id="coneZoomValue" for="coneZoomRange">rim</output>
+              </div>
+              <input id="coneZoomRange" type="range" min="0" max="1" value="0.08" step="0.005">
+              <div class="range-scale"><span>5-unit collar</span><span>cone tip</span></div>
+              <p>In the 3D view, begin at the rim where the long cone is almost cylindrical, then zoom out to reveal the tip.</p>
+            </div>
+
+            <button id="conePlayButton" class="play-button" type="button"><span id="conePlayIcon">▶</span><span id="conePlayLabel">Play integer landing</span></button>
+
+            <div class="solver-readout cone-readout">
+              <div><span>real cone order R</span><strong id="coneRValue">28.026397</strong></div>
+              <div><span>spectral λ = ρ²/R²</span><strong id="coneLambdaValue">3.317011</strong></div>
+              <div><span>unfolded seam gap</span><strong id="coneGapValue">0.339°</strong></div>
+              <div><span>Dirichlet normalized L²</span><strong id="coneDirichletValue">0</strong></div>
+              <div><span>Neumann normalized L²</span><strong id="coneNeumannValue">0</strong></div>
+            </div>
+          </aside>
+
+          <section class="canvas-panel cone-canvas-panel" aria-labelledby="coneDomainState">
+            <div class="canvas-toolbar cone-toolbar">
+              <div>
+                <span class="live-dot"></span>
+                <strong id="coneDomainState">relaxed crossing · seam open</strong>
+              </div>
+              <div class="view-switch cone-view-switch" role="group" aria-label="Cone visualization view">
+                <button class="view-button cone-view-button active" data-cone-view="slice" type="button" aria-pressed="true">Rim slice</button>
+                <button class="view-button cone-view-button" data-cone-view="cone" type="button" aria-pressed="false">3D cone</button>
+                <button class="view-button cone-view-button" data-cone-view="unfolded" type="button" aria-pressed="false">Unfolded ×28</button>
+              </div>
+              <div class="legend" role="img" aria-label="Cone scalar field color scale truncated from minus two to plus two">
+                <span>−2</span><i></i><span>+2</span>
+              </div>
+            </div>
+            <div id="coneCanvasWrap" class="canvas-wrap cone-canvas-wrap">
+              <canvas id="coneCanvas" role="img" aria-label="Numerical field on a cone rim slice or its unfolded planar sectors"></canvas>
+              <div id="coneThreeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional cone colored by the numerical field" hidden>
+                <div id="coneThreeLoading" class="three-loading">loading 3D renderer…</div>
+                <div class="three-help">drag to rotate · scroll to zoom · depth slider reveals tip</div>
+              </div>
+              <div class="cone-data-badge">13 Bessel modes · 112 fit angles · 512-point validation</div>
+            </div>
+            <div class="axis-footer"><span id="coneAxisLeft">x = −5</span><span id="coneAxisDescription">one quotient period ψ ∈ [−π, π]</span><span id="coneAxisRight">rim x = 0</span></div>
+          </section>
+        </div>
+
+        <div class="cone-view-notes" aria-label="Three ways to read the cone construction">
+          <button class="cone-note active" type="button" data-cone-target="slice">
+            <span>01</span><strong>End of one slice</strong>
+            <p>Unwrap only the last five radial units. Because R ≈ 28, the cone operator differs from the flat cylinder by terms of order 1/R.</p>
+          </button>
+          <button class="cone-note" type="button" data-cone-target="cone">
+            <span>02</span><strong>Wrap the collar</strong>
+            <p>The same samples live on a long, narrow cone. Start close to the rim; the depth control reveals why this nearly cylindrical collar still has a tip.</p>
+          </button>
+          <button class="cone-note" type="button" data-cone-target="unfolded">
+            <span>03</span><strong>Unfold and land</strong>
+            <p>Each slice subtends 2π/R. At R<sub>*</sub>, 28 copies miss by a visible seam inset. At R = 28 they match and the field becomes genuinely 28-fold.</p>
+          </button>
+        </div>
+      </section>
+
       <section class="interpretation">
-        <span class="section-number">02</span>
+        <span class="section-number">03</span>
         <div>
           <p class="eyebrow">How to read the picture</p>
           <h2>The right edge is the unknown.</h2>
@@ -161,8 +275,8 @@
     </main>
 
     <footer>
-      <span>Half-cylinder bifurcation laboratory</span>
-      <span>No cone geometry yet.</span>
+      <span>Schiffer bifurcation laboratory</span>
+      <span>Half-cylinder → finite cone → integer landing</span>
       <a href="#top">Back to top ↑</a>
     </footer>
 
@@ -173,8 +287,13 @@
       <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span>. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
       <p>The <span class="formula">k = 0</span> and <span class="formula">k = 1</span> radial factors are oscillatory. For <span class="formula">k ≥ 2</span> they are <span class="formula">e<sup>√(k²−λ)x</sup> cos(kθ)</span> and <span class="formula">e<sup>√(k²−λ)x</sup> sin(kθ)</span>, which decay as <span class="formula">x → −∞</span>. Consequently, the interior PDE residual is identically zero.</p>
       <p>For the selected <span class="formula">(λ,s)</span>, a column-scaled QR solve fits the boundary data using at least 256 angular samples. Exponential modes are rescaled by constants to avoid overflow; this does not change their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. Independent sliders generally move off the true one-dimensional branch, so these defects need not vanish.</p>
+      <hr>
+      <p class="eyebrow">Cone continuation</p>
+      <p>The cone panel uses the metric <span class="formula">dr² + (r²/R²)dψ²</span>. At fixed <span class="formula">ρ = j<sub>1,16</sub></span>, the field and boundary are expanded in 13 even Fourier–Bessel modes. An offline nonlinear least-squares continuation enforces <span class="formula">u = 1</span> and the exact metric normal derivative on 112 collocation angles; the displayed defects come from 512 shifted validation angles.</p>
+      <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">R = 28</span>, the quotient angle <span class="formula">2π/R</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
     </dialog>
 
+    <script src="cone-data.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
