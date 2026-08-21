@@ -13,11 +13,10 @@ The website is ordered as one argument rather than a gallery of simulations:
 5. The live half-cylinder free-boundary calculation.
 6. Direct Bessel-versus-cylinder radial comparisons.
 7. The quadratic order drift and its conversion into Debye phase drift.
-8. The numerical `R*=28.026397… → N=28` cone continuation and integer landing.
-9. A global-to-local one-wavelength zoom of the same solution.
-10. A real-data modulo-one plot of 10,000 additional crossings.
+8. The numerical `R*=28.026397… → N=28` continuation, integer landing, and global-to-local one-wavelength zoom in one laboratory.
+9. A modulo-one plot of the computed crossings through `N=41`, followed by the two-phase existence mechanism.
 
-The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects and identifies one sector, sends the cone tip to infinity, perturbs the resulting half-cylinder, restores the cone, and unfolds at integer order. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot, cone views, nested zoom, and radial comparisons use the stored numerical datasets described below.
+The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects and identifies one sector, sends the cone tip to infinity, perturbs the resulting half-cylinder, restores the cone, and unfolds at integer order. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot and nested zoom use the nonlinear branch data. The radial basis comparison is a separate fixed-`λ` Bessel dataset described below.
 
 ## Uniform half-cylinder branch
 
@@ -136,11 +135,7 @@ on a separate grid of 512 shifted angles. Since every retained Fourier-Bessel mo
 
 The browser interpolates the solved branch records and endpoint radial Bessel tables stored in `cone-data.js`. This keeps all interaction local and fast; it does not replace the continuation with a hand-drawn morph.
 
-The cone laboratory has three linked views:
-
-1. **Rim slice:** the last five radial units unwrapped as `(x, ψ)`, making the `R ≈ 28` cone look like the flat cylinder collar.
-2. **3D cone:** the intrinsic metric embedded as a long, narrow cone. The depth slider moves continuously from the nearly cylindrical rim to the tip.
-3. **Unfolded ×28:** twenty-eight sectors of angle `2π/R`. At `R*` the true angular seam is `0.339°`; at `R = 28` it closes exactly. A `×50` inset makes the initial gap legible without falsifying the main geometry.
+The visible interface keeps the landing and zoom together in one laboratory: the left panel assembles all 28 copies, while the main panel unwraps the seam-centered wavelength. The older standalone cone-view laboratory is not part of the visible story.
 
 ## One-wavelength nested zoom
 
@@ -152,7 +147,7 @@ The third laboratory puts the angular-mode comparison into one global-to-local p
 
 The large panel unwraps that exact physical patch into `(x, ψ)` coordinates. Its vertical extent is one quotient period `ψ ∈ [−π,π]`; its horizontal extent is a fixed five-unit radial collar. This is why the zoom has the same rectangular geometry as the flat half-cylinder. The true non-integer gap passes through the center of the zoom. Its position and crop scale are deliberately fixed; only the bifurcation branch remains interactive.
 
-Every scale is evaluated from the same interpolated nonlinear branch record, Fourier–Bessel field, and free boundary used by the cone laboratory. The angular gap is not invented or visually substituted: it is
+Every scale is evaluated from the same interpolated nonlinear branch record, Fourier–Bessel field, and free boundary. The angular gap is not invented or visually substituted: it is
 
 ```text
 gap angle = 2π(1 − 28/R),
@@ -175,45 +170,57 @@ J_R(√λ(R + x)) ≈ A_R(x) cos(ωx + ξ(R)),
 ξ′(R) = −acos(R/ρ),                     ω = √(λ − 1).
 ```
 
-The derivative is nonzero, so near the crossing `R` and the phase of the local cylinder wave are equivalent scalar parameters. The exact Bessel zero at `R*` anchors the comparison at a pure sine. Moving from `R* = 28.026397…` to `N = 28` gives a Debye phase shift of `1.4971°`; the phase extracted independently from the exact rim Cauchy data is `1.4978°`. The displayed dashed wave uses the Debye phase, while the solid trace uses the numerically evaluated Bessel profile. This comparison is presented as geometric intuition, not as a quoted step of the paper's proof.
+The derivative is nonzero, so near the crossing `R` and the phase of the local cylinder wave are equivalent scalar parameters. The exact Bessel zero at `R*` anchors the comparison at a pure sine. Moving from `R* = 28.026397…` to `N = 28` gives a Debye phase shift of `1.4971°`; the phase extracted independently from the exact rim Cauchy data is `1.4978°`. Both traces are solid: the exact Bessel curve is cyan and its phase-matched cylinder curve is orange.
 
 There are two local orders of variation here. Debye gives `Δξ(R) = −β*(R − R*) + O((R − R*)²)`, where `β* = acos(R*/ρ)`. The bifurcating branch is even in its signed amplitude, `R(s) − R* = c₂s² + O(s⁴)`. Consequently the phase displayed against the branch slider is quadratic: `Δξ(s) = −β*c₂s² + O(s⁴)`. The web dataset stores an independently evaluated critical Bessel profile at every solved branch record so the solid curve and exact Cauchy phase come from the numerical `R(s)` data.
 
-## Debye approximation laboratory
+## Fixed-λ Bessel basis laboratory
 
-The radial laboratory isolates the local dictionary itself. In the rim coordinate `x = r − R ≤ 0`, the cylinder radial equation for angular mode `k` is
-
-```text
-fₖ″ + (λ − k²)fₖ = 0.
-```
-
-Thus `k = 0,1` have sine/cosine radial bases for `λ ∈ (1,4)`, while every `k ≥ 2` has a bounded half-cylinder branch `exp(αₖx)`, `αₖ = √(k²−λ)`. On the cone the corresponding tip-regular separated eigenfunctions are
+The radial laboratory is deliberately separate from the nonlinear branch. It fixes `λ=2.4`, varies the cone rim radius over `26≤r₀≤30`, and uses the coordinate `x=r−r₀` on `[r₀−5,r₀]`. The cylinder radial equation is
 
 ```text
-J_{kR}(√λ r) {cos(kψ), sin(kψ)}.
+fₖ″ + (λ − k²)fₖ = 0,
 ```
 
-The singular `Y_{kR}` profile is rejected at the tip. Modified Bessel functions solve the equation with the opposite spectral sign and are not additional radial solutions of this Helmholtz problem.
-
-Three live panels compare these descriptions over `x ∈ [−d,0]`:
-
-1. `k = 1`: the exact derivative-normalized `J_R` profile against the anchored Debye sine/cosine combination;
-2. `k = 2`: the rim-normalized `J_{2R}` profile against `exp(√(4−λ)x)`;
-3. `k = 3`: the rim-normalized `J_{3R}` profile against `exp(√(9−λ)x)`.
-
-The evanescent plots use `log₁₀|f/f(0)|`, making several orders of decay visible. The collar-depth control is also a convergence test: as `d` decreases, curvature terms are suppressed and the exact Bessel profiles approach the constant-coefficient cylinder modes.
-
-This laboratory deliberately moves linearly in `R`, using `λ(R) = (ρ/R)²`, rather than following the nonlinear branch parameter. The critical curve interpolates the dense Bessel profiles evaluated at the solved branch orders; the two evanescent curves interpolate evaluated endpoint tables on the short interval `R ∈ [28, 28.026397…]`. The cylinder functions and Debye phase are evaluated in JavaScript. It therefore displays the near-linear local correspondence
+while the tip-regular cone basis is
 
 ```text
-Δξ = ξ(R) − ξ(R*) ≈ ξ′(R*)(R − R*),
+J_{kr₀}(√λ r) {cos(kψ), sin(kψ)}.
 ```
 
-while the neighboring branch-based panel displays the same change as quadratic in `s`.
+The singular `Y_{kr₀}` profile is rejected at the tip; modified Bessel functions solve the sign-flipped equation. Three live panels compare:
+
+1. `k=1`: the exact `J_{r₀}` profile with the unique cylinder sine/cosine combination having the same rim value and derivative;
+2. `k=2`: the rim-normalized `J_{2r₀}` profile with `exp(√(4−λ)x)`;
+3. `k=3`: the rim-normalized `J_{3r₀}` profile with `exp(√(9−λ)x)`.
+
+Every vertical axis is linear, making the last two curves visibly exponential. Both comparison traces are solid. A fixed cosine is not the correct `k=1` comparison: the Bessel rim Cauchy data change with `r₀`, so the matching cylinder coefficients rotate in the fixed basis `cos(ωx), sin(ωx)`.
+
+At fixed `λ`, Debye gives
+
+```text
+ξ_λ(r₀) = r₀[√(λ−1) − acos(λ⁻¹ᐟ²)] − π/4 + O(r₀⁻¹).
+```
+
+Thus `26≤r₀≤30` moves the local wave by about `72°`. Exact Bessel profiles are evaluated offline by `numerics/build_debye_wide_data.py`, stored in `debye-data.js`, and interpolated in the browser.
 
 ## Quadratic drift and the phase chain rule
 
-The story panel between the radial comparison and the integer landing uses the large-cone curvature law
+The story panel derives rather than merely states the radius curvature. The quadratic second harmonic is
+
+```text
+W₂(t) = −(ρ²/4) J_{2R*}(ρt)/J_{2R*}(ρ),
+S₂ = W₂′(1) = −(ρ³/4) J′_{2R*}(ρ)/J_{2R*}(ρ).
+```
+
+Cubic first-harmonic solvability gives the exact identity
+
+```text
+R″(0) = −√λ*/(4R*d*) [2 + ρ J′_{2R*}(ρ)/J_{2R*}(ρ)],
+d* = ∂ν j_{ν,m}|_{ν=R*} > 0.
+```
+
+Its large-cone limit is
 
 ```text
 Γ(λ) = √((λ−1)(4−λ)) / (4 acos(λ⁻¹ᐟ²)),
@@ -229,23 +236,29 @@ It overlays the stored `N=28` continuation records with the base quadratic law f
 
 Thus phase is locally linear in real order `R`, although both quantities change quadratically along the signed branch parameter `s`.
 
-## Abundance of near-integer crossings
+The visible boundary wave is a separate first-order effect:
 
-The last canvas uses the saved exhaustive search
+```text
+r_boundary(ψ;s) = R(s) − s cos ψ + O(s²).
+```
+
+Opposite rim points move linearly in `s`, while the angular average eliminates the cosine and leaves the quadratic mean-radius drift.
+
+## Crossings through N=41 and the near-integer mechanism
+
+The last canvas filters the saved common-zero data to `N≤41` and plots `(R,{R})` with a logarithmic horizontal `R`-axis. The underlying source remains
 
 ```text
 Example Search/Data/bifurcation_points_lambda_2_3_first_10000.csv
 ```
 
-from the companion Schiffer workspace. Its 10,000 records solve
+from the companion Schiffer workspace. Its records solve
 
 ```text
 J₁(ρ) = 0,   J_R(ρ) = 0,   2 ≤ ρ²/R² ≤ 3,
 ```
 
-and are plotted as `(R, R−floor(R))`. The search contains 1,023 crossings within `0.1` above an integer, 111 within `0.01`, and 12 within `0.001`; the smallest recorded gap is about `6.35×10⁻⁵`. These finite statistics illustrate abundance. The proof itself uses simultaneous two-frequency Debye phase alignment and a Kronecker-torus argument, rather than inferring density from the scatter plot.
-
-The `N=28` example is overlaid as a separate real reference point. It is not included in those statistics because its ratio `λ≈3.317011` lies outside the exhaustive dataset's `[2,3]` window. `abundance-data.js` stores rounded display columns and source metadata; the original CSV retains the high-precision values.
+The `N=28` example is overlaid as a separate real reference point. The mathematical explanation uses the McMahon phase for `j_{1,n}` and the Debye phase for `j_{N,m}`. Kronecker's theorem aligns both phases simultaneously; monotonicity of `ν↦j_{ν,m}` then converts the small zero gap into a crossing `N<R<N+δ`. The dots illustrate this mechanism but are not used as evidence for equidistribution.
 
 ## Reproduce the numerical data
 
@@ -257,13 +270,14 @@ python3 -m venv .venv
 .venv/bin/python numerics/scan_crossings.py
 .venv/bin/python numerics/continue_cone_branch.py
 .venv/bin/python numerics/build_web_data.py
+.venv/bin/python numerics/build_debye_wide_data.py
 .venv/bin/python numerics/build_abundance_data.py \
   --input /path/to/Schiffer/Example\ Search/Data/bifurcation_points_lambda_2_3_first_10000.csv \
   --summary /path/to/Schiffer/Example\ Search/Data/bifurcation_points_lambda_2_3_first_10000_summary.json \
   --n28 /path/to/Schiffer/N28\ numerics\ \(succesful\)/data/bifurcation.json
 ```
 
-The crossing scan reproduces the sub-100 running example. The continuation writes an ignored `numerics/branch-data.json`, `build_web_data.py` rebuilds `cone-data.js`, and `build_abundance_data.py` validates and compacts the external exhaustive CSV into `abundance-data.js`.
+The crossing scan reproduces the sub-100 running example. The continuation writes an ignored `numerics/branch-data.json`; `build_web_data.py` rebuilds `cone-data.js`; `build_debye_wide_data.py` evaluates the fixed-`λ`, `26≤r₀≤30` basis table; and `build_abundance_data.py` validates and compacts the external exhaustive CSV into `abundance-data.js`.
 
 ## Run locally
 

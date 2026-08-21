@@ -49,8 +49,8 @@ a { color: inherit; }
 #debye-experiment { order: 6; }
 .phase-story { order: 7; }
 #cone-experiment { order: 8; }
-#modes-experiment { order: 9; }
-#abundance-experiment { order: 10; }
+#modes-experiment { order: 8; }
+#abundance-experiment { order: 9; }
 
 .story-heading { display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: start; gap: 28px; }
 .story-heading h2 { max-width: 1000px; }
@@ -166,8 +166,8 @@ a { color: inherit; }
 .eyebrow { margin: 0 0 11px; color: var(--orange); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
 h2 { margin: 0; font: 300 clamp(44px, 5vw, 75px)/.93 var(--serif); letter-spacing: -.04em; }
 .equations { display: flex; align-items: baseline; gap: 20px; font: 11px var(--mono); color: rgba(241,238,229,.7); }
-.equations span { padding-right: 20px; border-right: 1px solid var(--line-light); }
-.equations small { font-size: 8px; text-transform: uppercase; letter-spacing: .08em; opacity: .55; }
+.equations > span { padding-right: 20px; border-right: 1px solid var(--line-light); }
+.equations > small { font-size: 8px; text-transform: uppercase; letter-spacing: .08em; opacity: .55; }
 
 .laboratory { display: grid; grid-template-columns: 330px minmax(0, 1fr); min-height: 690px; border: 1px solid var(--line-light); }
 .controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); background: rgba(255,255,255,.015); }
@@ -266,7 +266,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .modes-experiment { padding: 112px 4vw 0; background: var(--paper-2); }
 .modes-header { padding-bottom: 30px; }
 .modes-header .equations { max-width: 760px; justify-content: flex-end; color: rgba(19,33,38,.59); }
-.modes-header .equations span { border-color: var(--line); }
+.modes-header .equations > span { border-color: var(--line); }
 .modes-lead { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(280px,.75fr); gap: 64px; margin: 0 0 38px 55px; }
 .modes-lead p { max-width: 760px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
 .modes-lead p span { color: var(--ink); font-family: var(--mono); font-size: .88em; }
@@ -343,6 +343,13 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .phase-derivation-grid article > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .phase-derivation-grid h3 { margin: 19px 0 25px; font: 300 29px/1.05 var(--serif); }
 .phase-derivation-grid p { max-width: 570px; color: var(--muted); font-size: 9px; line-height: 1.72; }
+.phase-tex { margin: 18px 0; padding: 11px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.boxed-equation { border: 1px solid rgba(255,116,73,.35); background: rgba(255,116,73,.035); }
+.motion-split { display: grid; grid-template-columns: 1fr 1fr; margin: 0 3vw; border: 1px solid var(--line); border-top: 0; }
+.motion-split article { padding: 27px 34px; border-right: 1px solid var(--line); }
+.motion-split article:last-child { border-right: 0; }
+.motion-split article > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.motion-split p { max-width: 600px; margin: 13px 0 0; color: var(--muted); font-size: 9px; line-height: 1.7; }
 .phase-formula { display: grid; grid-template-columns: 86px 20px 1fr; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--line); font: 9px/1.55 var(--mono); }
 .phase-formula i { font-style: normal; }.phase-formula b { color: var(--orange); font-weight: 400; }
 .phase-story-lab { display: grid; grid-template-columns: 330px minmax(0,1fr); min-height: 570px; margin: 0 3vw; border: 1px solid var(--line); border-top: 0; }
@@ -364,8 +371,12 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .debye-header .equations { max-width: 690px; justify-content: flex-end; }
 .debye-lead { margin: 0 0 38px 55px; }
 .debye-lead p { max-width: 830px; margin: 0; color: rgba(241,238,229,.54); font-size: 14px; line-height: 1.75; }
+.paper-copy .katex { color: inherit; }
+.tex-display { overflow-x: auto; overflow-y: hidden; color: inherit; }
+.tex-display .katex-display { margin: .65em 0; }
+.tex-display .katex { font-size: .94em; }
 .debye-formula-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-bottom: 0; }
-.debye-formula-grid article { min-height: 300px; padding: 30px 34px 28px; border-right: 1px solid var(--line-light); }
+.debye-formula-grid article { min-height: 390px; padding: 30px 34px 28px; border-right: 1px solid var(--line-light); }
 .debye-formula-grid article:last-child { border-right: 0; }
 .debye-formula-grid article > span { display: block; margin-bottom: 17px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .debye-formula-grid h3 { margin: 0 0 22px; color: var(--paper); font: 300 28px/1.05 var(--serif); letter-spacing: -.02em; }
@@ -375,6 +386,10 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .formula-display i { color: rgba(241,238,229,.88); font-style: normal; }
 .cone-formula-display p { grid-template-columns: 75px 1fr; }
 .formula-note { max-width: 620px; margin: 20px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.7; }
+.basis-limit-derivation { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 40px; padding: 34px; border: 1px solid var(--line-light); border-bottom: 0; }
+.basis-limit-derivation > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.basis-limit-derivation p { max-width: 900px; margin: 0 0 11px; color: rgba(241,238,229,.5); font-size: 10px; line-height: 1.72; }
+.important-equation { margin: 10px 0 18px; padding: 7px 12px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.018); }
 .debye-laboratory { display: grid; grid-template-columns: 330px minmax(0,1fr); min-height: 650px; border: 1px solid var(--line-light); }
 .debye-controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); background: rgba(255,255,255,.015); }
 .debye-control-block { padding: 24px 0 20px; border-bottom: 1px solid var(--line-light); }
@@ -390,10 +405,10 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .debye-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 16px; color: rgba(241,238,229,.43); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .055em; }
 .debye-legend span { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
 .debye-legend i { width: 20px; height: 2px; display: block; }
-.debye-legend .dashed { background: repeating-linear-gradient(90deg,var(--orange) 0 5px,transparent 5px 8px); }
 .debye-canvas-wrap { min-height: 0; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 45%,#20353b 0,#101b20 70%); }
 #debyeCanvas { display: block; width: 100%; height: 100%; }
 .debye-conclusion { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--line-light); border-top: 0; }
+.debye-conclusion.two-column-conclusion { grid-template-columns: 1fr 1fr; }
 .debye-conclusion article { min-height: 245px; padding: 32px 34px; border-right: 1px solid var(--line-light); }
 .debye-conclusion article:last-child { border-right: 0; }
 .debye-conclusion article > span { display: block; margin-bottom: 24px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -404,7 +419,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .abundance-header { padding-bottom: 32px; }
 .abundance-lead { display: grid; grid-template-columns: 1fr 1fr; gap: 55px; margin: 0 0 38px 55px; max-width: 1100px; }
 .abundance-lead p { margin: 0; color: rgba(241,238,229,.5); font-size: 11px; line-height: 1.75; }
-.abundance-laboratory { display: grid; grid-template-columns: 330px minmax(0,1fr); min-height: 690px; border: 1px solid var(--line-light); }
+.abundance-laboratory { display: grid; grid-template-columns: minmax(380px,.82fr) minmax(0,1.18fr); min-height: 760px; border: 1px solid var(--line-light); }
 .abundance-controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); }
 .abundance-control-block { padding: 26px 0 22px; border-bottom: 1px solid var(--line-light); }
 .abundance-control-block p { margin: 15px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.65; }
@@ -412,6 +427,11 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .abundance-readout div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-light); }
 .abundance-readout span { color: rgba(241,238,229,.4); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .abundance-readout strong { color: rgba(241,238,229,.82); font: 9px var(--mono); text-align: right; }
+.abundance-proof-step { padding: 22px 0; border-bottom: 1px solid var(--line-light); }
+.abundance-proof-step > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .075em; }
+.abundance-proof-step p { margin: 11px 0 0; color: rgba(241,238,229,.45); font-size: 8px; line-height: 1.7; }
+.abundance-proof-step .tex-display { margin-top: 8px; }
+.abundance-proof-step .katex { font-size: .78em; }
 .abundance-provenance { margin-top: auto; padding-top: 25px; }
 .abundance-provenance > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .abundance-provenance p { margin: 11px 0 0; color: rgba(241,238,229,.38); font-size: 8px; line-height: 1.68; }
@@ -519,7 +539,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .experiment { padding: 65px 18px 0; }
   .experiment-header { display: block; }
   .equations { margin-top: 30px; gap: 12px; flex-wrap: wrap; }
-  .equations span { padding-right: 12px; }
+  .equations > span { padding-right: 12px; }
   .laboratory { grid-template-columns: 1fr; }
   .controls { border-right: 0; border-bottom: 1px solid var(--line-light); }
   .canvas-panel { min-height: 560px; grid-template-rows: 54px 470px 34px; }
@@ -556,17 +576,22 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .interpretation { grid-template-columns: 35px 1fr; padding: 80px 24px; gap: 25px; }
   .interpretation-copy { grid-column: 2; }
   .phase-story { padding: 84px 18px 0; }
-  .phase-story .story-heading, .phase-derivation-grid, .phase-story-lab { margin-left: 0; margin-right: 0; }
+  .phase-story .story-heading, .phase-derivation-grid, .motion-split, .phase-story-lab { margin-left: 0; margin-right: 0; }
   .phase-story-lead { margin-left: 54px; }
   .phase-derivation-grid { grid-template-columns: 1fr; }
   .phase-derivation-grid article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .phase-derivation-grid article:last-child { border-bottom: 0; }
+  .motion-split { grid-template-columns: 1fr; }
+  .motion-split article { border-right: 0; border-bottom: 1px solid var(--line); }
+  .motion-split article:last-child { border-bottom: 0; }
   .phase-story-plot { min-height: 820px; grid-template-rows: 62px 720px 36px; }
   .debye-experiment { padding: 84px 18px 0; }
   .debye-header .equations { justify-content: flex-start; }
   .debye-formula-grid { grid-template-columns: 1fr; }
   .debye-formula-grid article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
   .debye-formula-grid article:last-child { border-bottom: 0; }
+  .debye-formula-grid .tex-display .katex { font-size: .76em; }
+  .basis-limit-derivation { grid-template-columns: 1fr; gap: 18px; padding: 25px 20px; }
   .formula-display p, .cone-formula-display p { grid-template-columns: 1fr; gap: 3px; }
   .debye-laboratory { grid-template-columns: 1fr; }
   .debye-controls { border-right: 0; border-bottom: 1px solid var(--line-light); }
@@ -575,6 +600,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .debye-conclusion { grid-template-columns: 1fr; }
   .debye-conclusion article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
   .debye-conclusion article:last-child { border-bottom: 0; }
+  .debye-conclusion.two-column-conclusion { grid-template-columns: 1fr; }
   .abundance-experiment { padding: 84px 18px 0; }
   .abundance-header .equations { justify-content: flex-start; }
   .abundance-lead { grid-template-columns: 1fr; gap: 20px; }

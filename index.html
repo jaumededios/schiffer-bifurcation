@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23132126'/%3E%3Cpath d='M8 6v20M8 6c9 0 9 7 16 7M8 26c9 0 9-7 16-7' fill='none' stroke='%23f1eee5' stroke-width='1.5'/%3E%3Cpath d='M24 8v16' stroke='%23ff7449' stroke-width='2.5'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js" integrity="sha384-AtrdNsnxl/75rvBneBVH7DtOvCxSVahR2zWqle1coBKd8DEmLoviqNeJSx64gNAs" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})"></script>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -327,7 +330,7 @@
         </div>
       </section>
 
-      <section id="cone-experiment" class="experiment cone-experiment">
+      <section id="cone-experiment" class="experiment cone-experiment" hidden aria-hidden="true">
         <header class="experiment-header cone-header">
           <div>
             <span class="section-number">08</span>
@@ -443,7 +446,7 @@
       <section id="modes-experiment" class="modes-experiment">
         <header class="experiment-header modes-header">
           <div>
-            <span class="section-number">09</span>
+            <span class="section-number">08</span>
             <div>
               <p class="eyebrow">Verify the local story inside the global object</p>
               <h2>One solution, three scales.</h2>
@@ -552,25 +555,44 @@
       <section id="phase-story" class="phase-story">
         <header class="story-heading">
           <span class="section-number">07</span>
-          <div><p class="eyebrow">The missing degree of freedom</p><h2>On the cylinder it is phase. On the cone it is R.</h2></div>
+          <div><p class="eyebrow">The computation along the bifurcating branch</p><h2>First the radius moves. Then the phase follows.</h2></div>
         </header>
-        <div class="phase-story-lead">
-          <p>The cylinder’s critical radial channel has two Cauchy directions, so <span class="formula">A cos(ωx)+B sin(ωx)</span> is a wave with a freely changing phase. Tip regularity leaves only one cone profile, <span class="formula">J<sub>R</sub></span>. Debye restores the missing coordinate: changing the real order <span class="formula">R</span> changes the phase seen in the rim collar.</p>
+        <div class="phase-story-lead paper-copy">
+          <p>Section 6 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
         </div>
         <div class="phase-derivation-grid">
           <article>
-            <span>01 / cylinder-limit curvature</span>
-            <h3>The branch bends toward smaller cones.</h3>
-            <div class="phase-formula"><i>Γ(λ)</i><b>=</b><i>√[(λ−1)(4−λ)] / [4 acos(λ<sup>−1/2</sup>)]</i></div>
-            <div class="phase-formula"><i>R″(0)</i><b>=</b><i>−Γ(λ) + O(R<sup>−1</sup>) &lt; 0</i></div>
-            <p>The leading coefficient comes from the flat-cylinder collar calculation. The negative sign is the mechanism we need: a branch starting just above an integer moves down toward it.</p>
+            <span>01 / compute the radius drift</span>
+            <h3>The second harmonic determines the sign.</h3>
+            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) produces only modes \(0\) and \(2\). If \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\), the regular second harmonic and its boundary slope are</p>
+            <div class="tex-display phase-tex">\[W_2(t)=-\frac{\rho^2}{4}\frac{J_{2R_*}(\rho t)}{J_{2R_*}(\rho)},\qquad S_2=W_2'(1)=-\frac{\rho^3}{4}\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}.\]</div>
+            <p>At cubic order the first-harmonic solvability condition is \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), where \(Q(1)=-\rho d_*\) and \(\mu=R_*^2R''(0)/2\). Solving this scalar equation gives the exact curvature</p>
+            <div class="tex-display phase-tex boxed-equation">\[R''(0)=-\frac{\sqrt{\lambda_*}}{4R_*d_*}\left(2+\rho\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}\right).\]</div>
+            <p>For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
+            <div class="tex-display phase-tex">\[R''(0)=-\Gamma(\lambda_*)+O(R_*^{-1}),\qquad \Gamma(\lambda)=\frac{\sqrt{(\lambda-1)(4-\lambda)}}{4\arccos(\lambda^{-1/2})}>0.\]</div>
           </article>
           <article>
-            <span>02 / Debye chain rule</span>
-            <h3>Order drift becomes phase drift.</h3>
-            <div class="phase-formula"><i>ξ′(R)</i><b>=</b><i>−acos(R/ρ)</i></div>
-            <div class="phase-formula"><i>Δξ(s)</i><b>=</b><i>½ ξ′(R<sub>*</sub>)R″(0)s² + O(s⁴)</i></div>
-            <p>The response is locally linear when measured against <span class="formula">R</span>, but quadratic when measured along the signed branch amplitude <span class="formula">s</span>. That is why there is no contradiction between the two plots.</p>
+            <span>02 / convert radius drift into phase drift</span>
+            <h3>The phase moves by an explicit amount.</h3>
+            <p>Along this branch \(\rho\) is fixed. The oscillatory Debye phase at the rim is</p>
+            <div class="tex-display phase-tex">\[\xi(R;\rho)=\sqrt{\rho^2-R^2}-R\arccos\!\left(\frac R\rho\right)-\frac\pi4,\qquad \partial_R\xi=-\arccos\!\left(\frac R\rho\right).\]</div>
+            <p>Thus \(R\mapsto\xi\) is locally linear and invertible. But the signed branch parameter enters through an even function,</p>
+            <div class="tex-display phase-tex">\[R(s)=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
+            <p>The chain rule now gives the motion seen in the second graph:</p>
+            <div class="tex-display phase-tex boxed-equation">\[\Delta\xi(s)=-\frac12\arccos\!\left(\frac{R_*}{\rho}\right)R''(0)s^2+O(s^4).\]</div>
+            <p>Because both factors on the right are negative, \(\Delta\xi(s)>0\): the cone radius decreases while the local cylinder phase advances. There is a linear relation between phase and \(R-R_*\), and a quadratic relation between either of them and \(s\).</p>
+          </article>
+        </div>
+        <div class="motion-split" aria-label="Linear boundary motion versus quadratic radius motion">
+          <article>
+            <span>the visible boundary wave · order \(s\)</span>
+            <div class="tex-display">\[r_{\partial}(\psi;s)=R(s)-s\cos\psi+O(s^2).\]</div>
+            <p>The two opposite points \(\psi=0,\pi\) move in opposite directions at speed one. This is the first-order wiggle visible in the cylinder and cone pictures.</p>
+          </article>
+          <article>
+            <span>the mean cone radius · order \(s^2\)</span>
+            <div class="tex-display">\[\frac1{2\pi}\int_0^{2\pi}r_{\partial}(\psi;s),d\psi=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
+            <p>The cosine averages to zero. The parameter that must land on an integer therefore has no linear motion; its first nonzero change is the negative quadratic drift computed above.</p>
           </article>
         </div>
         <div class="phase-story-lab">
@@ -579,7 +601,7 @@
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">s = 0</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>integer landing</span></div></div>
             <div class="phase-story-readout"><div><span>real order R(s)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase Δξ(s)</span><strong id="phaseStoryPhaseValue">0°</strong></div><div><span>stored branch curvature</span><strong>R″(0) = −0.372069</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">−Γ(λ) = −0.317815</strong></div></div>
           </aside>
-          <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic departure from the crossing</strong><span>solid: continued branch · dashed: base quadratic</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with quadratic tangent laws"></canvas></div><div class="axis-footer"><span>s = 0</span><span>same branch, two coordinates</span><span>s = landing</span></div></section>
+          <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic departure from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>integer landing</span></div></section>
         </div>
       </section>
 
@@ -588,133 +610,153 @@
           <div>
             <span class="section-number">06</span>
             <div>
-              <p class="eyebrow">Compare the cone with its cylinder limit</p>
-              <h2>Different functions, same local modes.</h2>
+              <p class="eyebrow">The large-radius basis limit</p>
+              <h2>Bessel modes become cylinder modes near the rim.</h2>
             </div>
           </div>
-          <div class="equations" role="group" aria-label="Collar coordinate and order-to-phase equations">
-            <span>x = r − R ≤ 0</span>
-            <span>λ = (ρ/R)²</span>
-            <span>ξ′(R) = −acos(R/ρ)</span>
+          <div class="equations" role="group" aria-label="Fixed collar coordinates">
+            <span>\(x=r-r_0\)</span>
+            <span>\(r_0-5\le r\le r_0\)</span>
+            <small>\(\lambda=2.4\) fixed</small>
           </div>
         </header>
 
-        <div class="debye-lead">
-          <p>Freeze one angular Fourier mode and look only a bounded distance from the rim. The cone radial equation becomes the half-cylinder equation. What looks like two different bases is one local picture: regular Bessel profiles become either a phased wave or a decaying exponential, depending on whether the order lies below or above the Bessel argument.</p>
+        <div class="debye-lead paper-copy">
+          <p>Let the cone have rim radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: on the fixed coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
         </div>
 
-        <div class="debye-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
+        <div class="debye-formula-grid latex-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
           <article>
-            <span>01 / half-cylinder · x ≤ 0</span>
-            <h3>Sin, cos, and the bounded exponentials</h3>
-            <div class="formula-display">
-              <p><b>k = 0</b><i>[A cos(√λ x) + B sin(√λ x)]</i></p>
-              <p><b>k = 1</b><i>[A cos(ωx) + B sin(ωx)] {cos θ, sin θ}</i></p>
-              <p><b>k ≥ 2</b><i>C e<sup>α<sub>k</sub>x</sup> {cos(kθ), sin(kθ)}</i></p>
+            <span>01 / half-cylinder · \(x\le0\)</span>
+            <h3>The separated cylinder basis</h3>
+            <div class="tex-display">
+              \[
+              f_k''+(\lambda-k^2)f_k=0,qquad
+              u_k(x,\theta)=f_k(x)\{\cos(k\theta),\sin(k\theta)\}.
+              \]
+              \[
+              f_k(x)=
+              \begin{cases}
+              A_k\cos(\sqrt{\lambda-k^2}\,x)+B_k\sin(\sqrt{\lambda-k^2}\,x),&amp;k^2&lt;\lambda,\\
+              C_k e^{\sqrt{k^2-\lambda}\,x},&amp;k^2&gt;\lambda.
+              \end{cases}
+              \]
             </div>
-            <p class="formula-note">Here <span class="formula">ω = √(λ−1)</span> and <span class="formula">α<sub>k</sub> = √(k²−λ)</span>. The other exponential grows toward <span class="formula">x = −∞</span>, so boundedness removes it.</p>
+            <p class="formula-note">For \(1&lt;\lambda&lt;4\), the channels \(k=0,1\) oscillate. Boundedness as \(x\to-\infty\) leaves exactly one exponential for every \(k\ge2\).</p>
           </article>
           <article>
-            <span>02 / cone · tip regular</span>
-            <h3>Bessel functions carry the same channels</h3>
-            <div class="formula-display cone-formula-display">
-              <p><b>k ≥ 0</b><i>J<sub>kR</sub>(√λ r) {cos(kψ), sin(kψ)}</i></p>
-              <p><b>radial ODE</b><i>f″ + r⁻¹f′ + [λ − (kR/r)²]f = 0</i></p>
+            <span>02 / cone · regular at the tip</span>
+            <h3>The separated cone basis</h3>
+            <div class="tex-display">
+              \[
+              f_k''+\frac1r f_k'+\left(\lambda-\frac{k^2r_0^2}{r^2}\right)f_k=0,
+              \]
+              \[
+              u_k(r,\psi)=J_{kr_0}(\sqrt\lambda,r)
+              \{\cos(k\psi),\sin(k\psi)\}.
+              \]
             </div>
-            <p class="formula-note">Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and rejects the singular <span class="formula">Y<sub>kR</sub></span>. Modified Bessel <span class="formula">I/K</span> solve the sign-flipped equation, so they do not supply a second admissible profile here.</p>
+            <p class="formula-note">Regularity at \(r=0\) selects \(J_{kr_0}\) and rejects \(Y_{kr_0}\). There is no modified-Bessel replacement: \(I\) and \(K\) solve the equation with the opposite spectral sign.</p>
           </article>
+        </div>
+
+        <div class="basis-limit-derivation paper-copy">
+          <span>The limit on a fixed collar</span>
+          <div>
+            <p>Put \(q=\sqrt\lambda\), \(\omega=\sqrt{\lambda-1}\), and \(\Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1})\). Debye's oscillatory formula gives</p>
+            <div class="tex-display important-equation">\[J_{r_0}(\sqrt\lambda(r_0+x))=A_{r_0}(x)\cos\!\left(r_0\Phi(\sqrt\lambda)-\frac\pi4+\omega x\right)+O(r_0^{-1}).\]</div>
+            <p>Thus changing \(r_0\) translates the local wave by the explicit phase rate \(d\xi/dr_0=\Phi(\sqrt\lambda)\). For the higher channels, the nonoscillatory Debye formula gives</p>
+            <div class="tex-display important-equation">\[\frac{J_{kr_0}(\sqrt\lambda(r_0+x))}{J_{kr_0}(\sqrt\lambda r_0)}\longrightarrow e^{\sqrt{k^2-\lambda}\,x},\qquad k\ge2.\]</div>
+          </div>
         </div>
 
         <div class="debye-laboratory">
-          <aside class="debye-controls" aria-label="Debye comparison controls">
+          <aside class="debye-controls" aria-label="Large-radius Bessel comparison controls">
             <div class="control-heading">
-              <span>Local approximation</span>
+              <span>Move the cone rim</span>
               <button id="debyeResetButton" type="button">Reset</button>
             </div>
 
             <div class="debye-control-block">
-              <div class="control-label"><label for="debyeOrderRange">real Bessel order <i>R</i></label><output id="debyeOrderValue">28.010…</output></div>
-              <input id="debyeOrderRange" type="range" min="0" max="1" value="0.62" step="0.002">
-              <div class="range-scale"><span>R<sub>*</sub> = 28.026397…</span><span>N = 28</span></div>
-              <p>This slider is linear in <span class="formula">R</span>, not in branch amplitude <span class="formula">s</span>. It exposes the local bijection between real Bessel order and cylinder phase directly.</p>
+              <div class="control-label"><label for="debyeOrderRange">rim radius \(r_0\)</label><output id="debyeOrderValue">28</output></div>
+              <input id="debyeOrderRange" type="range" min="26" max="30" value="28" step="0.01">
+              <div class="range-scale"><span>\(r_0=26\)</span><span>\(r_0=28\)</span><span>\(r_0=30\)</span></div>
+              <p>The value of \(\lambda\) stays fixed. Increasing \(r_0\) simultaneously flattens the collar and advances the \(k=1\) phase.</p>
             </div>
 
-            <div class="debye-control-block">
-              <div class="control-label"><label for="debyeDepthRange">collar depth</label><output id="debyeDepthValue">5.00 units</output></div>
-              <input id="debyeDepthRange" type="range" min="0.5" max="5" value="5" step="0.05">
-              <div class="range-scale"><span>tight rim zoom</span><span>five radial units</span></div>
-              <p>Zoom toward <span class="formula">x = 0</span> to watch curvature errors disappear. Every trace is normalized at the rim; the evanescent panels use a logarithmic vertical scale.</p>
-            </div>
-
-            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Play R<sub>*</sub> → N</span></button>
+            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Play \(r_0:26\to30\)</span></button>
 
             <div class="debye-status">
-              <div><span>spectral parameter λ</span><strong id="debyeLambdaValue">—</strong></div>
-              <div><span>local wave phase Δξ</span><strong id="debyePhaseValue">—</strong></div>
-              <div><span>phase sensitivity dξ/dR</span><strong id="debyeBetaValue">—</strong></div>
-              <div><span>evanescent rates α₂ / α₃</span><strong id="debyeDecayValue">—</strong></div>
+              <div><span>fixed spectral parameter</span><strong id="debyeLambdaValue">\(\lambda=2.4\)</strong></div>
+              <div><span>phase advance from 28</span><strong id="debyePhaseValue">—</strong></div>
+              <div><span>wave translations</span><strong id="debyeBetaValue">—</strong></div>
+              <div><span>rates \(\alpha_2,\alpha_3\)</span><strong id="debyeDecayValue">—</strong></div>
             </div>
           </aside>
 
           <section class="debye-plot-panel" aria-labelledby="debyePlotState">
             <div class="debye-plot-toolbar">
-              <div><span class="live-dot"></span><strong id="debyePlotState">three radial channels at the rim</strong></div>
-              <div class="debye-legend" aria-label="Debye plot legend">
-                <span><i class="legend-cyan"></i>regular Bessel J<sub>kR</sub></span>
-                <span><i class="legend-orange dashed"></i>cylinder / Debye limit</span>
+              <div><span class="live-dot"></span><strong id="debyePlotState">three radial channels on \([r_0-5,r_0]\)</strong></div>
+              <div class="debye-legend" aria-label="Bessel and cylinder plot legend">
+                <span><i class="legend-cyan"></i>exact regular Bessel mode</span>
+                <span><i class="legend-orange"></i>matching cylinder mode</span>
               </div>
             </div>
             <div id="debyeCanvasWrap" class="debye-canvas-wrap">
-              <canvas id="debyeCanvas" role="img" aria-label="Three plots comparing rim-rescaled Bessel profiles with oscillatory and exponential half-cylinder radial modes"></canvas>
+              <canvas id="debyeCanvas" role="img" aria-label="Three linear-scale plots comparing Bessel profiles with oscillatory and exponential half-cylinder modes"></canvas>
             </div>
-            <div class="axis-footer"><span>x = r − R</span><span>rim-normalized radial profiles</span><span>x = 0 · rim</span></div>
+            <div class="axis-footer"><span>\(r=r_0-5\)</span><span>radial profile</span><span>\(r=r_0\)</span></div>
           </section>
         </div>
 
-        <div class="debye-conclusion">
-          <article><span>oscillatory region · R &lt; ρ</span><strong>The one nonconstant-angular regular Bessel wave becomes a phased sin/cos combination.</strong><p>On the cylinder the two radial Cauchy data are encoded by sine and cosine coefficients. On the cone, tip regularity leaves one <span class="formula">J</span> profile, but varying real order <span class="formula">R</span> moves its local phase <span class="formula">ξ(R)</span>.</p></article>
-          <article><span>exponential region · kR &gt; ρ</span><strong>Every higher Bessel channel becomes the bounded cylinder exponential.</strong><p>For <span class="formula">k = 2,3</span>, the local radial rate is <span class="formula">α<sub>k</sub> = √(k²−λ)</span>. The plots make the agreement sharper as the collar is tightened toward the rim.</p></article>
-          <article><span>bifurcation bookkeeping</span><strong>Linear in R; quadratic along s.</strong><p>Locally <span class="formula">Δξ ≈ ξ′(R<sub>*</sub>)(R−R<sub>*</sub>)</span>. Since the branch has <span class="formula">R(s)−R<sub>*</sub> = O(s²)</span>, the same phase motion is quadratic when parameterized by <span class="formula">s</span>.</p></article>
+        <div class="debye-conclusion two-column-conclusion">
+          <article><span>why both oscillatory curves move</span><strong>The orange wave is not a fixed cosine.</strong><p>A fixed cosine would impose \(f(0)=1\) and \(f'(0)=0\). The \(k=1\) Bessel profile has rim Cauchy data that depend on \(r_0\). The correct cylinder comparison is the unique \(A\cos(\omega x)+B\sin(\omega x)\) with those same data, so its phase must move with the blue Bessel wave.</p></article>
+          <article><span>what the three panels test</span><strong>One wave and two genuine exponentials.</strong><p>The \(k=1\) panel compares the complete phase-matched oscillation. The \(k=2,3\) panels remain on an ordinary linear vertical scale, so their approach to \(e^{\alpha_kx}\) is visible as an exponential shape rather than as a straight line on logarithmic paper.</p></article>
         </div>
       </section>
 
       <section id="abundance-experiment" class="abundance-experiment">
         <header class="experiment-header abundance-header">
-          <div><span class="section-number">10</span><div><p class="eyebrow">Is 28 an accident?</p><h2>There are many places to begin.</h2></div></div>
-          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>J<sub>1</sub>(ρ)=J<sub>R</sub>(ρ)=0</span><span>{R}=R−⌊R⌋</span><small>10,000 real crossings</small></div>
+          <div><span class="section-number">09</span><div><p class="eyebrow">Is 28 an accident?</p><h2>There are many places to begin.</h2></div></div>
+          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=41\)</small></div>
         </header>
-        <div class="abundance-lead">
-          <p>Each dot is a numerically polished common-zero crossing, plotted by its real order <span>R</span> and fractional part <span>{R}</span>. A dot close to the bottom begins just above an integer—the exact geometry needed before the negative quadratic drift. Increase the logarithmic cutoff and the opportunities keep arriving.</p>
-          <p>The cloud is evidence, not the density proof. The proof aligns two independent Debye phases by a Kronecker-torus argument; that is stronger than merely assuming the visible fractional parts are equidistributed.</p>
+        <div class="abundance-lead paper-copy">
+          <p>Each dot is a computed common zero \(\rho=j_{1,n}=j_{R,m}\), plotted at \((R,\{R\})\). The horizontal coordinate is logarithmic and the picture stops at \(N=41\); it is meant only to show the small collection of starting points relevant to the example, not to imitate an endless search.</p>
+          <p>A point near the bottom has \(R=N+\delta\) with \(0&lt;\delta\ll1\). Once the uniform nonlinear branch is known to decrease \(R\) by a fixed amount, such a crossing can land on \(N\) and unfold into the plane.</p>
         </div>
         <div class="abundance-laboratory">
-          <aside class="abundance-controls">
-            <div class="control-heading"><span>Exhaustive crossing search</span><button id="abundanceResetButton" type="button">Reset</button></div>
-            <div class="abundance-control-block">
-              <div class="control-label"><label for="abundanceCutoffRange">integer cutoff · logarithmic</label><output id="abundanceCutoffValue">N ≤ 100</output></div>
-              <input id="abundanceCutoffRange" type="range" min="0" max="1000" value="500" step="1">
-              <div class="range-scale"><span>N = 10</span><span>N = 841</span></div>
-              <p>Only the cutoff changes. The browser reveals stored search records; it does not manufacture or resample points.</p>
+          <aside class="abundance-controls abundance-proof">
+            <div class="control-heading"><span>Why near-integer crossings exist</span></div>
+            <div class="abundance-proof-step">
+              <span>01 / two asymptotic phases</span>
+              <div class="tex-display">\[j_{1,n}=\pi\left(n+\frac14\right)+o(1),\qquad N\Phi(j_{N,m}/N)=\pi\left(m-\frac14\right)+o(1).\]</div>
+              <p>McMahon controls the fixed-order zero; Debye controls the zero whose order and argument are both large.</p>
             </div>
-            <button id="abundancePlayButton" class="play-button" type="button" aria-pressed="false"><span id="abundancePlayIcon">▶</span><span id="abundancePlayLabel">Play the search</span></button>
+            <div class="abundance-proof-step">
+              <span>02 / align them simultaneously</span>
+              <div class="tex-display">\[N\longmapsto\left(N\frac{q_*}{\pi},N\frac{\Phi(q_*)}{\pi}\right)\pmod{\mathbb Z^2}.\]</div>
+              <p>Choose \(q_*\in(\sqrt2,\sqrt3)\) so that the two frequencies and \(1\) are rationally independent. Kronecker's theorem makes this orbit dense in the two-torus.</p>
+            </div>
+            <div class="abundance-proof-step">
+              <span>03 / close the remaining zero gap</span>
+              <p>One phase places \(j_{1,n}\) just above \(Nq_*\); the other places \(j_{N,m}\) just below it. Since \(\nu\mapsto j_{\nu,m}\) is strictly increasing with a uniform positive speed, a small increase from \(N\) produces the real order \(R\).</p>
+            </div>
             <div class="abundance-readout">
               <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
-              <div><span>smallest visible {R}</span><strong id="abundanceBestValue">—</strong></div>
-              <div><span>search window</span><strong>2 ≤ λ ≤ 3</strong></div>
-              <div><span>running example</span><strong>R* = 28.026397</strong></div>
+              <div><span>smallest sample {R}</span><strong id="abundanceBestValue">—</strong></div>
+              <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
             </div>
-            <div class="abundance-provenance"><span>Provenance</span><p>The cloud contains the first 10,000 crossings ordered by <span class="formula">R</span>, polished to 60 decimal digits and exhaustive through <span class="formula">R=841.0148…</span>. The orange <span class="formula">N=28</span> marker is a separate real crossing at <span class="formula">λ=3.317011</span>, outside this cloud’s <span class="formula">[2,3]</span> window.</p></div>
           </aside>
           <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
-            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">loading crossing data…</strong></div><div><span>hover a point for its zero indices</span></div></div>
+            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through N = 41</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
             <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
-            <div class="axis-footer"><span>small R</span><span>fractional order {R} versus R</span><span>large R</span></div>
+            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=41\)</span></div>
           </section>
         </div>
         <div class="abundance-conclusion">
-          <span>What the story has gained</span>
-          <h3>The disk had no continuous angular parameter. The cone created one.</h3>
-          <p>Debye explains how real order acts like cylinder phase. The nonlinear calculation says the order moves downward. The finite search exhibits increasingly close starting points; the Kronecker–Debye argument supplies them arbitrarily close to integers. Integer landing then turns the quotient solution back into a bounded, noncircular planar domain.</p>
+          <span>The theorem behind the picture</span>
+          <h3>The finite dots illustrate; the two-phase argument supplies arbitrary precision.</h3>
+          <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), the phase alignment produces \(N\ge N_{\min}\) and a crossing \(N&lt;R&lt;N+\delta\) with \(2&lt;\rho^2/R^2&lt;3\). The arithmetic input makes the initial gap smaller than the uniform analytic radius drop; it is this comparison—not visual equidistribution of the dots—that closes the proof.</p>
         </div>
       </section>
     </main>
@@ -743,17 +785,18 @@
       <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">r = R + x</span>, the <span class="formula">k = 1</span> Bessel equation tends on bounded collars to <span class="formula">C″ + (λ − 1)C = 0</span>. Debye refines this to <span class="formula">J<sub>R</sub>(√λ(R+x)) ≈ A<sub>R</sub>(x) cos(ωx + ξ(R))</span>, where <span class="formula">ξ(R) = √(ρ²−R²) − R acos(R/ρ) − π/4</span> and therefore <span class="formula">ξ′(R) = −acos(R/ρ)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">R<sub>*</sub></span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
       <hr>
       <p class="eyebrow">Debye approximations</p>
-      <p>The bottom laboratory compares radial functions rather than fitted fields. At <span class="formula">x=r−R</span>, the exact tabulated profiles <span class="formula">J<sub>kR</sub>(ρr/R)</span> are rim-normalized and compared with the limiting cylinder ODE <span class="formula">f″+(λ−k²)f=0</span>. The <span class="formula">k=1</span> curve is Cauchy-normalized and compared with its anchored Debye phase; the <span class="formula">k=2,3</span> curves are divided by their rim values and compared with <span class="formula">e<sup>√(k²−λ)x</sup></span>.</p>
-      <p>The critical <span class="formula">k=1</span> curve interpolates the dense evaluated profiles stored along the branch. The <span class="formula">k=2,3</span> curves interpolate their precomputed endpoint Bessel tables over the very short interval <span class="formula">R∈[28,28.026397…]</span>. Tightening the collar is the numerical test of the local asymptotic claim: the discrepancies shrink as <span class="formula">x→0</span>.</p>
+      <p>The radial laboratory is deliberately separate from the nonlinear branch. It fixes <span class="formula">λ=2.4</span>, moves the cone rim through <span class="formula">26≤r₀≤30</span>, and evaluates exact samples of <span class="formula">J<sub>kr₀</sub>(√λr)</span> on <span class="formula">r∈[r₀−5,r₀]</span>. The browser interpolates precomputed SciPy values in <span class="formula">r₀</span> and <span class="formula">r</span>.</p>
+      <p>For <span class="formula">k=1</span>, both curves are normalized by the oscillatory Cauchy amplitude and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the rim. For <span class="formula">k=2,3</span>, the Bessel traces are rim-normalized and compared with <span class="formula">e<sup>√(k²−λ)x</sup></span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
       <p class="eyebrow">Story diagrams and phase drift</p>
-      <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">N=28</span> landing. In the order/phase graph, the solid curves interpolate the actual continuation records while the dashed curves show the quadratic tangent law from <span class="formula">R″(0)</span>.</p>
+      <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">N=28</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">R″(0)</span>.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
-      <p>The final scatter plot is built from a saved exhaustive search of the first 10,000 crossings, ordered by <span class="formula">R</span>, satisfying <span class="formula">J₁(ρ)=J<sub>R</sub>(ρ)=0</span> and <span class="formula">2≤ρ²/R²≤3</span>. The roots were polished to 60 decimal digits; the browser stores nine-decimal display copies and derives <span class="formula">{R}</span> and <span class="formula">λ</span> from them. The orange <span class="formula">N=28</span> point comes from the separate continued example and is excluded from those statistics because its <span class="formula">λ≈3.317011</span> lies outside the search window.</p>
+      <p>The final scatter plot filters the saved common-zero data to <span class="formula">N≤41</span> and uses a logarithmic horizontal <span class="formula">R</span>-axis. The orange <span class="formula">N=28</span> point is the separate continued example. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite dots illustrate rather than substitute for the near-integer theorem.</p>
     </dialog>
 
     <script src="cone-data.js"></script>
+    <script src="debye-data.js"></script>
     <script src="abundance-data.js"></script>
     <script src="app.js"></script>
     <script src="story.js"></script>

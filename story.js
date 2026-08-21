@@ -471,7 +471,7 @@
       });
       context.strokeStyle = color; context.lineWidth = width; context.setLineDash(dash); context.stroke(); context.setLineDash([]);
     };
-    draw(options.quadratic, colors.orange, [5, 5], 1.5);
+    draw(options.quadratic, colors.orange, [], 1.5);
     draw(options.actual, colors.cyan, [], 2.2);
     const current = options.valueAt(branchAt(phaseStoryState.progress));
     const currentS = phaseStoryState.progress * data.landingS;
@@ -510,7 +510,7 @@
     drawPhasePanel(context, rects[1], { title: "LOCAL PHASE GAIN", subtitle: "ξ(R(s)) − ξ(R*)", actual: phaseActual, quadratic: phaseQuadratic, maximum: maximumPhase, maximumLabel: `${maximumPhase.toFixed(3)}°`, valueAt: (record) => (xi(record.R) - baseXi) * 180 / Math.PI });
     const current = branchAt(phaseStoryState.progress);
     const phaseDegrees = (xi(current.R) - baseXi) * 180 / Math.PI;
-    canvas.setAttribute("aria-label", `At branch amplitude ${current.s.toFixed(4)}, the continued order has decreased to ${current.R.toFixed(6)} and the Debye collar phase has increased by ${phaseDegrees.toFixed(4)} degrees. Solid curves use stored continuation records; dashed curves are their base quadratic laws.`);
+    canvas.setAttribute("aria-label", `At branch amplitude ${current.s.toFixed(4)}, the continued order has decreased to ${current.R.toFixed(6)} and the Debye collar phase has increased by ${phaseDegrees.toFixed(4)} degrees. Cyan solid curves use stored continuation records; orange solid curves are their base quadratic laws.`);
   }
 
   function updatePhaseStory() {

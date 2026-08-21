@@ -194,8 +194,8 @@
     const context = elements.canvas.getContext("2d");
     if (!context) return null;
 
-    const minimumCutoff = Math.max(10, model.minN);
-    const defaultCutoff = Math.min(100, model.maxN);
+    const minimumCutoff = model.minN;
+    const defaultCutoff = Math.min(41, model.maxN);
     const reducedMotion = global.matchMedia
       ? global.matchMedia("(prefers-reduced-motion: reduce)")
       : { matches: false };
@@ -297,8 +297,14 @@
 
     function screenPoint(radius, fraction, plot) {
       const xMaximum = state.cutoff + 1;
+      const xMinimum = model.columns.R[0];
+      const logarithmicPosition = (
+        Math.log(radius) - Math.log(xMinimum)
+      ) / (
+        Math.log(xMaximum) - Math.log(xMinimum)
+      );
       return {
-        x: plot.left + (radius / xMaximum) * plot.width,
+        x: plot.left + logarithmicPosition * plot.width,
         y: plot.bottom - fraction * plot.height,
       };
     }
@@ -314,12 +320,10 @@
       context.fillStyle = "rgba(255,116,73,0.055)";
       context.fillRect(plot.left, bandTop, plot.width, plot.bottom - bandTop);
       context.strokeStyle = "rgba(255,116,73,0.30)";
-      context.setLineDash([4, 5]);
       context.beginPath();
       context.moveTo(plot.left, bandTop + 0.5);
       context.lineTo(plot.right, bandTop + 0.5);
       context.stroke();
-      context.setLineDash([]);
     }
 
     function drawAxes(plot) {
@@ -339,11 +343,13 @@
         context.fillText(value.toFixed(value === 0 || value === 1 ? 0 : 2), plot.left - 10, y);
       });
 
-      const step = niceStep(state.cutoff, plot.compact ? 4 : 6);
       context.textAlign = "center";
       context.textBaseline = "top";
-      for (let value = 0; value <= state.cutoff; value += step) {
-        const x = plot.left + (value / (state.cutoff + 1)) * plot.width;
+      const tickCandidates = plot.compact ? [7, 10, 20, 41] : [7, 10, 15, 20, 30, 41];
+      tickCandidates.filter(function visible(value) {
+        return value >= model.columns.R[0] && value <= state.cutoff;
+      }).forEach(function drawTick(value) {
+        const x = screenPoint(value, 0, plot).x;
         context.strokeStyle = COLORS.grid;
         context.beginPath();
         context.moveTo(x + 0.5, plot.top);
@@ -351,7 +357,7 @@
         context.stroke();
         context.fillStyle = COLORS.muted;
         context.fillText(formatInteger(value), x, plot.bottom + 10);
-      }
+      });
 
       context.save();
       context.translate(15, (plot.top + plot.bottom) / 2);
@@ -367,7 +373,7 @@
       context.font = "8px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "bottom";
-      context.fillText("CROSSING ORDER R  ·  N = ⌊R⌋", (plot.left + plot.right) / 2, state.height - 8);
+      context.fillText("LOGARITHMIC CROSSING ORDER R  ·  N = ⌊R⌋", (plot.left + plot.right) / 2, state.height - 8);
 
       context.fillStyle = "rgba(255,116,73,0.70)";
       context.font = "7px 'DM Mono', monospace";
@@ -389,7 +395,7 @@
       context.arc(startX, y, 2.2, 0, Math.PI * 2);
       context.fill();
       context.fillStyle = COLORS.muted;
-      context.fillText("EXHAUSTIVE λ ∈ [2,3]", startX + 8, y);
+      context.fillText("COMPUTED λ ∈ [2,3]", startX + 8, y);
 
       const secondX = compact ? startX : startX + 164;
       const secondY = compact ? y + 17 : y;
