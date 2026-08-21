@@ -141,6 +141,38 @@ The derivative is nonzero, so near the crossing `R` and the phase of the local c
 
 There are two local orders of variation here. Debye gives `Δξ(R) = −β*(R − R*) + O((R − R*)²)`, where `β* = acos(R*/ρ)`. The bifurcating branch is even in its signed amplitude, `R(s) − R* = c₂s² + O(s⁴)`. Consequently the phase displayed against the branch slider is quadratic: `Δξ(s) = −β*c₂s² + O(s⁴)`. The web dataset stores an independently evaluated critical Bessel profile at every solved branch record so the solid curve and exact Cauchy phase come from the numerical `R(s)` data.
 
+## Debye approximation laboratory
+
+The final laboratory isolates the radial dictionary itself. In the rim coordinate `x = r − R ≤ 0`, the cylinder radial equation for angular mode `k` is
+
+```text
+fₖ″ + (λ − k²)fₖ = 0.
+```
+
+Thus `k = 0,1` have sine/cosine radial bases for `λ ∈ (1,4)`, while every `k ≥ 2` has a bounded half-cylinder branch `exp(αₖx)`, `αₖ = √(k²−λ)`. On the cone the corresponding tip-regular separated eigenfunctions are
+
+```text
+J_{kR}(√λ r) {cos(kψ), sin(kψ)}.
+```
+
+The singular `Y_{kR}` profile is rejected at the tip. Modified Bessel functions solve the equation with the opposite spectral sign and are not additional radial solutions of this Helmholtz problem.
+
+Three live panels compare these descriptions over `x ∈ [−d,0]`:
+
+1. `k = 1`: the exact derivative-normalized `J_R` profile against the anchored Debye sine/cosine combination;
+2. `k = 2`: the rim-normalized `J_{2R}` profile against `exp(√(4−λ)x)`;
+3. `k = 3`: the rim-normalized `J_{3R}` profile against `exp(√(9−λ)x)`.
+
+The evanescent plots use `log₁₀|f/f(0)|`, making several orders of decay visible. The collar-depth control is also a convergence test: as `d` decreases, curvature terms are suppressed and the exact Bessel profiles approach the constant-coefficient cylinder modes.
+
+This laboratory deliberately moves linearly in `R`, using `λ(R) = (ρ/R)²`, rather than following the nonlinear branch parameter. The critical curve interpolates the dense Bessel profiles evaluated at the solved branch orders; the two evanescent curves interpolate evaluated endpoint tables on the short interval `R ∈ [28, 28.026397…]`. The cylinder functions and Debye phase are evaluated in JavaScript. It therefore displays the near-linear local correspondence
+
+```text
+Δξ = ξ(R) − ξ(R*) ≈ ξ′(R*)(R − R*),
+```
+
+while the neighboring branch-based panel displays the same change as quadratic in `s`.
+
 ## Reproduce the cone data
 
 The numerical sources live in `numerics/` and require Python 3.12, NumPy, and SciPy.

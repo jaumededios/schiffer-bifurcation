@@ -214,6 +214,47 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .interpretation-copy p:first-child { margin-top: 0; }
 .interpretation-copy .formula { color: var(--ink); }
 
+.debye-experiment { padding: 108px 4vw 0; color: var(--paper); background: var(--ink); }
+.debye-header { padding-bottom: 31px; }
+.debye-header .equations { max-width: 690px; justify-content: flex-end; }
+.debye-lead { margin: 0 0 38px 55px; }
+.debye-lead p { max-width: 830px; margin: 0; color: rgba(241,238,229,.54); font-size: 14px; line-height: 1.75; }
+.debye-formula-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-bottom: 0; }
+.debye-formula-grid article { min-height: 300px; padding: 30px 34px 28px; border-right: 1px solid var(--line-light); }
+.debye-formula-grid article:last-child { border-right: 0; }
+.debye-formula-grid article > span { display: block; margin-bottom: 17px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.debye-formula-grid h3 { margin: 0 0 22px; color: var(--paper); font: 300 28px/1.05 var(--serif); letter-spacing: -.02em; }
+.formula-display { display: grid; gap: 8px; }
+.formula-display p { display: grid; grid-template-columns: 61px 1fr; align-items: baseline; gap: 14px; margin: 0; font: 10px/1.55 var(--mono); }
+.formula-display b { color: rgba(241,238,229,.42); font-size: 8px; font-weight: 400; }
+.formula-display i { color: rgba(241,238,229,.88); font-style: normal; }
+.cone-formula-display p { grid-template-columns: 75px 1fr; }
+.formula-note { max-width: 620px; margin: 20px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.7; }
+.debye-laboratory { display: grid; grid-template-columns: 330px minmax(0,1fr); min-height: 650px; border: 1px solid var(--line-light); }
+.debye-controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); background: rgba(255,255,255,.015); }
+.debye-control-block { padding: 24px 0 20px; border-bottom: 1px solid var(--line-light); }
+.debye-control-block p { margin: 14px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.65; }
+.debye-status { margin-top: auto; padding-top: 18px; }
+.debye-status div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line-light); }
+.debye-status span { color: rgba(241,238,229,.4); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.debye-status strong { color: rgba(241,238,229,.82); font: 9px var(--mono); text-align: right; }
+.debye-plot-panel { min-width: 0; display: grid; grid-template-rows: 64px minmax(550px,1fr) 36px; background: #101b20; }
+.debye-plot-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 22px; border-bottom: 1px solid var(--line-light); }
+.debye-plot-toolbar > div:first-child { display: flex; align-items: center; gap: 11px; }
+.debye-plot-toolbar strong { color: rgba(241,238,229,.7); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.debye-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 16px; color: rgba(241,238,229,.43); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .055em; }
+.debye-legend span { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.debye-legend i { width: 20px; height: 2px; display: block; }
+.debye-legend .dashed { background: repeating-linear-gradient(90deg,var(--orange) 0 5px,transparent 5px 8px); }
+.debye-canvas-wrap { min-height: 0; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 45%,#20353b 0,#101b20 70%); }
+#debyeCanvas { display: block; width: 100%; height: 100%; }
+.debye-conclusion { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--line-light); border-top: 0; }
+.debye-conclusion article { min-height: 245px; padding: 32px 34px; border-right: 1px solid var(--line-light); }
+.debye-conclusion article:last-child { border-right: 0; }
+.debye-conclusion article > span { display: block; margin-bottom: 24px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.debye-conclusion strong { display: block; color: var(--paper); font: 300 25px/1.08 var(--serif); }
+.debye-conclusion p { max-width: 390px; margin: 14px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.72; }
+
 footer { min-height: 190px; padding: 35px 4vw; display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; color: var(--paper); background: var(--ink); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 footer span { opacity: .43; }
 footer a { text-decoration: none; }
@@ -236,6 +277,10 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .modes-lead { margin-left: 0; }
   .modes-laboratory { grid-template-columns: 300px minmax(0,1fr); }
   .modes-legend { display: none; }
+  .debye-lead { margin-left: 0; }
+  .debye-laboratory { grid-template-columns: 1fr; }
+  .debye-controls { border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .debye-legend { display: none; }
 }
 
 @media (max-width: 760px) {
@@ -285,6 +330,19 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .freedom-strip article:last-child { border-bottom: 0; }
   .interpretation { grid-template-columns: 35px 1fr; padding: 80px 24px; gap: 25px; }
   .interpretation-copy { grid-column: 2; }
+  .debye-experiment { padding: 84px 18px 0; }
+  .debye-header .equations { justify-content: flex-start; }
+  .debye-formula-grid { grid-template-columns: 1fr; }
+  .debye-formula-grid article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .debye-formula-grid article:last-child { border-bottom: 0; }
+  .formula-display p, .cone-formula-display p { grid-template-columns: 1fr; gap: 3px; }
+  .debye-laboratory { grid-template-columns: 1fr; }
+  .debye-controls { border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .debye-plot-panel { min-height: 1030px; grid-template-rows: 66px 928px 36px; }
+  .debye-plot-toolbar { padding: 0 13px; }
+  .debye-conclusion { grid-template-columns: 1fr; }
+  .debye-conclusion article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .debye-conclusion article:last-child { border-bottom: 0; }
   footer { grid-template-columns: 1fr; gap: 18px; }
 }
 

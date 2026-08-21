@@ -2251,3 +2251,304 @@ window.addEventListener("resize", () => {
 });
 
 updateModesComparison();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Debye radial dictionary. Unlike the nonlinear branch slider above, this
+// control is linear in the real Bessel order R. The critical profile uses the
+// dense evaluated branch tables; the evanescent profiles interpolate their two
+// evaluated endpoints on the very short interval [N, R*].
+
+const debyeState = {
+  progress: .62,
+  depth: 5,
+  playing: false,
+  playFrame: null,
+  solution: null,
+};
+
+function debyeSolutionAt(progress) {
+  const amount = Math.max(0, Math.min(1, progress));
+  const R = interpolateNumber(coneNumerics.RStar, coneNumerics.targetN, amount);
+  const lambda = (coneNumerics.rho / R) ** 2;
+  const records = coneNumerics.records;
+  let criticalProfile;
+  if (R >= records[0].R) {
+    criticalProfile = [...records[0].criticalProfile];
+  } else if (R <= records.at(-1).R) {
+    criticalProfile = [...records.at(-1).criticalProfile];
+  } else {
+    let lowerIndex = 1;
+    while (records[lowerIndex].R > R) lowerIndex++;
+    const higher = records[lowerIndex - 1];
+    const lower = records[lowerIndex];
+    const localAmount = (higher.R - R) / (higher.R - lower.R);
+    criticalProfile = interpolateArray(higher.criticalProfile, lower.criticalProfile, localAmount);
+  }
+  return {
+    R,
+    lambda,
+    criticalProfile,
+    criticalRim: amount < 1e-12 ? 0 : tableValue(coneNumerics.profileGrid, criticalProfile, 1),
+  };
+}
+
+function debyeCanvasMetrics() {
+  const canvas = $("#debyeCanvas");
+  const wrap = $("#debyeCanvasWrap");
+  const width = Math.max(300, wrap.clientWidth || 900);
+  const height = Math.max(500, wrap.clientHeight || 550);
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(width * ratio);
+  canvas.height = Math.round(height * ratio);
+  const context = canvas.getContext("2d");
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  return { canvas, context, width, height };
+}
+
+function debyeSeries(solution, mode, depth) {
+  const samples = 520;
+  const exact = [];
+  const limiting = [];
+  const comparison = modesRadialComparison(solution);
+  const alpha = mode >= 2 ? Math.sqrt(mode * mode - solution.lambda) : 0;
+  let maxMismatch = 0;
+  for (let index = 0; index < samples; index++) {
+    const x = -depth + index / (samples - 1) * depth;
+    const bessel = mode === 1
+      ? comparison.besselValue(x)
+      : coneRadialValue(mode, 1 + x / solution.R, solution);
+    const cylinder = mode === 1 ? comparison.cylinderValue(x) : Math.exp(alpha * x);
+    exact.push({ x, value: bessel });
+    limiting.push({ x, value: cylinder });
+    maxMismatch = Math.max(maxMismatch, Math.abs(bessel - cylinder));
+  }
+  return { mode, exact, limiting, maxMismatch, comparison, alpha };
+}
+
+function debyeDrawGrid(context, plot, yTicks, yMap, depth) {
+  context.save();
+  context.strokeStyle = MODES_COLORS.grid;
+  context.fillStyle = MODES_COLORS.faint;
+  context.lineWidth = 1;
+  context.font = "7px DM Mono, monospace";
+  context.setLineDash([3, 6]);
+  yTicks.forEach(({ value, label }) => {
+    const y = yMap(value);
+    context.beginPath();
+    context.moveTo(plot.left, y);
+    context.lineTo(plot.left + plot.width, y);
+    context.stroke();
+    context.fillText(label, plot.left + 3, y - 4);
+  });
+  [0, .25, .5, .75, 1].forEach((amount) => {
+    const x = plot.left + amount * plot.width;
+    context.beginPath();
+    context.moveTo(x, plot.top);
+    context.lineTo(x, plot.top + plot.height);
+    context.stroke();
+  });
+  context.setLineDash([]);
+  context.fillText(`−${depth.toFixed(depth < 1 ? 2 : 1)}`, plot.left, plot.top + plot.height + 15);
+  context.textAlign = "right";
+  context.fillText("0 · rim", plot.left + plot.width, plot.top + plot.height + 15);
+  context.restore();
+}
+
+function debyeDrawCurve(context, points, xMap, yMap, color, dash = []) {
+  context.save();
+  context.beginPath();
+  points.forEach((point, index) => {
+    const x = xMap(point.x);
+    const y = yMap(point.value);
+    if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+  });
+  context.strokeStyle = color;
+  context.lineWidth = 2.15;
+  context.setLineDash(dash);
+  context.stroke();
+  context.restore();
+}
+
+function debyeDrawPanel(context, rect, series, depth) {
+  const isWave = series.mode === 1;
+  const plot = {
+    left: rect.left + 14,
+    top: rect.top + 77,
+    width: rect.width - 28,
+    height: rect.height - 119,
+  };
+  const xMap = (x) => plot.left + (x + depth) / depth * plot.width;
+  let yMap;
+  let exactPoints = series.exact;
+  let limitingPoints = series.limiting;
+  let yTicks;
+  let scaleLabel;
+
+  if (isWave) {
+    const maximum = Math.max(.25, ...exactPoints.map((point) => Math.abs(point.value)), ...limitingPoints.map((point) => Math.abs(point.value)));
+    const yBound = maximum * 1.08;
+    yMap = (value) => plot.top + (yBound - value) / (2 * yBound) * plot.height;
+    yTicks = [-1, 0, 1]
+      .filter((value) => Math.abs(value) <= yBound * 1.02)
+      .map((value) => ({ value, label: String(value) }));
+    scaleLabel = "linear · f′(0) = 1";
+  } else {
+    const transform = (point) => ({ x: point.x, value: Math.log10(Math.max(1e-9, Math.abs(point.value))) });
+    exactPoints = exactPoints.map(transform);
+    limitingPoints = limitingPoints.map(transform);
+    const observedMinimum = Math.min(...exactPoints.map((point) => point.value), ...limitingPoints.map((point) => point.value));
+    const floor = Math.max(-8, Math.min(-1, Math.floor(observedMinimum - .12)));
+    yMap = (value) => plot.top + (0 - value) / (0 - floor) * plot.height;
+    yTicks = [];
+    for (let value = floor; value <= 0; value++) yTicks.push({ value, label: value === 0 ? "1" : `10^${value}` });
+    scaleLabel = "log₁₀ · f(0) = 1";
+  }
+
+  context.save();
+  context.fillStyle = "rgba(12,22,27,.63)";
+  context.fillRect(rect.left, rect.top, rect.width, rect.height);
+  context.strokeStyle = "rgba(241,238,229,.14)";
+  context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
+  context.fillStyle = "rgba(241,238,229,.86)";
+  context.font = "9px DM Mono, monospace";
+  const title = isWave ? "k = 1 · OSCILLATORY" : `k = ${series.mode} · EVANESCENT`;
+  context.fillText(title, rect.left + 14, rect.top + 20);
+  context.fillStyle = MODES_COLORS.faint;
+  context.font = "7px DM Mono, monospace";
+  const regime = isWave
+    ? `R < ρ · ω = ${series.comparison.omega.toFixed(4)}`
+    : `${series.mode}R > ρ · α${series.mode} = ${series.alpha.toFixed(4)}`;
+  context.fillText(regime, rect.left + 14, rect.top + 37);
+  context.fillText(scaleLabel, rect.left + 14, rect.top + 53);
+  context.textAlign = "right";
+  context.fillStyle = MODES_COLORS.orange;
+  context.fillText(`max |Δ| = ${series.maxMismatch.toExponential(2)}`, rect.left + rect.width - 14, rect.top + 53);
+  context.restore();
+
+  debyeDrawGrid(context, plot, yTicks, yMap, depth);
+  context.save();
+  context.beginPath();
+  context.rect(plot.left, plot.top, plot.width, plot.height);
+  context.clip();
+  debyeDrawCurve(context, exactPoints, xMap, yMap, MODES_COLORS.cyan);
+  debyeDrawCurve(context, limitingPoints, xMap, yMap, MODES_COLORS.orange, [6, 4]);
+  context.restore();
+}
+
+function renderDebyeComparison() {
+  const { canvas, context, width, height } = debyeCanvasMetrics();
+  const solution = debyeState.solution;
+  const depth = debyeState.depth;
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "#101b20";
+  context.fillRect(0, 0, width, height);
+  const compact = width < 620;
+  const panels = [];
+  if (compact) {
+    const gap = 12;
+    const panelHeight = (height - gap * 4) / 3;
+    for (let index = 0; index < 3; index++) {
+      panels.push({ left: 12, top: gap + index * (panelHeight + gap), width: width - 24, height: panelHeight });
+    }
+  } else {
+    const gap = 14;
+    const panelWidth = (width - gap * 4) / 3;
+    for (let index = 0; index < 3; index++) {
+      panels.push({ left: gap + index * (panelWidth + gap), top: 18, width: panelWidth, height: height - 36 });
+    }
+  }
+  [1, 2, 3].forEach((mode, index) => {
+    debyeDrawPanel(context, panels[index], debyeSeries(solution, mode, depth), depth);
+  });
+
+  const comparison = modesRadialComparison(solution);
+  canvas.setAttribute("aria-label", `At real order ${solution.R.toFixed(6)}, three rim-rescaled plots compare regular Bessel modes with their cylinder limits over ${depth.toFixed(2)} radial units. The oscillatory k equals 1 phase shift is ${comparison.phaseDegrees.toFixed(3)} degrees; k equals 2 and 3 are compared with bounded exponentials.`);
+}
+
+function updateDebyeReadouts() {
+  const solution = debyeState.solution;
+  const comparison = modesRadialComparison(solution);
+  const beta = Math.acos(solution.R / coneNumerics.rho);
+  const alpha2 = Math.sqrt(4 - solution.lambda);
+  const alpha3 = Math.sqrt(9 - solution.lambda);
+  $("#debyeOrderValue").textContent = solution.R.toFixed(6);
+  $("#debyeDepthValue").textContent = `${debyeState.depth.toFixed(2)} units`;
+  $("#debyeLambdaValue").textContent = solution.lambda.toFixed(7);
+  $("#debyePhaseValue").textContent = `${comparison.phaseDegrees.toFixed(4)}°`;
+  $("#debyeBetaValue").textContent = `−${beta.toFixed(6)} rad / order`;
+  $("#debyeDecayValue").textContent = `${alpha2.toFixed(4)} / ${alpha3.toFixed(4)}`;
+  $("#debyePlotState").textContent = `R = ${solution.R.toFixed(6)} · exact Cauchy phase ${comparison.exactPhaseDegrees.toFixed(4)}°`;
+}
+
+function updateDebyeComparison() {
+  debyeState.solution = debyeSolutionAt(debyeState.progress);
+  updateDebyeReadouts();
+  renderDebyeComparison();
+}
+
+function stopDebyePlayback() {
+  debyeState.playing = false;
+  if (debyeState.playFrame) cancelAnimationFrame(debyeState.playFrame);
+  debyeState.playFrame = null;
+  $("#debyePlayIcon").textContent = "▶";
+  $("#debyePlayLabel").textContent = debyeState.progress > .999 ? "Replay R* → N" : "Play R* → N";
+}
+
+function toggleDebyePlayback() {
+  if (debyeState.playing) { stopDebyePlayback(); return; }
+  if (debyeState.progress > .999) debyeState.progress = 0;
+  debyeState.playing = true;
+  $("#debyePlayIcon").textContent = "Ⅱ";
+  $("#debyePlayLabel").textContent = "Pause";
+  const startProgress = debyeState.progress;
+  const start = performance.now();
+  let lastRender = 0;
+  const duration = Math.max(700, 4400 * (1 - startProgress));
+  const tick = (now) => {
+    if (!debyeState.playing) return;
+    const amount = Math.min(1, (now - start) / duration);
+    const eased = amount * amount * (3 - 2 * amount);
+    debyeState.progress = startProgress + (1 - startProgress) * eased;
+    $("#debyeOrderRange").value = debyeState.progress;
+    setRangeFill($("#debyeOrderRange"));
+    if (now - lastRender > 60 || amount >= 1) {
+      updateDebyeComparison();
+      lastRender = now;
+    }
+    if (amount >= 1) { stopDebyePlayback(); return; }
+    debyeState.playFrame = requestAnimationFrame(tick);
+  };
+  debyeState.playFrame = requestAnimationFrame(tick);
+}
+
+setRangeFill($("#debyeOrderRange"));
+setRangeFill($("#debyeDepthRange"));
+$("#debyeOrderRange").addEventListener("input", (event) => {
+  stopDebyePlayback();
+  debyeState.progress = Number(event.target.value);
+  setRangeFill(event.target);
+  updateDebyeComparison();
+});
+$("#debyeDepthRange").addEventListener("input", (event) => {
+  debyeState.depth = Number(event.target.value);
+  setRangeFill(event.target);
+  updateDebyeComparison();
+});
+$("#debyePlayButton").addEventListener("click", toggleDebyePlayback);
+$("#debyeResetButton").addEventListener("click", () => {
+  stopDebyePlayback();
+  Object.assign(debyeState, { progress: .62, depth: 5 });
+  $("#debyeOrderRange").value = debyeState.progress;
+  $("#debyeDepthRange").value = debyeState.depth;
+  setRangeFill($("#debyeOrderRange"));
+  setRangeFill($("#debyeDepthRange"));
+  updateDebyeComparison();
+});
+
+let debyeResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(debyeResizeTimer);
+  debyeResizeTimer = setTimeout(renderDebyeComparison, 140);
+});
+
+updateDebyeComparison();

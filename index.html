@@ -383,6 +383,101 @@
           <p>As <i>λ</i> approaches 4, the <i>k</i> = 2 correction decays more slowly: its natural length <span class="formula">1 / √(4 − λ)</span> becomes large. This part is a genuine feature of the cylinder mode equation.</p>
         </div>
       </section>
+
+      <section id="debye-experiment" class="debye-experiment">
+        <header class="experiment-header debye-header">
+          <div>
+            <span class="section-number">05</span>
+            <div>
+              <p class="eyebrow">Rim asymptotics / one local dictionary</p>
+              <h2>Debye approximations.</h2>
+            </div>
+          </div>
+          <div class="equations" role="group" aria-label="Collar coordinate and order-to-phase equations">
+            <span>x = r − R ≤ 0</span>
+            <span>λ = (ρ/R)²</span>
+            <span>ξ′(R) = −acos(R/ρ)</span>
+          </div>
+        </header>
+
+        <div class="debye-lead">
+          <p>Freeze one angular Fourier mode and look only a bounded distance from the rim. The cone radial equation becomes the half-cylinder equation. What looks like two different bases is one local picture: regular Bessel profiles become either a phased wave or a decaying exponential, depending on whether the order lies below or above the Bessel argument.</p>
+        </div>
+
+        <div class="debye-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
+          <article>
+            <span>01 / half-cylinder · x ≤ 0</span>
+            <h3>Sin, cos, and the bounded exponentials</h3>
+            <div class="formula-display">
+              <p><b>k = 0</b><i>[A cos(√λ x) + B sin(√λ x)]</i></p>
+              <p><b>k = 1</b><i>[A cos(ωx) + B sin(ωx)] {cos θ, sin θ}</i></p>
+              <p><b>k ≥ 2</b><i>C e<sup>α<sub>k</sub>x</sup> {cos(kθ), sin(kθ)}</i></p>
+            </div>
+            <p class="formula-note">Here <span class="formula">ω = √(λ−1)</span> and <span class="formula">α<sub>k</sub> = √(k²−λ)</span>. The other exponential grows toward <span class="formula">x = −∞</span>, so boundedness removes it.</p>
+          </article>
+          <article>
+            <span>02 / cone · tip regular</span>
+            <h3>Bessel functions carry the same channels</h3>
+            <div class="formula-display cone-formula-display">
+              <p><b>k ≥ 0</b><i>J<sub>kR</sub>(√λ r) {cos(kψ), sin(kψ)}</i></p>
+              <p><b>radial ODE</b><i>f″ + r⁻¹f′ + [λ − (kR/r)²]f = 0</i></p>
+            </div>
+            <p class="formula-note">Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and rejects the singular <span class="formula">Y<sub>kR</sub></span>. Modified Bessel <span class="formula">I/K</span> solve the sign-flipped equation, so they do not supply a second admissible profile here.</p>
+          </article>
+        </div>
+
+        <div class="debye-laboratory">
+          <aside class="debye-controls" aria-label="Debye comparison controls">
+            <div class="control-heading">
+              <span>Local approximation</span>
+              <button id="debyeResetButton" type="button">Reset</button>
+            </div>
+
+            <div class="debye-control-block">
+              <div class="control-label"><label for="debyeOrderRange">real Bessel order <i>R</i></label><output id="debyeOrderValue">28.010…</output></div>
+              <input id="debyeOrderRange" type="range" min="0" max="1" value="0.62" step="0.002">
+              <div class="range-scale"><span>R<sub>*</sub> = 28.026397…</span><span>N = 28</span></div>
+              <p>This slider is linear in <span class="formula">R</span>, not in branch amplitude <span class="formula">s</span>. It exposes the local bijection between real Bessel order and cylinder phase directly.</p>
+            </div>
+
+            <div class="debye-control-block">
+              <div class="control-label"><label for="debyeDepthRange">collar depth</label><output id="debyeDepthValue">5.00 units</output></div>
+              <input id="debyeDepthRange" type="range" min="0.5" max="5" value="5" step="0.05">
+              <div class="range-scale"><span>tight rim zoom</span><span>five radial units</span></div>
+              <p>Zoom toward <span class="formula">x = 0</span> to watch curvature errors disappear. Every trace is normalized at the rim; the evanescent panels use a logarithmic vertical scale.</p>
+            </div>
+
+            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Play R<sub>*</sub> → N</span></button>
+
+            <div class="debye-status">
+              <div><span>spectral parameter λ</span><strong id="debyeLambdaValue">—</strong></div>
+              <div><span>local wave phase Δξ</span><strong id="debyePhaseValue">—</strong></div>
+              <div><span>phase sensitivity dξ/dR</span><strong id="debyeBetaValue">—</strong></div>
+              <div><span>evanescent rates α₂ / α₃</span><strong id="debyeDecayValue">—</strong></div>
+            </div>
+          </aside>
+
+          <section class="debye-plot-panel" aria-labelledby="debyePlotState">
+            <div class="debye-plot-toolbar">
+              <div><span class="live-dot"></span><strong id="debyePlotState">three radial channels at the rim</strong></div>
+              <div class="debye-legend" aria-label="Debye plot legend">
+                <span><i class="legend-cyan"></i>regular Bessel J<sub>kR</sub></span>
+                <span><i class="legend-orange dashed"></i>cylinder / Debye limit</span>
+              </div>
+            </div>
+            <div id="debyeCanvasWrap" class="debye-canvas-wrap">
+              <canvas id="debyeCanvas" role="img" aria-label="Three plots comparing rim-rescaled Bessel profiles with oscillatory and exponential half-cylinder radial modes"></canvas>
+            </div>
+            <div class="axis-footer"><span>x = r − R</span><span>rim-normalized radial profiles</span><span>x = 0 · rim</span></div>
+          </section>
+        </div>
+
+        <div class="debye-conclusion">
+          <article><span>oscillatory region · R &lt; ρ</span><strong>The one nonconstant-angular regular Bessel wave becomes a phased sin/cos combination.</strong><p>On the cylinder the two radial Cauchy data are encoded by sine and cosine coefficients. On the cone, tip regularity leaves one <span class="formula">J</span> profile, but varying real order <span class="formula">R</span> moves its local phase <span class="formula">ξ(R)</span>.</p></article>
+          <article><span>exponential region · kR &gt; ρ</span><strong>Every higher Bessel channel becomes the bounded cylinder exponential.</strong><p>For <span class="formula">k = 2,3</span>, the local radial rate is <span class="formula">α<sub>k</sub> = √(k²−λ)</span>. The plots make the agreement sharper as the collar is tightened toward the rim.</p></article>
+          <article><span>bifurcation bookkeeping</span><strong>Linear in R; quadratic along s.</strong><p>Locally <span class="formula">Δξ ≈ ξ′(R<sub>*</sub>)(R−R<sub>*</sub>)</span>. Since the branch has <span class="formula">R(s)−R<sub>*</sub> = O(s²)</span>, the same phase motion is quadratic when parameterized by <span class="formula">s</span>.</p></article>
+        </div>
+      </section>
     </main>
 
     <footer>
@@ -406,6 +501,10 @@
       <p class="eyebrow">Angular modes</p>
       <p>The nested-zoom panel evaluates the whole 28-copy assembly and its seam-centered one-wavelength collar from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
       <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">r = R + x</span>, the <span class="formula">k = 1</span> Bessel equation tends on bounded collars to <span class="formula">C″ + (λ − 1)C = 0</span>. Debye refines this to <span class="formula">J<sub>R</sub>(√λ(R+x)) ≈ A<sub>R</sub>(x) cos(ωx + ξ(R))</span>, where <span class="formula">ξ(R) = √(ρ²−R²) − R acos(R/ρ) − π/4</span> and therefore <span class="formula">ξ′(R) = −acos(R/ρ)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">R<sub>*</sub></span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
+      <hr>
+      <p class="eyebrow">Debye approximations</p>
+      <p>The bottom laboratory compares radial functions rather than fitted fields. At <span class="formula">x=r−R</span>, the exact tabulated profiles <span class="formula">J<sub>kR</sub>(ρr/R)</span> are rim-normalized and compared with the limiting cylinder ODE <span class="formula">f″+(λ−k²)f=0</span>. The <span class="formula">k=1</span> curve is Cauchy-normalized and compared with its anchored Debye phase; the <span class="formula">k=2,3</span> curves are divided by their rim values and compared with <span class="formula">e<sup>√(k²−λ)x</sup></span>.</p>
+      <p>The critical <span class="formula">k=1</span> curve interpolates the dense evaluated profiles stored along the branch. The <span class="formula">k=2,3</span> curves interpolate their precomputed endpoint Bessel tables over the very short interval <span class="formula">R∈[28,28.026397…]</span>. Tightening the collar is the numerical test of the local asymptotic claim: the discrepancies shrink as <span class="formula">x→0</span>.</p>
     </dialog>
 
     <script src="cone-data.js"></script>
