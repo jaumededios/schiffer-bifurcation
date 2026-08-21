@@ -279,7 +279,7 @@
 
         <div class="modes-lead">
           <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost <span>2π</span>. The large panel unwraps exactly that patch into radial distance <span>x</span> and quotient angle <span>ψ</span>, so the curved rim becomes the flat-cylinder picture.</p>
-          <p>Move the crop to the seam to put the non-integer mismatch directly inside the main zoom. When the crop is elsewhere, the small orange box still tracks the seam by itself. Both zooms use the same numerical Bessel field and the same continued free boundary as the global picture.</p>
+          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The unwrapped patch uses the same numerical Bessel field and the same continued free boundary as the global picture.</p>
         </div>
 
         <div class="modes-laboratory">
@@ -301,16 +301,12 @@
             </div>
 
             <div class="modes-control-block">
-              <div class="control-label"><label for="modesCropRange">one-wavelength crop</label><output id="modesCropValue">opposite seam</output></div>
-              <input id="modesCropRange" type="range" min="0" max="0.5" value="0.5" step="0.002">
-              <div class="range-scale"><span>center on seam</span><span>opposite side</span></div>
-              <p>The cyan box moves around the global boundary. Put it at zero to see the angular cut inside the large flat zoom.</p>
-            </div>
-
-            <div class="modes-control-block">
-              <div class="control-label"><label for="modesDepthRange">radial crop depth</label><output id="modesDepthValue">5 units</output></div>
-              <input id="modesDepthRange" type="range" min="2.5" max="8" value="5" step="0.1">
-              <div class="range-scale"><span>one radial oscillation</span><span>deeper collar</span></div>
+              <div class="control-label"><span>one-wavelength crop</span><output id="modesCropValue">centered on seam</output></div>
+              <div class="fixed-zoom-pair">
+                <div><span>angular position</span><strong>seam · 0°</strong></div>
+                <div><span>radial crop depth</span><strong id="modesDepthValue">5 units</strong></div>
+              </div>
+              <p>The crop spans one full angular wavelength and five radial units. These scales are fixed so the mismatch is always visible in the large flat zoom.</p>
             </div>
 
             <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Play crossing → landing</span></button>
@@ -332,9 +328,9 @@
               </div>
             </div>
             <div id="modesCanvasWrap" class="modes-canvas-wrap">
-              <canvas id="modesCanvas" role="img" aria-label="A 28-fold global domain, a one-wavelength flat collar zoom, and a magnified non-integer seam"></canvas>
+              <canvas id="modesCanvas" role="img" aria-label="A 28-fold global domain and a seam-centered one-wavelength flat collar zoom"></canvas>
             </div>
-            <div class="axis-footer"><span>whole object</span><span>one wavelength → flat collar</span><span>seam-only zoom</span></div>
+            <div class="axis-footer"><span>whole object</span><span>one wavelength → flat collar</span><span>seam centered</span></div>
           </section>
         </div>
 
@@ -389,7 +385,7 @@
       <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">R = 28</span>, the quotient angle <span class="formula">2π/R</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
       <hr>
       <p class="eyebrow">Angular modes</p>
-      <p>The nested-zoom panel evaluates the whole 28-copy assembly, the selected one-wavelength collar, and the seam-only crop from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the main zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
+      <p>The nested-zoom panel evaluates the whole 28-copy assembly and its seam-centered one-wavelength collar from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
     </dialog>
 
     <script src="cone-data.js"></script>

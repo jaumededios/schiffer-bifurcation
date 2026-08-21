@@ -1347,7 +1347,7 @@ solveAndRenderCone();
 
 const modesState = {
   progress: .62,
-  crop: .5,
+  crop: 0,
   depth: 5,
   solution: null,
   playing: false,
@@ -1842,15 +1842,12 @@ function renderModesNestedZoom() {
   const compact = width < 650;
   let globalRect;
   let patchRect;
-  let seamRect;
   if (compact) {
-    globalRect = { left: 12, top: 10, width: width - 24, height: height * .36 };
-    patchRect = { left: 12, top: height * .39, width: width - 24, height: height * .36 };
-    seamRect = { left: 12, top: height * .78, width: width - 24, height: height * .19 };
+    globalRect = { left: 12, top: 10, width: width - 24, height: height * .42 };
+    patchRect = { left: 12, top: height * .45, width: width - 24, height: height * .53 };
   } else {
     globalRect = { left: 16, top: 18, width: width * .405, height: height - 36 };
-    patchRect = { left: width * .455, top: 28, width: width * .515, height: height * .61 };
-    seamRect = { left: width * .535, top: height * .72, width: width * .405, height: height * .225 };
+    patchRect = { left: width * .455, top: 42, width: width * .515, height: height - 84 };
   }
 
   const global = modesDrawGlobal(context, globalRect, solution, fieldValue);
@@ -1863,15 +1860,6 @@ function renderModesNestedZoom() {
     title: "ONE ANGULAR WAVELENGTH · UNWRAPPED COLLAR",
     detail: containsSeam ? "SEAM IS INSIDE THIS CROP" : "ψ-span = 2π · locally flat",
     accent: MODES_COLORS.cyan,
-  });
-  modesDrawPatch(context, seamRect, solution, fieldValue, {
-    centerAngle: 0,
-    tangentSpan: .65,
-    depth: Math.min(2.2, modesState.depth),
-    title: global.gap < 1e-7 ? "SECOND ZOOM · SEAM CLOSED AT N = 28" : "SECOND ZOOM · SEAM ONLY · 0.2 λθ SPAN",
-    detail: "",
-    accent: MODES_COLORS.orange,
-    compact: true,
   });
 
   if (!compact) {
@@ -1889,7 +1877,7 @@ function renderModesNestedZoom() {
   }
 
   const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
-  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies, a one-wavelength flat collar crop, and a seam-only crop showing a ${gapDegrees.toFixed(3)} degree mismatch.`);
+  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies and a seam-centered one-wavelength flat collar crop showing a ${gapDegrees.toFixed(3)} degree mismatch.`);
 }
 
 function updateModesReadouts() {
@@ -1955,34 +1943,18 @@ function toggleModesPlayback() {
 }
 
 setRangeFill($("#modesTransferRange"));
-setRangeFill($("#modesCropRange"));
-setRangeFill($("#modesDepthRange"));
 $("#modesTransferRange").addEventListener("input", (event) => {
   stopModesPlayback();
   modesState.progress = Number(event.target.value);
   setRangeFill(event.target);
   updateModesComparison();
 });
-$("#modesCropRange").addEventListener("input", (event) => {
-  modesState.crop = Number(event.target.value);
-  setRangeFill(event.target);
-  updateModesComparison();
-});
-$("#modesDepthRange").addEventListener("input", (event) => {
-  modesState.depth = Number(event.target.value);
-  setRangeFill(event.target);
-  updateModesComparison();
-});
 $("#modesPlayButton").addEventListener("click", toggleModesPlayback);
 $("#modesResetButton").addEventListener("click", () => {
   stopModesPlayback();
-  Object.assign(modesState, { progress: .62, crop: .5, depth: 5 });
+  Object.assign(modesState, { progress: .62, crop: 0, depth: 5 });
   $("#modesTransferRange").value = modesState.progress;
-  $("#modesCropRange").value = modesState.crop;
-  $("#modesDepthRange").value = modesState.depth;
   setRangeFill($("#modesTransferRange"));
-  setRangeFill($("#modesCropRange"));
-  setRangeFill($("#modesDepthRange"));
   updateModesComparison();
 });
 

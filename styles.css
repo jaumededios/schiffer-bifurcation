@@ -163,6 +163,11 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .parameter-pair div:last-child { border-right: 0; }
 .parameter-pair span { display: block; color: rgba(19,33,38,.42); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .parameter-pair strong { display: block; margin-top: 6px; color: var(--ink); font: 10px var(--mono); white-space: nowrap; }
+.fixed-zoom-pair { display: grid; grid-template-columns: 1fr 1fr; margin-top: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.fixed-zoom-pair div { padding: 12px 10px 12px 0; border-right: 1px solid var(--line); }
+.fixed-zoom-pair div:last-child { padding-left: 10px; border-right: 0; }
+.fixed-zoom-pair span { display: block; color: rgba(19,33,38,.42); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.fixed-zoom-pair strong { display: block; margin-top: 6px; color: var(--ink); font: 10px var(--mono); white-space: nowrap; }
 .modes-play-button { color: var(--ink); border-color: rgba(19,33,38,.25); }
 .modes-status { margin-top: auto; padding-top: 18px; }
 .modes-status div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }

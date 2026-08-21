@@ -105,13 +105,13 @@ The cone laboratory has three linked views:
 
 ## One-wavelength nested zoom
 
-The third laboratory puts the angular-mode comparison into one global-to-local picture. On the left, 28 copies of the relaxed quotient are assembled into the full wiggly object. A movable cyan box selects one angular wavelength,
+The third laboratory puts the angular-mode comparison into one global-to-local picture. On the left, 28 copies of the relaxed quotient are assembled into the full wiggly object. A cyan box centered on the assembly seam selects one angular wavelength,
 
 ```text
 Δφ = 2π/R,       rim arc length = R Δφ = 2π.
 ```
 
-The large panel unwraps that exact physical patch into `(x, ψ)` coordinates. Its vertical extent is one quotient period `ψ ∈ [−π,π]`; its horizontal extent is a user-controlled radial collar. This is why the zoom has the same rectangular geometry as the flat half-cylinder. Moving the crop to the assembly seam places the true non-integer gap directly inside this large zoom. A second, tighter seam-only crop remains visible when the primary selection is elsewhere.
+The large panel unwraps that exact physical patch into `(x, ψ)` coordinates. Its vertical extent is one quotient period `ψ ∈ [−π,π]`; its horizontal extent is a fixed five-unit radial collar. This is why the zoom has the same rectangular geometry as the flat half-cylinder. The true non-integer gap passes through the center of the zoom. Its position and crop scale are deliberately fixed; only the bifurcation branch remains interactive.
 
 Every scale is evaluated from the same interpolated nonlinear branch record, Fourier–Bessel field, and free boundary used by the cone laboratory. The angular gap is not invented or visually substituted: it is
 
