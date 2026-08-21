@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="equations" role="group" aria-label="Model equations">
-            <span>(Δ + λ)u ≈ 0</span>
+            <span>(Δ + λ)u = 0</span>
             <span>u = 1</span>
             <span>∂<sub>ν</sub>u = 0</span>
             <small>on Γ<sub>s</sub></small>
@@ -98,9 +98,10 @@
             </details>
 
             <div class="solver-readout">
-              <div><span>normalized PDE residual</span><strong id="residualValue">—</strong></div>
+              <div><span>interior PDE residual</span><strong id="interiorValue">—</strong></div>
+              <div><span>Dirichlet normalized L²</span><strong id="dirichletValue">—</strong></div>
+              <div><span>Neumann normalized L²</span><strong id="neumannValue">—</strong></div>
               <div><span>slowest decay length</span><strong id="decayValue">—</strong></div>
-              <div><span>boundary error</span><strong id="boundaryValue">—</strong></div>
             </div>
           </aside>
 
@@ -116,7 +117,7 @@
             </div>
             <div id="canvasWrap" class="canvas-wrap">
               <canvas id="fieldCanvas" role="img" aria-label="Heat map of the scalar field on a half-cylinder with a moving right boundary"></canvas>
-              <div id="solverBadge" class="solver-badge">solving modes…</div>
+              <div id="solverBadge" class="solver-badge">fitting boundary…</div>
             </div>
             <div class="axis-footer"><span>x = −5</span><span>inward collar coordinate x</span><span>x = 0</span></div>
           </section>
@@ -125,11 +126,11 @@
         <div class="readout-strip">
           <div class="readout-copy">
             <p class="eyebrow">What is being computed</p>
-            <h3>The field adapts to the moving wall.</h3>
-            <p>The base normal profile is corrected by exponentially decaying sine and cosine modes. Their coefficients are solved by least squares against the Helmholtz residual on the current variable domain.</p>
+            <h3>The interior equation is exact.</h3>
+            <p>Every retained sine and cosine mode solves the Helmholtz equation analytically. Least squares is used only on the moving wall, where the Dirichlet and normal-derivative equations compete.</p>
           </div>
           <div class="mode-spectrum">
-            <header><span>modal correction</span><span id="modeScale">coefficient magnitude</span></header>
+            <header><span>field coefficients</span><span id="modeScale">magnitude by angular mode</span></header>
             <div id="modeBars" class="mode-bars"></div>
           </div>
           <div class="boundary-diagram">
@@ -160,10 +161,10 @@
     <dialog id="methodDialog">
       <button id="closeMethod" type="button" aria-label="Close">×</button>
       <p class="eyebrow">Numerical method</p>
-      <h2>A small Galerkin calculation, in your browser.</h2>
-      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span> and use the inward distance <span class="formula">d = h<sub>s</sub>(θ) − x</span>. The base field is <span class="formula">cos(√λ d)</span>.</p>
-      <p>The critical <span class="formula">k = 1</span> corrector is oscillatory. The higher correctors are <span class="formula">d²e<sup>−qₖd</sup> cos(kθ)</span> and <span class="formula">d²e<sup>−qₖd</sup> sin(kθ)</span>, with <span class="formula">qₖ = √(k² − λ)</span> for <span class="formula">k ≥ 2</span>. The factor <span class="formula">d²</span> makes both boundary conditions exact for every fitted coefficient.</p>
-      <p>At every interaction, the site samples the variable domain and solves a ridge-regularized least-squares system minimizing <span class="formula">||(Δ + λ)u||₂</span>. This is a genuine truncated numerical collar model. It is not a proof that the prescribed wall is an exact global free-boundary solution.</p>
+      <h2>Exact inside, numerical on the wall.</h2>
+      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span>. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
+      <p>The <span class="formula">k = 0</span> and <span class="formula">k = 1</span> radial factors are oscillatory. For <span class="formula">k ≥ 2</span> they are <span class="formula">e<sup>√(k²−λ)x</sup> cos(kθ)</span> and <span class="formula">e<sup>√(k²−λ)x</sup> sin(kθ)</span>, which decay as <span class="formula">x → −∞</span>. Consequently, the interior PDE residual is identically zero.</p>
+      <p>For the selected <span class="formula">(λ,s)</span>, 160 boundary samples determine the modal coefficients by ridge-regularized least squares. The reported defects are independently evaluated on 320 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. Independent sliders generally move off the true one-dimensional branch, so these defects need not vanish.</p>
     </dialog>
 
     <script src="app.js"></script>

@@ -12,22 +12,33 @@ At `s = 0`, the heat-map domain is a rectangle representing a collar of the half
 
 ## Numerical model
 
-The field is recomputed in the browser whenever `λ`, `s`, `φ`, or the truncation order changes. It uses
+The field is recomputed in the browser whenever `λ`, `s`, `φ`, or the truncation order changes. Every retained term is an exact separated solution of
 
 ```text
-u₀(d) = cos(√λ d),   d = h_s(θ) − x,
+(Δ + λ)u = 0.
 ```
 
-together with an oscillatory critical corrector and the exponentially decaying higher modes
+The `k = 0` and `k = 1` radial factors are oscillatory. For `k ≥ 2`, the bounded half-cylinder modes are
 
 ```text
-d² exp(−√(k² − λ)d) cos(kθ),
-d² exp(−√(k² − λ)d) sin(kθ),    k ≥ 2.
+exp(√(k² − λ)x) cos(kθ),
+exp(√(k² − λ)x) sin(kθ).
 ```
 
-Their coefficients are chosen by a ridge-regularized least-squares solve minimizing the sampled residual of `(Δ + λ)u = 0` on the current variable domain. The factor `d²` makes `u = 1` and `∂νu = 0` exact at the displayed boundary.
+They decay as `x → −∞`, and their interior PDE residual is analytically zero. The coefficients are chosen by ridge-regularized least squares against the two free-boundary equations
 
-This is a genuine truncated numerical collar model, not a claim that the prescribed boundary is an exact global free-boundary solution.
+```text
+u(h_s(θ), θ) = 1,
+∇u(h_s(θ), θ) · (1, −h_s'(θ)) / √(1 + h_s'(θ)²) = 0.
+```
+
+The solve uses 160 angular samples. The displayed Dirichlet and Neumann defects are evaluated independently on 320 shifted samples in the normalized metric
+
+```text
+‖f‖² = (2π)⁻¹ ∫₋π^π |f(θ)|² dθ.
+```
+
+Since `λ` and `s` are independent controls, most selected pairs are off the true one-dimensional solution branch and need not have zero boundary defect.
 
 ## Run locally
 

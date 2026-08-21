@@ -21,36 +21,39 @@ function boundary(theta, parameters = state) {
   return parameters.s * Math.cos(theta - parameters.phase);
 }
 
-function inwardDistance(x, theta, parameters = state) {
-  return boundary(theta, parameters) - x;
+function boundaryDerivative(theta, parameters = state) {
+  return -parameters.s * Math.sin(theta - parameters.phase);
 }
 
-function radialBasis(d, k, lambda) {
-  if (k === 1) {
-    const frequency = Math.sqrt(Math.max(0, lambda - 1));
-    return d * d * Math.cos(frequency * d);
+function radialJet(x, mode, lambda) {
+  if (mode.radial === "decay") {
+    const decay = Math.sqrt(mode.k * mode.k - lambda);
+    const value = Math.exp(decay * x);
+    return { value, derivative: decay * value };
   }
-  const decay = Math.sqrt(Math.max(1e-8, k * k - lambda));
-  return d * d * Math.exp(-decay * d);
+  const frequency = mode.k === 0 ? Math.sqrt(lambda) : Math.sqrt(lambda - 1);
+  if (mode.radial === "cos") {
+    return { value: Math.cos(frequency * x), derivative: -frequency * Math.sin(frequency * x) };
+  }
+  if (frequency < 1e-8) return { value: x, derivative: 1 };
+  return { value: Math.sin(frequency * x) / frequency, derivative: Math.cos(frequency * x) };
 }
 
-function baseField(x, theta, parameters) {
-  const d = inwardDistance(x, theta, parameters);
-  return Math.cos(Math.sqrt(parameters.lambda) * d);
-}
-
-function basisField(x, theta, parameters, mode) {
-  const d = inwardDistance(x, theta, parameters);
+function angularJet(theta, mode) {
+  if (mode.k === 0) return { value: 1, derivative: 0 };
   const angle = mode.k * theta;
-  const angular = mode.trig === "cos" ? Math.cos(angle) : Math.sin(angle);
-  return radialBasis(d, mode.k, parameters.lambda) * angular;
+  if (mode.trig === "cos") return { value: Math.cos(angle), derivative: -mode.k * Math.sin(angle) };
+  return { value: Math.sin(angle), derivative: mode.k * Math.cos(angle) };
 }
 
-function operatorValue(field, x, theta, lambda, epsilon = 0.0035) {
-  const center = field(x, theta);
-  const xx = (field(x + epsilon, theta) - 2 * center + field(x - epsilon, theta)) / (epsilon * epsilon);
-  const tt = (field(x, theta + epsilon) - 2 * center + field(x, theta - epsilon)) / (epsilon * epsilon);
-  return xx + tt + lambda * center;
+function basisJet(x, theta, parameters, mode) {
+  const radial = radialJet(x, mode, parameters.lambda);
+  const angular = angularJet(theta, mode);
+  return {
+    value: radial.value * angular.value,
+    dx: radial.derivative * angular.value,
+    dtheta: radial.value * angular.derivative,
+  };
 }
 
 function solveLinearSystem(matrix, vector) {
@@ -76,9 +79,15 @@ function solveLinearSystem(matrix, vector) {
 }
 
 function modalList(maxMode) {
-  const modes = [];
-  for (let k = 1; k <= maxMode; k++) {
-    modes.push({ k, trig: "cos" }, { k, trig: "sin" });
+  const modes = [
+    { k: 0, trig: "const", radial: "cos" },
+    { k: 0, trig: "const", radial: "sin" },
+  ];
+  for (const trig of ["cos", "sin"]) {
+    modes.push({ k: 1, trig, radial: "cos" }, { k: 1, trig, radial: "sin" });
+  }
+  for (let k = 2; k <= maxMode; k++) {
+    modes.push({ k, trig: "cos", radial: "decay" }, { k, trig: "sin", radial: "decay" });
   }
   return modes;
 }
@@ -88,64 +97,80 @@ function solveModalField(parameters) {
   const n = modes.length;
   const normal = Array.from({ length: n }, () => Array(n).fill(0));
   const rhs = Array(n).fill(0);
-  const rows = [];
-  const base = (x, theta) => baseField(x, theta, parameters);
-  const basisFunctions = modes.map((mode) => (x, theta) => basisField(x, theta, parameters, mode));
+  const trainingCount = 160;
 
-  for (let angularIndex = 0; angularIndex < 28; angularIndex++) {
-    const theta = -Math.PI + (angularIndex + 0.5) * TWO_PI / 28;
-    for (let radialIndex = 0; radialIndex < 13; radialIndex++) {
-      const d = 0.14 + radialIndex * 4.55 / 12;
-      const x = boundary(theta, parameters) - d;
-      const r0 = operatorValue(base, x, theta, parameters.lambda);
-      const row = basisFunctions.map((field) => operatorValue(field, x, theta, parameters.lambda));
-      rows.push({ x, theta, r0, row });
-      for (let i = 0; i < n; i++) {
-        rhs[i] -= row[i] * r0;
-        for (let j = 0; j <= i; j++) normal[i][j] += row[i] * row[j];
-      }
+  const accumulateRow = (row, target) => {
+    for (let i = 0; i < n; i++) {
+      rhs[i] += row[i] * target;
     }
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j <= i; j++) normal[i][j] += row[i] * row[j];
+    }
+  };
+
+  for (let angularIndex = 0; angularIndex < trainingCount; angularIndex++) {
+    const theta = -Math.PI + (angularIndex + 0.5) * TWO_PI / trainingCount;
+    const x = boundary(theta, parameters);
+    const slope = boundaryDerivative(theta, parameters);
+    const normalScale = Math.sqrt(1 + slope * slope);
+    const jets = modes.map((mode) => basisJet(x, theta, parameters, mode));
+    accumulateRow(jets.map((jet) => jet.value), 1);
+    accumulateRow(jets.map((jet) => (jet.dx - slope * jet.dtheta) / normalScale), 0);
   }
 
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < i; j++) normal[j][i] = normal[i][j];
   }
   const trace = normal.reduce((sum, row, i) => sum + row[i], 0);
-  const ridge = Math.max(1e-8, trace / Math.max(1, n) * 2e-6);
+  const ridge = Math.max(1e-12, trace / Math.max(1, n) * 1e-10);
   for (let i = 0; i < n; i++) normal[i][i] += ridge;
   const coefficients = solveLinearSystem(normal, rhs);
 
-  const solution = { parameters: { ...parameters }, modes, coefficients, residual: 0, boundaryError: 0 };
-  let residualSquared = 0;
-  let scaleSquared = 0;
-  rows.forEach(({ x, theta, r0, row }) => {
-    const residual = r0 + row.reduce((sum, value, i) => sum + value * coefficients[i], 0);
-    const value = fieldValue(x, theta, solution);
-    residualSquared += residual * residual;
-    scaleSquared += (parameters.lambda * value) ** 2 + 1e-8;
-  });
-  solution.residual = Math.sqrt(residualSquared / scaleSquared);
-
-  let boundaryError = 0;
-  for (let i = 0; i < 48; i++) {
-    const theta = -Math.PI + i * TWO_PI / 48;
+  const solution = {
+    parameters: { ...parameters },
+    modes,
+    coefficients,
+    interiorResidual: 0,
+    dirichletL2: 0,
+    neumannL2: 0,
+    boundaryCombined: 0,
+    boundaryMax: 0,
+  };
+  const validationCount = 320;
+  let dirichletSquared = 0;
+  let neumannSquared = 0;
+  for (let i = 0; i < validationCount; i++) {
+    const theta = -Math.PI + (i + 0.173) * TWO_PI / validationCount;
     const x = boundary(theta, parameters);
-    const valueError = Math.abs(fieldValue(x, theta, solution) - 1);
-    const epsilon = 1e-5;
-    const derivativeError = Math.abs((fieldValue(x + epsilon, theta, solution) - fieldValue(x - epsilon, theta, solution)) / (2 * epsilon));
-    boundaryError = Math.max(boundaryError, valueError, derivativeError);
+    const slope = boundaryDerivative(theta, parameters);
+    const jet = fieldJet(x, theta, solution);
+    const dirichlet = jet.value - 1;
+    const neumann = (jet.dx - slope * jet.dtheta) / Math.sqrt(1 + slope * slope);
+    dirichletSquared += dirichlet * dirichlet;
+    neumannSquared += neumann * neumann;
+    solution.boundaryMax = Math.max(solution.boundaryMax, Math.abs(dirichlet), Math.abs(neumann));
   }
-  solution.boundaryError = boundaryError;
+  solution.dirichletL2 = Math.sqrt(dirichletSquared / validationCount);
+  solution.neumannL2 = Math.sqrt(neumannSquared / validationCount);
+  solution.boundaryCombined = Math.sqrt((dirichletSquared + neumannSquared) / (2 * validationCount));
   return solution;
 }
 
-function fieldValue(x, theta, solution = state.solution) {
-  if (!solution) return 0;
-  let value = baseField(x, theta, solution.parameters);
+function fieldJet(x, theta, solution = state.solution) {
+  const result = { value: 0, dx: 0, dtheta: 0 };
+  if (!solution) return result;
   for (let i = 0; i < solution.modes.length; i++) {
-    value += solution.coefficients[i] * basisField(x, theta, solution.parameters, solution.modes[i]);
+    const jet = basisJet(x, theta, solution.parameters, solution.modes[i]);
+    const coefficient = solution.coefficients[i];
+    result.value += coefficient * jet.value;
+    result.dx += coefficient * jet.dx;
+    result.dtheta += coefficient * jet.dtheta;
   }
-  return value;
+  return result;
+}
+
+function fieldValue(x, theta, solution = state.solution) {
+  return fieldJet(x, theta, solution).value;
 }
 
 const COLOR_STOPS = [
@@ -338,10 +363,8 @@ function renderModeBars() {
   const container = $("#modeBars");
   container.replaceChildren();
   const grouped = [];
-  for (let k = 1; k <= state.solution.parameters.maxMode; k++) {
-    const cosIndex = state.solution.modes.findIndex((mode) => mode.k === k && mode.trig === "cos");
-    const sinIndex = state.solution.modes.findIndex((mode) => mode.k === k && mode.trig === "sin");
-    const magnitude = Math.hypot(state.solution.coefficients[cosIndex] || 0, state.solution.coefficients[sinIndex] || 0);
+  for (let k = 0; k <= state.solution.parameters.maxMode; k++) {
+    const magnitude = Math.hypot(...state.solution.modes.map((mode, index) => mode.k === k ? state.solution.coefficients[index] : 0));
     grouped.push({ k, magnitude });
   }
   const maximum = Math.max(1e-6, ...grouped.map((item) => item.magnitude));
@@ -349,7 +372,7 @@ function renderModeBars() {
     const row = document.createElement("div");
     row.className = "mode-bar";
     const label = document.createElement("span");
-    label.textContent = k === 1 ? "k 1 · crit" : `k ${k}`;
+    label.textContent = k === 0 ? "k 0 · base" : (k === 1 ? "k 1 · crit" : `k ${k}`);
     const track = document.createElement("div");
     track.className = "mode-bar-track";
     const fill = document.createElement("div");
@@ -373,8 +396,9 @@ function updateReadouts() {
   $("#sValue").textContent = `${state.s >= 0 ? "+" : ""}${state.s.toFixed(3)}`;
   $("#phaseValue").textContent = `${(state.phase / Math.PI).toFixed(2)}π`;
   $("#modeValue").textContent = `k ≤ ${state.maxMode}`;
-  $("#residualValue").textContent = state.solution.residual.toExponential(2);
-  $("#boundaryValue").textContent = state.solution.boundaryError < 1e-7 ? "< 10⁻⁷" : state.solution.boundaryError.toExponential(1);
+  $("#interiorValue").textContent = "0 · analytic";
+  $("#dirichletValue").textContent = state.solution.dirichletL2.toExponential(2);
+  $("#neumannValue").textContent = state.solution.neumannL2.toExponential(2);
   $("#decayValue").textContent = (1 / Math.sqrt(4 - state.lambda)).toFixed(2);
   $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `moving boundary · s = ${state.s.toFixed(3)}`;
 }
