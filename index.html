@@ -266,99 +266,93 @@
           <div>
             <span class="section-number">03</span>
             <div>
-              <p class="eyebrow">Separated solutions / radial freedom</p>
-              <h2>Where the phase goes.</h2>
+              <p class="eyebrow">Global cone / one wavelength / flat collar</p>
+              <h2>One picture, three scales.</h2>
             </div>
           </div>
-          <div class="equations" role="group" aria-label="Separated radial equations">
-            <span>f″ + (λ − k²)f = 0</span>
-            <span>r²f″ + rf′ + (λr² − k²R²)f = 0</span>
-            <small>cylinder / cone</small>
+          <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
+            <span>ψ = Rφ</span>
+            <span>one wavelength: Δφ = 2π/R</span>
+            <span>seam: 2π(1 − 28/R)</span>
           </div>
         </header>
 
         <div class="modes-lead">
-          <p>Fix one angular label <span>k</span>. On the flat half-cylinder, an oscillatory radial mode has two bounded basis functions, cosine and sine, so their ratio is a free phase. At the cone tip, regularity keeps only the ordinary Bessel branch <span>J<sub>kR</sub></span>. The scalar freedom reappears geometrically: allow <span>R</span> to be real and changing the order moves the Bessel phase.</p>
-          <p>The critical comparison is <span>k = 1</span>. Move the shared dial from the integer cone <span>R = 28</span> to the crossing <span>R<sub>*</sub> = 28.026397…</span>; alongside it, the cylinder combination rotates from cosine to sine.</p>
+          <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost <span>2π</span>. The large panel unwraps exactly that patch into radial distance <span>x</span> and quotient angle <span>ψ</span>, so the curved rim becomes the flat-cylinder picture.</p>
+          <p>Move the crop to the seam to put the non-integer mismatch directly inside the main zoom. When the crop is elsewhere, the small orange box still tracks the seam by itself. Both zooms use the same numerical Bessel field and the same continued free boundary as the global picture.</p>
         </div>
 
         <div class="modes-laboratory">
-          <aside class="modes-controls light-controls" aria-label="Angular mode comparison controls">
+          <aside class="modes-controls light-controls" aria-label="Nested angular zoom controls">
             <div class="control-heading">
-              <span>Comparison controls</span>
+              <span>Nested zoom controls</span>
               <button id="modesResetButton" type="button">Reset</button>
             </div>
 
             <div class="modes-control-block">
-              <div class="control-label"><span>angular mode <i>k</i></span><output id="modesKValue">k = 1</output></div>
-              <div class="mode-picker" role="group" aria-label="Choose angular mode">
-                <button type="button" data-mode-k="0">0</button>
-                <button class="active" type="button" data-mode-k="1">1</button>
-                <button type="button" data-mode-k="2">2</button>
-                <button type="button" data-mode-k="3">3</button>
-                <button type="button" data-mode-k="4">4</button>
-                <button type="button" data-mode-k="5">5</button>
-              </div>
-              <p>Modes <span class="formula">k = 0, 1</span> are oscillatory at λ = 3.323268. Modes <span class="formula">k ≥ 2</span> are evanescent on the cylinder.</p>
-            </div>
-
-            <div class="modes-control-block">
-              <div class="control-label"><label for="modesTransferRange">phase ↔ real order</label><output id="modesTransferValue">100%</output></div>
-              <input id="modesTransferRange" type="range" min="0" max="1" value="1" step="0.002">
-              <div class="range-scale"><span>cos / N = 28</span><span>sin / R<sub>*</sub></span></div>
+              <div class="control-label"><label for="modesTransferRange">cone branch</label><output id="modesTransferValue">62%</output></div>
+              <input id="modesTransferRange" type="range" min="0" max="1" value="0.62" step="0.002">
+              <div class="range-scale"><span>R<sub>*</sub> / open seam</span><span>N = 28 / closed</span></div>
               <div class="parameter-pair">
-                <div><span>cylinder phase δ</span><strong id="modesPhaseValue">0.500π</strong></div>
-                <div><span>cone order R</span><strong id="modesOrderValue">28.026397</strong></div>
+                <div><span>real order R</span><strong id="modesOrderValue">28.016…</strong></div>
+                <div><span>boundary amplitude s</span><strong id="modesAmplitudeValue">0.2228</strong></div>
               </div>
-              <p>The linkage is conceptual, not an identity of solutions: one scalar moves the phase in the flat limit, while one scalar changes the real Bessel order on the cone at fixed ρ<sub>*</sub> (so λ(R) = ρ<sub>*</sub>²/R²).</p>
+              <p>These are interpolated records from the solved nonlinear branch: the wiggles grow while the real order lands on the integer.</p>
             </div>
 
             <div class="modes-control-block">
-              <div class="control-label"><label for="modesDepthRange">radial window</label><output id="modesDepthValue">8 units</output></div>
-              <input id="modesDepthRange" type="range" min="3" max="14" value="8" step="0.25">
-              <div class="range-scale"><span>near rim</span><span>deeper collar</span></div>
+              <div class="control-label"><label for="modesCropRange">one-wavelength crop</label><output id="modesCropValue">opposite seam</output></div>
+              <input id="modesCropRange" type="range" min="0" max="0.5" value="0.5" step="0.002">
+              <div class="range-scale"><span>center on seam</span><span>opposite side</span></div>
+              <p>The cyan box moves around the global boundary. Put it at zero to see the angular cut inside the large flat zoom.</p>
             </div>
 
-            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Sweep phase into order</span></button>
+            <div class="modes-control-block">
+              <div class="control-label"><label for="modesDepthRange">radial crop depth</label><output id="modesDepthValue">5 units</output></div>
+              <input id="modesDepthRange" type="range" min="2.5" max="8" value="5" step="0.1">
+              <div class="range-scale"><span>one radial oscillation</span><span>deeper collar</span></div>
+            </div>
+
+            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Play crossing → landing</span></button>
 
             <div class="modes-status">
-              <div><span>cylinder regime</span><strong id="modesRegimeValue">oscillatory</strong></div>
-              <div><span>bounded radial dimension</span><strong id="modesDimensionValue">2 → 1</strong></div>
-              <div><span>cylinder λ at N = 28</span><strong>3.323268</strong></div>
+              <div><span>28-copy seam</span><strong id="modesGapValue">0.20°</strong></div>
+              <div><span>one angular wavelength</span><strong id="modesWavelengthValue">6.283 units</strong></div>
+              <div><span>local curvature</span><strong id="modesCurvatureValue">1 / 28.016</strong></div>
             </div>
           </aside>
 
           <section class="modes-plot-panel" aria-labelledby="modesPlotState">
             <div class="modes-plot-toolbar">
-              <div><span class="live-dot"></span><strong id="modesPlotState">critical k = 1 · Bessel crossing</strong></div>
+              <div><span class="live-dot"></span><strong id="modesPlotState">28 copies · one wavelength selected</strong></div>
               <div class="modes-legend" aria-label="Mode plot legend">
-                <span><i class="legend-cyan"></i>first basis / integer N</span>
-                <span><i class="legend-orange"></i>second basis / real R</span>
-                <span><i class="legend-white"></i>selected profile</span>
+                <span><i class="legend-cyan"></i>one-wavelength crop</span>
+                <span><i class="legend-orange"></i>seam / mismatch</span>
+                <span><i class="legend-white"></i>free boundary</span>
               </div>
             </div>
             <div id="modesCanvasWrap" class="modes-canvas-wrap">
-              <canvas id="modesCanvas" role="img" aria-label="Side-by-side plots of cylinder and Bessel radial modes with their common angular factor"></canvas>
+              <canvas id="modesCanvas" role="img" aria-label="A 28-fold global domain, a one-wavelength flat collar zoom, and a magnified non-integer seam"></canvas>
             </div>
-            <div class="axis-footer"><span id="modesAxisLeft">x = −8</span><span>profiles normalized on the visible window · zeros and phase preserved</span><span>rim x = 0</span></div>
+            <div class="axis-footer"><span>whole object</span><span>one wavelength → flat collar</span><span>seam-only zoom</span></div>
           </section>
         </div>
 
         <div class="freedom-strip">
           <article>
-            <span>01 / flat cylinder</span>
-            <h3>Two oscillatory radial solutions</h3>
-            <p>For <span class="formula">k² &lt; λ</span>, the bounded radial space is <span class="formula">span{cos(ωx), sin(ωx)}</span>. Choosing their coefficient ratio is choosing a phase <span class="formula">δ</span>.</p>
+            <span>01 / global Bessel mode</span>
+            <h3>One regular profile from the tip</h3>
+            <p>Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and discards <span class="formula">Y<sub>kR</sub></span>. There is no second tip-regular modified-Bessel companion for this positive-λ equation.</p>
           </article>
           <article>
-            <span>02 / cone tip</span>
-            <h3>One tip-regular Bessel solution</h3>
-            <p>Regularity discards <span class="formula">Y<sub>kR</sub></span>. There is no second tip-regular modified-Bessel companion for this positive-λ equation: <span class="formula">I/K</span> belong to the sign-flipped radial equation.</p>
+            <span>02 / one-wavelength zoom</span>
+            <h3>The cone becomes the flat collar</h3>
+            <p>Over one angular wavelength, the circumference coordinate is <span class="formula">ψ = Rφ</span> and curvature is only <span class="formula">1/R</span>. The Bessel oscillation becomes the local sine/cosine cylinder picture.</p>
           </article>
           <article>
-            <span>03 / relaxed order</span>
-            <h3>The scalar freedom becomes R</h3>
-            <p>Varying non-integer <span class="formula">R</span> changes the order <span class="formula">kR</span>, hence the radial Bessel phase. At <span class="formula">R = R<sub>*</sub></span>, the critical mode reaches <span class="formula">J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>.</p>
+            <span>03 / where the phase goes</span>
+            <h3>Phase freedom becomes real order</h3>
+            <p>The flat oscillatory equation has a two-dimensional <span class="formula">cos/sin</span> space. On the cone, varying non-integer <span class="formula">R</span> moves the phase of the sole regular Bessel profile—and leaves the angular seam shown above.</p>
           </article>
         </div>
       </section>
@@ -395,7 +389,7 @@
       <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">R = 28</span>, the quotient angle <span class="formula">2π/R</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
       <hr>
       <p class="eyebrow">Angular modes</p>
-      <p>The comparison panel evaluates the cylinder factors analytically and samples the cone factors from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>. At the exact crossing knot, the critical trace is imposed as <span class="formula">J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>; interpolation is only between nearby stored radial samples and the two endpoint orders.</p>
+      <p>The nested-zoom panel evaluates the whole 28-copy assembly, the selected one-wavelength collar, and the seam-only crop from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the main zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
     </dialog>
 
     <script src="cone-data.js"></script>

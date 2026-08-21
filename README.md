@@ -103,25 +103,24 @@ The cone laboratory has three linked views:
 2. **3D cone:** the intrinsic metric embedded as a long, narrow cone. The depth slider moves continuously from the nearly cylindrical rim to the tip.
 3. **Unfolded ×28:** twenty-eight sectors of angle `2π/R`. At `R*` the true angular seam is `0.339°`; at `R = 28` it closes exactly. A `×50` inset makes the initial gap legible without falsifying the main geometry.
 
-## Angular-mode comparison
+## One-wavelength nested zoom
 
-The third laboratory isolates a single angular factor `cos(kψ)` and places its cylinder and cone radial equations side by side. At the landing value `λ = 3.3232684745`, the half-cylinder equation is
-
-```text
-f″ + (λ − k²)f = 0.
-```
-
-For `k = 0, 1`, its bounded solution space is two-dimensional, spanned by `cos(ωx)` and `sin(ωx)`. Their coefficient ratio is a phase. For `k ≥ 2`, the equation has growing and decaying exponentials; boundedness as `x → −∞` keeps only `exp(√(k²−λ)x)`.
-
-On the cone the corresponding equation is
+The third laboratory puts the angular-mode comparison into one global-to-local picture. On the left, 28 copies of the relaxed quotient are assembled into the full wiggly object. A movable cyan box selects one angular wavelength,
 
 ```text
-r²f″ + rf′ + (λr² − k²R²)f = 0.
+Δφ = 2π/R,       rim arc length = R Δφ = 2π.
 ```
 
-Regularity at the tip keeps `J_{kR}` and rejects the singular `Y_{kR}` branch. There is no second tip-regular modified-Bessel solution of this positive-`λ` equation: `I` and `K` solve the sign-flipped radial equation, and `K` is singular at the tip. Thus the critical `k = 1` cylinder mode has a scalar phase freedom while its regular cone counterpart has only one radial profile for each fixed `R`.
+The large panel unwraps that exact physical patch into `(x, ψ)` coordinates. Its vertical extent is one quotient period `ψ ∈ [−π,π]`; its horizontal extent is a user-controlled radial collar. This is why the zoom has the same rectangular geometry as the flat half-cylinder. Moving the crop to the assembly seam places the true non-integer gap directly inside this large zoom. A second, tighter seam-only crop remains visible when the primary selection is elsewhere.
 
-The comparison dial visualizes how the relaxed real parameter supplies a new scalar direction: it moves from `R = 28` to `R* = 28.026397413`, changing the Bessel order and hence its oscillatory phase until `J_R*(ρ*) = 0`. This is a structural analogy, not an equality between the cylinder phase and `R`. The cylinder curves are evaluated analytically in JavaScript; the cone curves use the same precomputed endpoint Bessel tables as the continuation, with the exact critical rim zero inserted as a table knot.
+Every scale is evaluated from the same interpolated nonlinear branch record, Fourier–Bessel field, and free boundary used by the cone laboratory. The angular gap is not invented or visually substituted: it is
+
+```text
+gap angle = 2π(1 − 28/R),
+gap arc length at the rim = 2π(R − 28).
+```
+
+The accompanying explanation keeps the radial degree-of-freedom comparison explicit. On the cylinder, an oscillatory radial equation has the two-dimensional space `span{cos(ωx), sin(ωx)}`, whose coefficient ratio is a phase. On the cone, tip regularity keeps `J_{kR}` and rejects singular `Y_{kR}`; `I/K` instead belong to the sign-flipped equation. Varying real `R` changes the phase of the single regular Bessel profile and supplies the relaxed scalar direction used by the bifurcation.
 
 ## Reproduce the cone data
 

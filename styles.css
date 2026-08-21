@@ -158,10 +158,6 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .modes-control-block p { margin: 14px 0 0; color: rgba(19,33,38,.52); font-size: 9px; line-height: 1.65; }
 .light-controls input[type="range"] { background: linear-gradient(to right, var(--orange) var(--value), rgba(19,33,38,.18) var(--value)); }
 .light-controls .range-scale { color: rgba(19,33,38,.4); }
-.mode-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; margin-top: 17px; }
-.mode-picker button { aspect-ratio: 1; padding: 0; color: rgba(19,33,38,.55); background: transparent; border: 1px solid var(--line); cursor: pointer; font: 10px var(--mono); transition: .18s; }
-.mode-picker button:hover { color: var(--orange); border-color: var(--orange); }
-.mode-picker button.active { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 .parameter-pair { display: grid; grid-template-columns: 1fr 1fr; margin-top: 18px; border: 1px solid var(--line); }
 .parameter-pair div { min-width: 0; padding: 11px 10px; border-right: 1px solid var(--line); }
 .parameter-pair div:last-child { border-right: 0; }
@@ -260,7 +256,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .modes-lead { grid-template-columns: 1fr; gap: 20px; }
   .modes-laboratory { grid-template-columns: 1fr; }
   .modes-controls { border-right: 0; border-bottom: 1px solid var(--line); }
-  .modes-plot-panel { min-height: 650px; grid-template-rows: 66px 548px 36px; }
+  .modes-plot-panel { min-height: 862px; grid-template-rows: 66px 760px 36px; }
   .modes-plot-toolbar { padding: 0 13px; }
   .freedom-strip { grid-template-columns: 1fr; }
   .freedom-strip article { min-height: 215px; border-right: 0; border-bottom: 1px solid var(--line); }

@@ -1342,19 +1342,18 @@ window.addEventListener("resize", () => {
 solveAndRenderCone();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Angular-mode comparison. The cylinder curves are analytic separated
-// solutions. The cone curves interpolate the same precomputed Bessel tables
-// used by the finite-cone continuation above.
+// Global-to-local angular zoom. All three scales use the same interpolated
+// nonlinear cone record and the same precomputed Fourier–Bessel field.
 
 const modesState = {
-  k: 1,
-  transfer: 1,
-  depth: 8,
+  progress: .62,
+  crop: .5,
+  depth: 5,
+  solution: null,
   playing: false,
   playFrame: null,
 };
 
-const MODES_LAMBDA = coneNumerics.records.at(-1).lambda;
 const MODES_COLORS = {
   cyan: "#4da2a3",
   orange: "#ff7449",
@@ -1364,63 +1363,6 @@ const MODES_COLORS = {
   text: "rgba(241,238,229,.58)",
   faint: "rgba(241,238,229,.34)",
 };
-
-function modesOrder() {
-  return interpolateNumber(coneNumerics.targetN, coneNumerics.RStar, modesState.transfer);
-}
-
-function modesTableValue(values, q, rimValue) {
-  const grid = coneNumerics.profileGrid;
-  if (Math.abs(q - 1) < 1e-12) return rimValue;
-  const step = (grid.at(-1) - grid[0]) / (grid.length - 1);
-  const lowerIndex = Math.min(grid.length - 2, Math.max(0, Math.floor((q - grid[0]) / step)));
-  const lowerQ = grid[lowerIndex];
-  const upperQ = grid[lowerIndex + 1];
-  if (q < 1 && upperQ > 1) return interpolateNumber(values[lowerIndex], rimValue, (q - lowerQ) / (1 - lowerQ));
-  if (q > 1 && lowerQ < 1) return interpolateNumber(rimValue, values[lowerIndex + 1], (q - 1) / (upperQ - 1));
-  return tableValue(grid, values, q);
-}
-
-function modesCylinderProfiles(x) {
-  const k = modesState.k;
-  const discriminant = MODES_LAMBDA - k * k;
-  if (discriminant > 0) {
-    const frequency = Math.sqrt(discriminant);
-    const phase = modesState.transfer * Math.PI / 2;
-    return {
-      regime: "oscillatory",
-      parameter: frequency,
-      first: Math.cos(frequency * x),
-      second: Math.sin(frequency * x),
-      selected: Math.cos(frequency * x - phase),
-    };
-  }
-  const decay = Math.sqrt(-discriminant);
-  return {
-    regime: "evanescent",
-    parameter: decay,
-    first: Math.exp(decay * x),
-    second: Math.exp(-decay * x),
-    selected: Math.exp(decay * x),
-  };
-}
-
-function modesConeProfile(mode, x, transfer = modesState.transfer) {
-  const R = interpolateNumber(coneNumerics.targetN, coneNumerics.RStar, transfer);
-  const q = Math.max(0, (R + x) / R);
-  const landingRim = mode === 1
-    ? tableValue(coneNumerics.profileGrid, coneNumerics.profiles.landing[mode], 1)
-    : 1;
-  const crossingRim = mode === 1 ? 0 : 1;
-  const landing = modesTableValue(coneNumerics.profiles.landing[mode], q, landingRim);
-  const crossing = modesTableValue(coneNumerics.profiles.crossing[mode], q, crossingRim);
-  return interpolateNumber(landing, crossing, transfer);
-}
-
-function normalizedSeries(series, sharedScale = null) {
-  const scale = sharedScale ?? Math.max(1e-14, ...series.map((value) => Math.abs(value)));
-  return series.map((value) => value / scale);
-}
 
 function modesCanvasMetrics() {
   const canvas = $("#modesCanvas");
@@ -1627,33 +1569,354 @@ function renderModesComparison() {
   canvas.setAttribute("aria-label", `Angular mode ${modesState.k}: ${cylinder.regime} cylinder radial profiles compared with Bessel profiles at N 28 and real order ${currentR.toFixed(6)}.`);
 }
 
-function updateModesReadouts() {
-  const cylinder = modesCylinderProfiles(0);
-  const currentR = modesOrder();
-  $("#modesKValue").textContent = `k = ${modesState.k}`;
-  $("#modesTransferValue").textContent = `${Math.round(modesState.transfer * 100)}%`;
-  $("#modesPhaseValue").textContent = cylinder.regime === "oscillatory"
-    ? `${(modesState.transfer / 2).toFixed(3)}π`
-    : "not available";
-  $("#modesOrderValue").textContent = currentR.toFixed(6);
-  $("#modesDepthValue").textContent = `${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)} units`;
-  $("#modesAxisLeft").textContent = `x = −${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)}`;
-  $("#modesRegimeValue").textContent = cylinder.regime;
-  $("#modesDimensionValue").textContent = cylinder.regime === "oscillatory"
-    ? "2 cylinder → 1 cone"
-    : "1 bounded → 1 tip-regular";
-  if (modesState.k === 1 && modesState.transfer > .995) {
-    $("#modesPlotState").textContent = "critical k = 1 · J_R*(ρ*) = 0";
-  } else if (cylinder.regime === "oscillatory") {
-    $("#modesPlotState").textContent = `k = ${modesState.k} · phase δ ↔ order R`;
+function modesPolarPoint(plot, radius, angle, R) {
+  const scaled = radius / R * plot.radius;
+  return {
+    x: plot.cx + scaled * Math.cos(angle),
+    y: plot.cy - scaled * Math.sin(angle),
+  };
+}
+
+function modesFastField(solution) {
+  const sampleCount = coneNumerics.profileGrid.length;
+  const qMax = coneNumerics.profileGrid.at(-1);
+  const radial = solution.a.map((_, mode) => {
+    const samples = [];
+    for (let index = 0; index < sampleCount; index++) {
+      samples.push(coneRadialValue(mode, index / (sampleCount - 1) * qMax, solution));
+    }
+    return samples;
+  });
+  return (radius, psi) => {
+    const scaled = Math.max(0, Math.min(sampleCount - 1, radius / solution.R / qMax * (sampleCount - 1)));
+    const lower = Math.min(sampleCount - 2, Math.floor(scaled));
+    const amount = scaled - lower;
+    const cosine = Math.cos(psi);
+    let previousCosine = 1;
+    let currentCosine = cosine;
+    let value = 0;
+    for (let mode = 0; mode < solution.a.length; mode++) {
+      let angular;
+      if (mode === 0) angular = 1;
+      else if (mode === 1) angular = cosine;
+      else {
+        angular = 2 * cosine * currentCosine - previousCosine;
+        previousCosine = currentCosine;
+        currentCosine = angular;
+      }
+      const radialValue = interpolateNumber(radial[mode][lower], radial[mode][lower + 1], amount);
+      value += solution.a[mode] * radialValue * angular;
+    }
+    return value;
+  };
+}
+
+function modesRaster(rect, sampler, resolution = .62) {
+  const width = Math.max(2, Math.round(rect.width * resolution));
+  const height = Math.max(2, Math.round(rect.height * resolution));
+  const offscreen = document.createElement("canvas");
+  offscreen.width = width;
+  offscreen.height = height;
+  const offscreenContext = offscreen.getContext("2d");
+  const image = offscreenContext.createImageData(width, height);
+  for (let row = 0; row < height; row++) {
+    for (let column = 0; column < width; column++) {
+      const color = sampler((column + .5) / width, (row + .5) / height);
+      const pixel = (row * width + column) * 4;
+      image.data[pixel] = color[0];
+      image.data[pixel + 1] = color[1];
+      image.data[pixel + 2] = color[2];
+      image.data[pixel + 3] = 255;
+    }
+  }
+  offscreenContext.putImageData(image, 0, 0);
+  return offscreen;
+}
+
+function modesDrawGlobal(context, rect, solution, fieldValue) {
+  const plot = {
+    cx: rect.left + rect.width * .5,
+    cy: rect.top + rect.height * .54,
+    radius: Math.min(rect.width, rect.height - 42) * .43,
+  };
+  const localPlot = {
+    cx: (plot.cx - rect.left) / rect.width,
+    cy: (plot.cy - rect.top) / rect.height,
+    radius: plot.radius / Math.min(rect.width, rect.height),
+  };
+  const aspectScaleX = Math.min(rect.width, rect.height) / rect.width;
+  const aspectScaleY = Math.min(rect.width, rect.height) / rect.height;
+  const raster = modesRaster(rect, (u, v) => {
+    const dx = (u - localPlot.cx) / (localPlot.radius * aspectScaleX);
+    const dy = (localPlot.cy - v) / (localPlot.radius * aspectScaleY);
+    const radius = Math.hypot(dx, dy) * solution.R;
+    if (radius > solution.R + .75) return [16, 27, 32];
+    const coordinates = unfoldedCoordinates(Math.atan2(dy, dx), solution);
+    if (!coordinates) return radius <= solution.R + .45 ? [63, 31, 29] : [16, 27, 32];
+    const wallRadius = solution.R - coneBoundaryGraph(coordinates.psi, solution);
+    if (radius > wallRadius) return [15, 27, 32];
+    return coneColorFor(fieldValue(radius, coordinates.psi));
+  }, .58);
+  context.save();
+  context.imageSmoothingEnabled = true;
+  context.drawImage(raster, rect.left, rect.top, rect.width, rect.height);
+
+  context.strokeStyle = "rgba(241,238,229,.12)";
+  context.lineWidth = 1;
+  context.setLineDash([3, 6]);
+  [.35, .6, .82, 1].forEach((ratio) => {
+    context.beginPath();
+    context.arc(plot.cx, plot.cy, plot.radius * ratio, 0, TWO_PI);
+    context.stroke();
+  });
+  context.setLineDash([]);
+
+  context.beginPath();
+  let drawing = false;
+  for (let index = 0; index <= 1120; index++) {
+    const angle = index / 1120 * TWO_PI;
+    const coordinates = unfoldedCoordinates(angle, solution);
+    if (!coordinates) { drawing = false; continue; }
+    const wallRadius = solution.R - coneBoundaryGraph(coordinates.psi, solution);
+    const point = modesPolarPoint(plot, wallRadius, angle, solution.R);
+    if (!drawing) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+    drawing = true;
+  }
+  context.strokeStyle = MODES_COLORS.white;
+  context.lineWidth = 1.7;
+  context.shadowColor = "rgba(255,116,73,.45)";
+  context.shadowBlur = 5;
+  context.stroke();
+  context.shadowBlur = 0;
+
+  const gap = Math.max(0, TWO_PI * (1 - coneNumerics.targetN / solution.R));
+  if (gap > 1e-7) {
+    context.strokeStyle = MODES_COLORS.orange;
+    context.lineWidth = 1.4;
+    [-gap / 2, gap / 2].forEach((angle) => {
+      const inner = modesPolarPoint(plot, solution.R * .62, angle, solution.R);
+      const outer = modesPolarPoint(plot, solution.R * 1.06, angle, solution.R);
+      context.beginPath();
+      context.moveTo(inner.x, inner.y);
+      context.lineTo(outer.x, outer.y);
+      context.stroke();
+    });
+  }
+
+  const cropAngle = modesState.crop * TWO_PI;
+  const halfAngle = Math.PI / solution.R;
+  const innerRadius = Math.max(0, solution.R - modesState.depth);
+  const outerRadius = solution.R + .65;
+  const cropPoints = [
+    modesPolarPoint(plot, innerRadius, cropAngle - halfAngle, solution.R),
+    modesPolarPoint(plot, outerRadius, cropAngle - halfAngle, solution.R),
+    modesPolarPoint(plot, outerRadius, cropAngle + halfAngle, solution.R),
+    modesPolarPoint(plot, innerRadius, cropAngle + halfAngle, solution.R),
+  ];
+  context.beginPath();
+  cropPoints.forEach((point, index) => {
+    if (index === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+  });
+  context.closePath();
+  context.fillStyle = "rgba(77,162,163,.11)";
+  context.fill();
+  context.strokeStyle = MODES_COLORS.cyan;
+  context.lineWidth = 1.7;
+  context.stroke();
+
+  context.fillStyle = "rgba(241,238,229,.82)";
+  context.font = "8px DM Mono, monospace";
+  context.fillText("WHOLE 28-COPY ASSEMBLY", rect.left + 10, rect.top + 16);
+  context.fillStyle = MODES_COLORS.faint;
+  context.font = "7px DM Mono, monospace";
+  context.fillText(`R = ${solution.R.toFixed(6)} · s = ${solution.s.toFixed(4)}`, rect.left + 10, rect.top + 31);
+  context.fillStyle = MODES_COLORS.cyan;
+  context.fillText("1 λθ", cropPoints[1].x + 5, cropPoints[1].y - 5);
+  context.restore();
+  return { plot, cropPoints, gap };
+}
+
+function modesPatchCoordinates(solution, centerAngle, tangent) {
+  const angle = Math.atan2(
+    Math.sin(centerAngle + tangent / solution.R),
+    Math.cos(centerAngle + tangent / solution.R)
+  );
+  return unfoldedCoordinates(angle, solution);
+}
+
+function modesDrawPatch(context, rect, solution, fieldValue, options) {
+  const compact = Boolean(options.compact);
+  const labelHeight = compact ? 24 : 39;
+  const footerHeight = compact ? 14 : 22;
+  const plot = {
+    left: rect.left + (compact ? 8 : 12),
+    top: rect.top + labelHeight,
+    width: rect.width - (compact ? 16 : 24),
+    height: rect.height - labelHeight - footerHeight,
+  };
+  const xMin = -options.depth;
+  const xMax = compact ? .22 : .55;
+  const raster = modesRaster(plot, (u, v) => {
+    const x = interpolateNumber(xMin, xMax, u);
+    const tangent = interpolateNumber(options.tangentSpan, -options.tangentSpan, v);
+    const coordinates = modesPatchCoordinates(solution, options.centerAngle, tangent);
+    if (!coordinates) return [67, 31, 28];
+    const wall = -coneBoundaryGraph(coordinates.psi, solution);
+    if (x > wall) return [15, 27, 32];
+    return coneColorFor(fieldValue(solution.R + x, coordinates.psi));
+  }, compact ? .76 : .64);
+
+  context.save();
+  context.fillStyle = "rgba(12,22,27,.74)";
+  context.fillRect(rect.left, rect.top, rect.width, rect.height);
+  context.imageSmoothingEnabled = true;
+  context.drawImage(raster, plot.left, plot.top, plot.width, plot.height);
+
+  const xToPixel = (x) => plot.left + (x - xMin) / (xMax - xMin) * plot.width;
+  const tangentToPixel = (tangent) => plot.top + (options.tangentSpan - tangent) / (2 * options.tangentSpan) * plot.height;
+  context.strokeStyle = "rgba(241,238,229,.13)";
+  context.lineWidth = 1;
+  context.setLineDash([3, 6]);
+  [xMin, xMin / 2, 0].forEach((x) => {
+    context.beginPath(); context.moveTo(xToPixel(x), plot.top); context.lineTo(xToPixel(x), plot.top + plot.height); context.stroke();
+  });
+  [-.5, 0, .5].forEach((amount) => {
+    const y = tangentToPixel(amount * options.tangentSpan * 2);
+    context.beginPath(); context.moveTo(plot.left, y); context.lineTo(plot.left + plot.width, y); context.stroke();
+  });
+  context.setLineDash([]);
+
+  context.beginPath();
+  let drawing = false;
+  for (let index = 0; index <= 360; index++) {
+    const tangent = options.tangentSpan - index / 360 * 2 * options.tangentSpan;
+    const coordinates = modesPatchCoordinates(solution, options.centerAngle, tangent);
+    if (!coordinates) { drawing = false; continue; }
+    const x = -coneBoundaryGraph(coordinates.psi, solution);
+    const px = xToPixel(x);
+    const py = tangentToPixel(tangent);
+    if (!drawing) context.moveTo(px, py); else context.lineTo(px, py);
+    drawing = true;
+  }
+  context.strokeStyle = MODES_COLORS.white;
+  context.lineWidth = compact ? 1.3 : 2;
+  context.shadowColor = "rgba(255,116,73,.62)";
+  context.shadowBlur = compact ? 3 : 6;
+  context.stroke();
+  context.shadowBlur = 0;
+
+  context.strokeStyle = options.accent;
+  context.lineWidth = 1;
+  context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
+  context.fillStyle = "rgba(241,238,229,.83)";
+  context.font = `${compact ? 7 : 8}px DM Mono, monospace`;
+  context.fillText(options.title, rect.left + (compact ? 8 : 12), rect.top + (compact ? 15 : 17));
+  if (!compact) {
+    context.fillStyle = MODES_COLORS.faint;
+    context.font = "7px DM Mono, monospace";
+    context.textAlign = "right";
+    context.fillText(options.detail, rect.left + rect.width - 12, rect.top + 17);
+    context.textAlign = "left";
+    context.fillText(`x = −${options.depth.toFixed(1)}`, plot.left, rect.top + rect.height - 6);
+    context.textAlign = "right";
+    context.fillText("free rim x = 0", plot.left + plot.width, rect.top + rect.height - 6);
+  }
+  context.restore();
+  return plot;
+}
+
+function modesCropContainsSeam(solution) {
+  const cropAngle = modesState.crop * TWO_PI;
+  const distance = Math.abs(Math.atan2(Math.sin(cropAngle), Math.cos(cropAngle)));
+  const gap = Math.max(0, TWO_PI * (1 - coneNumerics.targetN / solution.R));
+  return distance <= Math.PI / solution.R + gap / 2;
+}
+
+function renderModesNestedZoom() {
+  const { canvas, context, width, height } = modesCanvasMetrics();
+  const solution = modesState.solution;
+  const fieldValue = modesFastField(solution);
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "#101b20";
+  context.fillRect(0, 0, width, height);
+  const compact = width < 650;
+  let globalRect;
+  let patchRect;
+  let seamRect;
+  if (compact) {
+    globalRect = { left: 12, top: 10, width: width - 24, height: height * .36 };
+    patchRect = { left: 12, top: height * .39, width: width - 24, height: height * .36 };
+    seamRect = { left: 12, top: height * .78, width: width - 24, height: height * .19 };
   } else {
-    $("#modesPlotState").textContent = `k = ${modesState.k} · bounded decay ↔ tip-regular J`;
+    globalRect = { left: 16, top: 18, width: width * .405, height: height - 36 };
+    patchRect = { left: width * .455, top: 28, width: width * .515, height: height * .61 };
+    seamRect = { left: width * .535, top: height * .72, width: width * .405, height: height * .225 };
+  }
+
+  const global = modesDrawGlobal(context, globalRect, solution, fieldValue);
+  const cropAngle = modesState.crop * TWO_PI;
+  const containsSeam = modesCropContainsSeam(solution);
+  const patchPlot = modesDrawPatch(context, patchRect, solution, fieldValue, {
+    centerAngle: cropAngle,
+    tangentSpan: Math.PI,
+    depth: modesState.depth,
+    title: "ONE ANGULAR WAVELENGTH · UNWRAPPED COLLAR",
+    detail: containsSeam ? "SEAM IS INSIDE THIS CROP" : "ψ-span = 2π · locally flat",
+    accent: MODES_COLORS.cyan,
+  });
+  modesDrawPatch(context, seamRect, solution, fieldValue, {
+    centerAngle: 0,
+    tangentSpan: .65,
+    depth: Math.min(2.2, modesState.depth),
+    title: global.gap < 1e-7 ? "SECOND ZOOM · SEAM CLOSED AT N = 28" : "SECOND ZOOM · SEAM ONLY · 0.2 λθ SPAN",
+    detail: "",
+    accent: MODES_COLORS.orange,
+    compact: true,
+  });
+
+  if (!compact) {
+    context.save();
+    context.strokeStyle = "rgba(77,162,163,.58)";
+    context.lineWidth = 1;
+    context.setLineDash([4, 5]);
+    context.beginPath();
+    context.moveTo(global.cropPoints[1].x, global.cropPoints[1].y);
+    context.lineTo(patchPlot.left, patchPlot.top);
+    context.moveTo(global.cropPoints[2].x, global.cropPoints[2].y);
+    context.lineTo(patchPlot.left, patchPlot.top + patchPlot.height);
+    context.stroke();
+    context.restore();
+  }
+
+  const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
+  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies, a one-wavelength flat collar crop, and a seam-only crop showing a ${gapDegrees.toFixed(3)} degree mismatch.`);
+}
+
+function updateModesReadouts() {
+  const solution = modesState.solution;
+  const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
+  const cropDegrees = modesState.crop * 360;
+  $("#modesTransferValue").textContent = `${Math.round(modesState.progress * 100)}%`;
+  $("#modesOrderValue").textContent = solution.R.toFixed(6);
+  $("#modesAmplitudeValue").textContent = solution.s.toFixed(4);
+  $("#modesCropValue").textContent = modesState.crop < .012 ? "centered on seam" : `${cropDegrees.toFixed(0)}° from seam`;
+  $("#modesDepthValue").textContent = `${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)} units`;
+  $("#modesGapValue").textContent = gapDegrees < 5e-5 ? "0° · closed" : `${gapDegrees.toFixed(3)}°`;
+  $("#modesWavelengthValue").textContent = `${TWO_PI.toFixed(3)} units`;
+  $("#modesCurvatureValue").textContent = `1 / ${solution.R.toFixed(3)}`;
+  if (gapDegrees < 5e-5) {
+    $("#modesPlotState").textContent = "integer landing · 28 copies close exactly";
+  } else if (modesCropContainsSeam(solution)) {
+    $("#modesPlotState").textContent = `R = ${solution.R.toFixed(6)} · seam inside main zoom`;
+  } else {
+    $("#modesPlotState").textContent = `R = ${solution.R.toFixed(6)} · seam tracked below`;
   }
 }
 
 function updateModesComparison() {
+  modesState.solution = coneRecordAt(modesState.progress);
   updateModesReadouts();
-  renderModesComparison();
+  renderModesNestedZoom();
 }
 
 function stopModesPlayback() {
@@ -1661,51 +1924,47 @@ function stopModesPlayback() {
   if (modesState.playFrame) cancelAnimationFrame(modesState.playFrame);
   modesState.playFrame = null;
   $("#modesPlayIcon").textContent = "▶";
-  $("#modesPlayLabel").textContent = modesState.transfer > .999 ? "Replay phase into order" : "Sweep phase into order";
+  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Replay crossing → landing" : "Play crossing → landing";
 }
 
 function toggleModesPlayback() {
   if (modesState.playing) { stopModesPlayback(); return; }
-  if (modesState.transfer > .999) modesState.transfer = 0;
+  if (modesState.progress > .999) modesState.progress = 0;
   modesState.playing = true;
   $("#modesPlayIcon").textContent = "Ⅱ";
   $("#modesPlayLabel").textContent = "Pause";
-  const startTransfer = modesState.transfer;
+  const startProgress = modesState.progress;
   const start = performance.now();
-  const duration = Math.max(700, 4200 * (1 - startTransfer));
+  let lastRender = 0;
+  const duration = Math.max(700, 5200 * (1 - startProgress));
   const tick = (now) => {
     if (!modesState.playing) return;
     const amount = Math.min(1, (now - start) / duration);
     const eased = amount * amount * (3 - 2 * amount);
-    modesState.transfer = startTransfer + (1 - startTransfer) * eased;
-    $("#modesTransferRange").value = modesState.transfer;
+    modesState.progress = startProgress + (1 - startProgress) * eased;
+    $("#modesTransferRange").value = modesState.progress;
     setRangeFill($("#modesTransferRange"));
-    updateModesComparison();
+    if (now - lastRender > 65 || amount >= 1) {
+      updateModesComparison();
+      lastRender = now;
+    }
     if (amount >= 1) { stopModesPlayback(); return; }
     modesState.playFrame = requestAnimationFrame(tick);
   };
   modesState.playFrame = requestAnimationFrame(tick);
 }
 
-document.querySelectorAll("[data-mode-k]").forEach((button) => {
-  button.setAttribute("aria-pressed", String(Number(button.dataset.modeK) === modesState.k));
-  button.addEventListener("click", () => {
-    stopModesPlayback();
-    modesState.k = Number(button.dataset.modeK);
-    document.querySelectorAll("[data-mode-k]").forEach((candidate) => {
-      const active = candidate === button;
-      candidate.classList.toggle("active", active);
-      candidate.setAttribute("aria-pressed", String(active));
-    });
-    updateModesComparison();
-  });
-});
-
 setRangeFill($("#modesTransferRange"));
+setRangeFill($("#modesCropRange"));
 setRangeFill($("#modesDepthRange"));
 $("#modesTransferRange").addEventListener("input", (event) => {
   stopModesPlayback();
-  modesState.transfer = Number(event.target.value);
+  modesState.progress = Number(event.target.value);
+  setRangeFill(event.target);
+  updateModesComparison();
+});
+$("#modesCropRange").addEventListener("input", (event) => {
+  modesState.crop = Number(event.target.value);
   setRangeFill(event.target);
   updateModesComparison();
 });
@@ -1717,23 +1976,20 @@ $("#modesDepthRange").addEventListener("input", (event) => {
 $("#modesPlayButton").addEventListener("click", toggleModesPlayback);
 $("#modesResetButton").addEventListener("click", () => {
   stopModesPlayback();
-  Object.assign(modesState, { k: 1, transfer: 1, depth: 8 });
-  $("#modesTransferRange").value = modesState.transfer;
+  Object.assign(modesState, { progress: .62, crop: .5, depth: 5 });
+  $("#modesTransferRange").value = modesState.progress;
+  $("#modesCropRange").value = modesState.crop;
   $("#modesDepthRange").value = modesState.depth;
   setRangeFill($("#modesTransferRange"));
+  setRangeFill($("#modesCropRange"));
   setRangeFill($("#modesDepthRange"));
-  document.querySelectorAll("[data-mode-k]").forEach((button) => {
-    const active = Number(button.dataset.modeK) === 1;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
   updateModesComparison();
 });
 
 let modesResizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(modesResizeTimer);
-  modesResizeTimer = setTimeout(renderModesComparison, 140);
+  modesResizeTimer = setTimeout(renderModesNestedZoom, 140);
 });
 
 updateModesComparison();
