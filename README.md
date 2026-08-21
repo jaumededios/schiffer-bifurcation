@@ -1,6 +1,6 @@
 # A counterexample to Schiffer's conjecture
 
-A browser-based narrative and numerical visualization of the Schiffer construction: why direct disk bifurcation is obstructed, why the half-cylinder is flexible, how a long flat cone reproduces the cylinder near its rim, how real Bessel order replaces cylinder phase, and how a nonlinear branch lands at integer symmetry order.
+Let `Ω⊂ℝ²` be a smooth bounded domain and suppose a nonconstant eigenfunction satisfies `−Δu=λu` in `Ω`, with both `u=constant` and `∂νu=0` on `∂Ω`. Schiffer's conjecture says that this overdetermined boundary behavior should force `Ω` to be a disk. This browser-based narrative explains why the disk is locally rigid, why the analogous problem is flexible on the half-cylinder and sphere, and how that flexibility can be transferred back to the plane using long cones and an integer symmetry landing.
 
 ## Narrative structure
 

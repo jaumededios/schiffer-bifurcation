@@ -37,7 +37,8 @@ a { color: inherit; }
 .intro h1 { align-self: center; margin: 0; max-width: 1200px; font: 300 clamp(70px, 10vw, 150px)/.83 var(--serif); letter-spacing: -.055em; }
 .intro-bottom { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 50px; }
 .intro-bottom p { grid-column: 2; max-width: 620px; margin: 0; color: var(--muted); font-size: clamp(15px, 1.35vw, 20px); line-height: 1.65; }
-.intro-bottom p span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
+.intro-bottom p > span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
+.intro-bottom p > .katex { font-family: KaTeX_Main, serif; font-size: .92em; }
 .intro-bottom a { width: 210px; display: flex; justify-content: space-between; padding-bottom: 10px; text-decoration: none; border-bottom: 1px solid var(--ink); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 
 .intro { order: 0; }
