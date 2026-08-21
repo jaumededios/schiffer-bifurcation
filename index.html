@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive numerical visualizations of the Schiffer bifurcation on a half-cylinder and its finite-cone landing.">
-    <title>Schiffer bifurcation laboratory</title>
+    <meta name="description" content="An interactive visual story of the Schiffer counterexample: disk rigidity, cylinder bifurcation, long cones, Debye phase, and integer landing.">
+    <title>How to escape the disk · Schiffer visual story</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23132126'/%3E%3Cpath d='M8 6v20M8 6c9 0 9 7 16 7M8 26c9 0 9-7 16-7' fill='none' stroke='%23f1eee5' stroke-width='1.5'/%3E%3Cpath d='M24 8v16' stroke='%23ff7449' stroke-width='2.5'/%3E%3C/svg%3E">
@@ -17,7 +17,7 @@
     <header class="topbar">
       <a class="brand" href="#top" aria-label="Schiffer bifurcation laboratory home">
         <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
-        <span>Schiffer bifurcation laboratory</span>
+        <span>Schiffer · a visual proof story</span>
       </a>
       <div class="status"><i></i><span>numerical · interactive</span></div>
       <button id="methodButton" class="method-button" type="button">Numerical method</button>
@@ -25,21 +25,123 @@
 
     <main id="top">
       <section class="intro">
-        <div class="intro-index">Experiment 01 <span>/</span> Half-cylinder</div>
-        <h1>A boundary begins<br>to move.</h1>
+        <div class="intro-index">One obstruction <span>/</span> one escape route <span>/</span> one integer landing</div>
+        <h1>How do you escape<br>the disk?</h1>
         <div class="intro-bottom">
-          <p>We look only at a collar of the infinite half-cylinder. Move <i>λ</i> inside <span>(1, 4)</span>, then turn on the branch parameter <i>s</i>. At <i>s</i> = 0 the boundary is flat; away from zero it begins in the critical first Fourier mode and acquires solved higher harmonics.</p>
-          <a href="#experiment">Enter the collar <span>↓</span></a>
+          <p>The disk seems spectrally locked. The cylinder can bifurcate. A very long cone lets us carry that flexible local picture back toward the plane—provided its continuously varying angle lands on an integer. We will follow one numerical example all the way to <span>N = 28</span>.</p>
+          <a href="#question">Start with the obstruction <span>↓</span></a>
         </div>
+      </section>
+
+      <section id="question" class="story-question">
+        <div class="story-heading">
+          <span class="section-number">01</span>
+          <div><p class="eyebrow">The overdetermined question</p><h2>The disk is the obvious solution. Is it alone?</h2></div>
+        </div>
+        <div class="question-grid">
+          <div class="question-copy">
+            <p>Schiffer asks whether a bounded planar domain carrying a nonconstant Neumann eigenfunction with one constant boundary value must be a disk. After normalization, the boundary supplies both the value and its normal derivative—Cauchy data for an elliptic equation.</p>
+            <p class="story-correction"><span>Careful:</span> the disk is an example of the Schiffer property, not a counterexample. A counterexample must be a genuinely noncircular bounded domain with the same data.</p>
+          </div>
+          <div class="hero-equation" aria-label="The normalized Schiffer overdetermined problem">
+            <span>−Δu = λu</span><small>inside Ω</small>
+            <span>u = 1</span><small>on ∂Ω</small>
+            <span>∂<sub>ν</sub>u = 0</span><small>on ∂Ω</small>
+          </div>
+        </div>
+        <div class="spectral-gate">
+          <div class="gate-copy"><p class="eyebrow">The linear test</p><h3>To move the boundary, two spectra must meet.</h3><p>At a symmetric solution, a nonradial shape direction can enter the linearized kernel only when the radial Neumann eigenvalue is also a Dirichlet eigenvalue in that angular mode. Without this coincidence, the implicit-function heuristic predicts local isolation after geometric symmetries are removed.</p></div>
+          <div class="gate-diagram" role="img" aria-label="A radial Neumann state and a nonradial Dirichlet state meeting at one eigenvalue open a bifurcation kernel">
+            <div><span>radial state</span><strong>Neumann eigenvalue</strong><i>λ<sub>rad</sub></i></div>
+            <b aria-hidden="true">+</b>
+            <div><span>angular shape mode</span><strong>Dirichlet eigenvalue</strong><i>λ<sub>ang</sub></i></div>
+            <b aria-hidden="true">=</b>
+            <div class="gate-result"><span>when λ<sub>rad</sub> = λ<sub>ang</sub></span><strong>kernel opens</strong><i>bifurcation can begin</i></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="disk-obstruction" class="disk-obstruction">
+        <header class="story-heading light-story-heading">
+          <span class="section-number">02</span>
+          <div><p class="eyebrow">Try the linear test on the disk</p><h2>The only open door is a translation.</h2></div>
+        </header>
+        <div class="disk-obstruction-grid">
+          <div class="disk-sketch" role="img" aria-label="Disk radial mode and an infinitesimal translation">
+            <svg viewBox="0 0 420 300" aria-hidden="true">
+              <defs><radialGradient id="diskField"><stop offset="0" stop-color="#ff7449" stop-opacity=".72"/><stop offset=".52" stop-color="#e9e2cb" stop-opacity=".46"/><stop offset="1" stop-color="#32868c" stop-opacity=".76"/></radialGradient></defs>
+              <circle cx="175" cy="150" r="106" fill="url(#diskField)" stroke="#f1eee5" stroke-width="2"/>
+              <circle cx="175" cy="150" r="61" fill="none" stroke="rgba(241,238,229,.34)"/>
+              <path d="M277 150h70m-17-15 17 15-17 15" fill="none" stroke="#ff7449" stroke-width="2"/>
+              <text x="175" y="154" text-anchor="middle">J₀(ρr)</text>
+              <text x="312" y="125" text-anchor="middle">ℓ = 1</text>
+              <text x="312" y="185" text-anchor="middle">translation</text>
+            </svg>
+          </div>
+          <div class="disk-equation-stack">
+            <article><span>radial Neumann state</span><strong>u(r) = J<sub>0</sub>(ρr)</strong><p>Its boundary condition is <span class="formula">J<sub>1</sub>(ρ)=0</span>.</p></article>
+            <article><span>candidate angular kernel ℓ</span><strong>J<sub>ℓ</sub>(ρ)=0</strong><p>The same positive <span class="formula">ρ</span> would have to be a zero of two integer-order Bessel functions.</p></article>
+          </div>
+          <div class="bourget-card">
+            <span>Bourget–Siegel obstruction</span>
+            <h3>No shared positive zeros at distinct integer orders.</h3>
+            <p>Every <span class="formula">ℓ≥2</span> is excluded. The surviving <span class="formula">ℓ=1</span> direction merely translates the disk, so it produces no new shape. The direct disk bifurcation is spectrally locked.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="borrow-flexibility" class="borrow-flexibility">
+        <header class="story-heading">
+          <span class="section-number">03</span>
+          <div><p class="eyebrow">Change the ambient geometry</p><h2>Elsewhere, the same problem can move.</h2></div>
+        </header>
+        <div class="borrow-lead"><p>The obstruction is not a universal failure of bifurcation. On a flat cylinder and on the sphere, the spectral branches have room to cross. Those examples suggest a strategy: borrow the cylinder’s local flexibility, but recover a bounded planar object at the end.</p></div>
+        <div class="world-cards">
+          <article>
+            <div class="world-sketch cylinder-world" aria-hidden="true"><i></i><i></i><i></i><span></span></div>
+            <span>flat cylinder</span><h3>A propagating first mode, then decaying higher modes.</h3><p>For <span class="formula">1&lt;λ&lt;4</span>, the first angular channel oscillates while every <span class="formula">k≥2</span> channel is evanescent. This is the flexible model we can compute explicitly.</p>
+          </article>
+          <article>
+            <div class="world-sketch sphere-world" aria-hidden="true"><i></i><span></span></div>
+            <span>sphere</span><h3>Curvature separates the spectral branches.</h3><p>Schiffer-type bifurcations also occur in spherical geometry. The lesson is conceptual: once scaling no longer locks every eigenvalue together, nontrivial crossings can appear.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="geometric-escape" class="geometric-escape">
+        <header class="experiment-header geometry-header">
+          <div><span class="section-number">04</span><div><p class="eyebrow">The geometric move</p><h2>Hide the cylinder inside a disk.</h2></div></div>
+          <div class="equations"><span>one sector: 2π/N</span><span>cone length: N</span><small>N = 28 running example</small></div>
+        </header>
+        <div class="geometry-lead"><p>Take an <span>N</span>-fold object, keep one angular sector, and quotient its two radial sides. After normalizing the rim circumference, that tiny sector becomes a cone of length <span>N</span>. Near its far rim the cone is almost a cylinder. Perturb there, then unfold only when the reciprocal aperture becomes the integer <span>N</span>.</p></div>
+        <div class="geometry-laboratory">
+          <aside class="geometry-controls">
+            <div class="control-heading"><span>Quotient → perturb → unfold</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
+            <div class="geometry-stages" aria-label="Four stages of the geometric construction">
+              <button type="button" data-story-stage="0"><span>01</span><strong>cut one sector</strong><small>from a 28-fold disk</small></button>
+              <button type="button" data-story-stage="0.333"><span>02</span><strong>form the cone</strong><small>normalize its rim</small></button>
+              <button type="button" data-story-stage="0.666"><span>03</span><strong>perturb the collar</strong><small>use the cylinder model</small></button>
+              <button type="button" data-story-stage="1"><span>04</span><strong>unfold at N</strong><small>recover the plane</small></button>
+            </div>
+            <div class="geometry-scrub"><div class="control-label"><label for="storyGeometryRange">construction</label><output id="storyGeometryValue">cut one sector</output></div><input id="storyGeometryRange" type="range" min="0" max="1" value="0" step="0.002"></div>
+            <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Play the geometric move</span></button>
+          </aside>
+          <section class="geometry-canvas-panel" aria-labelledby="storyGeometryState">
+            <div class="geometry-toolbar"><span class="live-dot"></span><strong id="storyGeometryState">one of 28 sectors selected</strong><span>schematic geometry · numerical landing boundary</span></div>
+            <div id="storyGeometryCanvasWrap" class="geometry-canvas-wrap"><canvas id="storyGeometryCanvas" role="img" aria-label="Animated sequence cutting one disk sector, turning it into a long cone, perturbing its rim, and unfolding an N-fold wiggly disk"></canvas></div>
+            <div class="axis-footer"><span>disk</span><span>one normalized quotient</span><span>disk again</span></div>
+          </section>
+        </div>
+        <div class="geometry-principle"><strong>The cone supplies the missing continuous parameter.</strong><p>For a disk, the angular order is an integer. On the quotient cone, its reciprocal aperture <span class="formula">R</span> is real. We may bifurcate at <span class="formula">R_*=28.026397…</span>, let the nonlinear branch decrease <span class="formula">R</span>, and unfold when it reaches <span class="formula">28</span>.</p></div>
       </section>
 
       <section id="experiment" class="experiment">
         <header class="experiment-header">
           <div>
-            <span class="section-number">01</span>
+            <span class="section-number">05</span>
             <div>
-              <p class="eyebrow">Variable domain / live field</p>
-              <h2>Near-boundary view</h2>
+              <p class="eyebrow">Make the limiting cylinder problem concrete</p>
+              <h2>First, move the flat wall.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Model equations">
@@ -49,6 +151,11 @@
             <small>on Γ<sub>s</sub></small>
           </div>
         </header>
+
+        <div class="experiment-story-lead">
+          <p><span>The cylinder limit.</span> On every compact spectral window <span class="formula">K⊂(1,4)</span>, the fixed-collar analysis has a uniform resonant first mode and uniformly invertible higher modes. The browser below is the finite-mode numerical version of that local mechanism: choose <span class="formula">λ</span>, then turn on the wall amplitude <span class="formula">s</span>.</p>
+          <p><span>What to watch.</span> The bright right edge is unknown. At <span class="formula">s=0</span> it is flat; the first harmonic moves it, and the solve simultaneously generates the next wall harmonics and the field required by both boundary conditions.</p>
+        </div>
 
         <div class="laboratory">
           <aside class="controls" aria-label="Simulation controls">
@@ -153,10 +260,10 @@
       <section id="cone-experiment" class="experiment cone-experiment">
         <header class="experiment-header cone-header">
           <div>
-            <span class="section-number">02</span>
+            <span class="section-number">08</span>
             <div>
-              <p class="eyebrow">Finite cone / numerical integer landing</p>
-              <h2>The seam closes.</h2>
+              <p class="eyebrow">Now start the actual cone branch</p>
+              <h2>Land on the integer.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Cone model equations">
@@ -266,10 +373,10 @@
       <section id="modes-experiment" class="modes-experiment">
         <header class="experiment-header modes-header">
           <div>
-            <span class="section-number">03</span>
+            <span class="section-number">09</span>
             <div>
-              <p class="eyebrow">Global cone / one wavelength / flat collar</p>
-              <h2>One picture, three scales.</h2>
+              <p class="eyebrow">Verify the local story inside the global object</p>
+              <h2>One solution, three scales.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
@@ -372,25 +479,47 @@
         </div>
       </section>
 
-      <section class="interpretation">
-        <span class="section-number">04</span>
-        <div>
-          <p class="eyebrow">How to read the picture</p>
-          <h2>The right edge is the unknown.</h2>
+      <section id="phase-story" class="phase-story">
+        <header class="story-heading">
+          <span class="section-number">07</span>
+          <div><p class="eyebrow">The missing degree of freedom</p><h2>On the cylinder it is phase. On the cone it is R.</h2></div>
+        </header>
+        <div class="phase-story-lead">
+          <p>The cylinder’s critical radial channel has two Cauchy directions, so <span class="formula">A cos(ωx)+B sin(ωx)</span> is a wave with a freely changing phase. Tip regularity leaves only one cone profile, <span class="formula">J<sub>R</sub></span>. Debye restores the missing coordinate: changing the real order <span class="formula">R</span> changes the phase seen in the rim collar.</p>
         </div>
-        <div class="interpretation-copy">
-          <p>The vertical direction is the periodic angle <i>θ</i>. The horizontal direction runs inward along the cylinder. Everything to the right of the bright boundary lies outside the domain.</p>
-          <p>As <i>λ</i> approaches 4, the <i>k</i> = 2 correction decays more slowly: its natural length <span class="formula">1 / √(4 − λ)</span> becomes large. This part is a genuine feature of the cylinder mode equation.</p>
+        <div class="phase-derivation-grid">
+          <article>
+            <span>01 / cylinder-limit curvature</span>
+            <h3>The branch bends toward smaller cones.</h3>
+            <div class="phase-formula"><i>Γ(λ)</i><b>=</b><i>√[(λ−1)(4−λ)] / [4 acos(λ<sup>−1/2</sup>)]</i></div>
+            <div class="phase-formula"><i>R″(0)</i><b>=</b><i>−Γ(λ) + O(R<sup>−1</sup>) &lt; 0</i></div>
+            <p>The leading coefficient comes from the flat-cylinder collar calculation. The negative sign is the mechanism we need: a branch starting just above an integer moves down toward it.</p>
+          </article>
+          <article>
+            <span>02 / Debye chain rule</span>
+            <h3>Order drift becomes phase drift.</h3>
+            <div class="phase-formula"><i>ξ′(R)</i><b>=</b><i>−acos(R/ρ)</i></div>
+            <div class="phase-formula"><i>Δξ(s)</i><b>=</b><i>½ ξ′(R<sub>*</sub>)R″(0)s² + O(s⁴)</i></div>
+            <p>The response is locally linear when measured against <span class="formula">R</span>, but quadratic when measured along the signed branch amplitude <span class="formula">s</span>. That is why there is no contradiction between the two plots.</p>
+          </article>
+        </div>
+        <div class="phase-story-lab">
+          <aside>
+            <div class="control-heading"><span>Actual N = 28 branch</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
+            <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">s = 0</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>integer landing</span></div></div>
+            <div class="phase-story-readout"><div><span>real order R(s)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase Δξ(s)</span><strong id="phaseStoryPhaseValue">0°</strong></div><div><span>stored branch curvature</span><strong>R″(0) = −0.372069</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">−Γ(λ) = −0.317815</strong></div></div>
+          </aside>
+          <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic departure from the crossing</strong><span>solid: continued branch · dashed: base quadratic</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with quadratic tangent laws"></canvas></div><div class="axis-footer"><span>s = 0</span><span>same branch, two coordinates</span><span>s = landing</span></div></section>
         </div>
       </section>
 
       <section id="debye-experiment" class="debye-experiment">
         <header class="experiment-header debye-header">
           <div>
-            <span class="section-number">05</span>
+            <span class="section-number">06</span>
             <div>
-              <p class="eyebrow">Rim asymptotics / one local dictionary</p>
-              <h2>Debye approximations.</h2>
+              <p class="eyebrow">Compare the cone with its cylinder limit</p>
+              <h2>Different functions, same local modes.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Collar coordinate and order-to-phase equations">
@@ -478,11 +607,51 @@
           <article><span>bifurcation bookkeeping</span><strong>Linear in R; quadratic along s.</strong><p>Locally <span class="formula">Δξ ≈ ξ′(R<sub>*</sub>)(R−R<sub>*</sub>)</span>. Since the branch has <span class="formula">R(s)−R<sub>*</sub> = O(s²)</span>, the same phase motion is quadratic when parameterized by <span class="formula">s</span>.</p></article>
         </div>
       </section>
+
+      <section id="abundance-experiment" class="abundance-experiment">
+        <header class="experiment-header abundance-header">
+          <div><span class="section-number">10</span><div><p class="eyebrow">Is 28 an accident?</p><h2>There are many places to begin.</h2></div></div>
+          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>J<sub>1</sub>(ρ)=J<sub>R</sub>(ρ)=0</span><span>{R}=R−⌊R⌋</span><small>10,000 real crossings</small></div>
+        </header>
+        <div class="abundance-lead">
+          <p>Each dot is a numerically polished common-zero crossing, plotted by its real order <span>R</span> and fractional part <span>{R}</span>. A dot close to the bottom begins just above an integer—the exact geometry needed before the negative quadratic drift. Increase the logarithmic cutoff and the opportunities keep arriving.</p>
+          <p>The cloud is evidence, not the density proof. The proof aligns two independent Debye phases by a Kronecker-torus argument; that is stronger than merely assuming the visible fractional parts are equidistributed.</p>
+        </div>
+        <div class="abundance-laboratory">
+          <aside class="abundance-controls">
+            <div class="control-heading"><span>Exhaustive crossing search</span><button id="abundanceResetButton" type="button">Reset</button></div>
+            <div class="abundance-control-block">
+              <div class="control-label"><label for="abundanceCutoffRange">integer cutoff · logarithmic</label><output id="abundanceCutoffValue">N ≤ 100</output></div>
+              <input id="abundanceCutoffRange" type="range" min="0" max="1000" value="500" step="1">
+              <div class="range-scale"><span>N = 10</span><span>N = 841</span></div>
+              <p>Only the cutoff changes. The browser reveals stored search records; it does not manufacture or resample points.</p>
+            </div>
+            <button id="abundancePlayButton" class="play-button" type="button" aria-pressed="false"><span id="abundancePlayIcon">▶</span><span id="abundancePlayLabel">Play the search</span></button>
+            <div class="abundance-readout">
+              <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
+              <div><span>smallest visible {R}</span><strong id="abundanceBestValue">—</strong></div>
+              <div><span>search window</span><strong>2 ≤ λ ≤ 3</strong></div>
+              <div><span>running example</span><strong>R* = 28.026397</strong></div>
+            </div>
+            <div class="abundance-provenance"><span>Provenance</span><p>The cloud contains the first 10,000 crossings ordered by <span class="formula">R</span>, polished to 60 decimal digits and exhaustive through <span class="formula">R=841.0148…</span>. The orange <span class="formula">N=28</span> marker is a separate real crossing at <span class="formula">λ=3.317011</span>, outside this cloud’s <span class="formula">[2,3]</span> window.</p></div>
+          </aside>
+          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
+            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">loading crossing data…</strong></div><div><span>hover a point for its zero indices</span></div></div>
+            <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
+            <div class="axis-footer"><span>small R</span><span>fractional order {R} versus R</span><span>large R</span></div>
+          </section>
+        </div>
+        <div class="abundance-conclusion">
+          <span>What the story has gained</span>
+          <h3>The disk had no continuous angular parameter. The cone created one.</h3>
+          <p>Debye explains how real order acts like cylinder phase. The nonlinear calculation says the order moves downward. The finite search exhibits increasingly close starting points; the Kronecker–Debye argument supplies them arbitrarily close to integers. Integer landing then turns the quotient solution back into a bounded, noncircular planar domain.</p>
+        </div>
+      </section>
     </main>
 
     <footer>
-      <span>Schiffer bifurcation laboratory</span>
-      <span>Half-cylinder → finite cone → integer landing</span>
+      <span>Schiffer · a visual proof story</span>
+      <span>disk obstruction → cylinder limit → cone → integer landing</span>
       <a href="#top">Back to top ↑</a>
     </footer>
 
@@ -505,9 +674,18 @@
       <p class="eyebrow">Debye approximations</p>
       <p>The bottom laboratory compares radial functions rather than fitted fields. At <span class="formula">x=r−R</span>, the exact tabulated profiles <span class="formula">J<sub>kR</sub>(ρr/R)</span> are rim-normalized and compared with the limiting cylinder ODE <span class="formula">f″+(λ−k²)f=0</span>. The <span class="formula">k=1</span> curve is Cauchy-normalized and compared with its anchored Debye phase; the <span class="formula">k=2,3</span> curves are divided by their rim values and compared with <span class="formula">e<sup>√(k²−λ)x</sup></span>.</p>
       <p>The critical <span class="formula">k=1</span> curve interpolates the dense evaluated profiles stored along the branch. The <span class="formula">k=2,3</span> curves interpolate their precomputed endpoint Bessel tables over the very short interval <span class="formula">R∈[28,28.026397…]</span>. Tightening the collar is the numerical test of the local asymptotic claim: the discrepancies shrink as <span class="formula">x→0</span>.</p>
+      <hr>
+      <p class="eyebrow">Story diagrams and phase drift</p>
+      <p>The four-stage disk–cone animation is a geometric guide, not a PDE simulation: its disk field and intermediate cone shading are schematic. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">N=28</span> landing. In the order/phase graph, the solid curves interpolate the actual continuation records while the dashed curves show the quadratic tangent law from <span class="formula">R″(0)</span>.</p>
+      <hr>
+      <p class="eyebrow">Near-integer crossing search</p>
+      <p>The final scatter plot is built from a saved exhaustive search of the first 10,000 crossings, ordered by <span class="formula">R</span>, satisfying <span class="formula">J₁(ρ)=J<sub>R</sub>(ρ)=0</span> and <span class="formula">2≤ρ²/R²≤3</span>. The roots were polished to 60 decimal digits; the browser stores nine-decimal display copies and derives <span class="formula">{R}</span> and <span class="formula">λ</span> from them. The orange <span class="formula">N=28</span> point comes from the separate continued example and is excluded from those statistics because its <span class="formula">λ≈3.317011</span> lies outside the search window.</p>
     </dialog>
 
     <script src="cone-data.js"></script>
+    <script src="abundance-data.js"></script>
     <script src="app.js"></script>
+    <script src="story.js"></script>
+    <script src="abundance.js"></script>
   </body>
 </html>

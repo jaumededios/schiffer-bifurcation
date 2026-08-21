@@ -1,6 +1,23 @@
-# Schiffer bifurcation laboratory
+# Schiffer visual proof story
 
-A browser-based numerical visualization of the Schiffer problem, from the infinite half-cylinder collar to a finite cone branch that lands at an integer symmetry order.
+A browser-based narrative and numerical visualization of the Schiffer construction: why direct disk bifurcation is obstructed, why the half-cylinder is flexible, how a long flat cone reproduces the cylinder near its rim, how real Bessel order replaces cylinder phase, and how a nonlinear branch lands at integer symmetry order.
+
+## Narrative structure
+
+The website is ordered as one argument rather than a gallery of simulations:
+
+1. The normalized overdetermined problem and its linear spectral-coincidence test.
+2. The disk obstruction: `J₁(ρ)=0` and `J_ℓ(ρ)=0` cannot share a positive zero for integer `ℓ≥2` by the Bourget–Siegel theorem; `ℓ=1` is translation.
+3. The flexible cylinder and sphere analogues.
+4. The quotient move from one `N`-fold disk sector to a length-`N` cone and its nearly cylindrical rim.
+5. The live half-cylinder free-boundary calculation.
+6. Direct Bessel-versus-cylinder radial comparisons.
+7. The quadratic order drift and its conversion into Debye phase drift.
+8. The numerical `R*=28.026397… → N=28` cone continuation and integer landing.
+9. A global-to-local one-wavelength zoom of the same solution.
+10. A real-data modulo-one plot of 10,000 additional crossings.
+
+The opening geometry animation is explicitly schematic. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot, cone views, nested zoom, and radial comparisons use the stored numerical datasets described below.
 
 The domain is
 
@@ -143,7 +160,7 @@ There are two local orders of variation here. Debye gives `Δξ(R) = −β*(R �
 
 ## Debye approximation laboratory
 
-The final laboratory isolates the radial dictionary itself. In the rim coordinate `x = r − R ≤ 0`, the cylinder radial equation for angular mode `k` is
+The radial laboratory isolates the local dictionary itself. In the rim coordinate `x = r − R ≤ 0`, the cylinder radial equation for angular mode `k` is
 
 ```text
 fₖ″ + (λ − k²)fₖ = 0.
@@ -173,7 +190,43 @@ This laboratory deliberately moves linearly in `R`, using `λ(R) = (ρ/R)²`, ra
 
 while the neighboring branch-based panel displays the same change as quadratic in `s`.
 
-## Reproduce the cone data
+## Quadratic drift and the phase chain rule
+
+The story panel between the radial comparison and the integer landing uses the large-cone curvature law
+
+```text
+Γ(λ) = √((λ−1)(4−λ)) / (4 acos(λ⁻¹ᐟ²)),
+R″(0) = −Γ(λ) + O(R⁻¹) < 0.
+```
+
+It overlays the stored `N=28` continuation records with the base quadratic law from `Rpp`. The corresponding Debye phase obeys
+
+```text
+Δξ(s) = ½ ξ′(R*)R″(0)s² + O(s⁴),
+ξ′(R) = −acos(R/ρ).
+```
+
+Thus phase is locally linear in real order `R`, although both quantities change quadratically along the signed branch parameter `s`.
+
+## Abundance of near-integer crossings
+
+The last canvas uses the saved exhaustive search
+
+```text
+Example Search/Data/bifurcation_points_lambda_2_3_first_10000.csv
+```
+
+from the companion Schiffer workspace. Its 10,000 records solve
+
+```text
+J₁(ρ) = 0,   J_R(ρ) = 0,   2 ≤ ρ²/R² ≤ 3,
+```
+
+and are plotted as `(R, R−floor(R))`. The search contains 1,023 crossings within `0.1` above an integer, 111 within `0.01`, and 12 within `0.001`; the smallest recorded gap is about `6.35×10⁻⁵`. These finite statistics illustrate abundance. The proof itself uses simultaneous two-frequency Debye phase alignment and a Kronecker-torus argument, rather than inferring density from the scatter plot.
+
+The `N=28` example is overlaid as a separate real reference point. It is not included in those statistics because its ratio `λ≈3.317011` lies outside the exhaustive dataset's `[2,3]` window. `abundance-data.js` stores rounded display columns and source metadata; the original CSV retains the high-precision values.
+
+## Reproduce the numerical data
 
 The numerical sources live in `numerics/` and require Python 3.12, NumPy, and SciPy.
 
@@ -183,9 +236,13 @@ python3 -m venv .venv
 .venv/bin/python numerics/scan_crossings.py
 .venv/bin/python numerics/continue_cone_branch.py
 .venv/bin/python numerics/build_web_data.py
+.venv/bin/python numerics/build_abundance_data.py \
+  --input /path/to/Schiffer/Example\ Search/Data/bifurcation_points_lambda_2_3_first_10000.csv \
+  --summary /path/to/Schiffer/Example\ Search/Data/bifurcation_points_lambda_2_3_first_10000_summary.json \
+  --n28 /path/to/Schiffer/N28\ numerics\ \(succesful\)/data/bifurcation.json
 ```
 
-The first command reproduces the sub-100 crossing scan. The continuation writes an ignored `numerics/branch-data.json`; the final command deterministically rebuilds the checked-in browser dataset.
+The crossing scan reproduces the sub-100 running example. The continuation writes an ignored `numerics/branch-data.json`, `build_web_data.py` rebuilds `cone-data.js`, and `build_abundance_data.py` validates and compacts the external exhaustive CSV into `abundance-data.js`.
 
 ## Run locally
 
