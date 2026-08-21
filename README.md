@@ -40,9 +40,19 @@ The solve uses a column-scaled Householder QR factorization rather than normal e
 
 Since `λ` and `s` are independent controls, most selected pairs are off the true one-dimensional solution branch and need not have zero boundary defect.
 
+## Views
+
+The flat view displays the field in the unwrapped coordinates `(x, θ)`. The 3D view embeds the same samples as
+
+```text
+(x, θ) ↦ (x, R cos θ, R sin θ),
+```
+
+so the moving free boundary becomes the wavy open rim of a rotatable cylinder. Both views use the same solved field and update from the same controls.
+
 ## Run locally
 
-There is no build step or runtime dependency. Open `index.html`, or serve the directory with any static server.
+There is no build step. Open `index.html`, or serve the directory with any static server. The optional 3D view loads a pinned Three.js ES module from jsDelivr on demand.
 
 ```sh
 python3 -m http.server 8000

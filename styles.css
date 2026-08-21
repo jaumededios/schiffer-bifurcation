@@ -79,10 +79,19 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .canvas-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-bottom: 1px solid var(--line-light); }
 .canvas-toolbar > div:first-child { display: flex; align-items: center; gap: 12px; }
 .canvas-toolbar strong { font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: rgba(241,238,229,.64); }
+.view-switch { display: flex; align-items: center; padding: 3px; border: 1px solid rgba(241,238,229,.15); border-radius: 999px; }
+.view-button { padding: 6px 11px; color: rgba(241,238,229,.45); background: transparent; border: 0; border-radius: 999px; cursor: pointer; font: 7px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.view-button.active { color: var(--ink); background: var(--paper); }
 .legend { display: flex; align-items: center; gap: 9px; font: 7px var(--mono); color: rgba(241,238,229,.45); }
 .legend i { display: block; width: 130px; height: 5px; background: linear-gradient(90deg,#17304f,#32868c,#e9e2cb,#ef7047,#a72c49); }
 .canvas-wrap { min-height: 0; position: relative; overflow: hidden; }
 #fieldCanvas { display: block; width: 100%; height: 100%; }
+.three-wrap { position: absolute; inset: 0; background: radial-gradient(circle at 52% 46%, #20353b 0, #101b20 58%, #0c161b 100%); }
+.three-wrap[hidden] { display: none; }
+.three-wrap canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.three-wrap canvas:active { cursor: grabbing; }
+.three-loading { position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%,-50%); color: rgba(241,238,229,.5); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.three-help { position: absolute; right: 17px; bottom: 14px; z-index: 2; color: rgba(241,238,229,.35); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; pointer-events: none; }
 .solver-badge { position: absolute; top: 18px; left: 18px; padding: 8px 10px; color: var(--ink); background: var(--paper); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; opacity: 0; transform: translateY(-4px); transition: .18s; pointer-events: none; }
 .solver-badge.visible { opacity: 1; transform: translateY(0); }
 .axis-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 22px; border-top: 1px solid var(--line-light); color: rgba(241,238,229,.35); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -141,6 +150,9 @@ dialog button { position: absolute; top: 15px; right: 19px; padding: 0; color: v
   .controls { border-right: 0; border-bottom: 1px solid var(--line-light); }
   .canvas-panel { min-height: 560px; grid-template-rows: 54px 470px 34px; }
   .legend i { width: 75px; }
+  .canvas-toolbar { padding: 0 12px; }
+  .view-button { padding: 6px 8px; }
+  .legend { display: none; }
   .readout-strip { grid-template-columns: 1fr; }
   .readout-strip > div { border-right: 0; border-bottom: 1px solid var(--line-light); }
   .boundary-diagram { grid-column: auto; }

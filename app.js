@@ -6,6 +6,7 @@ const state = {
   s: 0,
   phase: 0,
   maxMode: 10,
+  view: "flat",
   solution: null,
   updateFrame: null,
   playing: false,
@@ -16,6 +17,17 @@ const state = {
 const X_MIN = -5;
 const X_MAX = 1.05;
 const TWO_PI = Math.PI * 2;
+const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
+
+const threeState = {
+  library: null,
+  loading: null,
+  renderer: null,
+  scene: null,
+  camera: null,
+  group: null,
+  pointer: null,
+};
 
 function boundary(theta, parameters = state) {
   return parameters.s * Math.cos(theta - parameters.phase);
@@ -211,6 +223,215 @@ function colorFor(value) {
   }
   const local = (t - left.t) / Math.max(1e-8, right.t - left.t);
   return left.rgb.map((channel, i) => Math.round(channel + (right.rgb[i] - channel) * local));
+}
+
+function buildCylinderMeshData(solution, axialSegments = 96, angularSegments = 96) {
+  const positions = [];
+  const colors = [];
+  const indices = [];
+  const rim = [];
+  const referenceRim = [];
+  const radius = 1.22;
+
+  for (let angularIndex = 0; angularIndex <= angularSegments; angularIndex++) {
+    const theta = -Math.PI + angularIndex / angularSegments * TWO_PI;
+    const wall = boundary(theta, solution.parameters);
+    const cosine = Math.cos(theta);
+    const sine = Math.sin(theta);
+    for (let axialIndex = 0; axialIndex <= axialSegments; axialIndex++) {
+      const fraction = axialIndex / axialSegments;
+      const x = X_MIN + fraction * (wall - X_MIN);
+      positions.push(x, radius * cosine, radius * sine);
+      const color = colorFor(fieldValue(x, theta, solution));
+      colors.push(color[0] / 255, color[1] / 255, color[2] / 255);
+    }
+    rim.push(wall, radius * cosine, radius * sine);
+    referenceRim.push(0, radius * cosine, radius * sine);
+  }
+
+  const rowLength = axialSegments + 1;
+  for (let angularIndex = 0; angularIndex < angularSegments; angularIndex++) {
+    for (let axialIndex = 0; axialIndex < axialSegments; axialIndex++) {
+      const a = angularIndex * rowLength + axialIndex;
+      const b = a + 1;
+      const c = a + rowLength;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+
+  const latitudeLoops = [.2, .4, .6, .8].map((fraction) => {
+    const points = [];
+    for (let angularIndex = 0; angularIndex <= angularSegments; angularIndex++) {
+      const theta = -Math.PI + angularIndex / angularSegments * TWO_PI;
+      const wall = boundary(theta, solution.parameters);
+      const x = X_MIN + fraction * (wall - X_MIN);
+      points.push(x, radius * Math.cos(theta), radius * Math.sin(theta));
+    }
+    return points;
+  });
+
+  const longitudeLines = Array.from({ length: 8 }, (_, lineIndex) => {
+    const theta = -Math.PI + lineIndex / 8 * TWO_PI;
+    const wall = boundary(theta, solution.parameters);
+    const points = [];
+    for (let axialIndex = 0; axialIndex <= 48; axialIndex++) {
+      const x = X_MIN + axialIndex / 48 * (wall - X_MIN);
+      points.push(x, radius * Math.cos(theta), radius * Math.sin(theta));
+    }
+    return points;
+  });
+
+  return { positions, colors, indices, rim, referenceRim, latitudeLoops, longitudeLines };
+}
+
+function disposeThreeObject(object) {
+  object.traverse?.((child) => {
+    child.geometry?.dispose?.();
+    if (Array.isArray(child.material)) child.material.forEach((material) => material.dispose?.());
+    else child.material?.dispose?.();
+  });
+}
+
+function threeLine(THREE, points, color, opacity = 1) {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const material = new THREE.LineBasicMaterial({ color, transparent: opacity < 1, opacity });
+  return new THREE.Line(geometry, material);
+}
+
+function resizeThreeRenderer() {
+  if (!threeState.renderer || !threeState.camera) return;
+  const wrap = $("#threeWrap");
+  const width = Math.max(320, wrap.clientWidth || 900);
+  const height = Math.max(320, wrap.clientHeight || 580);
+  threeState.renderer.setSize(width, height, false);
+  threeState.camera.aspect = width / height;
+  threeState.camera.updateProjectionMatrix();
+}
+
+function renderThreeFrame() {
+  if (threeState.renderer && threeState.scene && threeState.camera) {
+    threeState.renderer.render(threeState.scene, threeState.camera);
+  }
+}
+
+function installThreeInteraction(canvas) {
+  canvas.addEventListener("pointerdown", (event) => {
+    threeState.pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    canvas.setPointerCapture?.(event.pointerId);
+  });
+  canvas.addEventListener("pointermove", (event) => {
+    if (!threeState.pointer || threeState.pointer.id !== event.pointerId || !threeState.group) return;
+    const dx = event.clientX - threeState.pointer.x;
+    const dy = event.clientY - threeState.pointer.y;
+    threeState.group.rotation.y += dx * .006;
+    threeState.group.rotation.x += dy * .006;
+    threeState.pointer.x = event.clientX;
+    threeState.pointer.y = event.clientY;
+    renderThreeFrame();
+  });
+  const release = (event) => {
+    if (threeState.pointer?.id === event.pointerId) threeState.pointer = null;
+  };
+  canvas.addEventListener("pointerup", release);
+  canvas.addEventListener("pointercancel", release);
+  canvas.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const factor = event.deltaY > 0 ? 1.08 : .92;
+    const length = Math.max(6.2, Math.min(15, threeState.camera.position.length() * factor));
+    threeState.camera.position.setLength(length);
+    renderThreeFrame();
+  }, { passive: false });
+}
+
+function setupThreeRenderer() {
+  if (threeState.renderer) return;
+  const THREE = threeState.library;
+  const wrap = $("#threeWrap");
+  threeState.scene = new THREE.Scene();
+  threeState.scene.background = new THREE.Color(0x101b20);
+  threeState.camera = new THREE.PerspectiveCamera(38, 1, .1, 100);
+  threeState.camera.position.set(7.3, 4.2, 6.6);
+  threeState.camera.lookAt(0, 0, 0);
+  threeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+  threeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  wrap.insertBefore(threeState.renderer.domElement, $("#threeLoading"));
+  threeState.group = new THREE.Group();
+  threeState.group.position.x = 2.1;
+  threeState.group.rotation.x = -.18;
+  threeState.group.rotation.y = -.16;
+  threeState.scene.add(threeState.group);
+  resizeThreeRenderer();
+  installThreeInteraction(threeState.renderer.domElement);
+}
+
+function updateThreeMesh() {
+  if (!threeState.library || !threeState.group || !state.solution) return;
+  const THREE = threeState.library;
+  while (threeState.group.children.length) {
+    const child = threeState.group.children[0];
+    threeState.group.remove(child);
+    disposeThreeObject(child);
+  }
+  const data = buildCylinderMeshData(state.solution);
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(data.positions, 3));
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(data.colors, 3));
+  geometry.setIndex(data.indices);
+  geometry.computeVertexNormals();
+  const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  threeState.group.add(new THREE.Mesh(geometry, material));
+  data.latitudeLoops.forEach((points) => threeState.group.add(threeLine(THREE, points, 0xf1eee5, .16)));
+  data.longitudeLines.forEach((points) => threeState.group.add(threeLine(THREE, points, 0xf1eee5, .12)));
+  threeState.group.add(threeLine(THREE, data.referenceRim, 0x7f9293, .48));
+  const rim = threeLine(THREE, data.rim, 0xfff4dc, 1);
+  rim.material.linewidth = 2;
+  threeState.group.add(rim);
+  $("#threeLoading").hidden = true;
+  renderThreeFrame();
+}
+
+async function ensureThreeRenderer() {
+  if (threeState.library) return threeState.library;
+  if (!threeState.loading) {
+    threeState.loading = import(THREE_MODULE_URL).then((library) => {
+      threeState.library = library;
+      setupThreeRenderer();
+      return library;
+    });
+  }
+  return threeState.loading;
+}
+
+async function renderCylinder() {
+  $("#threeLoading").hidden = false;
+  try {
+    await ensureThreeRenderer();
+    resizeThreeRenderer();
+    updateThreeMesh();
+  } catch (error) {
+    $("#threeLoading").textContent = "3D renderer could not be loaded";
+    console.error(error);
+  }
+}
+
+function renderActiveView() {
+  if (state.view === "cylinder") renderCylinder();
+  else renderHeatmap();
+}
+
+function setView(view) {
+  state.view = view;
+  document.querySelectorAll(".view-button").forEach((button) => {
+    const active = button.dataset.view === view;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  $("#fieldCanvas").hidden = view !== "flat";
+  $("#threeWrap").hidden = view !== "cylinder";
+  $("#axisDescription").textContent = view === "cylinder" ? "cylindrical surface (x, cos θ, sin θ)" : "unwrapped coordinates (x, θ)";
+  renderActiveView();
 }
 
 function canvasCoordinates(x, theta, width, height) {
@@ -428,7 +649,7 @@ function solveAndRender() {
   const parameters = { lambda: state.lambda, s: state.s, phase: state.phase, maxMode: state.maxMode };
   state.solution = solveModalField(parameters);
   updateReadouts();
-  renderHeatmap();
+  renderActiveView();
   renderModeBars();
   drawBoundaryDiagram();
   $("#solverBadge").classList.remove("visible");
@@ -487,6 +708,7 @@ bindRange("#lambdaRange", "lambda");
 bindRange("#sRange", "s");
 bindRange("#phaseRange", "phase");
 bindRange("#modeRange", "maxMode", (value) => Number.parseInt(value, 10));
+document.querySelectorAll(".view-button").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
 
 $("#playButton").addEventListener("click", togglePlayback);
 $("#resetButton").addEventListener("click", () => {
@@ -504,7 +726,7 @@ $("#methodDialog").addEventListener("click", (event) => { if (event.target === $
 let resizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => { if (state.solution) renderHeatmap(); }, 120);
+  resizeTimer = setTimeout(() => { if (state.solution) renderActiveView(); }, 120);
 });
 
 solveAndRender();

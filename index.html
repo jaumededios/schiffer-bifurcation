@@ -111,15 +111,23 @@
                 <span class="live-dot"></span>
                 <strong id="domainState">trivial cylinder · s = 0</strong>
               </div>
+              <div class="view-switch" role="group" aria-label="Visualization view">
+                <button class="view-button active" data-view="flat" type="button" aria-pressed="true">Flat</button>
+                <button class="view-button" data-view="cylinder" type="button" aria-pressed="false">3D cylinder</button>
+              </div>
               <div class="legend" role="img" aria-label="Scalar field color scale from minus one to plus one">
                 <span>−1</span><i></i><span>+1</span>
               </div>
             </div>
             <div id="canvasWrap" class="canvas-wrap">
               <canvas id="fieldCanvas" role="img" aria-label="Heat map of the scalar field on a half-cylinder with a moving right boundary"></canvas>
+              <div id="threeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional cylinder colored by the scalar field" hidden>
+                <div id="threeLoading" class="three-loading">loading 3D renderer…</div>
+                <div class="three-help">drag to rotate · scroll to zoom</div>
+              </div>
               <div id="solverBadge" class="solver-badge">fitting boundary…</div>
             </div>
-            <div class="axis-footer"><span>x = −5</span><span>inward collar coordinate x</span><span>x = 0</span></div>
+            <div class="axis-footer"><span>x = −5</span><span id="axisDescription">unwrapped coordinates (x, θ)</span><span>x = 0</span></div>
           </section>
         </div>
 
