@@ -60,6 +60,8 @@
 
   function drawFrameLabel(context, width, eyebrow, title, detail) {
     context.save();
+    context.textAlign = "left";
+    context.textBaseline = "alphabetic";
     context.fillStyle = colors.orange;
     context.font = "8px DM Mono, monospace";
     context.fillText(eyebrow.toUpperCase(), 24, 26);
@@ -395,41 +397,232 @@
       context.strokeStyle = index % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)"; context.lineWidth = 1; context.stroke();
     }
 
+    const rimDepth = 10;
+    const axialScale = (right - surfaceLeft) / 28 * 1.45;
+    function rimPoint(theta, deformed) {
+      // A quarter-turn phase makes the leading cos(psi-phi) mode legible in
+      // this side view: opposite rim points move in opposite axial directions.
+      const psi = theta - Math.PI / 2;
+      const shift = deformed ? waveAmount * axialScale * landingWall(psi) : 0;
+      return {
+        x: right + rimDepth * Math.cos(theta) + shift,
+        y: cx + half * Math.sin(theta),
+        shift: shift,
+      };
+    }
+
+    if (waveAmount > .015) {
+      for (let index = 0; index < 120; index++) {
+        const theta0 = index / 120 * TAU;
+        const theta1 = (index + 1) / 120 * TAU;
+        const base0 = rimPoint(theta0, false);
+        const base1 = rimPoint(theta1, false);
+        const moved1 = rimPoint(theta1, true);
+        const moved0 = rimPoint(theta0, true);
+        context.beginPath(); context.moveTo(base0.x, base0.y); context.lineTo(base1.x, base1.y);
+        context.lineTo(moved1.x, moved1.y); context.lineTo(moved0.x, moved0.y); context.closePath();
+        context.fillStyle = (moved0.shift + moved1.shift) > 0
+          ? "rgba(255,116,73,.13)"
+          : "rgba(77,162,163,.11)";
+        context.fill();
+      }
+
+      context.beginPath();
+      for (let index = 0; index <= 240; index++) {
+        const point = rimPoint(index / 240 * TAU, false);
+        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = "rgba(77,162,163,.72)"; context.setLineDash([4, 5]); context.lineWidth = 1.2; context.stroke(); context.setLineDash([]);
+    }
+
     context.beginPath();
-    for (let index = 0; index <= 220; index++) {
-      const theta = -Math.PI / 2 + index / 220 * Math.PI;
-      const y = cx + half * Math.sin(theta);
-      const x = right + 10 * Math.cos(theta) + waveAmount * 19 * Math.cos(theta * 2);
-      if (!index) context.moveTo(x, y); else context.lineTo(x, y);
+    for (let index = 0; index <= 360; index++) {
+      const point = rimPoint(index / 360 * TAU, true);
+      if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
     }
-    for (let index = 220; index >= 0; index--) {
-      const theta = Math.PI / 2 + index / 220 * Math.PI;
-      const y = cx + half * Math.sin(theta);
-      const x = right + 10 * Math.cos(theta) + waveAmount * 19 * Math.cos(theta * 2);
-      context.lineTo(x, y);
+    context.closePath();
+    context.strokeStyle = colors.paper; context.lineWidth = 2.4;
+    context.shadowColor = waveAmount ? colors.orange : colors.cyan; context.shadowBlur = 7;
+    context.stroke(); context.shadowBlur = 0;
+
+    if (waveAmount > .2) {
+      [Math.PI / 2, 3 * Math.PI / 2].forEach((theta, index) => {
+        const base = rimPoint(theta, false);
+        const moved = rimPoint(theta, true);
+        context.beginPath(); context.moveTo(base.x, base.y); context.lineTo(moved.x, moved.y);
+        context.strokeStyle = index ? colors.cyan : colors.orange;
+        context.lineWidth = 1.4; context.stroke();
+        context.beginPath(); context.arc(moved.x, moved.y, 3, 0, TAU);
+        context.fillStyle = index ? colors.cyan : colors.orange; context.fill();
+      });
+      context.fillStyle = colors.orange; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, right - 330), cx - half - 29);
     }
-    context.strokeStyle = colors.paper; context.lineWidth = 2.4; context.shadowColor = waveAmount ? colors.orange : colors.cyan; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
     context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
     if (t > .58) context.fillText("tip → −∞", visibleLeft + 36, cx - half - 28);
     context.fillStyle = colors.faint;
-    context.fillText(waveAmount > .5 ? "the free rim now carries the cylinder bifurcation" : (t > .6 ? "on every fixed boundary window, the cone is now a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
+    context.fillText(waveAmount > .5 ? "one rim point moves out while the opposite point moves in" : (t > .6 ? "on every fixed boundary window, the cone is now a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
+    context.restore();
+  }
+
+  function drawSectorFan(context, width, height, amount) {
+    const fan = ease(amount);
+    const cx = width * .5;
+    const cy = height * .54;
+    const radius = Math.min(width * .27, height * .34);
+    const copies = 28;
+    const halfAngle = Math.PI / copies;
+    const samples = 7;
+
+    context.save();
+    for (let copy = copies - 1; copy >= 0; copy--) {
+      const birth = copy === 0
+        ? 1
+        : ease((fan - (copy - 1) / (copies - 1) * .72) / .28);
+      if (birth <= .001) continue;
+      const rotation = copy / copies * TAU * birth;
+      context.save(); context.globalAlpha *= .18 + .78 * birth;
+      for (let sample = 0; sample < samples; sample++) {
+        const local0 = -halfAngle + sample / samples * 2 * halfAngle;
+        const local1 = -halfAngle + (sample + 1) / samples * 2 * halfAngle;
+        const psi0 = copies * local0;
+        const psi1 = copies * local1;
+        const radius0 = radius * (1 - landingWall(psi0) / 28);
+        const radius1 = radius * (1 - landingWall(psi1) / 28);
+        const angle0 = rotation + local0;
+        const angle1 = rotation + local1;
+        context.beginPath(); context.moveTo(cx, cy);
+        context.lineTo(cx + radius0 * Math.cos(angle0), cy + radius0 * Math.sin(angle0));
+        context.lineTo(cx + radius1 * Math.cos(angle1), cy + radius1 * Math.sin(angle1));
+        context.closePath();
+        const value = Math.cos((psi0 + psi1) / 2);
+        context.fillStyle = value > 0
+          ? `rgba(255,116,73,${.2 + .17 * value})`
+          : `rgba(77,162,163,${.22 - .2 * value})`;
+        context.fill();
+      }
+      context.beginPath(); context.moveTo(cx, cy);
+      context.lineTo(cx + radius * Math.cos(rotation - halfAngle), cy + radius * Math.sin(rotation - halfAngle));
+      context.strokeStyle = "rgba(241,238,229,.14)"; context.lineWidth = .7; context.stroke();
+      context.restore();
+    }
+
+    if (fan > .9) {
+      context.beginPath();
+      for (let index = 0; index <= 1000; index++) {
+        const angle = index / 1000 * TAU;
+        const psi = copies * angle;
+        const localRadius = radius * (1 - landingWall(psi) / 28);
+        const x = cx + localRadius * Math.cos(angle);
+        const y = cy + localRadius * Math.sin(angle);
+        if (!index) context.moveTo(x, y); else context.lineTo(x, y);
+      }
+      context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
+    }
     context.restore();
   }
 
   function drawUnfolding(context, width, height, amount) {
-    const t = ease(amount);
-    drawConeCylinder(context, width, height, 0, 1);
-    context.save(); context.globalAlpha = t; context.fillStyle = colors.ink; context.fillRect(0, 0, width, height); context.restore();
-    drawNfoldDisk(context, width, height, { wiggle: 1, divisions: 1 - t, opacity: t });
-    if (t > .08 && t < .92) {
-      context.save(); context.globalAlpha = Math.sin(Math.PI * t) * .55; context.strokeStyle = colors.orange; context.setLineDash([4, 6]);
-      const cx = width * .5; const cy = height * .54; const r0 = Math.min(width * .16, height * .2); const r1 = Math.min(width * .32, height * .38);
-      for (let index = 0; index < 28; index++) {
-        const angle = index / 28 * TAU;
-        context.beginPath(); context.moveTo(cx + r0 * Math.cos(angle), cy + r0 * Math.sin(angle)); context.lineTo(cx + r1 * Math.cos(angle), cy + r1 * Math.sin(angle)); context.stroke();
+    const t = Math.max(0, Math.min(1, amount));
+    const open = ease(t / .5);
+    const transfer = ease((t - .46) / .2);
+    const fan = ease((t - .6) / .4);
+    const meshOpacity = 1 - ease((t - .64) / .11);
+    const cy = height * .54;
+    const finalRadius = Math.min(width * .27, height * .34);
+    const tip = lerp(width * .15, width * .5, transfer);
+    const length = lerp(width * .69, finalRadius, transfer);
+    const half = lerp(Math.min(118, height * .23), finalRadius * Math.sin(Math.PI / 28), transfer);
+    const fold = 1 - open;
+    const depthProjection = .1;
+
+    function boundaryScale(angular) {
+      return 1 - landingWall(Math.PI * angular) / 28;
+    }
+
+    function sheetPoint(fraction, angular) {
+      const radial = fraction * boundaryScale(angular);
+      const flatY = radial * half * angular;
+      const coneY = radial * half * Math.sin(Math.PI * angular);
+      const coneZ = radial * half * Math.cos(Math.PI * angular);
+      const y = lerp(flatY, coneY, fold);
+      const z = fold * coneZ;
+      return {
+        x: tip + radial * length + depthProjection * z,
+        y: cy + y,
+      };
+    }
+
+    if (meshOpacity > .001) {
+      context.save(); context.globalAlpha *= meshOpacity;
+      const strips = [];
+      const stripCount = 30;
+      for (let index = 0; index < stripCount; index++) {
+        const a0 = -1 + 2 * index / stripCount;
+        const a1 = -1 + 2 * (index + 1) / stripCount;
+        strips.push({ a0: a0, a1: a1, depth: Math.cos(Math.PI * (a0 + a1) / 2) });
+      }
+      strips.sort((leftStrip, rightStrip) => leftStrip.depth - rightStrip.depth);
+      strips.forEach((strip) => {
+        const p0 = sheetPoint(0, strip.a0);
+        const p1 = sheetPoint(1, strip.a0);
+        const p2 = sheetPoint(1, strip.a1);
+        context.beginPath(); context.moveTo(p0.x, p0.y); context.lineTo(p1.x, p1.y); context.lineTo(p2.x, p2.y); context.closePath();
+        const warmth = (strip.a0 + strip.a1 + 2) / 4;
+        context.fillStyle = warmth > .5 ? "rgba(255,116,73,.26)" : "rgba(77,162,163,.28)";
+        context.fill();
+      });
+
+      for (let radialIndex = 1; radialIndex <= 7; radialIndex++) {
+        context.beginPath();
+        for (let index = 0; index <= 140; index++) {
+          const angular = -1 + 2 * index / 140;
+          const point = sheetPoint(radialIndex / 7, angular);
+          if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+        }
+        context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.3)" : "rgba(241,238,229,.18)";
+        context.lineWidth = radialIndex === 7 ? 1.5 : .8; context.stroke();
+      }
+
+      for (let index = 1; index < 12; index++) {
+        const angular = -1 + 2 * index / 12;
+        const start = sheetPoint(0, angular);
+        const end = sheetPoint(1, angular);
+        context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
+        context.strokeStyle = "rgba(241,238,229,.12)"; context.lineWidth = .8; context.stroke();
+      }
+
+      const sideAStart = sheetPoint(0, -1);
+      const sideAEnd = sheetPoint(1, -1);
+      const sideBStart = sheetPoint(0, 1);
+      const sideBEnd = sheetPoint(1, 1);
+      context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
+      context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
+      context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
+      context.strokeStyle = colors.orange; context.lineWidth = 2.5; context.stroke();
+
+      context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      if (fold > .72) {
+        context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
+        context.strokeStyle = colors.orange; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
+        context.fillStyle = colors.orange;
+        context.fillText("CUT THE QUOTIENT SEAM  A = B", sideAEnd.x + 9, sideAEnd.y - 8);
+      } else if (transfer < .8) {
+        context.fillStyle = colors.cyan; context.fillText("SIDE A", sideAEnd.x + 8, sideAEnd.y - 8);
+        context.fillStyle = colors.orange; context.fillText("SIDE B", sideBEnd.x + 8, sideBEnd.y + 12);
       }
       context.restore();
     }
+
+    if (fan > .001) drawSectorFan(context, width, height, fan);
+
+    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    const caption = open < .92
+      ? "cut the seam and open the cone"
+      : transfer < .9
+        ? "one wiggly quotient sector lies flat"
+        : "rotate 28 identical sectors into the plane";
+    context.fillText(caption, width * .5, cy + Math.min(118, height * .23) + 47);
   }
 
   function drawGeometrySequence(context, width, height, progress) {
@@ -508,20 +701,29 @@
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryNames = ["divide the disk", "select one sector", "fold its sides together", "send the tip away", "perturb the cylinder", "restore the cone", "unfold at integer R"];
-  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "the same sector folds · radial sides meet in one quotient seam", "cone tip at infinity · half-cylinder limit", "free boundary perturbed on the half-cylinder", "the same wave returned to the finite cone", "integer aperture · all 28 copies close"];
+  const geometryNames = ["divide the disk", "select one sector", "fold its sides together", "send the tip away", "perturb the cylinder", "restore the cone", "cut and unfold at integer R"];
+  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "the same sector folds · radial sides meet in one quotient seam", "cone tip at infinity · half-cylinder limit", "the free rim is the graph x = h(ψ)", "the same boundary graph returned to the finite cone", "cut the seam · open one sector · rotate 28 copies into the plane"];
 
   function renderGeometryStory() {
     const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
     context.clearRect(0, 0, width, height);
     context.fillStyle = colors.ink; context.fillRect(0, 0, width, height);
     drawGeometrySequence(context, width, height, geometryState.progress);
-    const nearest = Math.min(6, Math.round(geometryState.progress * 6));
-    drawFrameLabel(context, width, `${String(nearest + 1).padStart(2, "0")} / construction`, geometryNames[nearest], nearest === 6 ? "R = N = 28" : "N = 28 running geometry");
-    select("#storyGeometryValue").textContent = geometryNames[nearest];
-    select("#storyGeometryState").textContent = geometryStates[nearest];
-    document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === nearest));
-    canvas.setAttribute("aria-label", `Construction stage ${nearest + 1} of 7: ${geometryStates[nearest]}. The final boundary uses the stored numerical N equals 28 landing coefficients.`);
+    const scaled = Math.max(0, Math.min(1, geometryState.progress)) * 6;
+    const segment = Math.min(5, Math.floor(scaled));
+    const local = scaled - segment;
+    const active = geometryState.progress >= .999
+      ? 6
+      : geometryState.progress <= .001
+        ? 0
+        : local < .01
+          ? segment
+          : Math.min(6, segment + 1);
+    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28" : "N = 28 running geometry");
+    select("#storyGeometryValue").textContent = geometryNames[active];
+    select("#storyGeometryState").textContent = geometryStates[active];
+    document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === active));
+    canvas.setAttribute("aria-label", `Construction stage ${active + 1} of 7: ${geometryStates[active]}. The final boundary uses the stored numerical N equals 28 landing coefficients.`);
   }
 
   function stopGeometryPlayback() {

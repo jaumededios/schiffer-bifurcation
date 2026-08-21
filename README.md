@@ -16,7 +16,7 @@ The website is ordered as one argument rather than a gallery of simulations:
 8. The numerical `R*=28.026397… → N=28` continuation, integer landing, and global-to-local one-wavelength zoom in one laboratory.
 9. A modulo-one plot of the computed crossings through `N=41`, followed by the two-phase existence mechanism.
 
-The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects one sector, continuously folds its two radial sides into a single quotient seam, sends the cone tip to infinity, perturbs the resulting half-cylinder, restores the cone, and unfolds at integer order. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot and nested zoom use the nonlinear branch data. The radial basis comparison is a separate fixed-`λ` Bessel dataset described below.
+The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects one sector, continuously folds its two radial sides into a single quotient seam, sends the cone tip to infinity, perturbs the resulting half-cylinder, and restores the cone. At integer order the motion is reversed rather than cross-faded: the seam is cut, the wiggly cone opens into one planar sector, and 28 identical sectors rotate into place. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot and nested zoom use the nonlinear branch data. The radial basis comparison is a separate fixed-`λ` Bessel dataset described below.
 
 ## Uniform half-cylinder branch
 
