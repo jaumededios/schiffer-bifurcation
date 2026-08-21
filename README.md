@@ -103,6 +103,26 @@ The cone laboratory has three linked views:
 2. **3D cone:** the intrinsic metric embedded as a long, narrow cone. The depth slider moves continuously from the nearly cylindrical rim to the tip.
 3. **Unfolded ×28:** twenty-eight sectors of angle `2π/R`. At `R*` the true angular seam is `0.339°`; at `R = 28` it closes exactly. A `×50` inset makes the initial gap legible without falsifying the main geometry.
 
+## Angular-mode comparison
+
+The third laboratory isolates a single angular factor `cos(kψ)` and places its cylinder and cone radial equations side by side. At the landing value `λ = 3.3232684745`, the half-cylinder equation is
+
+```text
+f″ + (λ − k²)f = 0.
+```
+
+For `k = 0, 1`, its bounded solution space is two-dimensional, spanned by `cos(ωx)` and `sin(ωx)`. Their coefficient ratio is a phase. For `k ≥ 2`, the equation has growing and decaying exponentials; boundedness as `x → −∞` keeps only `exp(√(k²−λ)x)`.
+
+On the cone the corresponding equation is
+
+```text
+r²f″ + rf′ + (λr² − k²R²)f = 0.
+```
+
+Regularity at the tip keeps `J_{kR}` and rejects the singular `Y_{kR}` branch. There is no second tip-regular modified-Bessel solution of this positive-`λ` equation: `I` and `K` solve the sign-flipped radial equation, and `K` is singular at the tip. Thus the critical `k = 1` cylinder mode has a scalar phase freedom while its regular cone counterpart has only one radial profile for each fixed `R`.
+
+The comparison dial visualizes how the relaxed real parameter supplies a new scalar direction: it moves from `R = 28` to `R* = 28.026397413`, changing the Bessel order and hence its oscillatory phase until `J_R*(ρ*) = 0`. This is a structural analogy, not an equality between the cylinder phase and `R`. The cylinder curves are evaluated analytically in JavaScript; the cone curves use the same precomputed endpoint Bessel tables as the continuation, with the exact critical rim zero inserted as a table knot.
+
 ## Reproduce the cone data
 
 The numerical sources live in `numerics/` and require Python 3.12, NumPy, and SciPy.

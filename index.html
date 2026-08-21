@@ -261,8 +261,110 @@
         </div>
       </section>
 
+      <section id="modes-experiment" class="modes-experiment">
+        <header class="experiment-header modes-header">
+          <div>
+            <span class="section-number">03</span>
+            <div>
+              <p class="eyebrow">Separated solutions / radial freedom</p>
+              <h2>Where the phase goes.</h2>
+            </div>
+          </div>
+          <div class="equations" role="group" aria-label="Separated radial equations">
+            <span>f″ + (λ − k²)f = 0</span>
+            <span>r²f″ + rf′ + (λr² − k²R²)f = 0</span>
+            <small>cylinder / cone</small>
+          </div>
+        </header>
+
+        <div class="modes-lead">
+          <p>Fix one angular label <span>k</span>. On the flat half-cylinder, an oscillatory radial mode has two bounded basis functions, cosine and sine, so their ratio is a free phase. At the cone tip, regularity keeps only the ordinary Bessel branch <span>J<sub>kR</sub></span>. The scalar freedom reappears geometrically: allow <span>R</span> to be real and changing the order moves the Bessel phase.</p>
+          <p>The critical comparison is <span>k = 1</span>. Move the shared dial from the integer cone <span>R = 28</span> to the crossing <span>R<sub>*</sub> = 28.026397…</span>; alongside it, the cylinder combination rotates from cosine to sine.</p>
+        </div>
+
+        <div class="modes-laboratory">
+          <aside class="modes-controls light-controls" aria-label="Angular mode comparison controls">
+            <div class="control-heading">
+              <span>Comparison controls</span>
+              <button id="modesResetButton" type="button">Reset</button>
+            </div>
+
+            <div class="modes-control-block">
+              <div class="control-label"><span>angular mode <i>k</i></span><output id="modesKValue">k = 1</output></div>
+              <div class="mode-picker" role="group" aria-label="Choose angular mode">
+                <button type="button" data-mode-k="0">0</button>
+                <button class="active" type="button" data-mode-k="1">1</button>
+                <button type="button" data-mode-k="2">2</button>
+                <button type="button" data-mode-k="3">3</button>
+                <button type="button" data-mode-k="4">4</button>
+                <button type="button" data-mode-k="5">5</button>
+              </div>
+              <p>Modes <span class="formula">k = 0, 1</span> are oscillatory at λ = 3.323268. Modes <span class="formula">k ≥ 2</span> are evanescent on the cylinder.</p>
+            </div>
+
+            <div class="modes-control-block">
+              <div class="control-label"><label for="modesTransferRange">phase ↔ real order</label><output id="modesTransferValue">100%</output></div>
+              <input id="modesTransferRange" type="range" min="0" max="1" value="1" step="0.002">
+              <div class="range-scale"><span>cos / N = 28</span><span>sin / R<sub>*</sub></span></div>
+              <div class="parameter-pair">
+                <div><span>cylinder phase δ</span><strong id="modesPhaseValue">0.500π</strong></div>
+                <div><span>cone order R</span><strong id="modesOrderValue">28.026397</strong></div>
+              </div>
+              <p>The linkage is conceptual, not an identity of solutions: one scalar moves the phase in the flat limit, while one scalar changes the real Bessel order on the cone at fixed ρ<sub>*</sub> (so λ(R) = ρ<sub>*</sub>²/R²).</p>
+            </div>
+
+            <div class="modes-control-block">
+              <div class="control-label"><label for="modesDepthRange">radial window</label><output id="modesDepthValue">8 units</output></div>
+              <input id="modesDepthRange" type="range" min="3" max="14" value="8" step="0.25">
+              <div class="range-scale"><span>near rim</span><span>deeper collar</span></div>
+            </div>
+
+            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Sweep phase into order</span></button>
+
+            <div class="modes-status">
+              <div><span>cylinder regime</span><strong id="modesRegimeValue">oscillatory</strong></div>
+              <div><span>bounded radial dimension</span><strong id="modesDimensionValue">2 → 1</strong></div>
+              <div><span>cylinder λ at N = 28</span><strong>3.323268</strong></div>
+            </div>
+          </aside>
+
+          <section class="modes-plot-panel" aria-labelledby="modesPlotState">
+            <div class="modes-plot-toolbar">
+              <div><span class="live-dot"></span><strong id="modesPlotState">critical k = 1 · Bessel crossing</strong></div>
+              <div class="modes-legend" aria-label="Mode plot legend">
+                <span><i class="legend-cyan"></i>first basis / integer N</span>
+                <span><i class="legend-orange"></i>second basis / real R</span>
+                <span><i class="legend-white"></i>selected profile</span>
+              </div>
+            </div>
+            <div id="modesCanvasWrap" class="modes-canvas-wrap">
+              <canvas id="modesCanvas" role="img" aria-label="Side-by-side plots of cylinder and Bessel radial modes with their common angular factor"></canvas>
+            </div>
+            <div class="axis-footer"><span id="modesAxisLeft">x = −8</span><span>profiles normalized on the visible window · zeros and phase preserved</span><span>rim x = 0</span></div>
+          </section>
+        </div>
+
+        <div class="freedom-strip">
+          <article>
+            <span>01 / flat cylinder</span>
+            <h3>Two oscillatory radial solutions</h3>
+            <p>For <span class="formula">k² &lt; λ</span>, the bounded radial space is <span class="formula">span{cos(ωx), sin(ωx)}</span>. Choosing their coefficient ratio is choosing a phase <span class="formula">δ</span>.</p>
+          </article>
+          <article>
+            <span>02 / cone tip</span>
+            <h3>One tip-regular Bessel solution</h3>
+            <p>Regularity discards <span class="formula">Y<sub>kR</sub></span>. There is no second tip-regular modified-Bessel companion for this positive-λ equation: <span class="formula">I/K</span> belong to the sign-flipped radial equation.</p>
+          </article>
+          <article>
+            <span>03 / relaxed order</span>
+            <h3>The scalar freedom becomes R</h3>
+            <p>Varying non-integer <span class="formula">R</span> changes the order <span class="formula">kR</span>, hence the radial Bessel phase. At <span class="formula">R = R<sub>*</sub></span>, the critical mode reaches <span class="formula">J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>.</p>
+          </article>
+        </div>
+      </section>
+
       <section class="interpretation">
-        <span class="section-number">03</span>
+        <span class="section-number">04</span>
         <div>
           <p class="eyebrow">How to read the picture</p>
           <h2>The right edge is the unknown.</h2>
@@ -291,6 +393,9 @@
       <p class="eyebrow">Cone continuation</p>
       <p>The cone panel uses the metric <span class="formula">dr² + (r²/R²)dψ²</span>. At fixed <span class="formula">ρ = j<sub>1,16</sub></span>, the field and boundary are expanded in 13 even Fourier–Bessel modes. An offline nonlinear least-squares continuation enforces <span class="formula">u = 1</span> and the exact metric normal derivative on 112 collocation angles; the displayed defects come from 512 shifted validation angles.</p>
       <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">R = 28</span>, the quotient angle <span class="formula">2π/R</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
+      <hr>
+      <p class="eyebrow">Angular modes</p>
+      <p>The comparison panel evaluates the cylinder factors analytically and samples the cone factors from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>. At the exact crossing knot, the critical trace is imposed as <span class="formula">J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>; interpolation is only between nearby stored radial samples and the two endpoint orders.</p>
     </dialog>
 
     <script src="cone-data.js"></script>

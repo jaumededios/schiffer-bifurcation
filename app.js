@@ -1340,3 +1340,400 @@ window.addEventListener("resize", () => {
 });
 
 solveAndRenderCone();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Angular-mode comparison. The cylinder curves are analytic separated
+// solutions. The cone curves interpolate the same precomputed Bessel tables
+// used by the finite-cone continuation above.
+
+const modesState = {
+  k: 1,
+  transfer: 1,
+  depth: 8,
+  playing: false,
+  playFrame: null,
+};
+
+const MODES_LAMBDA = coneNumerics.records.at(-1).lambda;
+const MODES_COLORS = {
+  cyan: "#4da2a3",
+  orange: "#ff7449",
+  white: "#fff4dc",
+  gray: "rgba(241,238,229,.34)",
+  grid: "rgba(241,238,229,.105)",
+  text: "rgba(241,238,229,.58)",
+  faint: "rgba(241,238,229,.34)",
+};
+
+function modesOrder() {
+  return interpolateNumber(coneNumerics.targetN, coneNumerics.RStar, modesState.transfer);
+}
+
+function modesTableValue(values, q, rimValue) {
+  const grid = coneNumerics.profileGrid;
+  if (Math.abs(q - 1) < 1e-12) return rimValue;
+  const step = (grid.at(-1) - grid[0]) / (grid.length - 1);
+  const lowerIndex = Math.min(grid.length - 2, Math.max(0, Math.floor((q - grid[0]) / step)));
+  const lowerQ = grid[lowerIndex];
+  const upperQ = grid[lowerIndex + 1];
+  if (q < 1 && upperQ > 1) return interpolateNumber(values[lowerIndex], rimValue, (q - lowerQ) / (1 - lowerQ));
+  if (q > 1 && lowerQ < 1) return interpolateNumber(rimValue, values[lowerIndex + 1], (q - 1) / (upperQ - 1));
+  return tableValue(grid, values, q);
+}
+
+function modesCylinderProfiles(x) {
+  const k = modesState.k;
+  const discriminant = MODES_LAMBDA - k * k;
+  if (discriminant > 0) {
+    const frequency = Math.sqrt(discriminant);
+    const phase = modesState.transfer * Math.PI / 2;
+    return {
+      regime: "oscillatory",
+      parameter: frequency,
+      first: Math.cos(frequency * x),
+      second: Math.sin(frequency * x),
+      selected: Math.cos(frequency * x - phase),
+    };
+  }
+  const decay = Math.sqrt(-discriminant);
+  return {
+    regime: "evanescent",
+    parameter: decay,
+    first: Math.exp(decay * x),
+    second: Math.exp(-decay * x),
+    selected: Math.exp(decay * x),
+  };
+}
+
+function modesConeProfile(mode, x, transfer = modesState.transfer) {
+  const R = interpolateNumber(coneNumerics.targetN, coneNumerics.RStar, transfer);
+  const q = Math.max(0, (R + x) / R);
+  const landingRim = mode === 1
+    ? tableValue(coneNumerics.profileGrid, coneNumerics.profiles.landing[mode], 1)
+    : 1;
+  const crossingRim = mode === 1 ? 0 : 1;
+  const landing = modesTableValue(coneNumerics.profiles.landing[mode], q, landingRim);
+  const crossing = modesTableValue(coneNumerics.profiles.crossing[mode], q, crossingRim);
+  return interpolateNumber(landing, crossing, transfer);
+}
+
+function normalizedSeries(series, sharedScale = null) {
+  const scale = sharedScale ?? Math.max(1e-14, ...series.map((value) => Math.abs(value)));
+  return series.map((value) => value / scale);
+}
+
+function modesCanvasMetrics() {
+  const canvas = $("#modesCanvas");
+  const wrap = $("#modesCanvasWrap");
+  const width = Math.max(320, wrap.clientWidth || 900);
+  const height = Math.max(500, wrap.clientHeight || 620);
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(width * ratio);
+  canvas.height = Math.round(height * ratio);
+  const context = canvas.getContext("2d");
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  return { canvas, context, width, height };
+}
+
+function drawModesPanelGrid(context, rect) {
+  context.save();
+  context.strokeStyle = MODES_COLORS.grid;
+  context.lineWidth = 1;
+  context.setLineDash([3, 6]);
+  [-1, -.5, 0, .5, 1].forEach((value) => {
+    const y = rect.top + (1.15 - value) / 2.3 * rect.height;
+    context.beginPath();
+    context.moveTo(rect.left, y);
+    context.lineTo(rect.left + rect.width, y);
+    context.stroke();
+  });
+  [0, .25, .5, .75, 1].forEach((amount) => {
+    const x = rect.left + amount * rect.width;
+    context.beginPath();
+    context.moveTo(x, rect.top);
+    context.lineTo(x, rect.top + rect.height);
+    context.stroke();
+  });
+  context.setLineDash([]);
+  context.strokeStyle = "rgba(241,238,229,.26)";
+  context.beginPath();
+  const zeroY = rect.top + rect.height / 2;
+  context.moveTo(rect.left, zeroY);
+  context.lineTo(rect.left + rect.width, zeroY);
+  context.stroke();
+  context.restore();
+}
+
+function drawModesSeries(context, rect, values, color, width = 1.5, dash = []) {
+  context.save();
+  context.beginPath();
+  values.forEach((value, index) => {
+    const x = rect.left + index / (values.length - 1) * rect.width;
+    const clipped = Math.max(-1.15, Math.min(1.15, value));
+    const y = rect.top + (1.15 - clipped) / 2.3 * rect.height;
+    if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+  });
+  context.strokeStyle = color;
+  context.lineWidth = width;
+  context.setLineDash(dash);
+  context.lineJoin = "round";
+  context.lineCap = "round";
+  context.stroke();
+  context.restore();
+}
+
+function drawModesPanelLabel(context, rect, title, equation, detail) {
+  context.save();
+  context.fillStyle = "rgba(241,238,229,.83)";
+  context.font = "8px DM Mono, monospace";
+  context.fillText(title.toUpperCase(), rect.left, rect.top - 33);
+  context.fillStyle = MODES_COLORS.text;
+  context.font = "9px DM Mono, monospace";
+  context.fillText(equation, rect.left, rect.top - 17);
+  context.fillStyle = MODES_COLORS.faint;
+  context.font = "7px DM Mono, monospace";
+  context.textAlign = "right";
+  context.fillText(detail, rect.left + rect.width, rect.top - 17);
+  context.restore();
+}
+
+function drawModesRim(context, rect, label) {
+  const x = rect.left + rect.width;
+  context.save();
+  context.strokeStyle = "rgba(255,244,220,.54)";
+  context.lineWidth = 1;
+  context.beginPath();
+  context.moveTo(x, rect.top);
+  context.lineTo(x, rect.top + rect.height);
+  context.stroke();
+  context.translate(x - 5, rect.top + 10);
+  context.rotate(-Math.PI / 2);
+  context.fillStyle = MODES_COLORS.faint;
+  context.font = "6px DM Mono, monospace";
+  context.textAlign = "right";
+  context.fillText(label.toUpperCase(), 0, 0);
+  context.restore();
+}
+
+function drawAngularStrip(context, rect) {
+  drawModesPanelGrid(context, rect);
+  const values = [];
+  const sampleCount = 480;
+  for (let index = 0; index < sampleCount; index++) {
+    const psi = -Math.PI + index / (sampleCount - 1) * TWO_PI;
+    values.push(Math.cos(modesState.k * psi));
+  }
+  drawModesSeries(context, rect, values, MODES_COLORS.white, 2.1);
+  context.save();
+  context.fillStyle = "rgba(241,238,229,.78)";
+  context.font = "8px DM Mono, monospace";
+  context.fillText(`SHARED ANGULAR FACTOR · cos(${modesState.k === 1 ? "ψ" : `${modesState.k}ψ`})`, rect.left, rect.top - 12);
+  context.fillStyle = MODES_COLORS.faint;
+  context.font = "7px DM Mono, monospace";
+  context.fillText("−π", rect.left, rect.top + rect.height + 17);
+  context.textAlign = "center";
+  context.fillText("0", rect.left + rect.width / 2, rect.top + rect.height + 17);
+  context.textAlign = "right";
+  context.fillText("+π", rect.left + rect.width, rect.top + rect.height + 17);
+  context.restore();
+}
+
+function renderModesComparison() {
+  const { canvas, context, width, height } = modesCanvasMetrics();
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "#101b20";
+  context.fillRect(0, 0, width, height);
+
+  const compact = width < 650;
+  let cylinderRect;
+  let coneRect;
+  let angularRect;
+  if (compact) {
+    cylinderRect = { left: 34, top: 58, width: width - 56, height: Math.max(110, height * .245) };
+    coneRect = { left: 34, top: height * .405, width: width - 56, height: Math.max(110, height * .245) };
+    angularRect = { left: 34, top: height * .805, width: width - 56, height: Math.max(48, height * .09) };
+  } else {
+    const outer = 42;
+    const gutter = 58;
+    const plotWidth = (width - outer * 2 - gutter) / 2;
+    cylinderRect = { left: outer, top: 72, width: plotWidth, height: height * .56 };
+    coneRect = { left: outer + plotWidth + gutter, top: 72, width: plotWidth, height: height * .56 };
+    angularRect = { left: outer, top: height * .79, width: width - outer * 2, height: height * .105 };
+  }
+
+  const sampleCount = 420;
+  const cylinderFirst = [];
+  const cylinderSecond = [];
+  const cylinderSelected = [];
+  const coneInteger = [];
+  const coneCurrent = [];
+  for (let index = 0; index < sampleCount; index++) {
+    const x = -modesState.depth + index / (sampleCount - 1) * modesState.depth;
+    const cylinder = modesCylinderProfiles(x);
+    cylinderFirst.push(cylinder.first);
+    cylinderSecond.push(cylinder.second);
+    cylinderSelected.push(cylinder.selected);
+    coneInteger.push(modesConeProfile(modesState.k, x, 0));
+    coneCurrent.push(modesConeProfile(modesState.k, x));
+  }
+
+  const cylinder = modesCylinderProfiles(0);
+  const cylinderFirstNormalized = normalizedSeries(cylinderFirst);
+  const cylinderSecondNormalized = normalizedSeries(cylinderSecond);
+  const cylinderSelectedNormalized = normalizedSeries(cylinderSelected);
+  const coneScale = Math.max(1e-14, ...coneInteger.map(Math.abs), ...coneCurrent.map(Math.abs));
+  const coneIntegerNormalized = normalizedSeries(coneInteger, coneScale);
+  const coneCurrentNormalized = normalizedSeries(coneCurrent, coneScale);
+
+  drawModesPanelGrid(context, cylinderRect);
+  drawModesPanelGrid(context, coneRect);
+  drawModesSeries(context, cylinderRect, cylinderFirstNormalized, MODES_COLORS.cyan, 2.7);
+  drawModesSeries(context, cylinderRect, cylinderSecondNormalized,
+    cylinder.regime === "oscillatory" ? MODES_COLORS.orange : MODES_COLORS.gray,
+    2.7, cylinder.regime === "oscillatory" ? [] : [5, 5]);
+  drawModesSeries(context, cylinderRect, cylinderSelectedNormalized, MODES_COLORS.white, 1.7);
+  drawModesSeries(context, coneRect, coneIntegerNormalized, MODES_COLORS.cyan, 3.8);
+  drawModesSeries(context, coneRect, coneCurrentNormalized, MODES_COLORS.orange, 2.1);
+  drawModesRim(context, cylinderRect, "rim x = 0");
+  drawModesRim(context, coneRect, "rim r = R");
+
+  const symbol = cylinder.regime === "oscillatory" ? "ω" : "α";
+  const cylinderEquation = cylinder.regime === "oscillatory"
+    ? "cos(ωx), sin(ωx)"
+    : "e^{αx}, e^{−αx}";
+  const cylinderDetail = `${symbol} = ${cylinder.parameter.toFixed(4)} · ${cylinder.regime}`;
+  const currentR = modesOrder();
+  const coneRimValue = modesConeProfile(modesState.k, 0);
+  drawModesPanelLabel(context, cylinderRect, `half-cylinder / k = ${modesState.k}`, cylinderEquation, cylinderDetail);
+  drawModesPanelLabel(context, coneRect, `cone / k = ${modesState.k}`, `J_{${modesState.k}R}(ρr/R)`, `R = ${currentR.toFixed(6)} · rim ${coneRimValue.toExponential(1)}`);
+
+  if (cylinder.regime === "evanescent") {
+    context.save();
+    context.fillStyle = MODES_COLORS.faint;
+    context.font = "7px DM Mono, monospace";
+    context.fillText("dashed: growing branch rejected as x → −∞", cylinderRect.left + 8, cylinderRect.top + 15);
+    context.restore();
+  }
+  if (modesState.k === 1 && modesState.transfer > .995) {
+    context.save();
+    context.fillStyle = MODES_COLORS.orange;
+    context.font = "7px DM Mono, monospace";
+    context.textAlign = "right";
+    context.fillText("J_R*(ρ*) = 0", coneRect.left + coneRect.width - 8, coneRect.top + 15);
+    context.restore();
+  }
+
+  drawAngularStrip(context, angularRect);
+  canvas.setAttribute("aria-label", `Angular mode ${modesState.k}: ${cylinder.regime} cylinder radial profiles compared with Bessel profiles at N 28 and real order ${currentR.toFixed(6)}.`);
+}
+
+function updateModesReadouts() {
+  const cylinder = modesCylinderProfiles(0);
+  const currentR = modesOrder();
+  $("#modesKValue").textContent = `k = ${modesState.k}`;
+  $("#modesTransferValue").textContent = `${Math.round(modesState.transfer * 100)}%`;
+  $("#modesPhaseValue").textContent = cylinder.regime === "oscillatory"
+    ? `${(modesState.transfer / 2).toFixed(3)}π`
+    : "not available";
+  $("#modesOrderValue").textContent = currentR.toFixed(6);
+  $("#modesDepthValue").textContent = `${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)} units`;
+  $("#modesAxisLeft").textContent = `x = −${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)}`;
+  $("#modesRegimeValue").textContent = cylinder.regime;
+  $("#modesDimensionValue").textContent = cylinder.regime === "oscillatory"
+    ? "2 cylinder → 1 cone"
+    : "1 bounded → 1 tip-regular";
+  if (modesState.k === 1 && modesState.transfer > .995) {
+    $("#modesPlotState").textContent = "critical k = 1 · J_R*(ρ*) = 0";
+  } else if (cylinder.regime === "oscillatory") {
+    $("#modesPlotState").textContent = `k = ${modesState.k} · phase δ ↔ order R`;
+  } else {
+    $("#modesPlotState").textContent = `k = ${modesState.k} · bounded decay ↔ tip-regular J`;
+  }
+}
+
+function updateModesComparison() {
+  updateModesReadouts();
+  renderModesComparison();
+}
+
+function stopModesPlayback() {
+  modesState.playing = false;
+  if (modesState.playFrame) cancelAnimationFrame(modesState.playFrame);
+  modesState.playFrame = null;
+  $("#modesPlayIcon").textContent = "▶";
+  $("#modesPlayLabel").textContent = modesState.transfer > .999 ? "Replay phase into order" : "Sweep phase into order";
+}
+
+function toggleModesPlayback() {
+  if (modesState.playing) { stopModesPlayback(); return; }
+  if (modesState.transfer > .999) modesState.transfer = 0;
+  modesState.playing = true;
+  $("#modesPlayIcon").textContent = "Ⅱ";
+  $("#modesPlayLabel").textContent = "Pause";
+  const startTransfer = modesState.transfer;
+  const start = performance.now();
+  const duration = Math.max(700, 4200 * (1 - startTransfer));
+  const tick = (now) => {
+    if (!modesState.playing) return;
+    const amount = Math.min(1, (now - start) / duration);
+    const eased = amount * amount * (3 - 2 * amount);
+    modesState.transfer = startTransfer + (1 - startTransfer) * eased;
+    $("#modesTransferRange").value = modesState.transfer;
+    setRangeFill($("#modesTransferRange"));
+    updateModesComparison();
+    if (amount >= 1) { stopModesPlayback(); return; }
+    modesState.playFrame = requestAnimationFrame(tick);
+  };
+  modesState.playFrame = requestAnimationFrame(tick);
+}
+
+document.querySelectorAll("[data-mode-k]").forEach((button) => {
+  button.setAttribute("aria-pressed", String(Number(button.dataset.modeK) === modesState.k));
+  button.addEventListener("click", () => {
+    stopModesPlayback();
+    modesState.k = Number(button.dataset.modeK);
+    document.querySelectorAll("[data-mode-k]").forEach((candidate) => {
+      const active = candidate === button;
+      candidate.classList.toggle("active", active);
+      candidate.setAttribute("aria-pressed", String(active));
+    });
+    updateModesComparison();
+  });
+});
+
+setRangeFill($("#modesTransferRange"));
+setRangeFill($("#modesDepthRange"));
+$("#modesTransferRange").addEventListener("input", (event) => {
+  stopModesPlayback();
+  modesState.transfer = Number(event.target.value);
+  setRangeFill(event.target);
+  updateModesComparison();
+});
+$("#modesDepthRange").addEventListener("input", (event) => {
+  modesState.depth = Number(event.target.value);
+  setRangeFill(event.target);
+  updateModesComparison();
+});
+$("#modesPlayButton").addEventListener("click", toggleModesPlayback);
+$("#modesResetButton").addEventListener("click", () => {
+  stopModesPlayback();
+  Object.assign(modesState, { k: 1, transfer: 1, depth: 8 });
+  $("#modesTransferRange").value = modesState.transfer;
+  $("#modesDepthRange").value = modesState.depth;
+  setRangeFill($("#modesTransferRange"));
+  setRangeFill($("#modesDepthRange"));
+  document.querySelectorAll("[data-mode-k]").forEach((button) => {
+    const active = Number(button.dataset.modeK) === 1;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  updateModesComparison();
+});
+
+let modesResizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(modesResizeTimer);
+  modesResizeTimer = setTimeout(renderModesComparison, 140);
+});
+
+updateModesComparison();
