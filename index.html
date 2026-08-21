@@ -279,7 +279,7 @@
 
         <div class="modes-lead">
           <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost <span>2π</span>. The large panel unwraps exactly that patch into radial distance <span>x</span> and quotient angle <span>ψ</span>, so the curved rim becomes the flat-cylinder picture.</p>
-          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The unwrapped patch uses the same numerical Bessel field and the same continued free boundary as the global picture.</p>
+          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The radial trace isolates the non-evanescent wave; the higher flat modes are exponentials. Tip regularity selects one cone Bessel profile, and Debye exposes its <span>R ↔ phase</span> correspondence.</p>
         </div>
 
         <div class="modes-laboratory">
@@ -307,6 +307,23 @@
                 <div><span>radial crop depth</span><strong id="modesDepthValue">5 units</strong></div>
               </div>
               <p>The crop spans one full angular wavelength and five radial units. These scales are fixed so the mismatch is always visible in the large flat zoom.</p>
+            </div>
+
+            <div class="modes-control-block phase-control-block">
+              <div class="control-label"><span>R problem → cylinder phase</span><output id="modesPhaseValue">Δξ = 0.543°</output></div>
+              <div class="problem-map" aria-label="The Bessel radial problem becomes a sine-cosine problem on a flat collar">
+                <div><span>cone · tip regular</span><strong>B<sub>R</sub> = J<sub>R</sub></strong></div>
+                <i aria-hidden="true">→</i>
+                <div><span>Debye collar</span><strong>A cos(ωx + ξ<sub>R</sub>)</strong></div>
+              </div>
+              <div id="modesPhaseTrack" class="phase-track" role="img" aria-label="Local cylinder phase along the branch">
+                <span id="modesPhaseFill"></span>
+                <i id="modesPhaseMarker"></i>
+              </div>
+              <div class="range-scale"><span>R<sub>*</sub> · pure sin</span><span>N = 28 · Δξ<sub>N</sub></span></div>
+              <div class="phase-law"><span>ξ′(R) = −acos(R/ρ)</span><span>Δξ(s) ∼ R(s) − R<sub>*</sub> ∼ s²</span></div>
+              <div class="phase-agreement"><span>exact rim Cauchy phase</span><strong id="modesExactPhaseValue">δ = 0.543°</strong></div>
+              <p>The trace below the heatmap compares the exact regular Bessel profile with its Debye sine/cosine wave. The exact zero at <span class="formula">R<sub>*</sub></span> anchors the phase; changing <span class="formula">R</span> moves it by the explicit formula above.</p>
             </div>
 
             <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Play crossing → landing</span></button>
@@ -338,7 +355,7 @@
           <article>
             <span>01 / global Bessel mode</span>
             <h3>One regular profile from the tip</h3>
-            <p>Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and discards <span class="formula">Y<sub>kR</sub></span>. There is no second tip-regular modified-Bessel companion for this positive-λ equation.</p>
+            <p>Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and discards <span class="formula">Y<sub>kR</sub></span>. The modified <span class="formula">I/K</span> pair solves the sign-flipped equation, so <span class="formula">I</span> is not an admissible second profile here.</p>
           </article>
           <article>
             <span>02 / one-wavelength zoom</span>
@@ -348,7 +365,7 @@
           <article>
             <span>03 / where the phase goes</span>
             <h3>Phase freedom becomes real order</h3>
-            <p>The flat oscillatory equation has a two-dimensional <span class="formula">cos/sin</span> space. On the cone, varying non-integer <span class="formula">R</span> moves the phase of the sole regular Bessel profile—and leaves the angular seam shown above.</p>
+            <p>Debye turns the tip-regular Bessel profile into <span class="formula">A<sub>R</sub>(x) cos(ωx + ξ(R))</span> on the collar, with <span class="formula">ξ′(R) = −acos(R/ρ)</span>. Thus real order and cylinder phase are locally equivalent parameters; along the branch, both change quadratically in <span class="formula">s</span>.</p>
           </article>
         </div>
       </section>
@@ -386,6 +403,7 @@
       <hr>
       <p class="eyebrow">Angular modes</p>
       <p>The nested-zoom panel evaluates the whole 28-copy assembly and its seam-centered one-wavelength collar from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
+      <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">r = R + x</span>, the <span class="formula">k = 1</span> Bessel equation tends on bounded collars to <span class="formula">C″ + (λ − 1)C = 0</span>. Debye refines this to <span class="formula">J<sub>R</sub>(√λ(R+x)) ≈ A<sub>R</sub>(x) cos(ωx + ξ(R))</span>, where <span class="formula">ξ(R) = √(ρ²−R²) − R acos(R/ρ) − π/4</span> and therefore <span class="formula">ξ′(R) = −acos(R/ρ)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">R<sub>*</sub></span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
     </dialog>
 
     <script src="cone-data.js"></script>

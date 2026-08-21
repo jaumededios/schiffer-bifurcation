@@ -1,2 +1,3 @@
 numerics/branch-data.json
 __pycache__/
+.venv/

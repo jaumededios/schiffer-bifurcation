@@ -120,7 +120,25 @@ gap angle = 2π(1 − 28/R),
 gap arc length at the rim = 2π(R − 28).
 ```
 
-The accompanying explanation keeps the radial degree-of-freedom comparison explicit. On the cylinder, an oscillatory radial equation has the two-dimensional space `span{cos(ωx), sin(ωx)}`, whose coefficient ratio is a phase. On the cone, tip regularity keeps `J_{kR}` and rejects singular `Y_{kR}`; `I/K` instead belong to the sign-flipped equation. Varying real `R` changes the phase of the single regular Bessel profile and supplies the relaxed scalar direction used by the bifurcation.
+The accompanying explanation keeps the radial degree-of-freedom comparison explicit. On the cylinder, an oscillatory radial equation has the two-dimensional space `span{cos(ωx), sin(ωx)}`, whose coefficient ratio is a phase. On the cone, tip regularity keeps `J_{kR}` and rejects singular `Y_{kR}`; `I/K` instead belong to the sign-flipped equation.
+
+The browser makes the moral local comparison directly. For the critical `k = 1` profile, set `r = R + x` and write
+
+```text
+B_R(x) = normalized J_R(√λ(R + x)).
+```
+
+On every fixed collar, its equation approaches `C″ + (λ − 1)C = 0` as `R → ∞`. Debye makes the phase correspondence explicit:
+
+```text
+J_R(√λ(R + x)) ≈ A_R(x) cos(ωx + ξ(R)),
+ξ(R) = √(ρ² − R²) − R acos(R/ρ) − π/4,
+ξ′(R) = −acos(R/ρ),                     ω = √(λ − 1).
+```
+
+The derivative is nonzero, so near the crossing `R` and the phase of the local cylinder wave are equivalent scalar parameters. The exact Bessel zero at `R*` anchors the comparison at a pure sine. Moving from `R* = 28.026397…` to `N = 28` gives a Debye phase shift of `1.4971°`; the phase extracted independently from the exact rim Cauchy data is `1.4978°`. The displayed dashed wave uses the Debye phase, while the solid trace uses the numerically evaluated Bessel profile. This comparison is presented as geometric intuition, not as a quoted step of the paper's proof.
+
+There are two local orders of variation here. Debye gives `Δξ(R) = −β*(R − R*) + O((R − R*)²)`, where `β* = acos(R*/ρ)`. The bifurcating branch is even in its signed amplitude, `R(s) − R* = c₂s² + O(s⁴)`. Consequently the phase displayed against the branch slider is quadratic: `Δξ(s) = −β*c₂s² + O(s⁴)`. The web dataset stores an independently evaluated critical Bessel profile at every solved branch record so the solid curve and exact Cauchy phase come from the numerical `R(s)` data.
 
 ## Reproduce the cone data
 

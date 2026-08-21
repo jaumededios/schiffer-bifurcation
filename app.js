@@ -780,6 +780,8 @@ function coneRecordAt(progress) {
     lambda: interpolateNumber(left.lambda, right.lambda, amount),
     h: interpolateArray(left.h, right.h, amount),
     a: interpolateArray(left.a, right.a, amount),
+    criticalProfile: interpolateArray(left.criticalProfile, right.criticalProfile, amount),
+    criticalRim: interpolateNumber(left.criticalRim, right.criticalRim, amount),
     dirichlet_rms: interpolateNumber(left.dirichlet_rms, right.dirichlet_rms, amount),
     neumann_rms: interpolateNumber(left.neumann_rms, right.neumann_rms, amount),
     max_residual: interpolateNumber(left.max_residual, right.max_residual, amount),
@@ -801,6 +803,9 @@ function tableValue(grid, values, q) {
 }
 
 function coneRadialValue(mode, q, solution = coneState.solution) {
+  if (mode === 1 && solution.criticalProfile) {
+    return tableValue(coneNumerics.profileGrid, solution.criticalProfile, q);
+  }
   const orderAmount = Math.max(0, Math.min(1,
     (coneNumerics.RStar - solution.R) / (coneNumerics.RStar - coneNumerics.targetN)
   ));
@@ -1744,10 +1749,115 @@ function modesPatchCoordinates(solution, centerAngle, tangent) {
   return unfoldedCoordinates(angle, solution);
 }
 
+function modesRadialComparison(solution) {
+  const rimValue = solution.criticalRim;
+  // Every stored critical profile is divided by q J'_R(rho), so its derivative
+  // with respect to the collar coordinate x is one at x = 0.
+  const derivative = 1;
+  const omega = Math.sqrt(Math.max(0, solution.lambda - 1));
+  const exactPhase = Math.atan2(omega * rimValue, derivative);
+
+  // In the oscillatory Debye region, J_R(rho) has phase
+  // xi(R) = sqrt(rho^2-R^2) - R acos(R/rho) - pi/4. Anchoring xi at
+  // the exact crossing removes the small absolute Debye phase error while
+  // retaining its explicit order-to-phase law xi'(R) = -acos(R/rho).
+  const debyePhaseAt = (R) => Math.sqrt(coneNumerics.rho ** 2 - R ** 2)
+    - R * Math.acos(R / coneNumerics.rho) - Math.PI / 4;
+  const phase = debyePhaseAt(solution.R) - debyePhaseAt(coneNumerics.RStar);
+
+  const landingRecord = coneNumerics.records.at(-1);
+  const landingPhase = debyePhaseAt(landingRecord.R) - debyePhaseAt(coneNumerics.RStar);
+  const phaseFraction = landingPhase > 1e-12
+    ? Math.max(0, Math.min(1, phase / landingPhase))
+    : 0;
+
+  return {
+    omega,
+    rimValue,
+    derivative,
+    phase,
+    phaseDegrees: phase * 180 / Math.PI,
+    exactPhase,
+    exactPhaseDegrees: exactPhase * 180 / Math.PI,
+    landingPhaseDegrees: landingPhase * 180 / Math.PI,
+    phaseFraction,
+    cylinderValue: (x) => Math.sin(omega * x + phase) / (omega * Math.cos(phase)),
+    besselValue: (x) => tableValue(
+      coneNumerics.profileGrid,
+      solution.criticalProfile,
+      1 + x / solution.R
+    ),
+  };
+}
+
+function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
+  const plot = {
+    left: rect.left + 8,
+    top: rect.top + 25,
+    width: rect.width - 16,
+    height: rect.height - 33,
+  };
+  const bessel = [];
+  const cylinder = [];
+  const samples = 220;
+  for (let index = 0; index < samples; index++) {
+    const x = -depth + index / (samples - 1) * depth;
+    bessel.push(comparison.besselValue(x));
+    cylinder.push(comparison.cylinderValue(x));
+  }
+  const scale = Math.max(1e-8, ...bessel.map(Math.abs), ...cylinder.map(Math.abs)) * 1.12;
+  const xToPixel = (index) => plot.left + index / (samples - 1) * plot.width;
+  const yToPixel = (value) => plot.top + (scale - value) / (2 * scale) * plot.height;
+
+  context.save();
+  context.fillStyle = "rgba(8,17,21,.88)";
+  context.fillRect(rect.left, rect.top, rect.width, rect.height);
+  context.strokeStyle = "rgba(241,238,229,.1)";
+  context.lineWidth = 1;
+  context.beginPath();
+  context.moveTo(plot.left, yToPixel(0));
+  context.lineTo(plot.left + plot.width, yToPixel(0));
+  context.stroke();
+  context.beginPath();
+  context.moveTo(plot.left + plot.width, plot.top);
+  context.lineTo(plot.left + plot.width, plot.top + plot.height);
+  context.stroke();
+
+  const draw = (values, color, width, dash = []) => {
+    context.beginPath();
+    values.forEach((value, index) => {
+      const x = xToPixel(index);
+      const y = yToPixel(value);
+      if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    });
+    context.strokeStyle = color;
+    context.lineWidth = width;
+    context.setLineDash(dash);
+    context.stroke();
+    context.setLineDash([]);
+  };
+  draw(bessel, MODES_COLORS.cyan, 2.2);
+  draw(cylinder, MODES_COLORS.orange, 1.7, [5, 4]);
+
+  context.font = "7px DM Mono, monospace";
+  context.fillStyle = "rgba(241,238,229,.75)";
+  context.fillText("LOCAL k=1 · ORDER ↔ PHASE", rect.left + 8, rect.top + 14);
+  context.textAlign = "right";
+  context.fillStyle = MODES_COLORS.cyan;
+  context.fillText("BESSEL", rect.left + rect.width - 116, rect.top + 14);
+  context.fillStyle = MODES_COLORS.orange;
+  context.fillText("DEBYE SIN/COS", rect.left + rect.width - 8, rect.top + 14);
+  context.fillStyle = MODES_COLORS.faint;
+  context.fillText(`Δξ = ${comparison.phaseDegrees.toFixed(3)}° · exact δ = ${comparison.exactPhaseDegrees.toFixed(3)}°`, rect.left + rect.width - 8, rect.top + rect.height - 5);
+  context.textAlign = "left";
+  context.fillText(`x = −${depth.toFixed(0)}`, plot.left, rect.top + rect.height - 5);
+  context.restore();
+}
+
 function modesDrawPatch(context, rect, solution, fieldValue, options) {
   const compact = Boolean(options.compact);
   const labelHeight = compact ? 24 : 39;
-  const footerHeight = compact ? 14 : 22;
+  const footerHeight = compact ? 111 : 122;
   const plot = {
     left: rect.left + (compact ? 8 : 12),
     top: rect.top + labelHeight,
@@ -1817,11 +1927,18 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
     context.textAlign = "right";
     context.fillText(options.detail, rect.left + rect.width - 12, rect.top + 17);
     context.textAlign = "left";
-    context.fillText(`x = −${options.depth.toFixed(1)}`, plot.left, rect.top + rect.height - 6);
+    context.fillText(`x = −${options.depth.toFixed(1)}`, plot.left, plot.top + plot.height + 13);
     context.textAlign = "right";
-    context.fillText("free rim x = 0", plot.left + plot.width, rect.top + rect.height - 6);
+    context.fillText("free rim x = 0", plot.left + plot.width, plot.top + plot.height + 13);
   }
   context.restore();
+  const comparisonRect = {
+    left: plot.left,
+    top: plot.top + plot.height + (compact ? 18 : 22),
+    width: plot.width,
+    height: compact ? 87 : 94,
+  };
+  modesDrawRadialComparison(context, comparisonRect, solution, options.depth, options.comparison);
   return plot;
 }
 
@@ -1836,6 +1953,7 @@ function renderModesNestedZoom() {
   const { canvas, context, width, height } = modesCanvasMetrics();
   const solution = modesState.solution;
   const fieldValue = modesFastField(solution);
+  const comparison = modesRadialComparison(solution);
   context.clearRect(0, 0, width, height);
   context.fillStyle = "#101b20";
   context.fillRect(0, 0, width, height);
@@ -1858,8 +1976,9 @@ function renderModesNestedZoom() {
     tangentSpan: Math.PI,
     depth: modesState.depth,
     title: "ONE ANGULAR WAVELENGTH · UNWRAPPED COLLAR",
-    detail: containsSeam ? "SEAM IS INSIDE THIS CROP" : "ψ-span = 2π · locally flat",
+    detail: containsSeam ? `Δξ = ${comparison.phaseDegrees.toFixed(2)}° · SEAM CENTERED` : "ψ-span = 2π · locally flat",
     accent: MODES_COLORS.cyan,
+    comparison,
   });
 
   if (!compact) {
@@ -1877,18 +1996,25 @@ function renderModesNestedZoom() {
   }
 
   const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
-  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies and a seam-centered one-wavelength flat collar crop showing a ${gapDegrees.toFixed(3)} degree mismatch.`);
+  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies, a seam-centered one-wavelength flat collar crop showing a ${gapDegrees.toFixed(3)} degree mismatch, and a comparison of the regular Bessel radial mode with its Debye sine-cosine cylinder mode at phase shift ${comparison.phaseDegrees.toFixed(2)} degrees.`);
 }
 
 function updateModesReadouts() {
   const solution = modesState.solution;
   const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
   const cropDegrees = modesState.crop * 360;
+  const comparison = modesRadialComparison(solution);
+  const phasePercent = comparison.phaseFraction * 100;
   $("#modesTransferValue").textContent = `${Math.round(modesState.progress * 100)}%`;
   $("#modesOrderValue").textContent = solution.R.toFixed(6);
   $("#modesAmplitudeValue").textContent = solution.s.toFixed(4);
   $("#modesCropValue").textContent = modesState.crop < .012 ? "centered on seam" : `${cropDegrees.toFixed(0)}° from seam`;
   $("#modesDepthValue").textContent = `${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)} units`;
+  $("#modesPhaseValue").textContent = `Δξ = ${comparison.phaseDegrees.toFixed(3)}°`;
+  $("#modesExactPhaseValue").textContent = `δ = ${comparison.exactPhaseDegrees.toFixed(3)}°`;
+  $("#modesPhaseFill").style.width = `${phasePercent}%`;
+  $("#modesPhaseMarker").style.left = `${phasePercent}%`;
+  $("#modesPhaseTrack").setAttribute("aria-label", `The Debye cylinder phase shift is ${comparison.phaseDegrees.toFixed(2)} degrees, from zero degrees at the crossing to ${comparison.landingPhaseDegrees.toFixed(2)} degrees at N equals 28.`);
   $("#modesGapValue").textContent = gapDegrees < 5e-5 ? "0° · closed" : `${gapDegrees.toFixed(3)}°`;
   $("#modesWavelengthValue").textContent = `${TWO_PI.toFixed(3)} units`;
   $("#modesCurvatureValue").textContent = `1 / ${solution.R.toFixed(3)}`;

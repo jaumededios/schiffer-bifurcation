@@ -28,6 +28,13 @@ def radial_profiles(order_parameter, rho, mode_count, grid):
     return profiles
 
 
+def critical_profile(order_parameter, rho, grid):
+    """Tip-regular k=1 profile normalized to have unit rim derivative."""
+    wave_number = rho / order_parameter
+    scale = wave_number * special.jvp(order_parameter, rho, 1)
+    return special.jv(order_parameter, rho * grid) / scale
+
+
 def rounded(value):
     if isinstance(value, float):
         return float(f"{value:.11g}")
@@ -58,7 +65,13 @@ def main():
     records.append(landing)
     records = [{key: record[key] for key in keys} for record in records]
 
-    radial_grid = np.linspace(0, 1.03, 249)
+    # A 1.03 / 309 step puts q = 1 exactly at index 300. This matters at the
+    # crossing, where the critical profile has an exact rim zero.
+    radial_grid = np.linspace(0, 1.03, 310)
+    for index, record in enumerate(records):
+        profile = critical_profile(record["R"], branch["rho"], radial_grid)
+        record["criticalProfile"] = profile.tolist()
+        record["criticalRim"] = 0.0 if index == 0 else float(profile[300])
     payload = {
         "source": "Cao-Labora–de Dios Pont cone equations; offline Fourier–Bessel collocation",
         "targetN": branch["targetN"],
