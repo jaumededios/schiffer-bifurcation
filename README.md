@@ -5,10 +5,11 @@ A browser-based numerical visualization of the Schiffer problem, from the infini
 The domain is
 
 ```text
-Ωs = { (x, θ) : x ≤ h_s(θ) },   h_s(θ) = s cos(θ − φ),   θ ∈ S¹.
+Ωs = { (x, θ) : x ≤ h_s(θ) },
+h_s(θ) = s cos(θ − φ) + h₂ cos(2(θ − φ)) + h₃ cos(3(θ − φ)),   θ ∈ S¹.
 ```
 
-At `s = 0`, the heat-map domain is a rectangle representing a collar of the half-cylinder. Moving `s` displaces the right-hand free boundary in the critical first Fourier mode.
+At `s = 0`, the heat-map domain is a rectangle representing a collar of the half-cylinder. The first wall coefficient is fixed as the amplitude gauge `h₁ = s`; the mean axial translation is fixed to zero. For every selected `(λ,s)`, the browser solves for `h₂` and `h₃` together with the field coefficients.
 
 ## Numerical model
 
@@ -25,20 +26,20 @@ exp(√(k² − λ)x) cos(kθ),
 exp(√(k² − λ)x) sin(kθ).
 ```
 
-They decay as `x → −∞`, and their interior PDE residual is analytically zero. The coefficients are chosen by ridge-regularized least squares against the two free-boundary equations
+They decay as `x → −∞`, and their interior PDE residual is analytically zero. The field and wall coefficients are chosen together by a damped Gauss–Newton least-squares solve against the two free-boundary equations
 
 ```text
 u(h_s(θ), θ) = 1,
 ∇u(h_s(θ), θ) · (1, −h_s'(θ)) / √(1 + h_s'(θ)²) = 0.
 ```
 
-The solve uses a column-scaled Householder QR factorization rather than normal equations, with at least 256 angular samples and up to 16 angular modes. Exponential basis functions are also rescaled by constants to avoid overflow without changing the approximation space. The displayed Dirichlet and Neumann defects are evaluated independently on at least 512 shifted samples in the normalized metric
+Each nonlinear step uses the analytic Jacobian with respect to every field coefficient and the two wall coefficients; its least-squares subproblem uses a column-scaled Householder QR factorization rather than normal equations. A final QR solve polishes the field at the recovered wall. Training uses at least 256 angular samples and up to 16 angular field modes. Exponential basis functions are rescaled by constants to avoid overflow without changing the approximation space. The displayed Dirichlet and Neumann defects are evaluated independently on at least 512 shifted samples in the normalized metric
 
 ```text
 ‖f‖² = (2π)⁻¹ ∫₋π^π |f(θ)|² dθ.
 ```
 
-Since `λ` and `s` are independent controls, most selected pairs are off the true one-dimensional solution branch and need not have zero boundary defect.
+This is now a truncated free-boundary calculation rather than a prescribed-cosine-wall fit. It still solves only two higher wall harmonics, and `λ` and `s` remain independent controls, so the result need not lie on the exact one-dimensional branch and its boundary defect need not vanish.
 
 ## Views
 

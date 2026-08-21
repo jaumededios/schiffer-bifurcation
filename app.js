@@ -17,6 +17,7 @@ const state = {
 const X_MIN = -5;
 const X_MAX = 1.05;
 const TWO_PI = Math.PI * 2;
+const CYLINDER_WALL_MODES = [2, 3];
 const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
 
 const threeState = {
@@ -30,18 +31,40 @@ const threeState = {
 };
 
 function boundary(theta, parameters = state) {
-  return parameters.s * Math.cos(theta - parameters.phase);
+  const shifted = theta - parameters.phase;
+  let value = parameters.s * Math.cos(shifted);
+  CYLINDER_WALL_MODES.forEach((mode) => {
+    value += (parameters.wallCoefficients?.[mode] || 0) * Math.cos(mode * shifted);
+  });
+  return value;
 }
 
 function boundaryDerivative(theta, parameters = state) {
-  return -parameters.s * Math.sin(theta - parameters.phase);
+  const shifted = theta - parameters.phase;
+  let value = -parameters.s * Math.sin(shifted);
+  CYLINDER_WALL_MODES.forEach((mode) => {
+    value -= mode * (parameters.wallCoefficients?.[mode] || 0) * Math.sin(mode * shifted);
+  });
+  return value;
+}
+
+function parametersWithWall(parameters, higherCoefficients = [0, 0]) {
+  const wallCoefficients = [0, parameters.s, ...higherCoefficients];
+  return {
+    ...parameters,
+    wallCoefficients,
+    // This is only a column rescaling of the decaying basis. Keep it fixed
+    // while h2 and h3 move so the nonlinear Jacobian differentiates the
+    // physical wall dependence, not an arbitrary numerical normalization.
+    radialShift: Math.abs(parameters.s) + .9,
+  };
 }
 
 function radialJet(x, mode, parameters) {
   const { lambda } = parameters;
   if (mode.radial === "decay") {
     const decay = Math.sqrt(mode.k * mode.k - lambda);
-    const value = Math.exp(decay * (x - Math.abs(parameters.s)));
+    const value = Math.exp(decay * (x - (parameters.radialShift ?? Math.abs(parameters.s))));
     return { value, derivative: decay * value };
   }
   const frequency = mode.k === 0 ? Math.sqrt(lambda) : Math.sqrt(lambda - 1);
@@ -62,10 +85,13 @@ function angularJet(theta, mode) {
 function basisJet(x, theta, parameters, mode) {
   const radial = radialJet(x, mode, parameters);
   const angular = angularJet(theta, mode);
+  const value = radial.value * angular.value;
   return {
-    value: radial.value * angular.value,
+    value,
     dx: radial.derivative * angular.value,
     dtheta: radial.value * angular.derivative,
+    dxx: (mode.k * mode.k - parameters.lambda) * value,
+    dxtheta: radial.derivative * angular.derivative,
   };
 }
 
@@ -140,9 +166,7 @@ function modalList(maxMode) {
   return modes;
 }
 
-function solveModalField(parameters) {
-  const modes = modalList(parameters.maxMode);
-  const trainingCount = Math.max(256, 24 * (parameters.maxMode + 1));
+function fitFieldAtWall(parameters, modes, trainingCount) {
   const rows = [];
   const targets = [];
 
@@ -158,24 +182,146 @@ function solveModalField(parameters) {
     targets.push(0);
   }
   const coefficients = solveLeastSquares(rows, targets);
+  return { parameters, modes, coefficients };
+}
 
-  const solution = {
-    parameters: { ...parameters },
-    modes,
-    coefficients,
+function boundaryResidualVector(solution, count, offset) {
+  const residuals = [];
+  for (let index = 0; index < count; index++) {
+    const theta = -Math.PI + (index + offset) * TWO_PI / count;
+    const x = boundary(theta, solution.parameters);
+    const slope = boundaryDerivative(theta, solution.parameters);
+    const jet = fieldJet(x, theta, solution);
+    residuals.push(jet.value - 1);
+    residuals.push((jet.dx - slope * jet.dtheta) / Math.sqrt(1 + slope * slope));
+  }
+  return residuals;
+}
+
+function residualMeanSquare(solution, count, offset = .5) {
+  const residuals = boundaryResidualVector(solution, count, offset);
+  return residuals.reduce((sum, value) => sum + value * value, 0) / residuals.length;
+}
+
+function cylinderGaussNewtonSystem(solution, count) {
+  const rows = [];
+  const targets = [];
+  const fieldColumnCount = solution.modes.length;
+  for (let index = 0; index < count; index++) {
+    const theta = -Math.PI + (index + .5) * TWO_PI / count;
+    const shifted = theta - solution.parameters.phase;
+    const x = boundary(theta, solution.parameters);
+    const slope = boundaryDerivative(theta, solution.parameters);
+    const normalScale = Math.sqrt(1 + slope * slope);
+    const jets = solution.modes.map((mode) => basisJet(x, theta, solution.parameters, mode));
+    const field = { value: 0, dx: 0, dtheta: 0, dxx: 0, dxtheta: 0 };
+    jets.forEach((jet, modeIndex) => {
+      const coefficient = solution.coefficients[modeIndex];
+      field.value += coefficient * jet.value;
+      field.dx += coefficient * jet.dx;
+      field.dtheta += coefficient * jet.dtheta;
+      field.dxx += coefficient * jet.dxx;
+      field.dxtheta += coefficient * jet.dxtheta;
+    });
+
+    const dirichlet = field.value - 1;
+    const dirichletRow = jets.map((jet) => jet.value);
+    CYLINDER_WALL_MODES.forEach((mode) => {
+      dirichletRow.push(field.dx * Math.cos(mode * shifted));
+    });
+    rows.push(dirichletRow);
+    targets.push(-dirichlet);
+
+    const normalNumerator = field.dx - slope * field.dtheta;
+    const neumann = normalNumerator / normalScale;
+    const neumannRow = jets.map((jet) => (jet.dx - slope * jet.dtheta) / normalScale);
+    CYLINDER_WALL_MODES.forEach((mode) => {
+      const wallValueDerivative = Math.cos(mode * shifted);
+      const wallSlopeDerivative = -mode * Math.sin(mode * shifted);
+      const numeratorDerivative = (field.dxx - slope * field.dxtheta) * wallValueDerivative
+        - wallSlopeDerivative * field.dtheta;
+      neumannRow.push(numeratorDerivative / normalScale
+        - normalNumerator * slope * wallSlopeDerivative / (normalScale ** 3));
+    });
+    rows.push(neumannRow);
+    targets.push(-neumann);
+  }
+  return { rows, targets, fieldColumnCount };
+}
+
+function cylinderStep(solution, delta, amount, fieldColumnCount) {
+  const coefficients = solution.coefficients.map((value, index) => value + amount * delta[index]);
+  const wallCoefficients = [...solution.parameters.wallCoefficients];
+  CYLINDER_WALL_MODES.forEach((mode, index) => {
+    wallCoefficients[mode] += amount * delta[fieldColumnCount + index];
+  });
+  const parameters = {
+    ...solution.parameters,
+    wallCoefficients,
+  };
+  return { parameters, modes: solution.modes, coefficients };
+}
+
+function solveModalField(parameters) {
+  const modes = modalList(parameters.maxMode);
+  const trainingCount = Math.max(256, 24 * (parameters.maxMode + 1));
+  let solution = fitFieldAtWall(parametersWithWall(parameters), modes, trainingCount);
+  let trainingLoss = residualMeanSquare(solution, trainingCount);
+  let wallIterations = 0;
+
+  if (Math.abs(parameters.s) > 1e-8) {
+    for (let iteration = 0; iteration < 7; iteration++) {
+      const system = cylinderGaussNewtonSystem(solution, trainingCount);
+      const delta = solveLeastSquares(system.rows, system.targets, 2e-10);
+      if (delta.some((value) => !Number.isFinite(value))) break;
+
+      const wallStepLimit = Math.max(.015, .32 * Math.abs(parameters.s));
+      CYLINDER_WALL_MODES.forEach((mode, index) => {
+        const column = system.fieldColumnCount + index;
+        delta[column] = Math.max(-wallStepLimit, Math.min(wallStepLimit, delta[column]));
+      });
+
+      let accepted = null;
+      let acceptedLoss = trainingLoss;
+      for (const amount of [1, .5, .25, .125, .0625]) {
+        const candidate = cylinderStep(solution, delta, amount, system.fieldColumnCount);
+        const higherWallIsSafe = CYLINDER_WALL_MODES.every((mode) => Math.abs(candidate.parameters.wallCoefficients[mode]) <= .45);
+        if (!higherWallIsSafe) continue;
+        const candidateLoss = residualMeanSquare(candidate, trainingCount);
+        if (candidateLoss < acceptedLoss * (1 - 1e-9)) {
+          accepted = candidate;
+          acceptedLoss = candidateLoss;
+          break;
+        }
+      }
+      if (!accepted) break;
+      solution = accepted;
+      trainingLoss = acceptedLoss;
+      wallIterations = iteration + 1;
+      if (trainingLoss < 1e-24) break;
+    }
+  }
+
+  // With the wall fixed at the nonlinear iterate, finish with the exact linear
+  // least-squares minimizer in the separated field coefficients.
+  solution = fitFieldAtWall(solution.parameters, modes, trainingCount);
+
+  Object.assign(solution, {
     interiorResidual: 0,
     dirichletL2: 0,
     neumannL2: 0,
     boundaryCombined: 0,
     boundaryMax: 0,
-  };
+    wallIterations,
+    trainingCombined: Math.sqrt(residualMeanSquare(solution, trainingCount)),
+  });
   const validationCount = Math.max(512, 32 * (parameters.maxMode + 1));
   let dirichletSquared = 0;
   let neumannSquared = 0;
   for (let i = 0; i < validationCount; i++) {
     const theta = -Math.PI + (i + 0.173) * TWO_PI / validationCount;
-    const x = boundary(theta, parameters);
-    const slope = boundaryDerivative(theta, parameters);
+    const x = boundary(theta, solution.parameters);
+    const slope = boundaryDerivative(theta, solution.parameters);
     const jet = fieldJet(x, theta, solution);
     const dirichlet = jet.value - 1;
     const neumann = (jet.dx - slope * jet.dtheta) / Math.sqrt(1 + slope * slope);
@@ -190,7 +336,7 @@ function solveModalField(parameters) {
 }
 
 function fieldJet(x, theta, solution = state.solution) {
-  const result = { value: 0, dx: 0, dtheta: 0 };
+  const result = { value: 0, dx: 0, dtheta: 0, dxx: 0, dxtheta: 0 };
   if (!solution) return result;
   for (let i = 0; i < solution.modes.length; i++) {
     const jet = basisJet(x, theta, solution.parameters, solution.modes[i]);
@@ -198,6 +344,8 @@ function fieldJet(x, theta, solution = state.solution) {
     result.value += coefficient * jet.value;
     result.dx += coefficient * jet.dx;
     result.dtheta += coefficient * jet.dtheta;
+    result.dxx += coefficient * jet.dxx;
+    result.dxtheta += coefficient * jet.dxtheta;
   }
   return result;
 }
@@ -590,15 +738,25 @@ function drawBoundaryDiagram() {
   }
   const centerX = 144;
   svgElement("line", { x1: centerX, y1: 15, x2: centerX, y2: 173, stroke: "rgba(241,238,229,.32)", "stroke-dasharray": "3 5" }, svg);
+  const solvedParameters = state.solution?.parameters || state;
+  const criticalPoints = [];
   const points = [];
   for (let i = 0; i <= 120; i++) {
     const theta = Math.PI - i / 120 * TWO_PI;
-    points.push([centerX + state.s * 58 * Math.cos(theta - state.phase), 15 + i / 120 * 158]);
+    criticalPoints.push([centerX + state.s * 58 * Math.cos(theta - state.phase), 15 + i / 120 * 158]);
+    points.push([centerX + boundary(theta, solvedParameters) * 58, 15 + i / 120 * 158]);
   }
+  const criticalData = `M ${criticalPoints.map((point) => point.map((value) => value.toFixed(2)).join(" ")).join(" L ")}`;
+  svgElement("path", { d: criticalData, fill: "none", stroke: "rgba(77,162,163,.58)", "stroke-width": "1.2", "stroke-dasharray": "4 4" }, svg);
   const data = `M ${points.map((point) => point.map((value) => value.toFixed(2)).join(" ")).join(" L ")}`;
   svgElement("path", { d: data, fill: "none", stroke: "#ff7449", "stroke-width": "3" }, svg);
   const label = svgElement("text", { x: 24, y: 186, fill: "rgba(241,238,229,.42)", "font-family": "DM Mono", "font-size": "8" }, svg);
-  label.textContent = state.s === 0 ? "Γ₀ · flat wall" : `Γs · amplitude ${Math.abs(state.s).toFixed(2)}`;
+  const h2 = solvedParameters.wallCoefficients?.[2] || 0;
+  const h3 = solvedParameters.wallCoefficients?.[3] || 0;
+  label.textContent = state.s === 0 ? "Γ₀ · flat wall" : `Γs · h₂ ${h2.toFixed(3)} · h₃ ${h3.toFixed(3)}`;
+  svg.setAttribute("aria-label", state.s === 0
+    ? "Flat cylinder wall"
+    : `Solved wall with first mode ${state.s.toFixed(3)}, second mode ${h2.toFixed(4)}, and third mode ${h3.toFixed(4)}. The dashed curve is the unsolved first-mode wall.`);
 }
 
 function renderModeBars() {
@@ -639,10 +797,12 @@ function updateReadouts() {
   $("#phaseValue").textContent = `${(state.phase / Math.PI).toFixed(2)}π`;
   $("#modeValue").textContent = `k ≤ ${state.maxMode}`;
   $("#interiorValue").textContent = "0 · analytic";
+  $("#wallMode2Value").textContent = state.solution.parameters.wallCoefficients[2].toExponential(2);
+  $("#wallMode3Value").textContent = state.solution.parameters.wallCoefficients[3].toExponential(2);
   $("#dirichletValue").textContent = state.solution.dirichletL2.toExponential(2);
   $("#neumannValue").textContent = state.solution.neumannL2.toExponential(2);
   $("#decayValue").textContent = (1 / Math.sqrt(4 - state.lambda)).toFixed(2);
-  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `moving boundary · s = ${state.s.toFixed(3)}`;
+  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `wall + field solve · s = ${state.s.toFixed(3)}`;
 }
 
 function solveAndRender() {

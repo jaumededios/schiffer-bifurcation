@@ -74,6 +74,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .solver-readout div { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--line-light); }
 .solver-readout span { color: rgba(241,238,229,.4); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .solver-readout strong { font: 10px var(--mono); color: rgba(241,238,229,.82); }
+#wallMode2Value, #wallMode3Value { color: var(--orange); }
 
 .canvas-panel { min-width: 0; display: grid; grid-template-rows: 58px minmax(500px,1fr) 36px; background: #101b20; }
 .canvas-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-bottom: 1px solid var(--line-light); }

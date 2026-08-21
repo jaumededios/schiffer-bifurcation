@@ -28,7 +28,7 @@
         <div class="intro-index">Experiment 01 <span>/</span> Half-cylinder</div>
         <h1>A boundary begins<br>to move.</h1>
         <div class="intro-bottom">
-          <p>We look only at a collar of the infinite half-cylinder. Move <i>λ</i> inside <span>(1, 4)</span>, then turn on the branch parameter <i>s</i>. At <i>s</i> = 0 the boundary is flat; away from zero it follows the critical first Fourier mode.</p>
+          <p>We look only at a collar of the infinite half-cylinder. Move <i>λ</i> inside <span>(1, 4)</span>, then turn on the branch parameter <i>s</i>. At <i>s</i> = 0 the boundary is flat; away from zero it begins in the critical first Fourier mode and acquires solved higher harmonics.</p>
           <a href="#experiment">Enter the collar <span>↓</span></a>
         </div>
       </section>
@@ -74,7 +74,7 @@
               </div>
               <input id="sRange" type="range" min="-0.85" max="0.85" value="0" step="0.005">
               <div class="range-scale"><span>−0.85</span><span>0</span><span>+0.85</span></div>
-              <p>The wall is <span class="formula">x = s cos(θ − φ)</span>. At zero, the domain is the exact rectangular half-cylinder.</p>
+              <p>The amplitude gauge is <span class="formula">h<sub>1</sub> = s</span>. The solver also finds <span class="formula">h<sub>2</sub></span> and <span class="formula">h<sub>3</sub></span> in the wall graph; at zero the domain is the exact rectangular half-cylinder.</p>
             </div>
 
             <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Play bifurcation</span></button>
@@ -94,12 +94,14 @@
                   <label for="modeRange">retained modes</label>
                   <output id="modeValue" for="modeRange">k ≤ 10</output>
                 </div>
-                <input id="modeRange" type="range" min="2" max="16" value="10" step="1">
+                <input id="modeRange" type="range" min="3" max="16" value="10" step="1">
               </div>
             </details>
 
             <div class="solver-readout">
               <div><span>interior PDE residual</span><strong id="interiorValue">—</strong></div>
+              <div><span>wall mode h₂</span><strong id="wallMode2Value">—</strong></div>
+              <div><span>wall mode h₃</span><strong id="wallMode3Value">—</strong></div>
               <div><span>Dirichlet normalized L²</span><strong id="dirichletValue">—</strong></div>
               <div><span>Neumann normalized L²</span><strong id="neumannValue">—</strong></div>
               <div><span>slowest decay length</span><strong id="decayValue">—</strong></div>
@@ -126,7 +128,7 @@
                 <div id="threeLoading" class="three-loading">loading 3D renderer…</div>
                 <div class="three-help">drag to rotate · scroll to zoom</div>
               </div>
-              <div id="solverBadge" class="solver-badge">fitting boundary…</div>
+              <div id="solverBadge" class="solver-badge">solving wall + field…</div>
             </div>
             <div class="axis-footer"><span>x = −5</span><span id="axisDescription">unwrapped coordinates (x, θ)</span><span>x = 0</span></div>
           </section>
@@ -135,8 +137,8 @@
         <div class="readout-strip">
           <div class="readout-copy">
             <p class="eyebrow">What is being computed</p>
-            <h3>The interior equation is exact.</h3>
-            <p>Every retained sine and cosine mode solves the Helmholtz equation analytically. Least squares is used only on the moving wall, where the Dirichlet and normal-derivative equations compete.</p>
+            <h3>The wall and field move together.</h3>
+            <p>Every retained field mode solves Helmholtz analytically. A nonlinear least-squares step solves its coefficients simultaneously with the wall corrections <span class="formula">h₂ cos 2(θ−φ)</span> and <span class="formula">h₃ cos 3(θ−φ)</span>.</p>
           </div>
           <div class="mode-spectrum">
             <header><span>field coefficients</span><span id="modeScale">magnitude by angular mode</span></header>
@@ -279,7 +281,7 @@
 
         <div class="modes-lead">
           <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost <span>2π</span>. The large panel unwraps exactly that patch into radial distance <span>x</span> and quotient angle <span>ψ</span>, so the curved rim becomes the flat-cylinder picture.</p>
-          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The radial trace isolates the non-evanescent wave; the higher flat modes are exponentials. Tip regularity selects one cone Bessel profile, and Debye exposes its <span>R ↔ phase</span> correspondence.</p>
+          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The radial trace isolates the non-evanescent wave; the higher angular corrections are exponentials. Tip regularity selects one cone Bessel profile, and Debye exposes its <span>R ↔ phase</span> correspondence.</p>
         </div>
 
         <div class="modes-laboratory">
@@ -393,9 +395,9 @@
       <button id="closeMethod" type="button" aria-label="Close">×</button>
       <p class="eyebrow">Numerical method</p>
       <h2>Exact inside, numerical on the wall.</h2>
-      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span>. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
+      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ) + h₂ cos 2(θ − φ) + h₃ cos 3(θ − φ)</span>. The mean translation is fixed to zero and <span class="formula">h₁=s</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
       <p>The <span class="formula">k = 0</span> and <span class="formula">k = 1</span> radial factors are oscillatory. For <span class="formula">k ≥ 2</span> they are <span class="formula">e<sup>√(k²−λ)x</sup> cos(kθ)</span> and <span class="formula">e<sup>√(k²−λ)x</sup> sin(kθ)</span>, which decay as <span class="formula">x → −∞</span>. Consequently, the interior PDE residual is identically zero.</p>
-      <p>For the selected <span class="formula">(λ,s)</span>, a column-scaled QR solve fits the boundary data using at least 256 angular samples. Exponential modes are rescaled by constants to avoid overflow; this does not change their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. Independent sliders generally move off the true one-dimensional branch, so these defects need not vanish.</p>
+      <p>For the selected <span class="formula">(λ,s)</span>, a damped Gauss–Newton solve with an analytic wall Jacobian updates the field coefficients, <span class="formula">h₂</span>, and <span class="formula">h₃</span> simultaneously on at least 256 angular samples; a final column-scaled QR solve polishes the field at the recovered wall. Exponential modes are rescaled by constants to avoid overflow without changing their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. With only two wall corrections and independent <span class="formula">λ,s</span> sliders, the result is a truncated free-boundary solve rather than an exact branch, so the defects need not vanish.</p>
       <hr>
       <p class="eyebrow">Cone continuation</p>
       <p>The cone panel uses the metric <span class="formula">dr² + (r²/R²)dψ²</span>. At fixed <span class="formula">ρ = j<sub>1,16</sub></span>, the field and boundary are expanded in 13 even Fourier–Bessel modes. An offline nonlinear least-squares continuation enforces <span class="formula">u = 1</span> and the exact metric normal derivative on 112 collocation angles; the displayed defects come from 512 shifted validation angles.</p>
