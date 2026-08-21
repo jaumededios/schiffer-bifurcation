@@ -5,7 +5,7 @@ const state = {
   lambda: 2.4,
   s: 0,
   phase: 0,
-  maxMode: 4,
+  maxMode: 10,
   solution: null,
   updateFrame: null,
   playing: false,
@@ -25,10 +25,11 @@ function boundaryDerivative(theta, parameters = state) {
   return -parameters.s * Math.sin(theta - parameters.phase);
 }
 
-function radialJet(x, mode, lambda) {
+function radialJet(x, mode, parameters) {
+  const { lambda } = parameters;
   if (mode.radial === "decay") {
     const decay = Math.sqrt(mode.k * mode.k - lambda);
-    const value = Math.exp(decay * x);
+    const value = Math.exp(decay * (x - Math.abs(parameters.s)));
     return { value, derivative: decay * value };
   }
   const frequency = mode.k === 0 ? Math.sqrt(lambda) : Math.sqrt(lambda - 1);
@@ -47,7 +48,7 @@ function angularJet(theta, mode) {
 }
 
 function basisJet(x, theta, parameters, mode) {
-  const radial = radialJet(x, mode, parameters.lambda);
+  const radial = radialJet(x, mode, parameters);
   const angular = angularJet(theta, mode);
   return {
     value: radial.value * angular.value,
@@ -56,26 +57,61 @@ function basisJet(x, theta, parameters, mode) {
   };
 }
 
-function solveLinearSystem(matrix, vector) {
-  const n = vector.length;
-  const augmented = matrix.map((row, i) => [...row, vector[i]]);
-  for (let column = 0; column < n; column++) {
-    let pivot = column;
-    for (let row = column + 1; row < n; row++) {
-      if (Math.abs(augmented[row][column]) > Math.abs(augmented[pivot][column])) pivot = row;
-    }
-    [augmented[column], augmented[pivot]] = [augmented[pivot], augmented[column]];
-    const scale = augmented[column][column];
-    if (Math.abs(scale) < 1e-13) continue;
-    for (let j = column; j <= n; j++) augmented[column][j] /= scale;
-    for (let row = 0; row < n; row++) {
-      if (row === column) continue;
-      const factor = augmented[row][column];
-      if (Math.abs(factor) < 1e-15) continue;
-      for (let j = column; j <= n; j++) augmented[row][j] -= factor * augmented[column][j];
-    }
+function solveLeastSquares(inputRows, inputTargets, ridge = 1e-12) {
+  const columnCount = inputRows[0].length;
+  const columnScales = Array(columnCount).fill(0);
+  inputRows.forEach((row) => row.forEach((value, column) => { columnScales[column] += value * value; }));
+  for (let column = 0; column < columnCount; column++) {
+    columnScales[column] = Math.sqrt(columnScales[column]);
+    if (columnScales[column] < 1e-14) columnScales[column] = 1;
   }
-  return augmented.map((row, i) => Number.isFinite(row[n]) ? row[n] : (i * 0));
+
+  const rows = inputRows.map((row) => row.map((value, column) => value / columnScales[column]));
+  const targets = [...inputTargets];
+  const ridgeScale = Math.sqrt(ridge);
+  for (let column = 0; column < columnCount; column++) {
+    const row = Array(columnCount).fill(0);
+    row[column] = ridgeScale;
+    rows.push(row);
+    targets.push(0);
+  }
+
+  const rowCount = rows.length;
+  for (let column = 0; column < columnCount; column++) {
+    let norm = 0;
+    for (let row = column; row < rowCount; row++) norm = Math.hypot(norm, rows[row][column]);
+    if (norm < 1e-14) continue;
+    const alpha = rows[column][column] >= 0 ? -norm : norm;
+    const reflector = [];
+    let reflectorNormSquared = 0;
+    for (let row = column; row < rowCount; row++) {
+      const value = row === column ? rows[row][column] - alpha : rows[row][column];
+      reflector.push(value);
+      reflectorNormSquared += value * value;
+    }
+    if (reflectorNormSquared < 1e-28) continue;
+    const beta = 2 / reflectorNormSquared;
+    for (let targetColumn = column; targetColumn < columnCount; targetColumn++) {
+      let projection = 0;
+      for (let row = column; row < rowCount; row++) projection += reflector[row - column] * rows[row][targetColumn];
+      projection *= beta;
+      for (let row = column; row < rowCount; row++) rows[row][targetColumn] -= projection * reflector[row - column];
+    }
+    let targetProjection = 0;
+    for (let row = column; row < rowCount; row++) targetProjection += reflector[row - column] * targets[row];
+    targetProjection *= beta;
+    for (let row = column; row < rowCount; row++) targets[row] -= targetProjection * reflector[row - column];
+    rows[column][column] = alpha;
+    for (let row = column + 1; row < rowCount; row++) rows[row][column] = 0;
+  }
+
+  const scaledSolution = Array(columnCount).fill(0);
+  for (let row = columnCount - 1; row >= 0; row--) {
+    let value = targets[row];
+    for (let column = row + 1; column < columnCount; column++) value -= rows[row][column] * scaledSolution[column];
+    scaledSolution[row] = Math.abs(rows[row][row]) < 1e-13 ? 0 : value / rows[row][row];
+  }
+  return scaledSolution.map((value, column) => value / columnScales[column]);
 }
 
 function modalList(maxMode) {
@@ -94,19 +130,9 @@ function modalList(maxMode) {
 
 function solveModalField(parameters) {
   const modes = modalList(parameters.maxMode);
-  const n = modes.length;
-  const normal = Array.from({ length: n }, () => Array(n).fill(0));
-  const rhs = Array(n).fill(0);
-  const trainingCount = 160;
-
-  const accumulateRow = (row, target) => {
-    for (let i = 0; i < n; i++) {
-      rhs[i] += row[i] * target;
-    }
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j <= i; j++) normal[i][j] += row[i] * row[j];
-    }
-  };
+  const trainingCount = Math.max(256, 24 * (parameters.maxMode + 1));
+  const rows = [];
+  const targets = [];
 
   for (let angularIndex = 0; angularIndex < trainingCount; angularIndex++) {
     const theta = -Math.PI + (angularIndex + 0.5) * TWO_PI / trainingCount;
@@ -114,17 +140,12 @@ function solveModalField(parameters) {
     const slope = boundaryDerivative(theta, parameters);
     const normalScale = Math.sqrt(1 + slope * slope);
     const jets = modes.map((mode) => basisJet(x, theta, parameters, mode));
-    accumulateRow(jets.map((jet) => jet.value), 1);
-    accumulateRow(jets.map((jet) => (jet.dx - slope * jet.dtheta) / normalScale), 0);
+    rows.push(jets.map((jet) => jet.value));
+    targets.push(1);
+    rows.push(jets.map((jet) => (jet.dx - slope * jet.dtheta) / normalScale));
+    targets.push(0);
   }
-
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < i; j++) normal[j][i] = normal[i][j];
-  }
-  const trace = normal.reduce((sum, row, i) => sum + row[i], 0);
-  const ridge = Math.max(1e-12, trace / Math.max(1, n) * 1e-10);
-  for (let i = 0; i < n; i++) normal[i][i] += ridge;
-  const coefficients = solveLinearSystem(normal, rhs);
+  const coefficients = solveLeastSquares(rows, targets);
 
   const solution = {
     parameters: { ...parameters },
@@ -136,7 +157,7 @@ function solveModalField(parameters) {
     boundaryCombined: 0,
     boundaryMax: 0,
   };
-  const validationCount = 320;
+  const validationCount = Math.max(512, 32 * (parameters.maxMode + 1));
   let dirichletSquared = 0;
   let neumannSquared = 0;
   for (let i = 0; i < validationCount; i++) {
@@ -470,7 +491,7 @@ bindRange("#modeRange", "maxMode", (value) => Number.parseInt(value, 10));
 $("#playButton").addEventListener("click", togglePlayback);
 $("#resetButton").addEventListener("click", () => {
   stopPlayback();
-  Object.assign(state, { lambda: 2.4, s: 0, phase: 0, maxMode: 4 });
+  Object.assign(state, { lambda: 2.4, s: 0, phase: 0, maxMode: 10 });
   const values = { lambdaRange: state.lambda, sRange: state.s, phaseRange: state.phase, modeRange: state.maxMode };
   Object.entries(values).forEach(([id, value]) => { const input = $(`#${id}`); input.value = value; setRangeFill(input); });
   scheduleUpdate();

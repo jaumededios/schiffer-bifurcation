@@ -91,9 +91,9 @@
               <div class="control-block compact">
                 <div class="control-label">
                   <label for="modeRange">retained modes</label>
-                  <output id="modeValue" for="modeRange">k ≤ 4</output>
+                  <output id="modeValue" for="modeRange">k ≤ 10</output>
                 </div>
-                <input id="modeRange" type="range" min="2" max="6" value="4" step="1">
+                <input id="modeRange" type="range" min="2" max="16" value="10" step="1">
               </div>
             </details>
 
@@ -164,7 +164,7 @@
       <h2>Exact inside, numerical on the wall.</h2>
       <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ)</span>. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
       <p>The <span class="formula">k = 0</span> and <span class="formula">k = 1</span> radial factors are oscillatory. For <span class="formula">k ≥ 2</span> they are <span class="formula">e<sup>√(k²−λ)x</sup> cos(kθ)</span> and <span class="formula">e<sup>√(k²−λ)x</sup> sin(kθ)</span>, which decay as <span class="formula">x → −∞</span>. Consequently, the interior PDE residual is identically zero.</p>
-      <p>For the selected <span class="formula">(λ,s)</span>, 160 boundary samples determine the modal coefficients by ridge-regularized least squares. The reported defects are independently evaluated on 320 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. Independent sliders generally move off the true one-dimensional branch, so these defects need not vanish.</p>
+      <p>For the selected <span class="formula">(λ,s)</span>, a column-scaled QR solve fits the boundary data using at least 256 angular samples. Exponential modes are rescaled by constants to avoid overflow; this does not change their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. Independent sliders generally move off the true one-dimensional branch, so these defects need not vanish.</p>
     </dialog>
 
     <script src="app.js"></script>

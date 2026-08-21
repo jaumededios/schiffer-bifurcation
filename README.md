@@ -32,7 +32,7 @@ u(h_s(θ), θ) = 1,
 ∇u(h_s(θ), θ) · (1, −h_s'(θ)) / √(1 + h_s'(θ)²) = 0.
 ```
 
-The solve uses 160 angular samples. The displayed Dirichlet and Neumann defects are evaluated independently on 320 shifted samples in the normalized metric
+The solve uses a column-scaled Householder QR factorization rather than normal equations, with at least 256 angular samples and up to 16 angular modes. Exponential basis functions are also rescaled by constants to avoid overflow without changing the approximation space. The displayed Dirichlet and Neumann defects are evaluated independently on at least 512 shifted samples in the normalized metric
 
 ```text
 ‖f‖² = (2π)⁻¹ ∫₋π^π |f(θ)|² dθ.

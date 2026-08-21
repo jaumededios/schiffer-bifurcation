@@ -93,8 +93,8 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .readout-copy h3 { margin: 0 0 14px; font: 300 29px var(--serif); }
 .readout-copy > p:last-child { margin: 0; color: rgba(241,238,229,.46); font-size: 11px; line-height: 1.7; }
 .mode-spectrum header { display: flex; justify-content: space-between; padding-bottom: 15px; color: rgba(241,238,229,.42); border-bottom: 1px solid var(--line-light); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.mode-bars { padding-top: 17px; }
-.mode-bar { display: grid; grid-template-columns: 58px 1fr 48px; align-items: center; gap: 12px; margin-bottom: 11px; font: 8px var(--mono); }
+.mode-bars { display: grid; grid-template-columns: 1fr 1fr; column-gap: 22px; padding-top: 17px; }
+.mode-bar { display: grid; grid-template-columns: 58px 1fr 48px; align-items: center; gap: 10px; margin-bottom: 9px; font: 8px var(--mono); }
 .mode-bar > span:first-child { color: rgba(241,238,229,.5); }
 .mode-bar-track { height: 4px; background: rgba(241,238,229,.09); }
 .mode-bar-fill { height: 100%; background: linear-gradient(90deg,var(--orange),var(--red)); transform-origin: left; transition: width .2s ease; }
@@ -144,6 +144,7 @@ dialog button { position: absolute; top: 15px; right: 19px; padding: 0; color: v
   .readout-strip { grid-template-columns: 1fr; }
   .readout-strip > div { border-right: 0; border-bottom: 1px solid var(--line-light); }
   .boundary-diagram { grid-column: auto; }
+  .mode-bars { grid-template-columns: 1fr; }
   .interpretation { grid-template-columns: 35px 1fr; padding: 80px 24px; gap: 25px; }
   .interpretation-copy { grid-column: 2; }
   footer { grid-template-columns: 1fr; gap: 18px; }
