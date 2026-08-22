@@ -829,7 +829,7 @@ function stopPlayback() {
   if (state.playFrame) cancelAnimationFrame(state.playFrame);
   state.playFrame = null;
   $("#playIcon").textContent = "▶";
-  $("#playLabel").textContent = "Play bifurcation";
+  $("#playLabel").textContent = "Animate the branch";
 }
 
 function togglePlayback() {
@@ -1443,7 +1443,7 @@ function stopConePlayback() {
   if (coneState.playFrame) cancelAnimationFrame(coneState.playFrame);
   coneState.playFrame = null;
   $("#conePlayIcon").textContent = "▶";
-  $("#conePlayLabel").textContent = coneState.progress > .999 ? "Replay integer landing" : "Play integer landing";
+  $("#conePlayLabel").textContent = coneState.progress > .999 ? "Repeat the continuation" : "Animate the continuation";
 }
 
 function toggleConePlayback() {
@@ -2199,7 +2199,7 @@ function stopModesPlayback() {
   if (modesState.playFrame) cancelAnimationFrame(modesState.playFrame);
   modesState.playFrame = null;
   $("#modesPlayIcon").textContent = "▶";
-  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Replay crossing → landing" : "Play crossing → landing";
+  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Repeat crossing → landing" : "Animate crossing → landing";
 }
 
 function toggleModesPlayback() {
@@ -2456,7 +2456,7 @@ if (debyeData) {
     if (debyeState.playFrame) cancelAnimationFrame(debyeState.playFrame);
     debyeState.playFrame = null;
     $("#debyePlayIcon").textContent = "▶";
-    $("#debyePlayLabel").textContent = debyeState.radius > debyeData.rMax - .01 ? "Replay r₀: 26 → 30" : "Play r₀: 26 → 30";
+    $("#debyePlayLabel").textContent = debyeState.radius > debyeData.rMax - .01 ? "Repeat r₀: 26 → 30" : "Animate r₀: 26 → 30";
   }
 
   function toggleDebyePlayback() {

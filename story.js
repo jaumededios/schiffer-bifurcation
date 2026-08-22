@@ -731,7 +731,7 @@
     if (geometryState.frame) cancelAnimationFrame(geometryState.frame);
     geometryState.frame = null;
     select("#storyGeometryPlayIcon").textContent = "▶";
-    select("#storyGeometryPlayLabel").textContent = geometryState.progress > .999 ? "Replay the geometric move" : "Play the geometric move";
+    select("#storyGeometryPlayLabel").textContent = geometryState.progress > .999 ? "Repeat the quotient construction" : "Animate the quotient construction";
   }
 
   function playGeometryStory() {

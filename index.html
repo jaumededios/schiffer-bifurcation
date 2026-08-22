@@ -18,7 +18,7 @@
     <div class="noise" aria-hidden="true"></div>
 
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="Schiffer bifurcation laboratory home">
+      <a class="brand" href="#top" aria-label="Schiffer bifurcation exposition home">
         <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
         <span>Counterexamples to Schiffer's conjecture</span>
       </a>
@@ -44,7 +44,7 @@
           <div class="question-copy">
             <p>A smooth bounded domain \(\Omega\subset\mathbb R^2\) is said to have the <em>Schiffer property</em> if there are \(\lambda&gt;0\) and a nonconstant function \(u\) satisfying (1.1).</p>
             <p>The boundary value has been normalized to \(1\). Indeed, if the common boundary value were \(0\), then both the Dirichlet and Neumann data would vanish and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). Thus any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value equal to \(1\).</p>
-            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct solutions on domains that are not disks.</p>
+            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct Schiffer solutions on noncircular domains.</p>
           </div>
           <div class="equation-system hero-equation" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
             <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
@@ -63,13 +63,51 @@
         </div>
         <div class="linearization-section">
           <div class="linearization-intro">
-            <p class="eyebrow">Why a spectral coincidence appears</p>
-            <h3>Linearizing the moving boundary produces a Dirichlet eigenfunction at the same eigenvalue.</h3>
+            <p class="eyebrow">Why common zeros control linear stability</p>
+            <h3>Linear stability reduces to the kernel of a Dirichlet problem.</h3>
             <div class="linearization-explanation">
               <p>To see when a Schiffer domain can deform, place it in a smooth family \(\Omega_t\). A boundary point \(p\in\partial\Omega\) moves as \(p+t f(p)\nu(p)+O(t^2)\), so the function \(f\) records the normal displacement of the boundary.</p>
-              <p>Let \(u_t\) and \(\lambda_t\) solve (1.1) on \(\Omega_t\), and write \(v=\left.\frac d{dt}\right|_{t=0}u_t\) and \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). At a rotationally symmetric domain the base eigenfunction \(u\) is radial. After decomposing into angular Fourier modes, the term \(\mu u\) occurs only in the radial mode. Every nonzero angular mode therefore satisfies the homogeneous system (1.2).</p>
+              <p>Let \(u_t\) and \(\lambda_t\) solve (1.1) on \(\Omega_t\), and write \(v=\left.\frac d{dt}\right|_{t=0}u_t\) and \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). At the symmetric base solution considered here, \(u\) is radial. After decomposing into angular Fourier modes, the term \(\mu u\) occurs only in the radial mode. Every nonzero angular mode therefore satisfies the homogeneous system (1.2).</p>
             </div>
           </div>
+          <figure class="shape-variation-figure">
+            <div class="shape-variation-heading">
+              <span>Figure 1.1 · normal deformation of a domain</span>
+              <p>The scalar function \(f\) prescribes how far each boundary point moves in the normal direction. A tangential velocity only changes the parametrization of the boundary, so it does not appear in the shape derivative.</p>
+            </div>
+            <div class="shape-variation-diagrams">
+              <svg viewBox="0 0 440 300" role="img" aria-label="A domain with alternating inward and outward normal arrows prescribed by the function f">
+                <defs><marker id="normalArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
+                <circle class="variation-domain" cx="220" cy="145" r="88"/>
+                <text class="variation-domain-label" x="220" y="151" text-anchor="middle">Ω</text>
+                <g class="variation-normal-field" marker-end="url(#normalArrow)">
+                  <line x1="308" y1="145" x2="322" y2="145"/>
+                  <line x1="264" y1="221.2" x2="257" y2="209.1"/>
+                  <line x1="176" y1="221.2" x2="169" y2="233.3"/>
+                  <line x1="132" y1="145" x2="146" y2="145"/>
+                  <line x1="176" y1="68.8" x2="169" y2="56.7"/>
+                  <line x1="264" y1="68.8" x2="257" y2="80.9"/>
+                </g>
+                <text class="variation-svg-label" x="220" y="278" text-anchor="middle">the normal field fν on ∂Ω</text>
+                <text class="variation-sign-label" x="326" y="132">f &gt; 0</text>
+                <text class="variation-sign-label" x="267" y="202">f &lt; 0</text>
+              </svg>
+              <div class="variation-map"><span>\(p\longmapsto p+t f(p)\nu(p)\)</span><i aria-hidden="true">→</i></div>
+              <svg viewBox="0 0 440 300" role="img" aria-label="The original boundary in a dashed line and the deformed boundary in orange">
+                <path class="variation-deformed-domain" transform="translate(-580 -20)" d="M 902.0 165.0 C 902.0 173.4, 898.9 183.0, 894.6 190.3 C 890.3 197.7, 882.8 204.0, 876.2 209.0 C 869.7 214.0, 861.8 216.9, 855.2 220.2 C 848.7 223.6, 842.8 225.7, 837.0 229.1 C 831.2 232.5, 826.4 236.5, 820.2 240.4 C 814.0 244.4, 807.6 249.8, 800.0 253.0 C 792.4 256.2, 783.2 259.5, 774.7 259.6 C 766.2 259.6, 756.3 257.6, 749.0 253.3 C 741.7 249.1, 735.0 241.6, 730.8 234.2 C 726.6 226.8, 724.8 217.2, 723.8 209.0 C 722.8 200.8, 724.2 192.5, 724.6 185.2 C 724.9 177.9, 726.0 171.7, 726.0 165.0 C 726.0 158.3, 724.9 152.1, 724.6 144.8 C 724.2 137.5, 722.8 129.2, 723.8 121.0 C 724.8 112.8, 726.6 103.2, 730.8 95.8 C 735.0 88.4, 741.7 80.9, 749.0 76.7 C 756.3 72.4, 766.2 70.4, 774.7 70.4 C 783.2 70.5, 792.4 73.8, 800.0 77.0 C 807.6 80.2, 814.0 85.6, 820.2 89.6 C 826.4 93.5, 831.2 97.5, 837.0 100.9 C 842.8 104.3, 848.7 106.4, 855.2 109.8 C 861.8 113.1, 869.7 116.0, 876.2 121.0 C 882.8 126.0, 890.3 132.3, 894.6 139.7 C 898.9 147.0, 902.0 156.6, 902.0 165.0 Z"/>
+                <circle class="variation-original-boundary" cx="220" cy="145" r="88"/>
+                <circle class="variation-point original" cx="308" cy="145" r="3"/>
+                <circle class="variation-point moved" cx="322" cy="145" r="3"/>
+                <line class="variation-distance" x1="308" y1="145" x2="322" y2="145"/>
+                <text class="variation-domain-label" x="220" y="151" text-anchor="middle">Ωₜ</text>
+                <text class="variation-svg-label" x="139" y="48">∂Ω</text>
+                <text class="variation-svg-label accent" x="311" y="74">∂Ωₜ</text>
+                <text class="variation-sign-label" x="315" y="132">t f(p)</text>
+                <text class="variation-svg-label" x="220" y="278" text-anchor="middle">dashed: original · orange: deformed</text>
+              </svg>
+            </div>
+            <figcaption>To first order, \(\partial\Omega_t=\{p+t f(p)\nu(p):p\in\partial\Omega\}\). Positive values of \(f\) move the boundary outward and negative values move it inward.</figcaption>
+          </figure>
           <div class="linearization-core">
             <div class="linear-equations tex-display" aria-label="The nonradial linearized problem">
               \[
@@ -81,9 +119,12 @@
               \]
               <span class="equation-number">(1.2)</span>
             </div>
-            <p>The first two lines say that \(v\) is a nonradial Dirichlet eigenfunction with eigenvalue \(\lambda\). The last line then determines the boundary displacement: \(f=\lambda^{-1}\partial_\nu v\). Meanwhile the original radial function \(u\) is a Neumann eigenfunction at the same eigenvalue. Hence an infinitesimal deformation requires the spectral coincidence</p>
-            <div class="spectrum-meeting tex-display">\[\lambda\in\operatorname{Spec}_{N,\mathrm{rad}}(\Omega)\cap\operatorname{Spec}_{D,\mathrm{nonrad}}(\Omega).\]<span class="equation-number">(1.3)</span></div>
-            <p class="spectrum-note">Here \(\operatorname{Spec}_{N,\mathrm{rad}}\) denotes the radial Neumann spectrum, while \(\operatorname{Spec}_{D,\mathrm{nonrad}}\) denotes the nonradial Dirichlet spectrum.</p>
+            <div class="linear-stability-criterion">
+              <span>Linear stability criterion</span>
+              <p>Fix an angular mode. If \(\lambda\) is not a Dirichlet eigenvalue in that mode, then the first two lines of (1.2) force \(v=0\). The third line then gives \(\lambda f=\partial_\nu v=0\), and hence \(f=0\).</p>
+              <p>Thus there is no infinitesimal deformation in that mode. We call the Schiffer problem <em>linearly stable</em> when this holds in every genuine shape mode, after removing variations within the symmetric family and rigid motions. This is a statement about the kernel of the linearized problem; by itself, it does not imply nonlinear rigidity.</p>
+              <p>On the disk, the base Neumann condition is \(J_1(\rho)=0\), while a deformation in angular mode \(\ell\) would require \(J_\ell(\rho)=0\). A common positive zero is therefore exactly a possible nontrivial element of the linearized kernel. Section 2 shows that no such zero exists for \(\ell\ge2\); the mode \(\ell=1\) is translation.</p>
+            </div>
           </div>
           <details class="linearization-details">
             <summary><span>Derive the linearized system</span><i>expand +</i></summary>
@@ -99,7 +140,7 @@
       <section id="disk-obstruction" class="disk-obstruction">
         <header class="story-heading light-story-heading">
           <span class="section-number">02</span>
-          <div><p class="eyebrow">The Euclidean disk</p><h2>Bourget's hypothesis blocks the bifurcation.</h2></div>
+          <div><p class="eyebrow">The Euclidean disk</p><h2>The disk has no nontrivial linearized shape modes.</h2></div>
         </header>
         <div class="disk-obstruction-grid">
           <div class="disk-sketch" role="img" aria-label="Disk radial mode and an infinitesimal translation">
@@ -134,7 +175,7 @@
       <section id="borrow-flexibility" class="borrow-flexibility">
         <header class="story-heading">
           <span class="section-number">03</span>
-          <div><p class="eyebrow">Change the ambient geometry</p><h2>The spectral obstruction is not universal.</h2></div>
+          <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the missing spectral coincidence.</h2></div>
         </header>
         <div class="borrow-lead"><p>On the plane, changing the radius of a disk merely rescales every eigenvalue by the same factor, so no transverse spectral crossing can appear. The flat cylinder and the sphere break that scaling lock. In both settings genuine nonradial Schiffer branches are known.</p></div>
         <div class="world-cards">
@@ -172,12 +213,12 @@
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
-        <div class="borrow-conclusion"><span>The idea we keep</span><p>Borrow the cylinder's flexible local problem, but package it inside an <span class="formula">\(N\)</span>-fold quotient that can eventually be unfolded back into the plane.</p></div>
+        <div class="borrow-conclusion"><span>Mechanism used below</span><p>We place the cylinder's flexible local problem inside an <span class="formula">\(N\)</span>-fold quotient that can eventually be unfolded back into the plane.</p></div>
       </section>
 
       <section id="geometric-escape" class="geometric-escape">
         <header class="experiment-header geometry-header">
-          <div><span class="section-number">04</span><div><p class="eyebrow">The quotient construction</p><h2>A high-frequency disk becomes a long cylinder.</h2></div></div>
+          <div><span class="section-number">04</span><div><p class="eyebrow">The quotient construction</p><h2>The N-fold quotient converges to a half-cylinder.</h2></div></div>
           <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
         <div class="geometry-lead"><p>An \(N\)-fold field repeats on 28 identical angular sectors in our running example. Keep one sector and identify its radial edges. After rescaling so that the quotient boundary has circumference <span class="formula">\(2\pi\)</span>, the sector is a cone of length <span class="formula">\(R=N\)</span>. As <span class="formula">\(N\to\infty\)</span>, its tip recedes to infinity and every fixed neighborhood of the boundary converges to the half-cylinder <span class="formula">\(({-\infty},0]\times S^1\)</span>.</p></div>
@@ -194,7 +235,7 @@
               <button type="button" data-story-stage="1"><span>07</span><strong>cut and unfold at integer R</strong><small>open one sector, then copy ×28</small></button>
             </div>
             <div class="geometry-scrub"><div class="control-label"><label for="storyGeometryRange">construction</label><output id="storyGeometryValue">divide the disk</output></div><input id="storyGeometryRange" type="range" min="0" max="1" value="0" step="0.001"></div>
-            <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Play the geometric move</span></button>
+            <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Animate the quotient construction</span></button>
           </aside>
           <section class="geometry-canvas-panel" aria-labelledby="storyGeometryState">
             <div class="geometry-toolbar"><span class="live-dot"></span><strong id="storyGeometryState">the field repeats on 28 sectors</strong><span>continuous geometric schematic · numerical final boundary</span></div>
@@ -211,7 +252,7 @@
             <span class="section-number">05</span>
             <div>
               <p class="eyebrow">The limiting problem</p>
-              <h2>Some details on the cylinder perturbation.</h2>
+              <h2>The half-cylinder has a uniformly controlled bifurcating branch.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Model equations">
@@ -248,7 +289,7 @@
 
         <div class="experiment-story-lead">
           <p><span>What the theorem says.</span> The size of the allowed perturbation can be chosen uniformly while <span class="formula">\(\lambda\)</span> stays away from the thresholds <span class="formula">\(1\)</span> and <span class="formula">\(4\)</span>. This uniformity is what can later survive on sufficiently long cones.</p>
-          <p><span>What the browser computes.</span> The visualization is a finite Fourier approximation of this family. Move <span class="formula">\(\lambda\)</span>, then turn on <span class="formula">\(s\)</span>; the open rim and the Helmholtz field are solved together. The 3D view emphasizes the actual half-cylinder geometry.</p>
+          <p><span>Numerical approximation in the figure.</span> The plotted field is a finite Fourier approximation of this family. For each displayed pair <span class="formula">\((\lambda,s)\)</span>, the wall and the Helmholtz field are solved together; the flat and three-dimensional panels show the same computed solution in two coordinate representations.</p>
         </div>
 
         <div class="laboratory">
@@ -278,10 +319,10 @@
               <p>The amplitude gauge is <span class="formula">\(h_1=s\)</span>. The solver also finds <span class="formula">\(h_2\)</span> and <span class="formula">\(h_3\)</span> in the wall graph; at zero the domain is the exact rectangular half-cylinder.</p>
             </div>
 
-            <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Play bifurcation</span></button>
+            <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Animate the branch</span></button>
 
             <details class="secondary-controls">
-              <summary>More controls <span>+</span></summary>
+              <summary>Additional parameters <span>+</span></summary>
               <div class="control-block compact">
                 <div class="control-label">
                   <label for="phaseRange">angular phase <i>φ</i></label>
@@ -337,7 +378,7 @@
 
         <div class="readout-strip" hidden aria-hidden="true">
           <div class="readout-copy">
-            <p class="eyebrow">What is being computed</p>
+            <p class="eyebrow">Finite-dimensional solve</p>
             <h3>The wall and field move together.</h3>
             <p>Every retained field mode solves Helmholtz analytically. A nonlinear least-squares step solves its coefficients simultaneously with the wall corrections <span class="formula">\(h_2\cos 2(\theta-\phi)\)</span> and <span class="formula">\(h_3\cos 3(\theta-\phi)\)</span>.</p>
           </div>
@@ -356,8 +397,8 @@
           <div>
             <span class="section-number">08</span>
             <div>
-              <p class="eyebrow">Now start the actual cone branch</p>
-              <h2>Land on the integer.</h2>
+              <p class="eyebrow">Nonlinear continuation on cones</p>
+              <h2>The relaxed order decreases to N = 28.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Cone model equations">
@@ -410,7 +451,7 @@
               <p>In the 3D view, begin at the rim where the long cone is almost cylindrical, then zoom out to reveal the tip.</p>
             </div>
 
-            <button id="conePlayButton" class="play-button" type="button"><span id="conePlayIcon">▶</span><span id="conePlayLabel">Play integer landing</span></button>
+            <button id="conePlayButton" class="play-button" type="button"><span id="conePlayIcon">▶</span><span id="conePlayLabel">Animate the continuation</span></button>
 
             <div class="solver-readout cone-readout">
               <div><span>real cone order R</span><strong id="coneRValue">28.026397</strong></div>
@@ -469,8 +510,8 @@
           <div>
             <span class="section-number">08</span>
             <div>
-              <p class="eyebrow">Verify the local story inside the global object</p>
-              <h2>One solution, three scales.</h2>
+              <p class="eyebrow">Global and boundary-scale coordinates</p>
+              <h2>The same cone solution in two coordinate systems.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
@@ -529,7 +570,7 @@
               <p>The trace below the heatmap compares the exact regular Bessel profile with its Debye sine/cosine wave. The exact zero at <span class="formula">\(R_*\)</span> anchors the phase; changing <span class="formula">\(R\)</span> moves it by the explicit formula above.</p>
             </div>
 
-            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Play crossing → landing</span></button>
+            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Animate crossing → landing</span></button>
 
             <div class="modes-status">
               <div><span>28-copy seam</span><strong id="modesGapValue">0.20°</strong></div>
@@ -576,7 +617,7 @@
       <section id="phase-story" class="phase-story">
         <header class="story-heading">
           <span class="section-number">07</span>
-          <div><p class="eyebrow">The computation along the bifurcating branch</p><h2>First the radius moves. Then the phase follows.</h2></div>
+          <div><p class="eyebrow">The computation along the bifurcating branch</p><h2>The radius drift determines the Debye phase drift.</h2></div>
         </header>
         <div class="phase-story-lead paper-copy">
           <p>Section 6 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
@@ -705,7 +746,7 @@
               <p>The value of \(\lambda\) stays fixed. Increasing \(r_0\) simultaneously flattens the collar and advances the \(k=1\) phase.</p>
             </div>
 
-            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Play \(r_0:26\to30\)</span></button>
+            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Animate \(r_0:26\to30\)</span></button>
 
             <div class="debye-status">
               <div><span>fixed spectral parameter</span><strong id="debyeLambdaValue">\(\lambda=2.4\)</strong></div>
@@ -732,17 +773,17 @@
 
         <div class="debye-conclusion two-column-conclusion">
           <article><span>why both oscillatory curves move</span><strong>The orange wave is not a fixed cosine.</strong><p>A fixed cosine would impose \(f(0)=1\) and \(f'(0)=0\). The \(k=1\) Bessel profile has rim Cauchy data that depend on \(r_0\). The correct cylinder comparison is the unique \(A\cos(\omega x)+B\sin(\omega x)\) with those same data, so its phase must move with the blue Bessel wave.</p></article>
-          <article><span>what the three panels test</span><strong>One wave and two genuine exponentials.</strong><p>The \(k=1\) panel compares the complete phase-matched oscillation. The \(k=2,3\) panels remain on an ordinary linear vertical scale, so their approach to \(e^{\alpha_kx}\) is visible as an exponential shape rather than as a straight line on logarithmic paper.</p></article>
+          <article><span>the three radial regimes</span><strong>One wave and two genuine exponentials.</strong><p>The \(k=1\) panel compares the complete phase-matched oscillation. The \(k=2,3\) panels remain on an ordinary linear vertical scale, so their approach to \(e^{\alpha_kx}\) is visible as an exponential shape rather than as a straight line on logarithmic paper.</p></article>
         </div>
       </section>
 
       <section id="abundance-experiment" class="abundance-experiment">
         <header class="experiment-header abundance-header">
-          <div><span class="section-number">09</span><div><p class="eyebrow">Is 28 an accident?</p><h2>There are many places to begin.</h2></div></div>
+          <div><span class="section-number">09</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>Common zeros occur arbitrarily close to integer order.</h2></div></div>
           <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
-          <p>Each dot is a computed common zero \(\rho=j_{1,n}=j_{R,m}\), plotted at \((R,\{R\})\). The horizontal coordinate is logarithmic and the picture stops at \(N=200\): far enough to reveal repeated near-integer returns while keeping the individual crossings legible.</p>
+          <p>Each dot is a computed common zero \(\rho=j_{1,n}=j_{R,m}\), plotted at \((R,\{R\})\). The horizontal coordinate is logarithmic and the plot stops at \(N=200\): far enough to reveal repeated near-integer returns while keeping the individual crossings legible.</p>
           <p>A point near the bottom has \(R=N+\delta\) with \(0&lt;\delta\ll1\). Once the uniform nonlinear branch is known to decrease \(R\) by a fixed amount, such a crossing can land on \(N\) and unfold into the plane.</p>
         </div>
         <div class="abundance-laboratory">
@@ -775,7 +816,7 @@
           </section>
         </div>
         <div class="abundance-conclusion">
-          <span>The theorem behind the picture</span>
+          <span>Existence theorem</span>
           <h3>The finite dots illustrate; the two-phase argument supplies arbitrary precision.</h3>
           <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), the phase alignment produces \(N\ge N_{\min}\) and a crossing \(N&lt;R&lt;N+\delta\) with \(2&lt;\rho^2/R^2&lt;3\). The arithmetic input makes the initial gap smaller than the uniform analytic radius drop; it is this comparison—not visual equidistribution of the dots—that closes the proof.</p>
         </div>
@@ -805,7 +846,7 @@
     <dialog id="methodDialog">
       <button id="closeMethod" type="button" aria-label="Close">×</button>
       <p class="eyebrow">Computational notes</p>
-      <h2>Exact inside, numerical on the wall.</h2>
+      <h2>What is exact, and what is computed numerically.</h2>
       <p>The mathematical limiting problem is posed on the genuine half-infinite cylinder <span class="formula">\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>. Uniformly for <span class="formula">\(\lambda\)</span> in each compact <span class="formula">\(K\Subset(1,4)\)</span>, the same local bifurcation machinery used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">\(h_{\lambda,s}=s\cos\theta+O_K(s^2)\)</span>. The finite window below is only how that infinite-domain solution is displayed in the browser.</p>
       <p>We set <span class="formula">\(\Gamma_s:x=h_s(\theta)=s\cos(\theta-\phi)+h_2\cos 2(\theta-\phi)+h_3\cos 3(\theta-\phi)\)</span>. The mean translation is fixed to zero and <span class="formula">\(h_1=s\)</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">\((\Delta+\lambda)u=0\)</span> in the physical cylinder coordinates.</p>
       <p>The <span class="formula">\(k=0\)</span> and <span class="formula">\(k=1\)</span> radial factors are oscillatory. For <span class="formula">\(k\ge2\)</span> they are <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\cos(k\theta)\)</span> and <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\sin(k\theta)\)</span>, which decay as <span class="formula">\(x\to-\infty\)</span>. Consequently, the interior PDE residual is identically zero.</p>
@@ -820,11 +861,11 @@
       <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">\(r=R+x\)</span>, the <span class="formula">\(k=1\)</span> Bessel equation tends on bounded collars to <span class="formula">\(C''+(\lambda-1)C=0\)</span>. Debye refines this to <span class="formula">\(J_R(\sqrt\lambda(R+x))\approx A_R(x)\cos(\omega x+\xi(R))\)</span>, where <span class="formula">\(\xi(R)=\sqrt{\rho^2-R^2}-R\arccos(R/\rho)-\pi/4\)</span> and therefore <span class="formula">\(\xi'(R)=-\arccos(R/\rho)\)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">\(R_*\)</span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
       <hr>
       <p class="eyebrow">Debye approximations</p>
-      <p>The radial laboratory is deliberately separate from the nonlinear branch. It fixes <span class="formula">\(\lambda=2.4\)</span>, moves the cone rim through <span class="formula">\(26\le r_0\le30\)</span>, and evaluates exact samples of <span class="formula">\(J_{kr_0}(\sqrt\lambda\,r)\)</span> on <span class="formula">\(r\in[r_0-5,r_0]\)</span>. The browser interpolates precomputed SciPy values in <span class="formula">\(r_0\)</span> and <span class="formula">\(r\)</span>.</p>
+      <p>The radial comparison is deliberately separate from the nonlinear branch. It fixes <span class="formula">\(\lambda=2.4\)</span>, moves the cone rim through <span class="formula">\(26\le r_0\le30\)</span>, and evaluates exact samples of <span class="formula">\(J_{kr_0}(\sqrt\lambda\,r)\)</span> on <span class="formula">\(r\in[r_0-5,r_0]\)</span>. The browser interpolates precomputed SciPy values in <span class="formula">\(r_0\)</span> and <span class="formula">\(r\)</span>.</p>
       <p>For <span class="formula">\(k=1\)</span>, both curves are normalized by the oscillatory Cauchy amplitude and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the rim. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are rim-normalized and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
-      <p class="eyebrow">Story diagrams and phase drift</p>
-      <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">\(N=28\)</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">\(R''(0)\)</span>.</p>
+      <p class="eyebrow">Geometric schematic and phase drift</p>
+      <p>The seven-stage disk–cone figure is a geometric schematic, not a PDE computation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">\(N=28\)</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">\(R''(0)\)</span>.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
       <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. Below it, a five-row table uses the full search through <span class="formula">\(R\approx841\)</span>: on each of five equal logarithmic bands in <span class="formula">\(20\le R&lt;842\)</span>, it selects the largest scale-free score <span class="formula">\(q(R)=-\log\{R\}/\log R\)</span>, equivalently <span class="formula">\(\{R\}=R^{-q(R)}\)</span>. The orange <span class="formula">\(N=28\)</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
