@@ -24,6 +24,7 @@ R_REFERENCE = 28
 R_STEP = 0.05
 DEPTH = 5.0
 X_SAMPLES = 101
+GLOBAL_Q_SAMPLES = 181
 
 
 def rounded(value):
@@ -39,6 +40,7 @@ def rounded(value):
 def main():
     radii = np.arange(R_MIN, R_MAX + R_STEP / 2, R_STEP, dtype=float)
     x_grid = np.linspace(-DEPTH, 0.0, X_SAMPLES)
+    q_grid = np.linspace(0.0, 1.0, GLOBAL_Q_SAMPLES)
     root_lambda = math.sqrt(LAMBDA)
     omega = math.sqrt(LAMBDA - 1.0)
     profiles = {"1": [], "2": [], "3": []}
@@ -72,9 +74,33 @@ def main():
                 raise RuntimeError(f"non-finite mode {mode} profile at r0={radius}")
             profiles[str(mode)].append(normalized.tolist())
 
+    # Whole-disk profiles are needed only at integer fold orders.  They use
+    # exactly the same normalization as the collar samples, so a marked
+    # sector in the global picture agrees with its magnification.
+    global_profiles = {}
+    for fold_order in range(R_MIN, R_MAX + 1):
+        fold_profiles = {}
+        rim_argument = root_lambda * fold_order
+        for mode in (1, 2, 3):
+            order = mode * fold_order
+            values = special.jv(order, root_lambda * fold_order * q_grid)
+            value_at_rim = special.jv(order, rim_argument)
+            derivative_at_rim = root_lambda * special.jvp(order, rim_argument, 1)
+            if mode == 1:
+                amplitude = math.hypot(value_at_rim, derivative_at_rim / omega)
+            else:
+                amplitude = value_at_rim
+            normalized = values / amplitude
+            if not np.all(np.isfinite(normalized)):
+                raise RuntimeError(
+                    f"non-finite global mode {mode} profile at N={fold_order}"
+                )
+            fold_profiles[str(mode)] = normalized.tolist()
+        global_profiles[str(fold_order)] = fold_profiles
+
     phase_rate = math.sqrt(LAMBDA - 1.0) - math.acos(LAMBDA ** -0.5)
     payload = {
-        "source": "SciPy evaluation of J_(k r0)(sqrt(lambda) r) on a fixed rim collar",
+        "source": "SciPy evaluation of J_(k r0)(sqrt(lambda) r) on a fixed rim collar and whole integer-order disk",
         "lambda": LAMBDA,
         "rMin": R_MIN,
         "rMax": R_MAX,
@@ -82,9 +108,11 @@ def main():
         "rStep": R_STEP,
         "depth": DEPTH,
         "xGrid": x_grid.tolist(),
+        "qGrid": q_grid.tolist(),
         "radii": radii.tolist(),
         "phaseRate": phase_rate,
         "profiles": profiles,
+        "globalProfiles": global_profiles,
         "rimValue1": rim_value,
         "rimDerivative1": rim_derivative,
     }

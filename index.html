@@ -921,8 +921,7 @@
             <h3>The separated cylinder basis</h3>
             <div class="tex-display">
               \[
-              f_k''+(\lambda-k^2)f_k=0,\qquad
-              u_k(x,\theta)=f_k(x)\{\cos(k\theta),\sin(k\theta)\}.
+              f_k''+(\lambda-k^2)f_k=0.
               \]
               \[
               f_k(x)=
@@ -930,6 +929,12 @@
               A_k\cos(\sqrt{\lambda-k^2}\,x)+B_k\sin(\sqrt{\lambda-k^2}\,x),&amp;k^2&lt;\lambda,\\
               C_k e^{\sqrt{k^2-\lambda}\,x},&amp;k^2&gt;\lambda.
               \end{cases}
+              \]
+            </div>
+            <div class="tex-display basis-compared-mode">
+              \[
+              u_k^{\mathrm{cyl}}(x,\theta)=f_k(x)
+              \{\cos(k\theta),\sin(k\theta)\}.
               \]
             </div>
             <p class="formula-note">For \(1&lt;\lambda&lt;4\), the channels \(k=0,1\) oscillate. Boundedness as \(x\to-\infty\) leaves exactly one exponential for every \(k\ge2\).</p>
@@ -942,7 +947,12 @@
               f_k''+\frac1r f_k'+\left(\lambda-\frac{k^2r_0^2}{r^2}\right)f_k=0,
               \]
               \[
-              u_k(r,\psi)=J_{kr_0}(\sqrt\lambda\,r)
+              f_k(r)=J_{kr_0}(\sqrt\lambda\,r).
+              \]
+            </div>
+            <div class="tex-display basis-compared-mode">
+              \[
+              u_k^{\mathrm{cone}}(r,\psi)=J_{kr_0}(\sqrt\lambda\,r)
               \{\cos(k\psi),\sin(k\psi)\}.
               \]
             </div>
@@ -958,6 +968,63 @@
             <p>Thus changing \(r_0\) translates the local wave by the explicit phase rate \(d\xi/dr_0=\Phi(\sqrt\lambda)\). For the higher channels, the nonoscillatory Debye formula gives</p>
             <div class="tex-display important-equation">\[\frac{J_{kr_0}(\sqrt\lambda(r_0+x))}{J_{kr_0}(\sqrt\lambda r_0)}\longrightarrow e^{\sqrt{k^2-\lambda}\,x},\qquad k\ge2.\]</div>
           </div>
+        </div>
+
+        <div class="collar-field-laboratory" aria-label="Two-dimensional cylinder and cone mode comparison">
+          <aside class="collar-field-controls">
+            <div class="control-heading">
+              <span>01 / choose one mode</span>
+              <button id="collarFieldResetButton" type="button">Reset</button>
+            </div>
+
+            <div class="collar-field-control-block">
+              <div class="control-label"><label for="collarNRange">fold symmetry \(N\)</label><output id="collarNValue">28</output></div>
+              <input id="collarNRange" type="range" min="26" max="30" value="28" step="1">
+              <div class="range-scale"><span>26</span><span>28</span><span>30</span></div>
+              <p>The planar field has angular order <span class="formula">\(kN\)</span>. We stay in the same <span class="formula">\(28\pm2\)</span> large-radius window as the radial comparison below.</p>
+            </div>
+
+            <div class="collar-field-control-block">
+              <div class="control-label"><label for="collarKRange">wave parameter \(k\)</label><output id="collarKValue">1</output></div>
+              <input id="collarKRange" type="range" min="1" max="3" value="1" step="1">
+              <div class="range-scale"><span>1</span><span>2</span><span>3</span></div>
+              <p id="collarRegimeCopy">The <span class="formula">\(k=1\)</span> channel is oscillatory in the normal direction.</p>
+            </div>
+
+            <div class="collar-field-control-block">
+              <div class="control-label"><span>angular factor</span><output id="collarTrigValue">cos</output></div>
+              <div class="collar-trig-switch" role="group" aria-label="Choose sine or cosine angular factor">
+                <button class="active" type="button" data-collar-trig="cos" aria-pressed="true">cos</button>
+                <button type="button" data-collar-trig="sin" aria-pressed="false">sin</button>
+              </div>
+            </div>
+
+            <div class="collar-field-readout">
+              <div><span>cone order</span><strong id="collarAngularOrder">28</strong></div>
+              <div><span>collar depth</span><strong>5</strong></div>
+              <div><span>spectral parameter</span><strong>\(\lambda=2.4\)</strong></div>
+            </div>
+          </aside>
+
+          <article class="collar-field-panel">
+            <header><span>02 / cylinder</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+            <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a flat cylinder collar"></canvas></div>
+            <footer><span>\(x=-5\)</span><span>same coordinates</span><span>\(x=0\)</span></footer>
+          </article>
+
+          <article class="collar-field-panel">
+            <header><span>03 / one planar sector</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
+            <div class="collar-field-canvas-wrap"><canvas id="collarConeCanvas" role="img" aria-label="Selected Bessel mode on a magnified collar of one planar sector"></canvas></div>
+            <footer><span>\(r=N-5\)</span><span>magnified wedge</span><span>\(r=N\)</span></footer>
+          </article>
+
+          <article class="collar-field-panel collar-global-panel">
+            <header><span>04 / complete planar field</span><strong id="collarDiskTitle">angular order 28</strong></header>
+            <div class="collar-field-canvas-wrap"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with its magnified sector outlined"></canvas></div>
+            <footer><span>whole disk</span><span class="collar-crop-key"><i></i>panel 03</span></footer>
+          </article>
+
+          <p class="collar-field-caption">Each colored field is one selected separated eigenfunction, rather than a nonlinear sum of modes. Under the collar identification <span class="formula">\(\theta=\psi\)</span>, Panels 02 and 03 use the same coordinates and the same color scale. Panel 03 evaluates the exact regular Bessel profile; Panel 02 uses its cylinder mode with matching rim data. The cyan frame in Panel 04 is precisely the sector magnified in Panel 03.</p>
         </div>
 
         <div class="debye-laboratory">
@@ -1090,6 +1157,7 @@
       <hr>
       <p class="eyebrow">Debye approximations</p>
       <p>The radial comparison is deliberately separate from the nonlinear branch. It fixes <span class="formula">\(\lambda=2.4\)</span>, moves the cone rim through <span class="formula">\(26\le r_0\le30\)</span>, and evaluates exact samples of <span class="formula">\(J_{kr_0}(\sqrt\lambda\,r)\)</span> on <span class="formula">\(r\in[r_0-5,r_0]\)</span>. The browser interpolates precomputed SciPy values in <span class="formula">\(r_0\)</span> and <span class="formula">\(r\)</span>.</p>
+      <p>The four-panel field picture displays one separated eigenfunction at a time. Its cone collar uses those same exact samples, while its whole-disk panel uses additional exact SciPy profiles at the integer orders <span class="formula">\(N=26,\ldots,30\)</span>. The heat maps, coordinate transforms, sine/cosine switch, and crop geometry are all evaluated in the browser.</p>
       <p>For <span class="formula">\(k=1\)</span>, both curves are normalized by the oscillatory Cauchy amplitude and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the rim. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are rim-normalized and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
       <p class="eyebrow">Geometric schematic and phase drift</p>
