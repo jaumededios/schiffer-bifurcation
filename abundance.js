@@ -214,7 +214,7 @@
         formatGap(example.gap, false),
         example.score.toFixed(3),
       ];
-      const labels = ["log-order band", "crossing order R", "fractional gap {R}", "score q(R)"];
+      const labels = ["log-order band", "crossing order R", "fractional gap", "score q(R)"];
       values.forEach(function renderValue(value, columnIndex) {
         const cell = document.createElement(columnIndex === 1 ? "th" : "td");
         if (columnIndex === 1) cell.scope = "row";
@@ -431,7 +431,7 @@
       context.font = "8px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "top";
-      context.fillText("FRACTIONAL PART  {R}", 0, 0);
+      context.fillText("FRACTIONAL PART  R − FLOOR(R)", 0, 0);
       context.restore();
 
       context.fillStyle = COLORS.muted;
@@ -547,7 +547,7 @@
         const reference = model.reference;
         return [
           "N=28 RUNNING EXAMPLE · SEPARATE REAL CROSSING",
-          "R = " + reference.R.toFixed(9) + "   {R} = " + reference.fractionalPart.toFixed(9),
+          "R = " + reference.R.toFixed(9) + "   R − FLOOR(R) = " + reference.fractionalPart.toFixed(9),
           "ρ = " + reference.rho.toFixed(9) + "   λ = " + reference.lambda.toFixed(6),
           "J₁ zero 16 · order-R zero 6 · λ lies above [2,3]",
         ];
@@ -559,7 +559,7 @@
         const lambda = Math.pow(rho / radius, 2);
         return [
           "EXHAUSTIVE SEARCH CROSSING",
-          "R = " + radius.toFixed(9) + "   {R} = " + model.fractional[index].toFixed(9),
+          "R = " + radius.toFixed(9) + "   R − FLOOR(R) = " + model.fractional[index].toFixed(9),
           "ρ = " + rho.toFixed(9) + "   λ = " + lambda.toFixed(6),
           "J₁ zero n=" + model.columns.n[index]
             + " · λ-window root " + model.columns.localIndex[index],

@@ -44,43 +44,47 @@
         <div class="question-grid">
           <div class="question-copy">
             <p>The boundary constant cannot vanish for a nontrivial solution, so we divide by it and obtain the normalized problem shown on the right. A domain carrying such a function is said to have the Schiffer property.</p>
-            <p>This is overdetermined: a second-order elliptic equation normally accepts either Dirichlet or Neumann data, not both. Nevertheless every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">J₁</span>. Schiffer's conjecture asserted that these were the only bounded planar examples. The problem is therefore to construct a solution for a domain that is not a disk.</p>
+            <p>This is overdetermined: a second-order elliptic equation normally accepts either Dirichlet or Neumann data, not both. Nevertheless every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer's conjecture asserted that these were the only bounded planar examples. The problem is therefore to construct a solution for a domain that is not a disk.</p>
           </div>
           <div class="equation-system hero-equation" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
-            <span class="system-label">Schiffer(Ω)</span>
-            <span class="system-brace" aria-hidden="true">{</span>
-            <div class="system-lines">
-              <div><span>−Δu = λu</span><small>in Ω,</small></div>
-              <div><span>u = 1</span><small>on ∂Ω,</small></div>
-              <div><span>∂<sub>ν</sub>u = 0</span><small>on ∂Ω.</small></div>
+            <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
+            <div class="katex-system tex-display">
+              \[
+              \begin{cases}
+              -\Delta u=\lambda u &amp; \text{in }\Omega,\\
+              u=1 &amp; \text{on }\partial\Omega,\\
+              \partial_\nu u=0 &amp; \text{on }\partial\Omega.
+              \end{cases}
+              \]
             </div>
-            <p><span>λ&gt;0</span> and <span>u</span> is not constant.</p>
+            <p>\(\lambda&gt;0\) and \(u\) is not constant.</p>
           </div>
         </div>
         <div class="linearization-section">
           <div class="linearization-intro">
             <p class="eyebrow">Why a spectral coincidence appears</p>
             <h3>Linearizing the moving boundary produces a Dirichlet eigenfunction at the same eigenvalue.</h3>
-            <p>Start from a symmetric Schiffer solution <span class="formula">(Ω,u,λ)</span>. Move the boundary with normal velocity <span class="formula">f</span>, and write <span class="formula">u̇=v</span>, <span class="formula">λ̇=μ</span>. For a nonradial mode, the radial forcing <span class="formula">μu</span> disappears after angular projection.</p>
+            <p>Start from a symmetric Schiffer solution <span class="formula">\((\Omega,u,\lambda)\)</span>. Move the boundary with normal velocity <span class="formula">\(f\)</span>, and write <span class="formula">\(\dot u=v\)</span>, <span class="formula">\(\dot\lambda=\mu\)</span>. For a nonradial mode, the radial forcing <span class="formula">\(\mu u\)</span> disappears after angular projection.</p>
           </div>
           <div class="linearization-core">
-            <div class="linear-equations" aria-label="The nonradial linearized problem">
-              <span class="system-brace" aria-hidden="true">{</span>
-              <div class="system-lines">
-                <div><span>(−Δ−λ)v = 0</span><small>in Ω,</small></div>
-                <div><span>v = 0</span><small>on ∂Ω,</small></div>
-                <div><span>∂<sub>ν</sub>v = λf</span><small>on ∂Ω.</small></div>
-              </div>
+            <div class="linear-equations tex-display" aria-label="The nonradial linearized problem">
+              \[
+              \begin{cases}
+              (-\Delta-\lambda)v=0 &amp; \text{in }\Omega,\\
+              v=0 &amp; \text{on }\partial\Omega,\\
+              \partial_\nu v=\lambda f &amp; \text{on }\partial\Omega.
+              \end{cases}
+              \]
             </div>
-            <p>The first two lines say that <span class="formula">v</span> is a Dirichlet eigenfunction with eigenvalue <span class="formula">λ</span>. The last line recovers the boundary displacement from it. Thus a nontrivial shape direction requires</p>
-            <div class="spectrum-meeting"><span>λ ∈ Spec<sub>N,rad</sub>(Ω)</span><b>∩</b><span>Spec<sub>D,nonrad</sub>(Ω).</span></div>
+            <p>The first two lines say that <span class="formula">\(v\)</span> is a Dirichlet eigenfunction with eigenvalue <span class="formula">\(\lambda\)</span>. The last line recovers the boundary displacement from it. Thus a nontrivial shape direction requires</p>
+            <div class="spectrum-meeting tex-display">\[\lambda\in\operatorname{Spec}_{N,\mathrm{rad}}(\Omega)\cap\operatorname{Spec}_{D,\mathrm{nonrad}}(\Omega).\]</div>
           </div>
           <details class="linearization-details">
             <summary><span>Derive the boundary conditions</span><i>expand +</i></summary>
             <div>
-              <p>Pull the moving problem back to the original domain. Differentiating <span class="formula">u<sub>t</sub>|<sub>∂Ω<sub>t</sub></sub>=1</span> gives <span class="formula">v+f∂<sub>ν</sub>u=0</span>, hence <span class="formula">v=0</span> because the base solution is Neumann.</p>
-              <p>Differentiating the Neumann condition gives <span class="formula">∂<sub>ν</sub>v+f∂<sub>νν</sub>u=0</span>. Since <span class="formula">u=1</span> and <span class="formula">∂<sub>ν</sub>u=0</span> on the boundary, all tangential derivatives vanish there and the PDE yields <span class="formula">∂<sub>νν</sub>u=−λ</span>. Therefore <span class="formula">∂<sub>ν</sub>v=λf</span>.</p>
-              <p>In the interior, differentiation gives <span class="formula">(−Δ−λ)v=μu</span>. On a rotationally symmetric base, <span class="formula">u</span> is radial; projecting onto any nonzero angular mode removes the right-hand side and gives the homogeneous Dirichlet eigenvalue equation above.</p>
+              <p>Pull the moving problem back to the original domain. Differentiating <span class="formula">\(u_t|_{\partial\Omega_t}=1\)</span> gives <span class="formula">\(v+f\partial_\nu u=0\)</span>, hence <span class="formula">\(v=0\)</span> because the base solution is Neumann.</p>
+              <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu v+f\partial_{\nu\nu}u=0\)</span>. Since <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span> on the boundary, all tangential derivatives vanish there and the PDE yields <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>. Therefore <span class="formula">\(\partial_\nu v=\lambda f\)</span>.</p>
+              <p>In the interior, differentiation gives <span class="formula">\((-\Delta-\lambda)v=\mu u\)</span>. On a rotationally symmetric base, <span class="formula">\(u\)</span> is radial; projecting onto any nonzero angular mode removes the right-hand side and gives the homogeneous Dirichlet eigenvalue equation above.</p>
             </div>
           </details>
         </div>
@@ -105,17 +109,17 @@
           </div>
           <div class="disk-math">
             <p>On the unit disk, a radial Schiffer eigenfunction has the form</p>
-            <div class="display-equation">u<sub>0</sub>(r)=J<sub>0</sub>(ρr), <span>λ=ρ².</span></div>
+            <div class="display-equation tex-display">\[u_0(r)=\frac{J_0(\rho r)}{J_0(\rho)},\qquad \lambda=\rho^2.\]</div>
             <p>Its Neumann condition is</p>
-            <div class="display-equation">∂<sub>r</sub>u<sub>0</sub>(1)=−ρJ<sub>1</sub>(ρ)=0. <span>Therefore J<sub>1</sub>(ρ)=0.</span></div>
-            <p>A possible deformation in angular mode <span class="formula">ℓ</span> would have to come from the Dirichlet eigenfunction</p>
-            <div class="display-equation">v<sub>ℓ</sub>(r,θ)=J<sub>ℓ</sub>(ρr)cos(ℓθ), <span>so J<sub>ℓ</sub>(ρ)=0.</span></div>
+            <div class="display-equation tex-display">\[\partial_r u_0(1)=-\rho\frac{J_1(\rho)}{J_0(\rho)}=0,\qquad\text{so }J_1(\rho)=0.\]</div>
+            <p>A possible deformation in angular mode <span class="formula">\(\ell\)</span> would have to come from the Dirichlet eigenfunction</p>
+            <div class="display-equation tex-display">\[v_\ell(r,\theta)=J_\ell(\rho r)\cos(\ell\theta),\qquad\text{so }J_\ell(\rho)=0.\]</div>
           </div>
           <div class="bourget-card">
             <span>Bourget's hypothesis</span>
             <h3>Distinct integer-order Bessel functions have no common positive zero.</h3>
-            <p>Siegel proved Bourget's hypothesis: if <span class="formula">m≠n</span> are nonnegative integers, then <span class="formula">J<sub>m</sub></span> and <span class="formula">J<sub>n</sub></span> share no nonzero zero. Hence every candidate <span class="formula">ℓ≥2</span> is impossible.</p>
-            <p>The exceptional mode <span class="formula">ℓ=1</span> uses the same equation <span class="formula">J₁(ρ)=0</span>, but it is geometric noise rather than a new domain: <span class="formula">∂<sub>x</sub>u₀=−ρJ₁(ρr)cosθ</span> is exactly the derivative obtained by translating the disk.</p>
+            <p>Siegel proved Bourget's hypothesis: if <span class="formula">\(m\ne n\)</span> are nonnegative integers, then <span class="formula">\(J_m\)</span> and <span class="formula">\(J_n\)</span> share no nonzero zero. Hence every candidate <span class="formula">\(\ell\ge2\)</span> is impossible.</p>
+            <p>The exceptional mode <span class="formula">\(\ell=1\)</span> uses the same equation <span class="formula">\(J_1(\rho)=0\)</span>, but it is geometric noise rather than a new domain: <span class="formula">\(\partial_xu_0=-\rho J_1(\rho r)\cos\theta/J_0(\rho)\)</span> is exactly the derivative obtained by translating the disk.</p>
             <p class="citation-line">References: <a href="https://dlmf.nist.gov/10.21" target="_blank" rel="noreferrer">DLMF §10.21</a>; Watson, <em>A Treatise on the Theory of Bessel Functions</em>, §15.28; <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>.</p>
           </div>
         </div>
@@ -142,7 +146,7 @@
                 <text x="180" y="218" text-anchor="middle">ℝ × S¹ · two nonconstant boundary loops</text>
               </svg>
             </div>
-            <span>flat cylinder</span><h3>Nontrivial Schiffer domains exist on ℝ × S¹.</h3><p>Fall, Minlend and Weth construct compact domains on the flat cylinder whose Neumann eigenfunctions are constant on the boundary. In our half-cylinder limit, <span class="formula">1&lt;λ&lt;4</span> leaves the first angular channel oscillatory while every <span class="formula">k≥2</span> channel is evanescent.</p>
+            <span>flat cylinder</span><h3>Nontrivial Schiffer domains exist on \(\mathbb R\times S^1\).</h3><p>Fall, Minlend and Weth construct compact domains on the flat cylinder whose Neumann eigenfunctions are constant on the boundary. In our half-cylinder limit, <span class="formula">\(1&lt;\lambda&lt;4\)</span> leaves the first angular channel oscillatory while every <span class="formula">\(k\ge2\)</span> channel is evanescent.</p>
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article>
@@ -162,15 +166,15 @@
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
-        <div class="borrow-conclusion"><span>The idea we keep</span><p>Borrow the cylinder's flexible local problem, but package it inside an <span class="formula">N</span>-fold quotient that can eventually be unfolded back into the plane.</p></div>
+        <div class="borrow-conclusion"><span>The idea we keep</span><p>Borrow the cylinder's flexible local problem, but package it inside an <span class="formula">\(N\)</span>-fold quotient that can eventually be unfolded back into the plane.</p></div>
       </section>
 
       <section id="geometric-escape" class="geometric-escape">
         <header class="experiment-header geometry-header">
           <div><span class="section-number">04</span><div><p class="eyebrow">The quotient construction</p><h2>A high-frequency disk becomes a long cylinder.</h2></div></div>
-          <div class="equations"><span>ℝ² / C<sub>N</sub></span><span>g<sub>R</sub>=dr²+(r²/R²)dψ²</span><small>R=N only at the planar lift</small></div>
+          <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
-        <div class="geometry-lead"><p>An <span>N</span>-fold field repeats on 28 identical angular sectors in our running example. Keep one sector and identify its radial edges. After rescaling so that the quotient boundary has circumference <span class="formula">2π</span>, the sector is a cone of length <span class="formula">R=N</span>. As <span class="formula">N→∞</span>, its tip recedes to infinity and every fixed neighborhood of the boundary converges to the half-cylinder <span class="formula">(−∞,0]×S¹</span>.</p></div>
+        <div class="geometry-lead"><p>An \(N\)-fold field repeats on 28 identical angular sectors in our running example. Keep one sector and identify its radial edges. After rescaling so that the quotient boundary has circumference <span class="formula">\(2\pi\)</span>, the sector is a cone of length <span class="formula">\(R=N\)</span>. As <span class="formula">\(N\to\infty\)</span>, its tip recedes to infinity and every fixed neighborhood of the boundary converges to the half-cylinder <span class="formula">\(({-\infty},0]\times S^1\)</span>.</p></div>
         <div class="geometry-laboratory">
           <aside class="geometry-controls">
             <div class="control-heading"><span>Quotient → limit → return</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
@@ -192,7 +196,7 @@
             <div class="axis-footer"><span>N-fold disk</span><span>one normalized quotient</span><span>N-fold disk</span></div>
           </section>
         </div>
-        <div class="geometry-principle"><strong>The quotient lets the angular order become real.</strong><p>A planar rotation group exists only when <span class="formula">R=N∈ℕ</span>, but the cone metric is meaningful for every real <span class="formula">R&gt;0</span>. We therefore bifurcate at <span class="formula">R<sub>*</sub>=28.026397…</span>, follow a branch on relaxed cones, and return to the plane precisely when <span class="formula">R(s)=28</span>.</p></div>
+        <div class="geometry-principle"><strong>The quotient lets the angular order become real.</strong><p>A planar rotation group exists only when <span class="formula">\(R=N\in\mathbb N\)</span>, but the cone metric is meaningful for every real <span class="formula">\(R&gt;0\)</span>. We therefore bifurcate at <span class="formula">\(R_*=28.026397\ldots\)</span>, follow a branch on relaxed cones, and return to the plane precisely when <span class="formula">\(R(s)=28\)</span>.</p></div>
       </section>
 
       <section id="experiment" class="experiment">
@@ -205,8 +209,8 @@
             </div>
           </div>
           <div class="equations" role="group" aria-label="Model equations">
-            <span>Ω<sub>λ,s</sub>={x&lt;h<sub>λ,s</sub>(θ)}</span>
-            <span>(x,θ)∈ℝ×S¹</span>
+            <span>\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>
+            <span>\((x,\theta)\in\mathbb R\times S^1\)</span>
             <small>half-cylinder</small>
           </div>
         </header>
@@ -214,20 +218,31 @@
         <div class="cylinder-theorem">
           <div class="theorem-label"><span>Theorem</span><small>uniform half-cylinder branch</small></div>
           <div class="theorem-statement">
-            <p>Fix <span class="formula">0&lt;α&lt;1</span> and a compact interval <span class="formula">K⋐(1,4)</span>. There is an <span class="formula">ε<sub>K</sub>&gt;0</span> and a <span class="formula">C³</span> family <span class="formula">(Ω<sub>λ,s</sub>,u<sub>λ,s</sub>)</span>, defined for <span class="formula">λ∈K</span> and <span class="formula">|s|&lt;ε<sub>K</sub></span>, such that</p>
-            <div class="theorem-system">
-              <span class="system-brace" aria-hidden="true">{</span>
-              <div class="system-lines"><div><span>(Δ+λ)u<sub>λ,s</sub>=0</span><small>in Ω<sub>λ,s</sub>,</small></div><div><span>u<sub>λ,s</sub>=1</span><small>on ∂Ω<sub>λ,s</sub>,</small></div><div><span>∂<sub>ν</sub>u<sub>λ,s</sub>=0</span><small>on ∂Ω<sub>λ,s</sub>.</small></div></div>
+            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span> and a compact interval <span class="formula">\(K\Subset(1,4)\)</span>. There is an <span class="formula">\(\varepsilon_K&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, defined for <span class="formula">\(\lambda\in K\)</span> and <span class="formula">\(|s|&lt;\varepsilon_K\)</span>, such that</p>
+            <div class="theorem-system tex-display">
+              \[
+              \begin{cases}
+              (\Delta+\lambda)u_{\lambda,s}=0 &amp; \text{in }\Omega_{\lambda,s},\\
+              u_{\lambda,s}=1 &amp; \text{on }\partial\Omega_{\lambda,s},\\
+              \partial_\nu u_{\lambda,s}=0 &amp; \text{on }\partial\Omega_{\lambda,s}.
+              \end{cases}
+              \]
             </div>
             <p>The boundary and field begin with the explicit first angular mode</p>
-            <div class="theorem-expansion"><span>h<sub>λ,s</sub>(θ)=s cosθ+O<sub>K</sub>(s²),</span><span>u<sub>λ,s</sub>(x,θ)=cos(√λ x)+s <i>λ/√(λ−1)</i> sin(√(λ−1)x)cosθ+O<sub>K</sub>(s²).</span></div>
-            <p class="theorem-note">The remainders are uniform for <span class="formula">λ∈K</span> on every fixed boundary collar. Modes <span class="formula">k≥2</span> are selected by their bounded tails <span class="formula">e<sup>√(k²−λ)x</sup></span> as <span class="formula">x→−∞</span>. Fall–Minlend–Weth formulate their result for compact domains in the flat cylinder; this one-ended half-cylinder version follows from the same separation, weighted-space, and local bifurcation argument. The exclusion of <span class="formula">λ=1,4</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
+            <div class="theorem-expansion tex-display">
+              \[h_{\lambda,s}(\theta)=s\cos\theta+O_K(s^2),\]
+              \[\begin{aligned}
+              u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
+              &amp;\quad+s\frac{\lambda}{\sqrt{\lambda-1}}\sin(\sqrt{\lambda-1}\,x)\cos\theta+O_K(s^2).
+              \end{aligned}\]
+            </div>
+            <p class="theorem-note">The remainders are uniform for <span class="formula">\(\lambda\in K\)</span> on every fixed boundary collar. Modes <span class="formula">\(k\ge2\)</span> are selected by their bounded tails <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>. Fall–Minlend–Weth formulate their result for compact domains in the flat cylinder; this one-ended half-cylinder version follows from the same separation, weighted-space, and local bifurcation argument. The exclusion of <span class="formula">\(\lambda=1,4\)</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
           </div>
         </div>
 
         <div class="experiment-story-lead">
-          <p><span>What the theorem says.</span> The size of the allowed perturbation can be chosen uniformly while <span class="formula">λ</span> stays away from the thresholds <span class="formula">1</span> and <span class="formula">4</span>. This uniformity is what can later survive on sufficiently long cones.</p>
-          <p><span>What the browser computes.</span> The visualization is a finite Fourier approximation of this family. Move <span class="formula">λ</span>, then turn on <span class="formula">s</span>; the open rim and the Helmholtz field are solved together. The 3D view emphasizes the actual half-cylinder geometry.</p>
+          <p><span>What the theorem says.</span> The size of the allowed perturbation can be chosen uniformly while <span class="formula">\(\lambda\)</span> stays away from the thresholds <span class="formula">\(1\)</span> and <span class="formula">\(4\)</span>. This uniformity is what can later survive on sufficiently long cones.</p>
+          <p><span>What the browser computes.</span> The visualization is a finite Fourier approximation of this family. Move <span class="formula">\(\lambda\)</span>, then turn on <span class="formula">\(s\)</span>; the open rim and the Helmholtz field are solved together. The 3D view emphasizes the actual half-cylinder geometry.</p>
         </div>
 
         <div class="laboratory">
@@ -254,7 +269,7 @@
               </div>
               <input id="sRange" type="range" min="-0.85" max="0.85" value="0" step="0.005">
               <div class="range-scale"><span>−0.85</span><span>0</span><span>+0.85</span></div>
-              <p>The amplitude gauge is <span class="formula">h<sub>1</sub> = s</span>. The solver also finds <span class="formula">h<sub>2</sub></span> and <span class="formula">h<sub>3</sub></span> in the wall graph; at zero the domain is the exact rectangular half-cylinder.</p>
+              <p>The amplitude gauge is <span class="formula">\(h_1=s\)</span>. The solver also finds <span class="formula">\(h_2\)</span> and <span class="formula">\(h_3\)</span> in the wall graph; at zero the domain is the exact rectangular half-cylinder.</p>
             </div>
 
             <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Play bifurcation</span></button>
@@ -318,7 +333,7 @@
           <div class="readout-copy">
             <p class="eyebrow">What is being computed</p>
             <h3>The wall and field move together.</h3>
-            <p>Every retained field mode solves Helmholtz analytically. A nonlinear least-squares step solves its coefficients simultaneously with the wall corrections <span class="formula">h₂ cos 2(θ−φ)</span> and <span class="formula">h₃ cos 3(θ−φ)</span>.</p>
+            <p>Every retained field mode solves Helmholtz analytically. A nonlinear least-squares step solves its coefficients simultaneously with the wall corrections <span class="formula">\(h_2\cos 2(\theta-\phi)\)</span> and <span class="formula">\(h_3\cos 3(\theta-\phi)\)</span>.</p>
           </div>
           <div class="mode-spectrum">
             <header><span>field coefficients</span><span id="modeScale">magnitude by angular mode</span></header>
@@ -340,9 +355,9 @@
             </div>
           </div>
           <div class="equations" role="group" aria-label="Cone model equations">
-            <span>Δ<sub>R</sub> = ∂²<sub>r</sub> + r⁻¹∂<sub>r</sub> + R²r⁻²∂²<sub>ψ</sub></span>
-            <span>J<sub>1</sub>(ρ<sub>*</sub>) = J<sub>R*</sub>(ρ<sub>*</sub>) = 0</span>
-            <small>R<sub>*</sub> → N</small>
+            <span>\(\Delta_R=\partial_r^2+r^{-1}\partial_r+R^2r^{-2}\partial_\psi^2\)</span>
+            <span>\(J_1(\rho_*)=J_{R_*}(\rho_*)=0\)</span>
+            <small>\(R_*\to N\)</small>
           </div>
         </header>
 
@@ -366,7 +381,7 @@
             <div class="crossing-card" aria-label="Numerically selected cone crossing">
               <div><span>relaxed start</span><strong>28.026397</strong></div>
               <div><span>integer target</span><strong>28</strong></div>
-              <p>Smallest crossing below 100 with <span class="formula">1 &lt; λ &lt; 4</span> and fractional gap below 0.1.</p>
+              <p>Smallest crossing below 100 with <span class="formula">\(1&lt;\lambda&lt;4\)</span> and fractional gap below 0.1.</p>
             </div>
 
             <div class="control-block primary-control">
@@ -453,15 +468,15 @@
             </div>
           </div>
           <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
-            <span>ψ = Rφ</span>
-            <span>one wavelength: Δφ = 2π/R</span>
-            <span>seam: 2π(1 − 28/R)</span>
+            <span>\(\psi=R\phi\)</span>
+            <span>one wavelength: \(\Delta\phi=2\pi/R\)</span>
+            <span>seam: \(2\pi(1-28/R)\)</span>
           </div>
         </header>
 
         <div class="modes-lead">
-          <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost <span>2π</span>. The large panel unwraps exactly that patch into radial distance <span>x</span> and quotient angle <span>ψ</span>, so the curved rim becomes the flat-cylinder picture.</p>
-          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The radial trace isolates the non-evanescent wave; the higher angular corrections are exponentials. Tip regularity selects one cone Bessel profile, and Debye exposes its <span>R ↔ phase</span> correspondence.</p>
+          <p>The left panel is the whole 28-copy object. The cyan box selects one physical angular wavelength—an arc of length almost \(2\pi\). The large panel unwraps exactly that patch into radial distance \(x\) and quotient angle \(\psi\), so the curved rim becomes the flat-cylinder picture.</p>
+          <p>The one-wavelength crop is fixed at the seam, so the non-integer mismatch passes directly through the main zoom. The radial trace isolates the non-evanescent wave; the higher angular corrections are exponentials. Tip regularity selects one cone Bessel profile, and Debye exposes its \(R\leftrightarrow\text{phase}\) correspondence.</p>
         </div>
 
         <div class="modes-laboratory">
@@ -474,7 +489,7 @@
             <div class="modes-control-block">
               <div class="control-label"><label for="modesTransferRange">cone branch</label><output id="modesTransferValue">62%</output></div>
               <input id="modesTransferRange" type="range" min="0" max="1" value="0.62" step="0.002">
-              <div class="range-scale"><span>R<sub>*</sub> / open seam</span><span>N = 28 / closed</span></div>
+              <div class="range-scale"><span>\(R_*\) / open seam</span><span>\(N=28\) / closed</span></div>
               <div class="parameter-pair">
                 <div><span>real order R</span><strong id="modesOrderValue">28.016…</strong></div>
                 <div><span>boundary amplitude s</span><strong id="modesAmplitudeValue">0.2228</strong></div>
@@ -494,18 +509,18 @@
             <div class="modes-control-block phase-control-block">
               <div class="control-label"><span>R problem → cylinder phase</span><output id="modesPhaseValue">Δξ = 0.543°</output></div>
               <div class="problem-map" aria-label="The Bessel radial problem becomes a sine-cosine problem on a flat collar">
-                <div><span>cone · tip regular</span><strong>B<sub>R</sub> = J<sub>R</sub></strong></div>
+                <div><span>cone · tip regular</span><strong>\(B_R=J_R\)</strong></div>
                 <i aria-hidden="true">→</i>
-                <div><span>Debye collar</span><strong>A cos(ωx + ξ<sub>R</sub>)</strong></div>
+                <div><span>Debye collar</span><strong>\(A\cos(\omega x+\xi_R)\)</strong></div>
               </div>
               <div id="modesPhaseTrack" class="phase-track" role="img" aria-label="Local cylinder phase along the branch">
                 <span id="modesPhaseFill"></span>
                 <i id="modesPhaseMarker"></i>
               </div>
-              <div class="range-scale"><span>R<sub>*</sub> · pure sin</span><span>N = 28 · Δξ<sub>N</sub></span></div>
-              <div class="phase-law"><span>ξ′(R) = −acos(R/ρ)</span><span>Δξ(s) ∼ R(s) − R<sub>*</sub> ∼ s²</span></div>
+              <div class="range-scale"><span>\(R_*\) · pure sine</span><span>\(N=28\) · \(\Delta\xi_N\)</span></div>
+              <div class="phase-law"><span>\(\xi'(R)=-\arccos(R/\rho)\)</span><span>\(\Delta\xi(s)\sim R(s)-R_*\sim s^2\)</span></div>
               <div class="phase-agreement"><span>exact rim Cauchy phase</span><strong id="modesExactPhaseValue">δ = 0.543°</strong></div>
-              <p>The trace below the heatmap compares the exact regular Bessel profile with its Debye sine/cosine wave. The exact zero at <span class="formula">R<sub>*</sub></span> anchors the phase; changing <span class="formula">R</span> moves it by the explicit formula above.</p>
+              <p>The trace below the heatmap compares the exact regular Bessel profile with its Debye sine/cosine wave. The exact zero at <span class="formula">\(R_*\)</span> anchors the phase; changing <span class="formula">\(R\)</span> moves it by the explicit formula above.</p>
             </div>
 
             <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Play crossing → landing</span></button>
@@ -537,17 +552,17 @@
           <article>
             <span>01 / global Bessel mode</span>
             <h3>One regular profile from the tip</h3>
-            <p>Tip regularity keeps <span class="formula">J<sub>kR</sub></span> and discards <span class="formula">Y<sub>kR</sub></span>. The modified <span class="formula">I/K</span> pair solves the sign-flipped equation, so <span class="formula">I</span> is not an admissible second profile here.</p>
+            <p>Tip regularity keeps <span class="formula">\(J_{kR}\)</span> and discards <span class="formula">\(Y_{kR}\)</span>. The modified <span class="formula">\(I/K\)</span> pair solves the sign-flipped equation, so <span class="formula">\(I\)</span> is not an admissible second profile here.</p>
           </article>
           <article>
             <span>02 / one-wavelength zoom</span>
             <h3>The cone becomes the flat collar</h3>
-            <p>Over one angular wavelength, the circumference coordinate is <span class="formula">ψ = Rφ</span> and curvature is only <span class="formula">1/R</span>. The Bessel oscillation becomes the local sine/cosine cylinder picture.</p>
+            <p>Over one angular wavelength, the circumference coordinate is <span class="formula">\(\psi=R\phi\)</span> and curvature is only <span class="formula">\(1/R\)</span>. The Bessel oscillation becomes the local sine/cosine cylinder picture.</p>
           </article>
           <article>
             <span>03 / where the phase goes</span>
             <h3>Phase freedom becomes real order</h3>
-            <p>Debye turns the tip-regular Bessel profile into <span class="formula">A<sub>R</sub>(x) cos(ωx + ξ(R))</span> on the collar, with <span class="formula">ξ′(R) = −acos(R/ρ)</span>. Thus real order and cylinder phase are locally equivalent parameters; along the branch, both change quadratically in <span class="formula">s</span>.</p>
+            <p>Debye turns the tip-regular Bessel profile into <span class="formula">\(A_R(x)\cos(\omega x+\xi(R))\)</span> on the collar, with <span class="formula">\(\xi'(R)=-\arccos(R/\rho)\)</span>. Thus real order and cylinder phase are locally equivalent parameters; along the branch, both change quadratically in <span class="formula">\(s\)</span>.</p>
           </article>
         </div>
       </section>
@@ -591,7 +606,7 @@
           </article>
           <article>
             <span>the mean cone radius · order \(s^2\)</span>
-            <div class="tex-display">\[\frac1{2\pi}\int_0^{2\pi}r_{\partial}(\psi;s),d\psi=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
+            <div class="tex-display">\[\frac1{2\pi}\int_0^{2\pi}r_{\partial}(\psi;s)\,d\psi=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
             <p>The cosine averages to zero. The parameter that must land on an integer therefore has no linear motion; its first nonzero change is the negative quadratic drift computed above.</p>
           </article>
         </div>
@@ -631,7 +646,7 @@
             <h3>The separated cylinder basis</h3>
             <div class="tex-display">
               \[
-              f_k''+(\lambda-k^2)f_k=0,qquad
+              f_k''+(\lambda-k^2)f_k=0,\qquad
               u_k(x,\theta)=f_k(x)\{\cos(k\theta),\sin(k\theta)\}.
               \]
               \[
@@ -652,7 +667,7 @@
               f_k''+\frac1r f_k'+\left(\lambda-\frac{k^2r_0^2}{r^2}\right)f_k=0,
               \]
               \[
-              u_k(r,\psi)=J_{kr_0}(\sqrt\lambda,r)
+              u_k(r,\psi)=J_{kr_0}(\sqrt\lambda\,r)
               \{\cos(k\psi),\sin(k\psi)\}.
               \]
             </div>
@@ -743,7 +758,7 @@
             </div>
             <div class="abundance-readout">
               <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
-              <div><span>smallest sample {R}</span><strong id="abundanceBestValue">—</strong></div>
+              <div><span>smallest sample \(R-\lfloor R\rfloor\)</span><strong id="abundanceBestValue">—</strong></div>
               <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
             </div>
           </aside>
@@ -785,28 +800,28 @@
       <button id="closeMethod" type="button" aria-label="Close">×</button>
       <p class="eyebrow">Numerical method</p>
       <h2>Exact inside, numerical on the wall.</h2>
-      <p>The mathematical limiting problem is posed on the genuine half-infinite cylinder <span class="formula">Ω<sub>λ,s</sub>={x&lt;h<sub>λ,s</sub>(θ)}</span>. Uniformly for <span class="formula">λ</span> in each compact <span class="formula">K⋐(1,4)</span>, the same local bifurcation machinery used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">h<sub>λ,s</sub>=s cosθ+O<sub>K</sub>(s²)</span>. The finite window below is only how that infinite-domain solution is displayed in the browser.</p>
-      <p>We set <span class="formula">Γ<sub>s</sub>: x = h<sub>s</sub>(θ) = s cos(θ − φ) + h₂ cos 2(θ − φ) + h₃ cos 3(θ − φ)</span>. The mean translation is fixed to zero and <span class="formula">h₁=s</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">(Δ + λ)u = 0</span> in the physical cylinder coordinates.</p>
-      <p>The <span class="formula">k = 0</span> and <span class="formula">k = 1</span> radial factors are oscillatory. For <span class="formula">k ≥ 2</span> they are <span class="formula">e<sup>√(k²−λ)x</sup> cos(kθ)</span> and <span class="formula">e<sup>√(k²−λ)x</sup> sin(kθ)</span>, which decay as <span class="formula">x → −∞</span>. Consequently, the interior PDE residual is identically zero.</p>
-      <p>For the selected <span class="formula">(λ,s)</span>, a damped Gauss–Newton solve with an analytic wall Jacobian updates the field coefficients, <span class="formula">h₂</span>, and <span class="formula">h₃</span> simultaneously on at least 256 angular samples; a final column-scaled QR solve polishes the field at the recovered wall. Exponential modes are rescaled by constants to avoid overflow without changing their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">||f||² = (2π)⁻¹∫|f(θ)|²dθ</span>. With only two wall corrections and independent <span class="formula">λ,s</span> sliders, the result is a truncated free-boundary solve rather than an exact branch, so the defects need not vanish.</p>
+      <p>The mathematical limiting problem is posed on the genuine half-infinite cylinder <span class="formula">\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>. Uniformly for <span class="formula">\(\lambda\)</span> in each compact <span class="formula">\(K\Subset(1,4)\)</span>, the same local bifurcation machinery used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">\(h_{\lambda,s}=s\cos\theta+O_K(s^2)\)</span>. The finite window below is only how that infinite-domain solution is displayed in the browser.</p>
+      <p>We set <span class="formula">\(\Gamma_s:x=h_s(\theta)=s\cos(\theta-\phi)+h_2\cos 2(\theta-\phi)+h_3\cos 3(\theta-\phi)\)</span>. The mean translation is fixed to zero and <span class="formula">\(h_1=s\)</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">\((\Delta+\lambda)u=0\)</span> in the physical cylinder coordinates.</p>
+      <p>The <span class="formula">\(k=0\)</span> and <span class="formula">\(k=1\)</span> radial factors are oscillatory. For <span class="formula">\(k\ge2\)</span> they are <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\cos(k\theta)\)</span> and <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\sin(k\theta)\)</span>, which decay as <span class="formula">\(x\to-\infty\)</span>. Consequently, the interior PDE residual is identically zero.</p>
+      <p>For the selected <span class="formula">\((\lambda,s)\)</span>, a damped Gauss–Newton solve with an analytic wall Jacobian updates the field coefficients, <span class="formula">\(h_2\)</span>, and <span class="formula">\(h_3\)</span> simultaneously on at least 256 angular samples; a final column-scaled QR solve polishes the field at the recovered wall. Exponential modes are rescaled by constants to avoid overflow without changing their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">\(\lVert f\rVert^2=(2\pi)^{-1}\int|f(\theta)|^2\,d\theta\)</span>. With only two wall corrections and independent <span class="formula">\(\lambda,s\)</span> sliders, the result is a truncated free-boundary solve rather than an exact branch, so the defects need not vanish.</p>
       <hr>
       <p class="eyebrow">Cone continuation</p>
-      <p>The cone panel uses the metric <span class="formula">dr² + (r²/R²)dψ²</span>. At fixed <span class="formula">ρ = j<sub>1,16</sub></span>, the field and boundary are expanded in 13 even Fourier–Bessel modes. An offline nonlinear least-squares continuation enforces <span class="formula">u = 1</span> and the exact metric normal derivative on 112 collocation angles; the displayed defects come from 512 shifted validation angles.</p>
-      <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">R = 28</span>, the quotient angle <span class="formula">2π/R</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
+      <p>The cone panel uses the metric <span class="formula">\(dr^2+(r^2/R^2)d\psi^2\)</span>. At fixed <span class="formula">\(\rho=j_{1,16}\)</span>, the field and boundary are expanded in 13 even Fourier–Bessel modes. An offline nonlinear least-squares continuation enforces <span class="formula">\(u=1\)</span> and the exact metric normal derivative on 112 collocation angles; the displayed defects come from 512 shifted validation angles.</p>
+      <p>The browser interpolates those solved branch records and precomputed radial Bessel tables. At the final record <span class="formula">\(R=28\)</span>, the quotient angle <span class="formula">\(2\pi/R\)</span> tiles the plane exactly 28 times. The unfolded view draws the true seam angle and also includes a magnified inset because the initial mismatch is only about 0.339°.</p>
       <hr>
       <p class="eyebrow">Angular modes</p>
-      <p>The nested-zoom panel evaluates the whole 28-copy assembly and its seam-centered one-wavelength collar from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">J<sub>kR</sub>(ρ<sub>*</sub>r/R)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
-      <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">r = R + x</span>, the <span class="formula">k = 1</span> Bessel equation tends on bounded collars to <span class="formula">C″ + (λ − 1)C = 0</span>. Debye refines this to <span class="formula">J<sub>R</sub>(√λ(R+x)) ≈ A<sub>R</sub>(x) cos(ωx + ξ(R))</span>, where <span class="formula">ξ(R) = √(ρ²−R²) − R acos(R/ρ) − π/4</span> and therefore <span class="formula">ξ′(R) = −acos(R/ρ)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">R<sub>*</sub></span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
+      <p>The nested-zoom panel evaluates the whole 28-copy assembly and its seam-centered one-wavelength collar from one interpolated branch record. Its field samples come from the precomputed normalized tables <span class="formula">\(J_{kR}(\rho_*r/R)\)</span>; the free rim uses the same continued Fourier coefficients. The apparent flatness of the zoom is therefore a coordinate zoom of the cone data, not a separately drawn cylinder texture.</p>
+      <p>The radial trace is an additional local comparison, meant as the geometric intuition rather than a quoted step of the proof. Writing <span class="formula">\(r=R+x\)</span>, the <span class="formula">\(k=1\)</span> Bessel equation tends on bounded collars to <span class="formula">\(C''+(\lambda-1)C=0\)</span>. Debye refines this to <span class="formula">\(J_R(\sqrt\lambda(R+x))\approx A_R(x)\cos(\omega x+\xi(R))\)</span>, where <span class="formula">\(\xi(R)=\sqrt{\rho^2-R^2}-R\arccos(R/\rho)-\pi/4\)</span> and therefore <span class="formula">\(\xi'(R)=-\arccos(R/\rho)\)</span>. The graph anchors the Debye phase at the exact zero <span class="formula">\(R_*\)</span> and also reports the phase extracted from the exact rim Cauchy data; their close agreement is the numerical check of the analogy.</p>
       <hr>
       <p class="eyebrow">Debye approximations</p>
-      <p>The radial laboratory is deliberately separate from the nonlinear branch. It fixes <span class="formula">λ=2.4</span>, moves the cone rim through <span class="formula">26≤r₀≤30</span>, and evaluates exact samples of <span class="formula">J<sub>kr₀</sub>(√λr)</span> on <span class="formula">r∈[r₀−5,r₀]</span>. The browser interpolates precomputed SciPy values in <span class="formula">r₀</span> and <span class="formula">r</span>.</p>
-      <p>For <span class="formula">k=1</span>, both curves are normalized by the oscillatory Cauchy amplitude and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the rim. For <span class="formula">k=2,3</span>, the Bessel traces are rim-normalized and compared with <span class="formula">e<sup>√(k²−λ)x</sup></span>. All vertical axes are linear and all comparison curves are solid.</p>
+      <p>The radial laboratory is deliberately separate from the nonlinear branch. It fixes <span class="formula">\(\lambda=2.4\)</span>, moves the cone rim through <span class="formula">\(26\le r_0\le30\)</span>, and evaluates exact samples of <span class="formula">\(J_{kr_0}(\sqrt\lambda\,r)\)</span> on <span class="formula">\(r\in[r_0-5,r_0]\)</span>. The browser interpolates precomputed SciPy values in <span class="formula">\(r_0\)</span> and <span class="formula">\(r\)</span>.</p>
+      <p>For <span class="formula">\(k=1\)</span>, both curves are normalized by the oscillatory Cauchy amplitude and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the rim. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are rim-normalized and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
       <p class="eyebrow">Story diagrams and phase drift</p>
-      <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">N=28</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">R″(0)</span>.</p>
+      <p>The seven-stage disk–cone animation is a geometric guide, not a PDE simulation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">\(N=28\)</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">\(R''(0)\)</span>.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
-      <p>The final scatter plot filters the saved common-zero data to <span class="formula">N≤200</span> and uses a logarithmic horizontal <span class="formula">R</span>-axis. Below it, a five-row table uses the full search through <span class="formula">R≈841</span>: on each of five equal logarithmic bands in <span class="formula">20≤R&lt;842</span>, it selects the largest scale-free score <span class="formula">q(R)=−log{R}/log R</span>, equivalently <span class="formula">{R}=R<sup>−q(R)</sup></span>. The orange <span class="formula">N=28</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
+      <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. Below it, a five-row table uses the full search through <span class="formula">\(R\approx841\)</span>: on each of five equal logarithmic bands in <span class="formula">\(20\le R&lt;842\)</span>, it selects the largest scale-free score <span class="formula">\(q(R)=-\log\{R\}/\log R\)</span>, equivalently <span class="formula">\(\{R\}=R^{-q(R)}\)</span>. The orange <span class="formula">\(N=28\)</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
     </dialog>
 
     <script src="cone-data.js"></script>
