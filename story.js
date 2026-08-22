@@ -35,6 +35,20 @@
     if (main && section) main.appendChild(section);
   });
 
+  // The linearization motivates the disk theorem, so it belongs to Section 2
+  // rather than to the definition of the Schiffer property in Section 1.
+  const diskSection = select("#disk-obstruction");
+  const linearizationSection = select(".linearization-section");
+  const diskRigidityHeading = select(".disk-rigidity-heading");
+  if (diskSection && linearizationSection && diskRigidityHeading) {
+    diskSection.insertBefore(linearizationSection, diskRigidityHeading);
+    const variationFigure = select(".shape-variation-figure");
+    const linearizationCore = select(".linearization-core");
+    if (variationFigure && linearizationCore) {
+      linearizationSection.insertBefore(linearizationCore, variationFigure);
+    }
+  }
+
   function fillRange(input) {
     const amount = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
     input.style.setProperty("--value", `${amount * 100}%`);
@@ -193,11 +207,21 @@
     }
 
     if (divisions > 0) {
-      context.strokeStyle = `rgba(241,238,229,${.08 + .22 * divisions})`; context.lineWidth = .7;
       for (let index = 0; index < copies; index++) {
+        const startAngle = (index - .5) / copies * TAU;
+        const endAngle = (index + .5) / copies * TAU;
+        context.beginPath(); context.moveTo(cx, cy); context.arc(cx, cy, radius, startAngle, endAngle); context.closePath();
+        context.fillStyle = index % 2
+          ? `rgba(255,116,73,${.018 * divisions})`
+          : `rgba(77,162,163,${.024 * divisions})`;
+        context.fill();
         const angle = (index + .5) / copies * TAU;
         context.beginPath(); context.moveTo(cx, cy);
-        context.lineTo(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)); context.stroke();
+        context.lineTo(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
+        context.strokeStyle = index % 2
+          ? `rgba(255,116,73,${.12 + .18 * divisions})`
+          : `rgba(77,162,163,${.12 + .18 * divisions})`;
+        context.lineWidth = .7; context.stroke();
       }
     }
 
@@ -209,41 +233,42 @@
       if (!index) context.moveTo(x, y); else context.lineTo(x, y);
     }
     context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
-    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
-    context.fillText("the same angular profile repeats 28 times", cx, cy + radius + 34);
+    if (options.showCaption !== false) {
+      context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+      context.fillText("the same angular profile repeats N times", cx, cy + radius + 34);
+    }
     context.restore();
   }
 
   function drawFoldingSector(context, width, height, amount) {
     const t = Math.max(0, Math.min(1, amount));
-    const moveDisk = ease(t / .2);
-    const extract = ease((t - .06) / .28);
-    const fold = ease((t - .32) / .68);
+    const zoom = ease(t / .5);
+    const discard = ease((t - .3) / .25);
+    const materialOpacity = ease((t - .12) / .2);
+    const fold = ease((t - .57) / .43);
     const fullDiskRadius = Math.min(width * .27, height * .34);
-    const smallDiskRadius = Math.min(width * .15, height * .21);
-    const diskCx = lerp(width * .5, width * .2, moveDisk);
-    const diskRadius = lerp(fullDiskRadius, smallDiskRadius, moveDisk);
-    const diskOpacity = 1 - ease((t - .18) / .26);
+    const diskCx = lerp(width * .5, width * .15, zoom);
+    const diskRadius = lerp(fullDiskRadius, width * .69, zoom);
+    const diskOpacity = 1 - discard;
 
-    // Keep the chosen sector visible while its 27 redundant copies recede.
-    // The sector itself is never cross-faded into a cone: the same mesh below
-    // is continuously wrapped until its two radial edges coincide.
+    // Magnify the entire disk about the selected period. Only after most of
+    // the circle has moved outside the frame do the repeated copies fade. The
+    // highlighted sector below occupies the same material points throughout.
     if (diskOpacity > .001) {
       drawNfoldDisk(context, width, height, {
         cx: diskCx,
         radius: diskRadius,
         selection: 1,
         opacity: diskOpacity,
+        showCaption: false,
       });
     }
 
     const cy = height * .54;
-    const targetTip = width * .15;
-    const targetLength = width * .69;
     const targetHalf = Math.min(118, height * .23);
-    const tip = lerp(diskCx, targetTip, extract);
-    const length = lerp(diskRadius, targetLength, extract);
-    const half = lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, extract);
+    const tip = diskCx;
+    const length = diskRadius;
+    const half = lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, zoom);
     const depthProjection = .1;
 
     function sheetPoint(radial, angular) {
@@ -262,6 +287,7 @@
     }
 
     context.save();
+    context.globalAlpha *= materialOpacity;
 
     // Draw the angular strips back-to-front. At the start they partition one
     // flat triangle; at the end they are the visible faces of one cone.
@@ -284,8 +310,8 @@
       context.closePath();
       const warmth = (strip.a0 + strip.a1 + 2) / 4;
       context.fillStyle = warmth > .5
-        ? `rgba(255,116,73,${.13 + .16 * strip.depth * fold + .08 * extract})`
-        : `rgba(77,162,163,${.16 + .12 * strip.depth * fold + .08 * extract})`;
+        ? `rgba(255,116,73,${.16 + .16 * strip.depth * fold + .08 * zoom})`
+        : `rgba(77,162,163,${.18 + .12 * strip.depth * fold + .08 * zoom})`;
       context.fill();
       if (index % 3 === 0) {
         context.strokeStyle = "rgba(241,238,229,.055)";
@@ -331,21 +357,20 @@
     context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
     context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
     context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
-    context.strokeStyle = colors.orange; context.lineWidth = 2.5; context.stroke();
+    context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
 
-    if (fold < .94 && extract > .72) {
+    if (fold < .94 && discard > .72) {
       context.fillStyle = colors.cyan; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("RADIAL SIDE A", sideAEnd.x + 8, sideAEnd.y - 7);
-      context.fillStyle = colors.orange;
-      context.fillText("RADIAL SIDE B", sideBEnd.x + 8, sideBEnd.y + 13);
+      context.fillText("THE SAME PERIODIC SIDE", sideAEnd.x + 8, sideAEnd.y - 7);
+      context.fillText("THE SAME PERIODIC SIDE", sideBEnd.x + 8, sideBEnd.y + 13);
       const seam = { x: tip + length - depthProjection * half, y: cy };
-      [sideAEnd, sideBEnd].forEach((edge, index) => {
+      [sideAEnd, sideBEnd].forEach((edge) => {
         const arrowEnd = {
           x: lerp(edge.x, seam.x, .42),
           y: lerp(edge.y, seam.y, .42),
         };
         context.beginPath(); context.moveTo(edge.x, edge.y); context.lineTo(arrowEnd.x, arrowEnd.y);
-        context.strokeStyle = index ? "rgba(255,116,73,.62)" : "rgba(77,162,163,.62)";
+        context.strokeStyle = "rgba(77,162,163,.62)";
         context.setLineDash([3, 4]); context.lineWidth = 1; context.stroke(); context.setLineDash([]);
       });
     }
@@ -354,36 +379,73 @@
       const seamStart = sheetPoint(0, -1);
       const seamEnd = sheetPoint(1, -1);
       context.beginPath(); context.moveTo(seamStart.x, seamStart.y); context.lineTo(seamEnd.x, seamEnd.y);
-      context.strokeStyle = colors.orange; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
-      context.fillStyle = colors.orange; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("A = B · QUOTIENT SEAM", seamEnd.x + 9, seamEnd.y - 8);
+      context.strokeStyle = colors.cyan; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
+      context.fillStyle = colors.cyan; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillText("PERIODIC QUOTIENT SEAM", seamEnd.x + 9, seamEnd.y - 8);
     }
 
+    context.globalAlpha = 1;
     context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
-    const caption = extract < .72
-      ? "lift the selected sector away from its 27 copies"
+    const caption = zoom < .82
+      ? "magnify the whole disk around one angular period"
+      : discard < .9
+        ? "the repeated copies leave the frame; the selected sector stays fixed"
       : fold < .88
-        ? "fold the two radial sides together"
-        : "the two sides meet: the sector is now a quotient cone";
+        ? "identify the two copies of the periodic side"
+        : "the same sector has folded into the quotient cone";
     context.fillText(caption, width * .5, cy + targetHalf + 47);
     context.restore();
   }
 
-  function drawConeCylinder(context, width, height, cylinderAmount, waveAmount) {
+  function drawConeCylinder(context, width, height, cylinderAmount, waveAmount, returning = false) {
     const t = ease(cylinderAmount);
+    const materialBlend = ease(t / .18);
     const cx = height > 520 ? height * .54 : height * .5;
     const right = width * .84;
     const half = Math.min(118, height * .23);
     const visibleLeft = width * .08;
     const tip = lerp(width * .16, -width * 2.6, t);
-    const surfaceLeft = Math.max(visibleLeft, tip);
+    const surfaceLeft = Math.max(-width * .12, tip);
     const slopeFactor = t + (1 - t) * Math.max(0, (surfaceLeft - tip) / (right - tip));
     const leftHalf = half * slopeFactor;
+    const rimDepth = 10;
     context.save();
     const gradient = context.createLinearGradient(surfaceLeft, 0, right, 0);
     gradient.addColorStop(0, "rgba(12,22,27,.04)"); gradient.addColorStop(.7, "rgba(77,162,163,.28)"); gradient.addColorStop(1, "rgba(255,116,73,.28)");
     context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx + half); context.lineTo(surfaceLeft, cx + leftHalf); context.closePath();
-    context.fillStyle = gradient; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.7; context.stroke();
+    context.fillStyle = gradient; context.fill();
+    const curvature = context.createLinearGradient(0, cx - half, 0, cx + half);
+    curvature.addColorStop(0, "rgba(4,10,13,.34)");
+    curvature.addColorStop(.24, "rgba(241,238,229,.055)");
+    curvature.addColorStop(.52, "rgba(77,162,163,.09)");
+    curvature.addColorStop(.82, "rgba(4,10,13,.22)");
+    curvature.addColorStop(1, "rgba(4,10,13,.42)");
+    context.fillStyle = curvature; context.fill();
+
+    // At the handoff from the folding stage, retain the two colored halves of
+    // the material sector. They fade only after the very same cone starts to
+    // lengthen, preventing a visual replacement at the stage boundary.
+    if (materialBlend < .999) {
+      context.save(); context.globalAlpha = 1 - materialBlend;
+      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx); context.closePath();
+      context.fillStyle = "rgba(77,162,163,.42)"; context.fill();
+      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.lineTo(right, cx); context.closePath();
+      context.fillStyle = "rgba(255,116,73,.42)"; context.fill();
+      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(right, cx);
+      context.strokeStyle = colors.cyan; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
+      context.restore();
+    }
+
+    // Trace only the two generators. When the tip has left the frame, the
+    // cone continues behind the drawing instead of acquiring a false wall.
+    context.strokeStyle = `rgba(241,238,229,${.18 + .82 * materialBlend})`; context.lineWidth = 1.7;
+    context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
+    context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
+    if (materialBlend < .999) {
+      context.strokeStyle = `rgba(77,162,163,${1 - materialBlend})`;
+      context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
+      context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
+    }
 
     for (let index = -3; index <= 3; index++) {
       const q = index / 3; const yLeft = cx + q * leftHalf; const yRight = cx + q * half;
@@ -397,7 +459,12 @@
       context.strokeStyle = index % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)"; context.lineWidth = 1; context.stroke();
     }
 
-    const rimDepth = 10;
+    // A bright front arc and a faint rear arc give the surface genuine depth.
+    context.beginPath(); context.ellipse(right, cx, rimDepth, half, 0, -Math.PI / 2, Math.PI / 2);
+    context.strokeStyle = "rgba(241,238,229,.32)"; context.lineWidth = 1; context.stroke();
+    context.beginPath(); context.ellipse(right, cx, rimDepth, half, 0, Math.PI / 2, 3 * Math.PI / 2);
+    context.strokeStyle = "rgba(16,27,32,.78)"; context.lineWidth = 1.1; context.stroke();
+
     const axialScale = (right - surfaceLeft) / 28 * 1.45;
     function rimPoint(theta, deformed) {
       // A quarter-turn phase makes the leading cos(psi-phi) mode legible in
@@ -441,7 +508,7 @@
       if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
     }
     context.closePath();
-    context.strokeStyle = colors.paper; context.lineWidth = 2.4;
+    context.strokeStyle = waveAmount > .01 || materialBlend > .92 ? colors.paper : colors.orange; context.lineWidth = 2.4;
     context.shadowColor = waveAmount ? colors.orange : colors.cyan; context.shadowBlur = 7;
     context.stroke(); context.shadowBlur = 0;
 
@@ -459,7 +526,11 @@
       context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, right - 330), cx - half - 29);
     }
     context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
-    if (t > .58) context.fillText("tip → −∞", visibleLeft + 36, cx - half - 28);
+    if (t > .05) {
+      const orderLabel = t > .965 ? "N → ∞" : `N ≈ ${Math.round(28 / (1 - .9 * t))}`;
+      const tipMotion = t > .965 ? "tip at −∞" : returning ? "tip returns from the left" : "tip moves left";
+      context.fillText(`${orderLabel} · ${tipMotion}`, visibleLeft + 92, cx - half - 28);
+    }
     context.fillStyle = colors.faint;
     context.fillText(waveAmount > .5 ? "one rim point moves out while the opposite point moves in" : (t > .6 ? "on every fixed boundary window, the cone is now a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
     context.restore();
@@ -599,7 +670,7 @@
       context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
       context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
       context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
-      context.strokeStyle = colors.orange; context.lineWidth = 2.5; context.stroke();
+      context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
 
       context.font = "7px DM Mono, monospace"; context.textAlign = "left";
       if (fold > .72) {
@@ -608,8 +679,8 @@
         context.fillStyle = colors.orange;
         context.fillText("CUT THE QUOTIENT SEAM  A = B", sideAEnd.x + 9, sideAEnd.y - 8);
       } else if (transfer < .8) {
-        context.fillStyle = colors.cyan; context.fillText("SIDE A", sideAEnd.x + 8, sideAEnd.y - 8);
-        context.fillStyle = colors.orange; context.fillText("SIDE B", sideBEnd.x + 8, sideBEnd.y + 12);
+        context.fillStyle = colors.cyan; context.fillText("PERIODIC SIDE", sideAEnd.x + 8, sideAEnd.y - 8);
+        context.fillText("PERIODIC SIDE", sideBEnd.x + 8, sideBEnd.y + 12);
       }
       context.restore();
     }
@@ -634,7 +705,7 @@
     else if (segment === 1) drawFoldingSector(context, width, height, local);
     else if (segment === 2) drawConeCylinder(context, width, height, local, 0);
     else if (segment === 3) drawConeCylinder(context, width, height, 1, ease(local));
-    else if (segment === 4) drawConeCylinder(context, width, height, 1 - ease(local), 1);
+    else if (segment === 4) drawConeCylinder(context, width, height, 1 - ease(local), 1, true);
     else drawUnfolding(context, width, height, local);
   }
 
@@ -701,8 +772,8 @@
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryNames = ["divide the disk", "select one sector", "fold its sides together", "send the tip away", "perturb the cylinder", "restore the cone", "cut and unfold at integer R"];
-  const geometryStates = ["the field repeats on 28 sectors", "one fundamental sector selected", "the same sector folds · radial sides meet in one quotient seam", "cone tip at infinity · half-cylinder limit", "the free rim is the graph x = h(ψ)", "the same boundary graph returned to the finite cone", "cut the seam · open one sector · rotate 28 copies into the plane"];
+  const geometryNames = ["see the N-fold repetition", "magnify one period", "identify its periodic sides", "send the tip to −∞", "perturb the cylinder", "bring the same cone back", "cut and unfold at integer R"];
+  const geometryStates = ["one field repeats on every sector", "the whole disk is magnified around one angular period", "the same material sector folds and its periodic sides meet", "N tends to infinity locally at the rim · the tip leaves left", "the free rim becomes x = h(ψ)", "the same boundary wave remains attached to the returning cone", "cut the seam · open the same cone · rotate N copies into the plane"];
 
   function renderGeometryStory() {
     const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
@@ -719,11 +790,11 @@
         : local < .01
           ? segment
           : Math.min(6, segment + 1);
-    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28" : "N = 28 running geometry");
+    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28 at the lift" : "one material quotient sector");
     select("#storyGeometryValue").textContent = geometryNames[active];
     select("#storyGeometryState").textContent = geometryStates[active];
     document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === active));
-    canvas.setAttribute("aria-label", `Construction stage ${active + 1} of 7: ${geometryStates[active]}. The final boundary uses the stored numerical N equals 28 landing coefficients.`);
+    canvas.setAttribute("aria-label", `Construction stage ${active + 1} of 7: ${geometryStates[active]}. The sector and its boundary wave remain continuous through the entire construction.`);
   }
 
   function stopGeometryPlayback() {

@@ -47,7 +47,7 @@
             <p>The boundary value has been normalized to \(1\). Indeed, if the common boundary value were \(0\), then both the Dirichlet and Neumann data would vanish and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). Thus any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value equal to \(1\).</p>
             <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct Schiffer solutions on noncircular domains.</p>
           </div>
-          <div class="equation-system hero-equation" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
+          <div class="equation-system hero-equation sans-display-math" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
             <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
             <div class="katex-system tex-display">
               \[
@@ -64,16 +64,16 @@
         </div>
         <div class="linearization-section">
           <div class="linearization-intro">
-            <p class="eyebrow">Why common zeros control linear stability</p>
-            <h3>Linear stability reduces to the kernel of a Dirichlet problem.</h3>
+            <p class="eyebrow">2.1 · the linearized problem</p>
+            <h3>Infinitesimal deformations are controlled by a Dirichlet kernel.</h3>
             <div class="linearization-explanation">
-              <p>To see when a Schiffer domain can deform, place it in a smooth family \(\Omega_t\). A boundary point \(p\in\partial\Omega\) moves as \(p+t f(p)\nu(p)+O(t^2)\), so the function \(f\) records the normal displacement of the boundary.</p>
-              <p>Let \(u_t\) and \(\lambda_t\) solve (1.1) on \(\Omega_t\), and write \(v=\left.\frac d{dt}\right|_{t=0}u_t\) and \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). At the symmetric base solution considered here, \(u\) is radial. After decomposing into angular Fourier modes, the term \(\mu u\) occurs only in the radial mode. Every nonzero angular mode therefore satisfies the homogeneous system (1.2).</p>
+              <p>Let \((\Omega_t,u_t,\lambda_t)\) be a \(C^1\) family satisfying (1.1), with \((\Omega_0,u_0,\lambda_0)=(\Omega,u,\lambda)\). Write a moving boundary point as \(p_t=p+t f(p)\nu(p)+O(t^2)\), and set \(v=\left.\frac d{dt}\right|_{t=0}u_t\), \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). We call \((f,v,\mu)\) the infinitesimal deformation of the family.</p>
+              <p>The scalar \(f\) is the normal velocity of the boundary. A tangential velocity changes only the parametrization, not the domain. When the base solution is radial, the nonzero angular modes of this first-order problem have a particularly simple description.</p>
             </div>
           </div>
           <figure class="shape-variation-figure">
             <div class="shape-variation-heading">
-              <span>Figure 1.1 · normal deformation of a domain</span>
+              <span>Figure 2.1 · normal deformation of a domain</span>
               <p>The scalar function \(f\) prescribes how far each boundary point moves in the normal direction. A tangential velocity only changes the parametrization of the boundary, so it does not appear in the shape derivative.</p>
             </div>
             <div class="shape-variation-diagrams">
@@ -118,17 +118,18 @@
               \partial_\nu v=\lambda f &amp; \text{on }\partial\Omega.
               \end{cases}
               \]
-              <span class="equation-number">(1.2)</span>
+              <span class="equation-number">(2.1)</span>
             </div>
             <div class="linear-stability-criterion">
-              <span>Linear stability criterion</span>
-              <p>Fix an angular mode. If \(\lambda\) is not a Dirichlet eigenvalue in that mode, then the first two lines of (1.2) force \(v=0\). The third line then gives \(\lambda f=\partial_\nu v=0\), and hence \(f=0\).</p>
-              <p>Thus there is no infinitesimal deformation in that mode. We call the Schiffer problem <em>linearly stable</em> when this holds in every genuine shape mode, after removing variations within the symmetric family and rigid motions. This is a statement about the kernel of the linearized problem; by itself, it does not imply nonlinear rigidity.</p>
-              <p>On the disk, the base Neumann condition is \(J_1(\rho)=0\), while a deformation in angular mode \(\ell\) would require \(J_\ell(\rho)=0\). A common positive zero is therefore exactly a possible nontrivial element of the linearized kernel. Section 2 shows that no such zero exists for \(\ell\ge2\); the mode \(\ell=1\) is translation.</p>
+              <span>Theorem 2.1 · linearized kernel</span>
+              <p>Assume that \(\Omega\) is rotationally symmetric and that \(u\) is radial. In every angular mode \(\ell\ge1\), the linearized shape kernel consists precisely of the pairs \((f_\ell,v_\ell)\) satisfying (2.1).</p>
+              <p>Projection onto \(v_\ell\) therefore identifies this kernel with the Dirichlet eigenspace of \(-\Delta\) at eigenvalue \(\lambda\) in mode \(\ell\); the boundary velocity is recovered by \(f_\ell=\lambda^{-1}\partial_\nu v_\ell\).</p>
+              <p>If \(\lambda\) is not a Dirichlet eigenvalue in that angular mode, then \(v_\ell=0\) and hence \(f_\ell=0\). Absence of a common eigenvalue is exactly the first-order obstruction to deforming the domain in that mode.</p>
+              <p>This is what we mean by <em>linear stability</em>: after the symmetry directions are removed, the kernel of the linearized problem is zero. It is a first-order statement and does not, by itself, prove nonlinear local rigidity.</p>
             </div>
           </div>
           <details class="linearization-details">
-            <summary><span>Derive the linearized system</span><i>expand +</i></summary>
+            <summary><span>Proof of Theorem 2.1</span><i>expand +</i></summary>
             <div>
               <p>Write a moving boundary point as \(p_t=p+t f(p)\nu(p)+O(t^2)\). Differentiating \(u_t(p_t)=1\) gives \(v+f\partial_\nu u=0\) on \(\partial\Omega\). Since the base solution satisfies \(\partial_\nu u=0\), we obtain \(v=0\).</p>
               <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu v+f\partial_{\nu\nu}u=0\)</span>. Since <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span> on the boundary, all tangential derivatives vanish there and the PDE yields <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>. Therefore <span class="formula">\(\partial_\nu v=\lambda f\)</span>.</p>
@@ -141,26 +142,36 @@
       <section id="disk-obstruction" class="disk-obstruction">
         <header class="story-heading light-story-heading">
           <span class="section-number">02</span>
-          <div><p class="eyebrow">The Euclidean disk</p><h2>The disk is infinitesimally rigid modulo translations and dilations.</h2></div>
+          <div><p class="eyebrow">The Schiffer property near a disk</p><h2>Can a Schiffer disk be perturbed?</h2></div>
         </header>
+        <div class="disk-section-lead">
+          <p>This section gives a first-order reason that Schiffer's conjecture is plausible. If a disk belonged to a genuinely new family of Schiffer domains, the derivative of that family would produce a Dirichlet eigenfunction at exactly the eigenvalue of the radial Schiffer solution. We first derive that necessary condition. We then show that on the disk its only solutions come from moving within the familiar family of translated and dilated disks.</p>
+        </div>
+        <div class="subsection-heading disk-rigidity-heading">
+          <span>2.2 · the disk obstruction</span>
+          <h3>The disk has no genuine infinitesimal shape direction.</h3>
+        </div>
         <div class="disk-rigidity-theorem">
           <div class="disk-theorem-label">
-            <span>Theorem 2.1</span>
+            <span>Theorem 2.2</span>
             <small>infinitesimal rigidity of a Schiffer disk</small>
           </div>
           <div class="disk-theorem-statement">
-            <h3>The linearized shape kernel contains only the infinitesimal similarities of the plane.</h3>
-            <p>Let \(D\) be the unit disk, let \(\rho&gt;0\) satisfy \(J_1(\rho)=0\), and set \(u_0(r)=J_0(\rho r)/J_0(\rho)\). Let \(\mathcal K_{\mathrm{shape}}(D,u_0,\rho^2)\) denote the normal boundary velocities \(f\) admitted by the linearization of (1.1). Then</p>
+            <h3>The only first-order deformations of a Schiffer disk are translations and dilations.</h3>
+            <p>Let \(D\subset\mathbb R^2\) be the unit disk. Fix \(\rho&gt;0\) with \(J_1(\rho)=0\), and set \(u_0(r)=J_0(\rho r)/J_0(\rho)\) and \(\lambda_0=\rho^2\). Suppose \((\Omega_t,u_t,\lambda_t)\) is a \(C^1\) family of solutions of (1.1) with \((\Omega_0,u_0,\lambda_0)=(D,u_0,\rho^2)\). If \(f\) is the normal velocity of \(\partial\Omega_t\) at \(t=0\), then</p>
             <div class="disk-kernel-equation tex-display">
               \[
-              \mathcal K_{\mathrm{shape}}(D,u_0,\rho^2)
-              =\operatorname{span}\{1,\cos\theta,\sin\theta\}.
+              f(\theta)=c+a_1\cos\theta+a_2\sin\theta
+              \qquad(c,a_1,a_2\in\mathbb R).
               \]
             </div>
-            <p>The constant mode is dilation and the two first harmonics are translation in the two coordinate directions. Consequently the quotient of the linearized shape kernel by translations and dilations is zero.</p>
+            <p>Conversely, every such velocity is realized by an exact family obtained by dilating and translating the disk. Hence the linearized shape kernel, after quotienting by translations and dilations, is zero.</p>
           </div>
         </div>
 
+        <details class="disk-proof-details proof-details">
+          <summary><span>Proof of Theorem 2.2</span><i>expand +</i></summary>
+          <div class="disk-proof-body">
         <div class="disk-proof-grid">
           <article>
             <span>Proof · the radial base solution</span>
@@ -197,13 +208,13 @@
               J_\ell(\rho)A_\ell=J_\ell(\rho)B_\ell=0.
               \]
             </div>
-            <p>If \(J_\ell(\rho)\ne0\), then \(v_\ell=0\), and the last line of (1.2) gives \(f_\ell=0\). Hence a nonzero shape mode of order \(\ell\) requires the common zero \(J_1(\rho)=J_\ell(\rho)=0\).</p>
+            <p>If \(J_\ell(\rho)\ne0\), then \(v_\ell=0\), and the last line of (2.1) gives \(f_\ell=0\). Hence a nonzero shape mode of order \(\ell\) requires the common zero \(J_1(\rho)=J_\ell(\rho)=0\).</p>
           </article>
         </div>
 
         <div class="bourget-theorem">
           <div class="disk-theorem-label">
-            <span>Theorem 2.2</span>
+            <span>Theorem 2.3</span>
             <small>Bourget's hypothesis, proved by Siegel</small>
           </div>
           <div>
@@ -263,7 +274,7 @@
         <div class="disk-proof-conclusion">
           <span>Conclusion of the proof</span>
           <div>
-            <p>The zeroth Fourier mode of \(f\) is dilation; its first harmonics are translations; and Theorem 2.2 kills every higher harmonic. Therefore</p>
+            <p>The zeroth Fourier mode of \(f\) is dilation; its first harmonics are translations; and Theorem 2.3 kills every higher harmonic. Therefore</p>
             <div class="tex-display">
               \[
               \mathcal K_{\mathrm{shape}}
@@ -280,14 +291,16 @@
             <p>Rotations contribute no additional normal mode: their velocity is tangent to the circle, so \(f=0\). This proves that the disk is linearly rigid after quotienting by the translation and dilation symmetries, and that there is no other infinitesimal shape deformation from which to bifurcate.</p>
           </div>
         </div>
+          </div>
+        </details>
       </section>
 
       <section id="borrow-flexibility" class="borrow-flexibility">
         <header class="story-heading">
           <span class="section-number">03</span>
-          <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the missing spectral coincidence.</h2></div>
+          <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere have the missing Dirichlet mode.</h2></div>
         </header>
-        <div class="borrow-lead"><p>On the plane, changing the radius of a disk merely rescales every eigenvalue by the same factor, so no transverse spectral crossing can appear. The flat cylinder and the sphere break that scaling lock. In both settings genuine nonradial Schiffer branches are known.</p></div>
+        <div class="borrow-lead"><p>Theorem 2.1 tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. Bourget's theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches.</p></div>
         <div class="world-cards">
           <article>
             <div class="world-sketch" role="img" aria-label="A nontrivial domain bounded by two wavy loops on a flat cylinder">
@@ -303,7 +316,17 @@
                 <text x="180" y="218" text-anchor="middle">ℝ × S¹ · two nonconstant boundary loops</text>
               </svg>
             </div>
-            <span>flat cylinder</span><h3>Nontrivial Schiffer domains exist on \(\mathbb R\times S^1\).</h3><p>Fall, Minlend and Weth construct compact domains on the flat cylinder whose Neumann eigenfunctions are constant on the boundary. In our half-cylinder limit, <span class="formula">\(1&lt;\lambda&lt;4\)</span> leaves the first angular channel oscillatory while every <span class="formula">\(k\ge2\)</span> channel is evanescent.</p>
+            <span>flat cylinder</span><h3>The radial Neumann wave and a nonradial Dirichlet wave coexist.</h3>
+            <p>On the half-cylinder \(x\le0\), separation of variables gives, for every \(\lambda&gt;1\),</p>
+            <div class="world-mode-pair tex-display">
+              \[
+              \begin{aligned}
+              u_0(x)&amp;=\cos(\sqrt\lambda\,x),\\
+              v_1(x,\theta)&amp;=\sin(\sqrt{\lambda-1}\,x)\cos\theta.
+              \end{aligned}
+              \]
+            </div>
+            <p>At \(x=0\), the first wave has Neumann data and the second has Dirichlet data. Thus the coincidence excluded on the disk is automatic here: the two conditions coexist along an interval of \(\lambda\), rather than at a common Bessel zero. For \(1&lt;\lambda&lt;4\), every higher channel \(k\ge2\) is evanescent. Fall, Minlend and Weth obtain the corresponding nonlinear bifurcations on compact flat cylinders; the half-cylinder version used below follows from the same separated equations and weighted-space argument.</p>
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article>
@@ -323,34 +346,33 @@
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
-        <div class="borrow-conclusion"><span>Mechanism used below</span><p>We place the cylinder's flexible local problem inside an <span class="formula">\(N\)</span>-fold quotient that can eventually be unfolded back into the plane.</p></div>
       </section>
 
       <section id="geometric-escape" class="geometric-escape">
         <header class="experiment-header geometry-header">
-          <div><span class="section-number">04</span><div><p class="eyebrow">The quotient construction</p><h2>The N-fold quotient converges to a half-cylinder.</h2></div></div>
+          <div><span class="section-number">04</span><div><p class="eyebrow">From the plane to the limiting geometry</p><h2>Extracting a half-cylinder from an \(N\)-fold planar domain.</h2></div></div>
           <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
-        <div class="geometry-lead"><p>An \(N\)-fold field repeats on 28 identical angular sectors in our running example. Keep one sector and identify its radial edges. After rescaling so that the quotient boundary has circumference <span class="formula">\(2\pi\)</span>, the sector is a cone of length <span class="formula">\(R=N\)</span>. As <span class="formula">\(N\to\infty\)</span>, its tip recedes to infinity and every fixed neighborhood of the boundary converges to the half-cylinder <span class="formula">\(({-\infty},0]\times S^1\)</span>.</p></div>
+        <div class="geometry-lead"><p>Suppose that a planar field has \(N\)-fold rotational symmetry, with \(N\) large. Magnify one angular period, retain that sector, and identify its two radial sides. After rescaling so that the quotient boundary has circumference \(2\pi\), the same sector is a cone of length \(R=N\). Increasing \(N\) does not open the cone: it sends the tip to the left. Consequently every fixed collar of the rim converges to the half-cylinder \(({-\infty},0]\times S^1\). The animation keeps one material sector on screen through the quotient, the cylinder limit, the bifurcation, and the final planar lift.</p></div>
         <div class="geometry-laboratory">
           <aside class="geometry-controls">
             <div class="control-heading"><span>Quotient → limit → return</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
             <div class="geometry-stages" aria-label="Seven stages of the quotient construction">
-              <button type="button" data-story-stage="0"><span>01</span><strong>divide the disk</strong><small>28 repeated sectors</small></button>
-              <button type="button" data-story-stage="0.166667"><span>02</span><strong>select one sector</strong><small>use rotational symmetry</small></button>
-              <button type="button" data-story-stage="0.333333"><span>03</span><strong>fold its sides together</strong><small>form one quotient seam</small></button>
-              <button type="button" data-story-stage="0.5"><span>04</span><strong>send the tip away</strong><small>obtain the half-cylinder</small></button>
+              <button type="button" data-story-stage="0"><span>01</span><strong>see the \(N\)-fold repetition</strong><small>one field on every sector</small></button>
+              <button type="button" data-story-stage="0.166667"><span>02</span><strong>magnify one period</strong><small>the rest moves off screen</small></button>
+              <button type="button" data-story-stage="0.333333"><span>03</span><strong>identify its periodic sides</strong><small>the same sector folds to a cone</small></button>
+              <button type="button" data-story-stage="0.5"><span>04</span><strong>send the tip to \(-\infty\)</strong><small>\(N\to\infty\) near the rim</small></button>
               <button type="button" data-story-stage="0.666667"><span>05</span><strong>perturb the cylinder</strong><small>draw the rim as x = h(ψ)</small></button>
-              <button type="button" data-story-stage="0.833333"><span>06</span><strong>restore the cone</strong><small>retain the same boundary wave</small></button>
-              <button type="button" data-story-stage="1"><span>07</span><strong>cut and unfold at integer R</strong><small>open one sector, then copy ×28</small></button>
+              <button type="button" data-story-stage="0.833333"><span>06</span><strong>bring the same cone back</strong><small>the boundary wave stays attached</small></button>
+              <button type="button" data-story-stage="1"><span>07</span><strong>cut and unfold at integer \(R\)</strong><small>open the cone, then copy \(N\) times</small></button>
             </div>
             <div class="geometry-scrub"><div class="control-label"><label for="storyGeometryRange">construction</label><output id="storyGeometryValue">divide the disk</output></div><input id="storyGeometryRange" type="range" min="0" max="1" value="0" step="0.001"></div>
             <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Animate the quotient construction</span></button>
           </aside>
           <section class="geometry-canvas-panel" aria-labelledby="storyGeometryState">
-            <div class="geometry-toolbar"><span class="live-dot"></span><strong id="storyGeometryState">the field repeats on 28 sectors</strong><span>continuous geometric schematic · numerical final boundary</span></div>
-            <div id="storyGeometryCanvasWrap" class="geometry-canvas-wrap"><canvas id="storyGeometryCanvas" role="img" aria-label="Animated sequence dividing an N-fold disk, selecting and folding one sector into a cone, moving the cone tip to infinity, perturbing the half-cylinder, restoring the cone, and unfolding it"></canvas></div>
-            <div class="axis-footer"><span>N-fold disk</span><span>one normalized quotient</span><span>N-fold disk</span></div>
+            <div class="geometry-toolbar"><span class="live-dot"></span><strong id="storyGeometryState">one field repeats on every sector</strong><span>one continuous material sector · numerical final boundary</span></div>
+            <div id="storyGeometryCanvasWrap" class="geometry-canvas-wrap"><canvas id="storyGeometryCanvas" role="img" aria-label="One continuous animated sector magnified from an N-fold disk, folded to a cone, lengthened to a half-cylinder, deformed, returned to a cone, and unfolded into the plane"></canvas></div>
+            <div class="axis-footer"><span>\(N\)-fold disk</span><span>the same quotient sector</span><span>\(N\)-fold planar lift</span></div>
           </section>
         </div>
         <div class="geometry-principle"><strong>The quotient lets the angular order become real.</strong><p>A planar rotation group exists only when <span class="formula">\(R=N\in\mathbb N\)</span>, but the cone metric is meaningful for every real <span class="formula">\(R&gt;0\)</span>. We therefore bifurcate at <span class="formula">\(R_*=28.026397\ldots\)</span>, follow a branch on relaxed cones, and return to the plane precisely when <span class="formula">\(R(s)=28\)</span>.</p></div>

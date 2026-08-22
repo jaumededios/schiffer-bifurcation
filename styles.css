@@ -50,9 +50,9 @@ a { color: inherit; }
 
 .intro { order: 0; }
 .story-question { order: 1; padding: 105px 7vw 0; background: var(--paper); }
-.disk-obstruction { order: 2; padding: 105px 4vw 0; color: var(--paper); background: var(--ink); }
+.disk-obstruction { order: 2; padding: 105px 7vw 100px; color: var(--paper); background: var(--ink); }
 .borrow-flexibility { order: 3; padding: 110px 7vw; background: var(--paper-2); }
-.geometric-escape { order: 4; padding: 105px 4vw 0; color: var(--paper); background: var(--ink); }
+.geometric-escape { order: 4; padding: 105px 7vw 0; color: var(--paper); background: var(--ink); }
 #experiment { order: 5; }
 #debye-experiment { order: 6; }
 .phase-story { order: 7; }
@@ -62,29 +62,35 @@ a { color: inherit; }
 
 .story-heading { display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: start; gap: 28px; }
 .story-heading h2 { max-width: 1000px; }
-.question-grid { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(420px,.88fr); gap: 90px; align-items: start; margin: 66px 0 0 70px; padding-bottom: 85px; }
+.question-grid { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(420px,.88fr); gap: 72px; align-items: start; margin: 54px 0 0 70px; padding-bottom: 74px; }
 .question-copy { max-width: 720px; color: var(--muted); font-size: 15px; line-height: 1.82; }
 .question-copy p:first-child { margin-top: 0; }
-.equation-system { position: relative; min-height: 290px; padding: 56px 42px 35px; border: 1px solid var(--line); background: rgba(19,33,38,.025); }
+.equation-system { position: relative; min-height: 250px; padding: 50px 38px 29px; color: var(--muted); border: 1px solid var(--line); background: rgba(19,33,38,.025); }
 .system-label { position: absolute; left: 20px; top: 20px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
 .equation-number { color: var(--muted); font: 8px var(--mono); white-space: nowrap; }
 .equation-system > .equation-number { position: absolute; right: 20px; top: 20px; }
-.katex-system { display: grid; min-height: 154px; place-items: center; overflow-x: auto; }
+.katex-system { display: grid; min-height: 126px; place-items: center; overflow-x: auto; }
 .katex-system .katex-display { margin: 0; }
 .katex-system .katex { font-size: 1.2em; }
+.sans-display-math .katex .mathnormal,
+.sans-display-math .katex .mathrm,
+.sans-display-math .katex .mainrm,
+.sans-display-math .katex .mord:not([class*="math"]) { font-family: KaTeX_SansSerif, var(--sans); }
 .hero-equation > p { margin: 28px 0 0; padding-top: 18px; color: var(--muted); border-top: 1px solid var(--line); font: 9px var(--mono); }
-.linearization-section { margin: 0 -3vw; padding: 62px 3vw 0; color: var(--paper); background: var(--ink); }
+.disk-section-lead { max-width: 910px; margin: 42px 0 0 70px; color: rgba(241,238,229,.6); font-size: 14px; line-height: 1.76; }
+.disk-section-lead p { margin: 0; }
+.linearization-section { margin: 62px 0 0; padding: 0; color: var(--paper); background: transparent; }
 .linearization-intro { display: grid; grid-template-columns: minmax(280px,.7fr) minmax(420px,1.3fr); gap: 60px; align-items: start; }
 .linearization-intro .eyebrow { grid-column: 1/-1; margin-bottom: -26px; }
 .linearization-intro h3 { margin: 0; max-width: 620px; font: 300 38px/1.06 var(--serif); }
 .linearization-explanation { max-width: 720px; color: rgba(241,238,229,.57); font-size: 12px; line-height: 1.8; }
 .linearization-explanation p { margin: 0 0 15px; }
 .linearization-explanation p:last-child { margin-bottom: 0; }
-.shape-variation-figure { margin: 48px 0 0; border: 1px solid var(--line-light); }
+.shape-variation-figure { max-width: 930px; margin: 32px auto 0; border: 1px solid var(--line-light); }
 .shape-variation-heading { display: grid; grid-template-columns: minmax(230px,.7fr) minmax(420px,1.3fr); gap: 50px; padding: 24px 28px; border-bottom: 1px solid var(--line-light); }
 .shape-variation-heading > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
 .shape-variation-heading p { max-width: 720px; margin: 0; color: rgba(241,238,229,.52); font-size: 10px; line-height: 1.7; }
-.shape-variation-diagrams { display: grid; grid-template-columns: minmax(0,1fr) 150px minmax(0,1fr); align-items: center; min-height: 310px; }
+.shape-variation-diagrams { display: grid; grid-template-columns: minmax(0,1fr) 115px minmax(0,1fr); align-items: center; min-height: 225px; }
 .shape-variation-diagrams svg { display: block; width: 100%; height: auto; }
 .shape-variation-diagrams svg:first-child { border-right: 1px solid var(--line-light); }
 .shape-variation-diagrams svg:last-child { border-left: 1px solid var(--line-light); }
@@ -103,7 +109,7 @@ a { color: inherit; }
 .variation-point.moved { fill: var(--orange); }
 .variation-distance { stroke: var(--orange); stroke-width: 1.4; }
 .shape-variation-figure figcaption { margin: 0; padding: 18px 28px; color: rgba(241,238,229,.46); border-top: 1px solid var(--line-light); font-size: 10px; line-height: 1.7; }
-.linearization-core { display: grid; grid-template-columns: minmax(330px,.8fr) minmax(350px,1.2fr); gap: 60px; align-items: start; margin-top: 40px; padding: 42px; border: 1px solid var(--line-light); }
+.linearization-core { display: grid; grid-template-columns: minmax(330px,.8fr) minmax(350px,1.2fr); gap: 52px; align-items: start; margin-top: 34px; padding: 38px; border: 1px solid var(--line-light); border-top: 1px solid var(--orange); background: rgba(255,255,255,.018); }
 .linear-equations, .theorem-system { min-width: 0; overflow-x: auto; color: var(--paper); }
 .linear-equations { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
 .linear-equations .katex-display, .theorem-system .katex-display { margin: 0; text-align: left; }
@@ -119,6 +125,11 @@ a { color: inherit; }
 .linearization-details[open] summary i { font-size: 0; }.linearization-details[open] summary i::after { content: "collapse −"; font-size: 9px; }
 .linearization-details > div { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; padding-bottom: 52px; }
 .linearization-details > div p { margin: 0; padding: 25px; color: rgba(241,238,229,.5); background: rgba(255,255,255,.025); border: 1px solid var(--line-light); font-size: 10px; line-height: 1.75; }
+
+.subsection-heading { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; align-items: baseline; }
+.subsection-heading > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.subsection-heading h3 { max-width: 820px; margin: 0; font: 300 38px/1.05 var(--serif); letter-spacing: -.018em; }
+.disk-rigidity-heading { margin-top: 74px; padding-top: 48px; border-top: 1px solid var(--line-light); }
 
 .light-story-heading .section-number { border-color: var(--paper); }
 .disk-rigidity-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; margin-top: 52px; padding: 36px; border: 1px solid var(--line-light); }
@@ -155,6 +166,15 @@ a { color: inherit; }
 .disk-proof-conclusion p { max-width: 900px; margin: 0 0 15px; }
 .disk-proof-conclusion .tex-display { max-width: 850px; margin: 14px 0 20px; padding: 13px 18px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.02); }
 .disk-proof-conclusion .katex { font-size: .9em; }
+.proof-details { margin: 0; border: 1px solid var(--line-light); border-top: 0; }
+.proof-details > summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 36px; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.proof-details > summary::-webkit-details-marker { display: none; }
+.proof-details > summary i { color: var(--orange); font-style: normal; }
+.proof-details[open] > summary { border-bottom: 1px solid var(--line-light); }
+.proof-details[open] > summary i { font-size: 0; }
+.proof-details[open] > summary i::after { content: "collapse −"; font-size: 9px; }
+.disk-proof-body > :first-child { border-top: 0; }
+.disk-proof-body > :last-child { border-bottom: 0; }
 .citation-line a, .literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }
@@ -164,6 +184,9 @@ a { color: inherit; }
 .world-cards article > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .world-cards h3 { margin: 12px 0 0; font: 300 25px/1.05 var(--serif); }
 .world-cards p { margin: 13px 0 0; color: var(--muted); font-size: 9px; line-height: 1.7; }
+.world-mode-pair { margin: 12px 0 0; padding: 10px 0; color: var(--ink); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.world-mode-pair .katex-display { margin: 0; text-align: left; }
+.world-mode-pair .katex { font-size: .68em; }
 .world-sketch { grid-row: 1/5; position: relative; min-height: 230px; overflow: hidden; background: rgba(19,33,38,.035); }
 .world-sketch svg { width: 100%; height: 100%; }
 .world-sketch text { fill: rgba(19,33,38,.55); font: 7px var(--mono); letter-spacing: .04em; }
@@ -565,24 +588,27 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .intro h1 { margin: 54px 0 42px; font-size: clamp(42px,12vw,52px); line-height: .94; }
   .intro-bottom p { max-width: none; }
   .story-question, .borrow-flexibility { padding: 80px 24px; }
-  .disk-obstruction, .geometric-escape { padding: 80px 18px 0; }
+  .disk-obstruction { padding: 80px 24px; }
+  .geometric-escape { padding: 80px 18px 0; }
   .story-heading { grid-template-columns: 34px minmax(0,1fr); gap: 20px; }
   .question-grid { grid-template-columns: 1fr; margin-top: 45px; padding-bottom: 60px; }
   .equation-system { min-height: 260px; padding: 54px 18px 30px; }
   .katex-system .katex { font-size: .98em; }
-  .linearization-section { margin: 0 -24px; padding: 48px 24px 0; }
+  .disk-section-lead { margin-left: 0; }
+  .linearization-section { margin: 52px 0 0; padding: 0; }
   .linearization-intro, .linearization-core { grid-template-columns: 1fr; }
   .linearization-intro .eyebrow { margin-bottom: -13px; }
   .linearization-intro h3 { font-size: 31px; }
   .shape-variation-heading { grid-template-columns: 1fr; gap: 12px; }
   .shape-variation-diagrams { grid-template-columns: 1fr; }
-  .shape-variation-diagrams svg:first-child { border-right: 0; border-bottom: 1px solid var(--line-light); }
-  .shape-variation-diagrams svg:last-child { border-left: 0; border-top: 1px solid var(--line-light); }
-  .variation-map { padding: 19px 0; }
-  .variation-map i { transform: rotate(90deg); }
+  .shape-variation-diagrams svg:first-child, .shape-variation-diagrams .variation-map { display: none; }
+  .shape-variation-diagrams svg:last-child { height: 185px; border: 0; }
   .linearization-core { margin-top: 38px; padding: 25px 20px; }
   .linear-stability-criterion { padding: 25px 0 0; border-top: 1px solid var(--line-light); border-left: 0; }
   .linearization-details > div { grid-template-columns: 1fr; }
+  .subsection-heading { grid-template-columns: 1fr; gap: 14px; }
+  .subsection-heading h3 { font-size: 31px; }
+  .disk-rigidity-heading { margin-top: 58px; padding-top: 38px; }
   .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
   .disk-theorem-label small { max-width: none; }
   .disk-proof-grid, .disk-symmetry-grid { grid-template-columns: minmax(0,1fr); }
@@ -590,6 +616,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .disk-proof-grid article:last-child, .disk-symmetry-grid article:last-child { border-bottom: 0; }
   .disk-theorem-statement h3, .bourget-theorem h3 { font-size: 29px; }
   .disk-theorem-statement .katex, .bourget-theorem .katex, .disk-proof-conclusion .katex { font-size: .82em; }
+  .proof-details > summary { padding: 22px; }
   .borrow-lead, .world-cards, .borrow-conclusion { margin-left: 0; }
   .world-cards { grid-template-columns: 1fr; }
   .world-cards article { grid-template-columns: 1fr; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
