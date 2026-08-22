@@ -431,10 +431,69 @@
           </div>
         </header>
 
+        <div class="cylinder-spectral-seed">
+          <div class="cylinder-seed-copy">
+            <p class="eyebrow">The spectral input</p>
+            <h3>Two boundary conditions, at the same eigenvalue.</h3>
+            <p>Write <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span> on the flat half-cylinder <span class="formula">\(\{x\le 0\}\times S^1\)</span>. For every <span class="formula">\(\lambda&gt;1\)</span>, the following two separated modes solve the same Helmholtz equation.</p>
+          </div>
+
+          <div class="cylinder-mode-pair">
+            <article>
+              <span>radial Neumann mode</span>
+              <div class="tex-display">
+                \[
+                u_0(x)=\cos(\sqrt\lambda\,x),
+                \qquad
+                \begin{cases}
+                (\Delta+\lambda)u_0=0,\\
+                u_0(0)=1,\quad \partial_xu_0(0)=0.
+                \end{cases}
+                \]
+              </div>
+              <p>This is the undeformed Schiffer solution: it is constant on the boundary and has zero normal derivative there.</p>
+            </article>
+            <article>
+              <span>first angular Dirichlet mode</span>
+              <div class="tex-display">
+                \[
+                v_1(x,\theta)=\sin(\sqrt{\lambda-1}\,x)\cos\theta,
+                \qquad
+                \begin{cases}
+                (\Delta+\lambda)v_1=0,\\
+                v_1(0,\theta)=0.
+                \end{cases}
+                \]
+              </div>
+              <p>This is the nonradial kernel direction. The angular eigenvalue <span class="formula">\(1\)</span> leaves the normal frequency <span class="formula">\(\sqrt{\lambda-1}\)</span>.</p>
+            </article>
+          </div>
+
+          <div class="cylinder-kernel-bridge">
+            <strong>From the kernel to a moving boundary.</strong>
+            <div>
+              <p>Write <span class="formula">\(h_s=s f+O(s^2)\)</span> and <span class="formula">\(u_s=u_0+s v+O(s^2)\)</span>. Linearizing the two boundary conditions at <span class="formula">\(x=0\)</span> gives</p>
+              <div class="tex-display">
+                \[
+                v(0,\theta)=0,
+                \qquad
+                \partial_xv(0,\theta)=\lambda f(\theta).
+                \]
+              </div>
+              <p>Therefore <span class="formula">\(f(\theta)=\cos\theta\)</span> corresponds to <span class="formula">\(v=\lambda v_1/\sqrt{\lambda-1}\)</span>. This is exactly the first-order term in Theorem 5.1.</p>
+            </div>
+          </div>
+
+          <div class="cylinder-journal-note">
+            <strong>Relation with the cylinder construction.</strong>
+            <p>Morally, we follow the argument of Fall–Minlend–Weth for Schiffer bifurcations in flat cylinders. Their theorem is stated for compact cylindrical domains. In the one-ended model used here, the second boundary is replaced by the condition that every separated mode remain bounded as <span class="formula">\(x\to-\infty\)</span>. The local calculation at <span class="formula">\(x=0\)</span> is the same: the coincidence above supplies the kernel, separation of variables solves the complementary modes, and a local bifurcation argument produces a nonlinear branch. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
+          </div>
+        </div>
+
         <div class="cylinder-theorem">
-          <div class="theorem-label"><span>Theorem</span><small>uniform half-cylinder branch</small></div>
+          <div class="theorem-label"><span>Theorem 5.1</span><small>uniform half-cylinder branch</small></div>
           <div class="theorem-statement">
-            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span> and a compact interval <span class="formula">\(K\Subset(1,4)\)</span>. There is an <span class="formula">\(\varepsilon_K&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, defined for <span class="formula">\(\lambda\in K\)</span> and <span class="formula">\(|s|&lt;\varepsilon_K\)</span>, such that</p>
+            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span> and a compact interval <span class="formula">\(K\Subset(1,4)\)</span>. There is an <span class="formula">\(\varepsilon_K&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, with <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, defined for <span class="formula">\(\lambda\in K\)</span> and <span class="formula">\(|s|&lt;\varepsilon_K\)</span>, such that</p>
             <div class="theorem-system tex-display">
               \[
               \begin{cases}
@@ -452,7 +511,7 @@
               &amp;\quad+s\frac{\lambda}{\sqrt{\lambda-1}}\sin(\sqrt{\lambda-1}\,x)\cos\theta+O_K(s^2).
               \end{aligned}\]
             </div>
-            <p class="theorem-note">The remainders are uniform for <span class="formula">\(\lambda\in K\)</span> on every fixed boundary collar. Modes <span class="formula">\(k\ge2\)</span> are selected by their bounded tails <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>. Fall–Minlend–Weth formulate their result for compact domains in the flat cylinder; this one-ended half-cylinder version follows from the same separation, weighted-space, and local bifurcation argument. The exclusion of <span class="formula">\(\lambda=1,4\)</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
+            <p class="theorem-note">The remainders are uniform for <span class="formula">\(\lambda\in K\)</span> on every fixed boundary collar. Modes <span class="formula">\(k\ge2\)</span> are selected by their bounded tails <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>. The exclusion of <span class="formula">\(\lambda=1,4\)</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
           </div>
         </div>
 

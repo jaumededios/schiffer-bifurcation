@@ -224,6 +224,31 @@ a { color: inherit; }
 .experiment-story-lead p { margin: 0; color: rgba(241,238,229,.48); font-size: 10px; line-height: 1.72; }
 .experiment-story-lead p > span:first-child { display: block; margin-bottom: 9px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 
+.cylinder-spectral-seed { max-width: 1160px; margin: 0 0 42px 55px; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.cylinder-seed-copy { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; padding: 34px 36px 29px; }
+.cylinder-seed-copy .eyebrow { margin: 5px 0 0; font-size: 7px; }
+.cylinder-seed-copy h3 { max-width: 760px; margin: 0; font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
+.cylinder-seed-copy > p:last-child { grid-column: 2; max-width: 790px; margin: -18px 0 0; color: rgba(241,238,229,.55); font-size: 10px; line-height: 1.76; }
+.cylinder-mode-pair { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line-light); }
+.cylinder-mode-pair article { min-width: 0; padding: 31px 36px 34px; }
+.cylinder-mode-pair article + article { border-left: 1px solid var(--line-light); }
+.cylinder-mode-pair article > span { display: block; margin-bottom: 21px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .085em; }
+.cylinder-mode-pair .tex-display { min-height: 105px; display: flex; align-items: center; color: var(--paper); }
+.cylinder-mode-pair .katex-display { margin: 0; text-align: left; }
+.cylinder-mode-pair .katex { font-size: .9em; }
+.cylinder-mode-pair p { max-width: 465px; margin: 18px 0 0; color: rgba(241,238,229,.48); font-size: 9px; line-height: 1.72; }
+.cylinder-kernel-bridge { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; padding: 29px 36px 31px; border-top: 1px solid var(--line-light); }
+.cylinder-kernel-bridge > strong { color: var(--orange); font: 7px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .075em; }
+.cylinder-kernel-bridge > div { max-width: 820px; }
+.cylinder-kernel-bridge p { margin: 0; color: rgba(241,238,229,.52); font-size: 9px; line-height: 1.78; }
+.cylinder-kernel-bridge .tex-display { margin: 15px 0; color: var(--paper); }
+.cylinder-kernel-bridge .katex-display { margin: 0; text-align: left; }
+.cylinder-kernel-bridge .katex { font-size: .92em; }
+.cylinder-journal-note { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; padding: 29px 36px 32px; border-top: 1px solid var(--line-light); background: rgba(255,255,255,.014); }
+.cylinder-journal-note strong { color: rgba(241,238,229,.67); font: 7px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .075em; }
+.cylinder-journal-note p { max-width: 820px; margin: 0; color: rgba(241,238,229,.5); font-size: 9px; line-height: 1.78; }
+.cylinder-journal-note a { color: var(--orange); text-underline-offset: 3px; }
+
 .cylinder-theorem { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; margin: 0 0 42px 55px; padding: 36px; border-top: 1px solid var(--orange); border-bottom: 1px solid var(--line-light); background: rgba(255,255,255,.018); }
 .theorem-label { display: flex; flex-direction: column; gap: 8px; }
 .theorem-label span { color: var(--orange); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
@@ -561,7 +586,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .world-cards article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .world-cards article:last-child { border-bottom: 0; }
   .borrow-conclusion { margin-left: 0; }
-  .geometry-lead, .experiment-story-lead { margin-left: 0; }
+  .geometry-lead, .experiment-story-lead, .cylinder-spectral-seed { margin-left: 0; }
   .geometry-laboratory { grid-template-columns: 290px minmax(0,1fr); }
   .cylinder-theorem { grid-template-columns: 150px minmax(0,1fr); margin-left: 0; }
   .laboratory { grid-template-columns: 290px minmax(0,1fr); }
@@ -632,6 +657,14 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .geometry-toolbar { padding: 0 12px; }
   .geometry-toolbar > span:last-child { display: none; }
   .geometry-principle { grid-template-columns: 1fr; }
+  .cylinder-seed-copy, .cylinder-kernel-bridge, .cylinder-journal-note { grid-template-columns: 1fr; gap: 18px; padding: 27px 22px; }
+  .cylinder-seed-copy > p:last-child { grid-column: auto; margin: 0; }
+  .cylinder-seed-copy h3 { font-size: 29px; }
+  .cylinder-mode-pair { grid-template-columns: 1fr; }
+  .cylinder-mode-pair article { padding: 27px 22px; }
+  .cylinder-mode-pair article + article { border-top: 1px solid var(--line-light); border-left: 0; }
+  .cylinder-mode-pair .tex-display { min-height: 0; overflow-x: auto; }
+  .cylinder-mode-pair .katex { font-size: .78em; }
   .cylinder-theorem { grid-template-columns: 1fr; gap: 24px; padding: 25px 20px; }
   .theorem-system { grid-template-columns: 45px 1fr; }
   .experiment-story-lead { grid-template-columns: 1fr; gap: 22px; }
