@@ -38,7 +38,15 @@ a { color: inherit; }
 .intro-bottom { display: block; }
 .intro-bottom p { max-width: 900px; margin: 0 0 0 auto; color: var(--muted); font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72; }
 .intro-bottom p > span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
-.intro-bottom p > .katex { font-family: KaTeX_Main, serif; font-size: .92em; }
+.intro-bottom p > .katex { font-size: .92em; }
+
+/* KaTeX follows the typography and palette of the surrounding argument. */
+.katex, .katex-display, .katex-html { color: inherit; }
+.katex .mathsf { font-family: KaTeX_SansSerif, var(--sans); }
+.katex-inline-sans .mathnormal,
+.katex-inline-sans .mathrm,
+.katex-inline-sans .mainrm,
+.katex-inline-sans .mord:not([class*="math"]) { font-family: KaTeX_SansSerif, var(--sans); }
 
 .intro { order: 0; }
 .story-question { order: 1; padding: 105px 7vw 0; background: var(--paper); }
