@@ -31,15 +31,14 @@ a { color: inherit; }
 .status i, .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(77,162,163,.14); }
 .method-button { justify-self: end; padding: 0 0 5px; color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--ink); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
 
-.intro { min-height: calc(100vh - 72px); padding: 8vh 7vw 7vh; display: grid; grid-template-rows: auto 1fr auto; }
+.intro { padding: 76px 7vw 92px; display: grid; grid-template-rows: auto auto auto; }
 .intro-index { display: flex; gap: 15px; color: var(--muted); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .intro-index span { color: var(--orange); }
-.intro h1 { align-self: center; margin: 0; max-width: 1200px; font: 300 clamp(70px, 10vw, 150px)/.83 var(--serif); letter-spacing: -.055em; }
-.intro-bottom { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 50px; }
-.intro-bottom p { grid-column: 2; max-width: 620px; margin: 0; color: var(--muted); font-size: clamp(15px, 1.35vw, 20px); line-height: 1.65; }
+.intro h1 { margin: 70px 0 58px; max-width: 1120px; font: 300 clamp(68px, 8.6vw, 128px)/.86 var(--serif); letter-spacing: -.052em; }
+.intro-bottom { display: block; }
+.intro-bottom p { max-width: 900px; margin: 0 0 0 auto; color: var(--muted); font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72; }
 .intro-bottom p > span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
 .intro-bottom p > .katex { font-family: KaTeX_Main, serif; font-size: .92em; }
-.intro-bottom a { width: 210px; display: flex; justify-content: space-between; padding-bottom: 10px; text-decoration: none; border-bottom: 1px solid var(--ink); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 
 .intro { order: 0; }
 .story-question { order: 1; padding: 105px 7vw 0; background: var(--paper); }
@@ -60,6 +59,8 @@ a { color: inherit; }
 .question-copy p:first-child { margin-top: 0; }
 .equation-system { position: relative; min-height: 290px; padding: 56px 42px 35px; border: 1px solid var(--line); background: rgba(19,33,38,.025); }
 .system-label { position: absolute; left: 20px; top: 20px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.equation-number { color: var(--muted); font: 8px var(--mono); white-space: nowrap; }
+.equation-system > .equation-number { position: absolute; right: 20px; top: 20px; }
 .katex-system { display: grid; min-height: 154px; place-items: center; overflow-x: auto; }
 .katex-system .katex-display { margin: 0; }
 .katex-system .katex { font-size: 1.2em; }
@@ -68,15 +69,19 @@ a { color: inherit; }
 .linearization-intro { display: grid; grid-template-columns: minmax(280px,.7fr) minmax(420px,1.3fr); gap: 60px; align-items: start; }
 .linearization-intro .eyebrow { grid-column: 1/-1; margin-bottom: -26px; }
 .linearization-intro h3 { margin: 0; max-width: 620px; font: 300 38px/1.06 var(--serif); }
-.linearization-intro > p:last-child { margin: 0; max-width: 690px; color: rgba(241,238,229,.55); font-size: 12px; line-height: 1.8; }
+.linearization-explanation { max-width: 720px; color: rgba(241,238,229,.57); font-size: 12px; line-height: 1.8; }
+.linearization-explanation p { margin: 0 0 15px; }
+.linearization-explanation p:last-child { margin-bottom: 0; }
 .linearization-core { display: grid; grid-template-columns: minmax(330px,.8fr) minmax(350px,1.2fr); gap: 60px; align-items: center; margin-top: 52px; padding: 42px; border: 1px solid var(--line-light); }
 .linear-equations, .theorem-system { min-width: 0; overflow-x: auto; color: var(--paper); }
+.linear-equations { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
 .linear-equations .katex-display, .theorem-system .katex-display { margin: 0; text-align: left; }
 .linear-equations .katex, .theorem-system .katex { font-size: 1.08em; }
 .linearization-core > p { margin: 0; color: rgba(241,238,229,.53); font-size: 11px; line-height: 1.78; }
-.spectrum-meeting { grid-column: 2; min-width: 0; padding: 21px 24px; overflow-x: auto; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.spectrum-meeting { grid-column: 2; min-width: 0; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; padding: 21px 24px; overflow-x: auto; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
 .spectrum-meeting .katex-display { margin: 0; }
 .spectrum-meeting .katex { font-size: .92em; }
+.linearization-core > .spectrum-note { grid-column: 2; margin-top: -35px; color: rgba(241,238,229,.4); font-size: 9px; }
 .linearization-details { margin-top: 28px; border-top: 1px solid var(--line-light); }
 .linearization-details summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .linearization-details summary::-webkit-details-marker { display: none; }
@@ -510,11 +515,9 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
 @media (max-width: 760px) {
   .topbar { padding: 0 20px; grid-template-columns: 1fr auto; }
   .status { display: none; }
-  .intro { padding: 65px 24px 45px; min-height: 680px; }
-  .intro h1 { font-size: clamp(46px,14vw,61px); line-height: .92; }
-  .intro-bottom { grid-template-columns: 1fr; }
-  .intro-bottom p { grid-column: 1; }
-  .intro-bottom a { display: none; }
+  .intro { padding: 56px 24px 68px; }
+  .intro h1 { margin: 54px 0 42px; font-size: clamp(42px,12vw,52px); line-height: .94; }
+  .intro-bottom p { max-width: none; }
   .story-question, .borrow-flexibility { padding: 80px 24px; }
   .disk-obstruction, .geometric-escape { padding: 80px 18px 0; }
   .story-heading { grid-template-columns: 34px minmax(0,1fr); gap: 20px; }
@@ -527,6 +530,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .linearization-intro h3 { font-size: 31px; }
   .linearization-core { margin-top: 38px; padding: 25px 20px; }
   .spectrum-meeting { grid-column: 1; text-align: center; }
+  .linearization-core > .spectrum-note { grid-column: 1; margin-top: -30px; text-align: left; }
   .linearization-details > div { grid-template-columns: 1fr; }
   .disk-obstruction-grid { grid-template-columns: 1fr; }
   .disk-obstruction-grid > div { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }

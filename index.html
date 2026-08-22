@@ -22,17 +22,16 @@
         <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
         <span>Counterexamples to Schiffer's conjecture</span>
       </a>
-      <div class="status"><i></i><span>numerical · interactive</span></div>
-      <button id="methodButton" class="method-button" type="button">Numerical method</button>
+      <div class="status"><span>mathematical exposition · numerical figures</span></div>
+      <button id="methodButton" class="method-button" type="button">Computational notes</button>
     </header>
 
     <main id="top">
       <section class="intro">
-        <div class="intro-index">Planar rigidity <span>/</span> cylinder flexibility <span>/</span> integer landing</div>
-        <h1>A counterexample to<br>Schiffer's conjecture</h1>
+        <div class="intro-index">An expository account with numerical figures</div>
+        <h1>A counterexample to Schiffer's conjecture</h1>
         <div class="intro-bottom">
-          <p>Let \(\Omega\subset\mathbb R^2\) be a smooth bounded domain, and suppose a nonconstant Laplace eigenfunction satisfies \(-\Delta u=\lambda u\) in \(\Omega\), while \(u\) is constant and \(\partial_\nu u=0\) on its boundary. Schiffer's conjecture says that these simultaneous boundary conditions should force \(\Omega\) to be a disk—a striking planar rigidity statement. The disk is indeed locally rigid; analogous problems on the sphere and flat cylinder, however, admit nontrivial bifurcations. We transfer that flexibility back to the plane: high rotational symmetry turns a planar quotient into a long cone, its rim approaches a half-cylinder, and a cone branch can reach an integer symmetry order and unfold into a noncircular planar domain.</p>
-          <a href="#question">Begin with the equation <span>↓</span></a>
+          <p>Schiffer's conjecture asks whether an overdetermined Laplace eigenvalue problem characterizes the disk among smooth bounded planar domains. The disk is locally rigid, whereas analogous problems on the sphere and flat cylinder admit nontrivial bifurcations. We explain how the cylinder mechanism can be transferred back to the plane: a highly symmetric planar quotient is a long cone, the geometry near its boundary approaches a half-cylinder, and a cone bifurcation can be unfolded when its real symmetry parameter reaches an integer.</p>
         </div>
       </section>
 
@@ -43,8 +42,9 @@
         </div>
         <div class="question-grid">
           <div class="question-copy">
-            <p>The boundary constant cannot vanish for a nontrivial solution, so we divide by it and obtain the normalized problem shown on the right. A domain carrying such a function is said to have the Schiffer property.</p>
-            <p>This is overdetermined: a second-order elliptic equation normally accepts either Dirichlet or Neumann data, not both. Nevertheless every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer's conjecture asserted that these were the only bounded planar examples. The problem is therefore to construct a solution for a domain that is not a disk.</p>
+            <p>A smooth bounded domain \(\Omega\subset\mathbb R^2\) is said to have the <em>Schiffer property</em> if there are \(\lambda&gt;0\) and a nonconstant function \(u\) satisfying (1.1).</p>
+            <p>The boundary value has been normalized to \(1\). Indeed, if the common boundary value were \(0\), then both the Dirichlet and Neumann data would vanish and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). Thus any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value equal to \(1\).</p>
+            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct solutions on domains that are not disks.</p>
           </div>
           <div class="equation-system hero-equation" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
             <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
@@ -57,6 +57,7 @@
               \end{cases}
               \]
             </div>
+            <span class="equation-number">(1.1)</span>
             <p>\(\lambda&gt;0\) and \(u\) is not constant.</p>
           </div>
         </div>
@@ -64,7 +65,10 @@
           <div class="linearization-intro">
             <p class="eyebrow">Why a spectral coincidence appears</p>
             <h3>Linearizing the moving boundary produces a Dirichlet eigenfunction at the same eigenvalue.</h3>
-            <p>Start from a symmetric Schiffer solution <span class="formula">\((\Omega,u,\lambda)\)</span>. Move the boundary with normal velocity <span class="formula">\(f\)</span>, and write <span class="formula">\(\dot u=v\)</span>, <span class="formula">\(\dot\lambda=\mu\)</span>. For a nonradial mode, the radial forcing <span class="formula">\(\mu u\)</span> disappears after angular projection.</p>
+            <div class="linearization-explanation">
+              <p>To see when a Schiffer domain can deform, place it in a smooth family \(\Omega_t\). A boundary point \(p\in\partial\Omega\) moves as \(p+t f(p)\nu(p)+O(t^2)\), so the function \(f\) records the normal displacement of the boundary.</p>
+              <p>Let \(u_t\) and \(\lambda_t\) solve (1.1) on \(\Omega_t\), and write \(v=\left.\frac d{dt}\right|_{t=0}u_t\) and \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). At a rotationally symmetric domain the base eigenfunction \(u\) is radial. After decomposing into angular Fourier modes, the term \(\mu u\) occurs only in the radial mode. Every nonzero angular mode therefore satisfies the homogeneous system (1.2).</p>
+            </div>
           </div>
           <div class="linearization-core">
             <div class="linear-equations tex-display" aria-label="The nonradial linearized problem">
@@ -75,14 +79,16 @@
               \partial_\nu v=\lambda f &amp; \text{on }\partial\Omega.
               \end{cases}
               \]
+              <span class="equation-number">(1.2)</span>
             </div>
-            <p>The first two lines say that <span class="formula">\(v\)</span> is a Dirichlet eigenfunction with eigenvalue <span class="formula">\(\lambda\)</span>. The last line recovers the boundary displacement from it. Thus a nontrivial shape direction requires</p>
-            <div class="spectrum-meeting tex-display">\[\lambda\in\operatorname{Spec}_{N,\mathrm{rad}}(\Omega)\cap\operatorname{Spec}_{D,\mathrm{nonrad}}(\Omega).\]</div>
+            <p>The first two lines say that \(v\) is a nonradial Dirichlet eigenfunction with eigenvalue \(\lambda\). The last line then determines the boundary displacement: \(f=\lambda^{-1}\partial_\nu v\). Meanwhile the original radial function \(u\) is a Neumann eigenfunction at the same eigenvalue. Hence an infinitesimal deformation requires the spectral coincidence</p>
+            <div class="spectrum-meeting tex-display">\[\lambda\in\operatorname{Spec}_{N,\mathrm{rad}}(\Omega)\cap\operatorname{Spec}_{D,\mathrm{nonrad}}(\Omega).\]<span class="equation-number">(1.3)</span></div>
+            <p class="spectrum-note">Here \(\operatorname{Spec}_{N,\mathrm{rad}}\) denotes the radial Neumann spectrum, while \(\operatorname{Spec}_{D,\mathrm{nonrad}}\) denotes the nonradial Dirichlet spectrum.</p>
           </div>
           <details class="linearization-details">
-            <summary><span>Derive the boundary conditions</span><i>expand +</i></summary>
+            <summary><span>Derive the linearized system</span><i>expand +</i></summary>
             <div>
-              <p>Pull the moving problem back to the original domain. Differentiating <span class="formula">\(u_t|_{\partial\Omega_t}=1\)</span> gives <span class="formula">\(v+f\partial_\nu u=0\)</span>, hence <span class="formula">\(v=0\)</span> because the base solution is Neumann.</p>
+              <p>Write a moving boundary point as \(p_t=p+t f(p)\nu(p)+O(t^2)\). Differentiating \(u_t(p_t)=1\) gives \(v+f\partial_\nu u=0\) on \(\partial\Omega\). Since the base solution satisfies \(\partial_\nu u=0\), we obtain \(v=0\).</p>
               <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu v+f\partial_{\nu\nu}u=0\)</span>. Since <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span> on the boundary, all tangential derivatives vanish there and the PDE yields <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>. Therefore <span class="formula">\(\partial_\nu v=\lambda f\)</span>.</p>
               <p>In the interior, differentiation gives <span class="formula">\((-\Delta-\lambda)v=\mu u\)</span>. On a rotationally symmetric base, <span class="formula">\(u\)</span> is radial; projecting onto any nonzero angular mode removes the right-hand side and gives the homogeneous Dirichlet eigenvalue equation above.</p>
             </div>
@@ -798,7 +804,7 @@
 
     <dialog id="methodDialog">
       <button id="closeMethod" type="button" aria-label="Close">×</button>
-      <p class="eyebrow">Numerical method</p>
+      <p class="eyebrow">Computational notes</p>
       <h2>Exact inside, numerical on the wall.</h2>
       <p>The mathematical limiting problem is posed on the genuine half-infinite cylinder <span class="formula">\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>. Uniformly for <span class="formula">\(\lambda\)</span> in each compact <span class="formula">\(K\Subset(1,4)\)</span>, the same local bifurcation machinery used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">\(h_{\lambda,s}=s\cos\theta+O_K(s^2)\)</span>. The finite window below is only how that infinite-domain solution is displayed in the browser.</p>
       <p>We set <span class="formula">\(\Gamma_s:x=h_s(\theta)=s\cos(\theta-\phi)+h_2\cos 2(\theta-\phi)+h_3\cos 3(\theta-\phi)\)</span>. The mean translation is fixed to zero and <span class="formula">\(h_1=s\)</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">\((\Delta+\lambda)u=0\)</span> in the physical cylinder coordinates.</p>
