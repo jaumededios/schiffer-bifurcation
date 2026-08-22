@@ -258,7 +258,7 @@
     if (!context) return null;
 
     const minimumCutoff = model.minN;
-    const defaultCutoff = Math.min(41, model.maxN);
+    const defaultCutoff = Math.min(200, model.maxN);
     const reducedMotion = global.matchMedia
       ? global.matchMedia("(prefers-reduced-motion: reduce)")
       : { matches: false };
@@ -408,7 +408,9 @@
 
       context.textAlign = "center";
       context.textBaseline = "top";
-      const tickCandidates = plot.compact ? [7, 10, 20, 41] : [7, 10, 15, 20, 30, 41];
+      const tickCandidates = plot.compact
+        ? [7, 20, 50, 100, 200]
+        : [7, 10, 20, 50, 100, 200];
       tickCandidates.filter(function visible(value) {
         return value >= model.columns.R[0] && value <= state.cutoff;
       }).forEach(function drawTick(value) {
