@@ -140,34 +140,143 @@
       <section id="disk-obstruction" class="disk-obstruction">
         <header class="story-heading light-story-heading">
           <span class="section-number">02</span>
-          <div><p class="eyebrow">The Euclidean disk</p><h2>The disk has no nontrivial linearized shape modes.</h2></div>
+          <div><p class="eyebrow">The Euclidean disk</p><h2>The disk is infinitesimally rigid modulo translations and dilations.</h2></div>
         </header>
-        <div class="disk-obstruction-grid">
-          <div class="disk-sketch" role="img" aria-label="Disk radial mode and an infinitesimal translation">
-            <svg viewBox="0 0 420 300" aria-hidden="true">
-              <defs><radialGradient id="diskField"><stop offset="0" stop-color="#ff7449" stop-opacity=".72"/><stop offset=".52" stop-color="#e9e2cb" stop-opacity=".46"/><stop offset="1" stop-color="#32868c" stop-opacity=".76"/></radialGradient></defs>
-              <circle cx="175" cy="150" r="106" fill="url(#diskField)" stroke="#f1eee5" stroke-width="2"/>
-              <circle cx="175" cy="150" r="61" fill="none" stroke="rgba(241,238,229,.34)"/>
-              <path d="M277 150h70m-17-15 17 15-17 15" fill="none" stroke="#ff7449" stroke-width="2"/>
-              <text x="175" y="154" text-anchor="middle">J₀(ρr)</text>
-              <text x="312" y="125" text-anchor="middle">ℓ = 1</text>
-              <text x="312" y="185" text-anchor="middle">translation</text>
-            </svg>
+        <div class="disk-rigidity-theorem">
+          <div class="disk-theorem-label">
+            <span>Theorem 2.1</span>
+            <small>infinitesimal rigidity of a Schiffer disk</small>
           </div>
-          <div class="disk-math">
-            <p>On the unit disk, a radial Schiffer eigenfunction has the form</p>
-            <div class="display-equation tex-display">\[u_0(r)=\frac{J_0(\rho r)}{J_0(\rho)},\qquad \lambda=\rho^2.\]</div>
-            <p>Its Neumann condition is</p>
-            <div class="display-equation tex-display">\[\partial_r u_0(1)=-\rho\frac{J_1(\rho)}{J_0(\rho)}=0,\qquad\text{so }J_1(\rho)=0.\]</div>
-            <p>A possible deformation in angular mode <span class="formula">\(\ell\)</span> would have to come from the Dirichlet eigenfunction</p>
-            <div class="display-equation tex-display">\[v_\ell(r,\theta)=J_\ell(\rho r)\cos(\ell\theta),\qquad\text{so }J_\ell(\rho)=0.\]</div>
+          <div class="disk-theorem-statement">
+            <h3>The linearized shape kernel contains only the infinitesimal similarities of the plane.</h3>
+            <p>Let \(D\) be the unit disk, let \(\rho&gt;0\) satisfy \(J_1(\rho)=0\), and set \(u_0(r)=J_0(\rho r)/J_0(\rho)\). Let \(\mathcal K_{\mathrm{shape}}(D,u_0,\rho^2)\) denote the normal boundary velocities \(f\) admitted by the linearization of (1.1). Then</p>
+            <div class="disk-kernel-equation tex-display">
+              \[
+              \mathcal K_{\mathrm{shape}}(D,u_0,\rho^2)
+              =\operatorname{span}\{1,\cos\theta,\sin\theta\}.
+              \]
+            </div>
+            <p>The constant mode is dilation and the two first harmonics are translation in the two coordinate directions. Consequently the quotient of the linearized shape kernel by translations and dilations is zero.</p>
           </div>
-          <div class="bourget-card">
-            <span>Bourget's hypothesis</span>
+        </div>
+
+        <div class="disk-proof-grid">
+          <article>
+            <span>Proof · the radial base solution</span>
+            <p>Every radial solution regular at the origin is a multiple of \(J_0(\rho r)\). The normalization \(u_0=1\) on \(r=1\) gives</p>
+            <div class="tex-display">
+              \[
+              u_0(r)=\frac{J_0(\rho r)}{J_0(\rho)},\qquad \lambda=\rho^2.
+              \]
+            </div>
+            <p>The Neumann condition is</p>
+            <div class="tex-display">
+              \[
+              \partial_r u_0(1)
+              =-\rho\frac{J_1(\rho)}{J_0(\rho)}=0.
+              \]
+            </div>
+            <p>Thus \(J_1(\rho)=0\). Interlacing of the zeros of \(J_0\) and \(J_1\) ensures that \(J_0(\rho)\ne0\), so the normalization is well-defined.</p>
+          </article>
+          <article>
+            <span>Proof · separation of the nonradial modes</span>
+            <p>Write the \(\ell\)-th Fourier component of the linearized field as</p>
+            <div class="tex-display">
+              \[
+              \begin{aligned}
+              v_\ell(r,\theta)&amp;=J_\ell(\rho r)\Phi_\ell(\theta),\\
+              \Phi_\ell(\theta)&amp;=A_\ell\cos(\ell\theta)+B_\ell\sin(\ell\theta),
+              \qquad \ell\ge1.
+              \end{aligned}
+              \]
+            </div>
+            <p>Regularity at \(r=0\) excludes \(Y_\ell\). The Dirichlet condition \(v_\ell=0\) at \(r=1\) gives</p>
+            <div class="tex-display">
+              \[
+              J_\ell(\rho)A_\ell=J_\ell(\rho)B_\ell=0.
+              \]
+            </div>
+            <p>If \(J_\ell(\rho)\ne0\), then \(v_\ell=0\), and the last line of (1.2) gives \(f_\ell=0\). Hence a nonzero shape mode of order \(\ell\) requires the common zero \(J_1(\rho)=J_\ell(\rho)=0\).</p>
+          </article>
+        </div>
+
+        <div class="bourget-theorem">
+          <div class="disk-theorem-label">
+            <span>Theorem 2.2</span>
+            <small>Bourget's hypothesis, proved by Siegel</small>
+          </div>
+          <div>
             <h3>Distinct integer-order Bessel functions have no common positive zero.</h3>
-            <p>Siegel proved Bourget's hypothesis: if <span class="formula">\(m\ne n\)</span> are nonnegative integers, then <span class="formula">\(J_m\)</span> and <span class="formula">\(J_n\)</span> share no nonzero zero. Hence every candidate <span class="formula">\(\ell\ge2\)</span> is impossible.</p>
-            <p>The exceptional mode <span class="formula">\(\ell=1\)</span> uses the same equation <span class="formula">\(J_1(\rho)=0\)</span>, but it is geometric noise rather than a new domain: <span class="formula">\(\partial_xu_0=-\rho J_1(\rho r)\cos\theta/J_0(\rho)\)</span> is exactly the derivative obtained by translating the disk.</p>
+            <div class="tex-display">
+              \[
+              \begin{gathered}
+              m,n\in\mathbb Z_{\ge0},\qquad m\ne n,\qquad \rho&gt;0,\\
+              \Longrightarrow\quad
+              \neg\bigl(J_m(\rho)=J_n(\rho)=0\bigr).
+              \end{gathered}
+              \]
+            </div>
+            <p>Apply the theorem with \(m=1\) and \(n=\ell\). Since the radial Schiffer solution already satisfies \(J_1(\rho)=0\), every angular mode \(\ell\ge2\) vanishes in the linearized shape kernel. The only nonradial modes left are \(\cos\theta\) and \(\sin\theta\).</p>
             <p class="citation-line">References: <a href="https://dlmf.nist.gov/10.21" target="_blank" rel="noreferrer">DLMF §10.21</a>; Watson, <em>A Treatise on the Theory of Bessel Functions</em>, §15.28; <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>.</p>
+          </div>
+        </div>
+
+        <div class="disk-symmetry-grid">
+          <article>
+            <span>Translations · \(\ell=1\)</span>
+            <p>For \(a\in\mathbb R^2\), translation gives an exact family of Schiffer triples:</p>
+            <div class="tex-display">
+              \[
+              \begin{aligned}
+              \Omega_t&amp;=D+ta,\\
+              u_t(x)&amp;=u_0(x-ta),\\
+              \lambda_t&amp;=\rho^2.
+              \end{aligned}
+              \]
+            </div>
+            <p>Its normal velocity is</p>
+            <div class="tex-display">
+              \[
+              f_a(\theta)=a\cdot(\cos\theta,\sin\theta)
+              =a_1\cos\theta+a_2\sin\theta.
+              \]
+            </div>
+            <p>Thus the entire \(\ell=1\) kernel is exactly the two-dimensional translation orbit.</p>
+          </article>
+          <article>
+            <span>Dilations · \(\ell=0\)</span>
+            <p>For \(c\in\mathbb R\), dilation also gives an exact family:</p>
+            <div class="tex-display">
+              \[
+              \begin{aligned}
+              \Omega_t&amp;=(1+ct)D,\\
+              u_t(x)&amp;=u_0\!\left(\frac{x}{1+ct}\right),\\
+              \lambda_t&amp;=\frac{\rho^2}{(1+ct)^2}.
+              \end{aligned}
+              \]
+            </div>
+            <p>The boundary moves with constant normal velocity \(f_c(\theta)=c\). The eigenvalue changes because the Laplacian scales by inverse length squared. Thus the radial shape direction is exactly dilation.</p>
+          </article>
+        </div>
+
+        <div class="disk-proof-conclusion">
+          <span>Conclusion of the proof</span>
+          <div>
+            <p>The zeroth Fourier mode of \(f\) is dilation; its first harmonics are translations; and Theorem 2.2 kills every higher harmonic. Therefore</p>
+            <div class="tex-display">
+              \[
+              \mathcal K_{\mathrm{shape}}
+              =\underbrace{\operatorname{span}\{1\}}_{\text{dilation}}
+              \oplus
+              \underbrace{\operatorname{span}\{\cos\theta,\sin\theta\}}_{\text{translations}},
+              \]
+              \[
+              \mathcal K_{\mathrm{shape}}\big/
+              \operatorname{span}\{1,\cos\theta,\sin\theta\}
+              =\{0\}.
+              \]
+            </div>
+            <p>Rotations contribute no additional normal mode: their velocity is tangent to the circle, so \(f=0\). This proves that the disk is linearly rigid after quotienting by the translation and dilation symmetries, and that there is no other infinitesimal shape deformation from which to bifurcate.</p>
           </div>
         </div>
       </section>

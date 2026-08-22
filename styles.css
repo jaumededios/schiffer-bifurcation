@@ -113,22 +113,40 @@ a { color: inherit; }
 .linearization-details > div p { margin: 0; padding: 25px; color: rgba(241,238,229,.5); background: rgba(255,255,255,.025); border: 1px solid var(--line-light); font-size: 10px; line-height: 1.75; }
 
 .light-story-heading .section-number { border-color: var(--paper); }
-.disk-obstruction-grid { display: grid; grid-template-columns: .72fr 1.05fr 1.23fr; border: 1px solid var(--line-light); margin-top: 52px; }
-.disk-obstruction-grid > div { min-height: 350px; padding: 32px; border-right: 1px solid var(--line-light); }
-.disk-obstruction-grid > div:last-child { border-right: 0; }
-.disk-sketch { display: grid; place-items: center; background: radial-gradient(circle at center,rgba(255,255,255,.04),transparent 70%); }
-.disk-sketch svg { width: 100%; max-height: 290px; }
-.disk-sketch text { fill: rgba(241,238,229,.7); font: 8px var(--mono); }
-.disk-math { display: flex; flex-direction: column; justify-content: center; }
-.disk-math p, .bourget-card p { color: rgba(241,238,229,.5); font-size: 9px; line-height: 1.72; }
-.display-equation { padding: 13px 0 15px; overflow-x: auto; color: var(--paper); border-bottom: 1px solid var(--line-light); }
-.display-equation .katex-display { margin: 0; text-align: left; }
-.display-equation .katex { font-size: .86em; }
-.bourget-card > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.bourget-card { display: flex; flex-direction: column; justify-content: center; }
-.bourget-card h3 { max-width: 480px; margin: 26px 0 0; font: 300 32px/1.03 var(--serif); }
-.bourget-card p { max-width: 480px; margin: 17px 0 0; }
-.bourget-card .citation-line { padding-top: 16px; border-top: 1px solid var(--line-light); font-size: 7px; }
+.disk-rigidity-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; margin-top: 52px; padding: 36px; border: 1px solid var(--line-light); }
+.disk-theorem-label { display: flex; flex-direction: column; gap: 8px; }
+.disk-theorem-label span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.disk-theorem-label small { max-width: 165px; color: rgba(241,238,229,.4); font: 7px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .065em; }
+.disk-theorem-statement { max-width: 940px; }
+.disk-theorem-statement h3, .bourget-theorem h3 { max-width: 790px; margin: 0; font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
+.disk-theorem-statement p, .disk-proof-grid p, .bourget-theorem p, .disk-symmetry-grid p, .disk-proof-conclusion p { color: rgba(241,238,229,.54); font-size: 10px; line-height: 1.76; }
+.disk-theorem-statement p { max-width: 820px; margin: 18px 0 0; }
+.disk-kernel-equation { margin: 20px 0; padding: 17px 20px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.025); }
+.disk-kernel-equation .katex-display { text-align: left; }
+.disk-proof-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-top: 0; }
+.disk-proof-grid article { min-width: 0; padding: 34px 36px; border-right: 1px solid var(--line-light); }
+.disk-proof-grid article:last-child { border-right: 0; }
+.disk-proof-grid article > span, .disk-symmetry-grid article > span, .disk-proof-conclusion > span { display: block; margin-bottom: 20px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.disk-proof-grid p { max-width: 620px; margin: 14px 0; }
+.disk-proof-grid .tex-display { padding: 9px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.disk-proof-grid .katex { font-size: .86em; }
+.bourget-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; padding: 36px; border: 1px solid var(--line-light); border-top: 0; background: rgba(255,116,73,.025); }
+.bourget-theorem > div:last-child { min-width: 0; }
+.bourget-theorem .tex-display { max-width: 760px; margin: 20px 0; padding: 14px 18px; border: 1px solid rgba(255,116,73,.32); }
+.bourget-theorem p { max-width: 850px; margin: 14px 0 0; }
+.bourget-theorem .citation-line { margin-top: 21px; padding-top: 16px; border-top: 1px solid var(--line-light); font-size: 7px; }
+.disk-symmetry-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-top: 0; }
+.disk-symmetry-grid article { min-width: 0; padding: 34px 36px; border-right: 1px solid var(--line-light); }
+.disk-symmetry-grid article:last-child { border-right: 0; }
+.disk-symmetry-grid p { max-width: 630px; margin: 13px 0; }
+.disk-symmetry-grid .tex-display { margin: 13px 0; padding: 10px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.disk-symmetry-grid .katex { font-size: .85em; }
+.disk-proof-conclusion { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; padding: 36px; border: 1px solid var(--line-light); border-top: 0; }
+.disk-proof-conclusion > span { margin: 0; }
+.disk-proof-conclusion > div { min-width: 0; }
+.disk-proof-conclusion p { max-width: 900px; margin: 0 0 15px; }
+.disk-proof-conclusion .tex-display { max-width: 850px; margin: 14px 0 20px; padding: 13px 18px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.02); }
+.disk-proof-conclusion .katex { font-size: .9em; }
 .citation-line a, .literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }
@@ -505,9 +523,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .question-grid { margin-left: 0; gap: 42px; }
   .linearization-intro, .linearization-core { gap: 35px; }
   .linearization-core { padding: 32px; }
-  .disk-obstruction-grid { grid-template-columns: 1fr 1fr; }
-  .disk-obstruction-grid > div:nth-child(2) { border-right: 0; }
-  .bourget-card { grid-column: 1/-1; min-height: 230px !important; border-top: 1px solid var(--line-light); }
+  .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: 160px minmax(0,1fr); gap: 28px; }
   .world-cards { grid-template-columns: 1fr; margin-left: 0; }
   .world-cards article { grid-template-columns: 210px 1fr; border-right: 0; border-bottom: 1px solid var(--line); }
   .world-cards article:last-child { border-bottom: 0; }
@@ -559,10 +575,13 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .linearization-core { margin-top: 38px; padding: 25px 20px; }
   .linear-stability-criterion { padding: 25px 0 0; border-top: 1px solid var(--line-light); border-left: 0; }
   .linearization-details > div { grid-template-columns: 1fr; }
-  .disk-obstruction-grid { grid-template-columns: 1fr; }
-  .disk-obstruction-grid > div { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
-  .disk-obstruction-grid > div:last-child { border-bottom: 0; }
-  .bourget-card { grid-column: auto; }
+  .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
+  .disk-theorem-label small { max-width: none; }
+  .disk-proof-grid, .disk-symmetry-grid { grid-template-columns: minmax(0,1fr); }
+  .disk-proof-grid article, .disk-symmetry-grid article { padding: 27px 22px; border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .disk-proof-grid article:last-child, .disk-symmetry-grid article:last-child { border-bottom: 0; }
+  .disk-theorem-statement h3, .bourget-theorem h3 { font-size: 29px; }
+  .disk-theorem-statement .katex, .bourget-theorem .katex, .disk-proof-conclusion .katex { font-size: .82em; }
   .borrow-lead, .world-cards, .borrow-conclusion { margin-left: 0; }
   .world-cards { grid-template-columns: 1fr; }
   .world-cards article { grid-template-columns: 1fr; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
