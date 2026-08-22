@@ -303,17 +303,40 @@
         <div class="borrow-lead"><p>Theorem 2.1 tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. Bourget's theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches.</p></div>
         <div class="world-cards">
           <article>
-            <div class="world-sketch" role="img" aria-label="A nontrivial domain bounded by two wavy loops on a flat cylinder">
-              <svg viewBox="0 0 360 240" aria-hidden="true">
-                <defs><linearGradient id="cylinderSurface" x1="0" x2="1"><stop stop-color="#173039"/><stop offset=".52" stop-color="#4d9290"/><stop offset="1" stop-color="#182d35"/></linearGradient><linearGradient id="cylinderBand" x1="0" x2="1"><stop stop-color="#ff7449" stop-opacity=".16"/><stop offset=".5" stop-color="#f1eee5" stop-opacity=".36"/><stop offset="1" stop-color="#ff7449" stop-opacity=".16"/></linearGradient></defs>
-                <path d="M58 55H302c25 0 25 130 0 130H58z" fill="url(#cylinderSurface)" stroke="#132126" stroke-width="1.4"/>
-                <ellipse cx="58" cy="120" rx="25" ry="65" fill="#d9d7ca" stroke="#132126" stroke-width="1.4"/>
-                <ellipse cx="302" cy="120" rx="25" ry="65" fill="none" stroke="#132126" stroke-width="1.4"/>
-                <path d="M122 61C140 72 137 91 121 105C105 119 106 142 124 178L237 178C253 148 255 126 238 110C221 94 222 74 239 61Z" fill="url(#cylinderBand)"/>
-                <path d="M122 61C140 72 137 91 121 105C105 119 106 142 124 178" fill="none" stroke="#ff7449" stroke-width="3"/>
-                <path d="M239 61C222 74 221 94 238 110C255 126 253 148 237 178" fill="none" stroke="#ff7449" stroke-width="3"/>
-                <path d="M58 88H302M58 120H302M58 152H302" fill="none" stroke="#f1eee5" stroke-opacity=".34" stroke-width="1"/>
-                <text x="180" y="218" text-anchor="middle">ℝ × S¹ · two nonconstant boundary loops</text>
+            <div class="world-sketch realistic-world" role="img" aria-label="A filled compact domain on a three-dimensional flat cylinder, bounded by two closed wavy loops">
+              <svg viewBox="0 0 520 300" aria-hidden="true">
+                <defs>
+                  <linearGradient id="cylinderSurface" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#12252c"/><stop offset=".23" stop-color="#397b7c"/><stop offset=".5" stop-color="#72aaa4"/><stop offset=".78" stop-color="#285b62"/><stop offset="1" stop-color="#101d23"/>
+                  </linearGradient>
+                  <linearGradient id="cylinderDomain" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#9f3f35" stop-opacity=".66"/><stop offset=".24" stop-color="#ef7955" stop-opacity=".78"/><stop offset=".53" stop-color="#f3c79c" stop-opacity=".86"/><stop offset=".8" stop-color="#cb5b45" stop-opacity=".76"/><stop offset="1" stop-color="#762d2c" stop-opacity=".7"/>
+                  </linearGradient>
+                  <radialGradient id="cylinderCap" cx="32%" cy="34%"><stop stop-color="#eff0e7"/><stop offset=".55" stop-color="#9fc3ba"/><stop offset="1" stop-color="#315b60"/></radialGradient>
+                  <clipPath id="cylinderClip"><path d="M70 62H445A27 88 0 0 1 445 238H70Z"/></clipPath>
+                  <filter id="cylinderShadow" x="-20%" y="-30%" width="150%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#132126" flood-opacity=".24"/></filter>
+                </defs>
+                <ellipse cx="267" cy="254" rx="218" ry="17" fill="#132126" opacity=".12"/>
+                <g filter="url(#cylinderShadow)">
+                  <path d="M70 62H445A27 88 0 0 1 445 238H70Z" fill="url(#cylinderSurface)" stroke="#132126" stroke-width="2"/>
+                  <ellipse cx="70" cy="150" rx="27" ry="88" fill="url(#cylinderCap)" stroke="#132126" stroke-width="2"/>
+                  <g clip-path="url(#cylinderClip)">
+                    <path d="M70 91H445M70 119H445M70 150H445M70 181H445M70 209H445" fill="none" stroke="#f1eee5" stroke-opacity=".16"/>
+                    <g fill="none" stroke="#f1eee5" stroke-opacity=".14">
+                      <ellipse cx="123" cy="150" rx="10" ry="88"/><ellipse cx="214" cy="150" rx="10" ry="88"/><ellipse cx="305" cy="150" rx="10" ry="88"/><ellipse cx="396" cy="150" rx="10" ry="88"/>
+                    </g>
+                    <path d="M165 238C145 232 136 198 136 150C136 102 145 68 165 62L355 62C337 70 330 103 331 150C330 197 337 230 355 238Z" fill="#512c2b" opacity=".36"/>
+                    <path d="M165 62C184 69 199 104 202 150C199 196 184 231 165 238L355 238C374 231 388 196 390 150C388 104 374 69 355 62Z" fill="url(#cylinderDomain)"/>
+                    <path d="M165 238C145 232 136 198 136 150C136 102 145 68 165 62M355 238C337 230 330 197 331 150C330 103 337 70 355 62" fill="none" stroke="#7fbbb5" stroke-width="1.5" stroke-dasharray="5 5" opacity=".72"/>
+                    <path d="M165 62C184 69 199 104 202 150C199 196 184 231 165 238M355 62C374 69 388 104 390 150C388 196 374 231 355 238" fill="none" stroke="#ff7449" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M183 74L373 74M198 108L386 108M202 150H390M198 192L386 192M183 226L373 226" fill="none" stroke="#fff4df" stroke-opacity=".18"/>
+                  </g>
+                  <ellipse cx="445" cy="150" rx="27" ry="88" fill="none" stroke="#d8ebe5" stroke-width="1.8" opacity=".72"/>
+                  <path d="M445 62A27 88 0 0 1 445 238" fill="none" stroke="#f1eee5" stroke-width="2.2"/>
+                  <path d="M70 62A27 88 0 0 1 70 238" fill="none" stroke="#f1eee5" stroke-width="1.4" opacity=".58"/>
+                </g>
+                <text class="world-domain-label" x="274" y="157" text-anchor="middle">Ω</text>
+                <text x="260" y="286" text-anchor="middle">a compact domain on ℝ × S¹ · both orange curves belong to ∂Ω</text>
               </svg>
             </div>
             <span>flat cylinder</span><h3>The radial Neumann wave and a nonradial Dirichlet wave coexist.</h3>
@@ -330,16 +353,30 @@
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article>
-            <div class="world-sketch" role="img" aria-label="A spherical cap with an eight-fold wavy boundary">
-              <svg viewBox="0 0 360 240" aria-hidden="true">
-                <defs><radialGradient id="sphereSurface" cx="36%" cy="28%"><stop stop-color="#f1eee5"/><stop offset=".44" stop-color="#a9c8c1"/><stop offset="1" stop-color="#173039"/></radialGradient><clipPath id="sphereClip"><circle cx="180" cy="114" r="92"/></clipPath></defs>
-                <circle cx="180" cy="114" r="92" fill="url(#sphereSurface)" stroke="#132126" stroke-width="1.5"/>
-                <g clip-path="url(#sphereClip)" fill="none" stroke="#132126" stroke-opacity=".35">
-                  <ellipse cx="180" cy="114" rx="92" ry="31"/><ellipse cx="180" cy="114" rx="38" ry="92"/><path d="M180 22C128 50 128 178 180 206M180 22C232 50 232 178 180 206"/>
+            <div class="world-sketch realistic-world" role="img" aria-label="A filled contractible domain on a shaded sphere, bounded by one closed eight-fold wavy curve">
+              <svg viewBox="0 0 520 300" aria-hidden="true">
+                <defs>
+                  <radialGradient id="sphereSurface" cx="34%" cy="24%"><stop stop-color="#f7f4e9"/><stop offset=".34" stop-color="#bdd8ce"/><stop offset=".68" stop-color="#4f8583"/><stop offset="1" stop-color="#183039"/></radialGradient>
+                  <linearGradient id="sphereDomain" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffd2aa" stop-opacity=".94"/><stop offset=".45" stop-color="#ff8a61" stop-opacity=".82"/><stop offset="1" stop-color="#c64d3d" stop-opacity=".76"/></linearGradient>
+                  <radialGradient id="sphereGloss" cx="33%" cy="24%"><stop stop-color="#ffffff" stop-opacity=".42"/><stop offset=".42" stop-color="#ffffff" stop-opacity=".06"/><stop offset="1" stop-color="#132126" stop-opacity=".18"/></radialGradient>
+                  <clipPath id="sphereClip"><circle cx="260" cy="143" r="111"/></clipPath>
+                  <filter id="sphereShadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#132126" flood-opacity=".26"/></filter>
+                </defs>
+                <ellipse cx="260" cy="263" rx="105" ry="18" fill="#132126" opacity=".16"/>
+                <g filter="url(#sphereShadow)">
+                  <circle cx="260" cy="143" r="111" fill="url(#sphereSurface)" stroke="#132126" stroke-width="2"/>
+                  <g clip-path="url(#sphereClip)" fill="none" stroke="#132126" stroke-opacity=".22">
+                    <ellipse cx="260" cy="143" rx="111" ry="35"/><ellipse cx="260" cy="143" rx="56" ry="111"/>
+                    <path d="M260 32C205 66 205 220 260 254M260 32C315 66 315 220 260 254M149 143C184 105 336 105 371 143M149 143C184 181 336 181 371 143"/>
+                  </g>
+                  <path d="M151 153Q158 140 165 153Q172 166 179 153Q186 140 193 153Q200 166 207 153Q214 140 221 153Q228 166 235 153Q242 140 249 153Q256 166 263 153Q270 140 277 153Q284 166 291 153Q298 140 305 153Q312 166 319 153Q326 140 333 153Q340 166 347 153Q354 140 361 153Q368 166 375 153A111 111 0 0 0 151 153Z" fill="url(#sphereDomain)" clip-path="url(#sphereClip)"/>
+                  <path d="M151 153C180 116 218 108 260 109C302 108 340 116 375 153" fill="none" stroke="#8a3c36" stroke-width="1.6" stroke-dasharray="5 5" opacity=".68"/>
+                  <path d="M151 153Q158 140 165 153Q172 166 179 153Q186 140 193 153Q200 166 207 153Q214 140 221 153Q228 166 235 153Q242 140 249 153Q256 166 263 153Q270 140 277 153Q284 166 291 153Q298 140 305 153Q312 166 319 153Q326 140 333 153Q340 166 347 153Q354 140 361 153Q368 166 375 153" fill="none" stroke="#ff7449" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="260" cy="143" r="111" fill="url(#sphereGloss)" pointer-events="none"/>
+                  <circle cx="260" cy="143" r="111" fill="none" stroke="#132126" stroke-width="2"/>
                 </g>
-                <path d="M94 115C103 105 111 122 120 112C129 102 137 120 146 110C155 100 163 117 172 108C181 99 190 117 199 108C208 100 216 119 225 110C234 102 242 121 251 112C260 103 267 120 273 116" fill="none" stroke="#ff7449" stroke-width="3.2"/>
-                <path d="M94 115C104 139 132 153 180 154C228 153 259 139 273 116" fill="rgba(255,116,73,.1)" stroke="#ff7449" stroke-opacity=".42" stroke-dasharray="4 5"/>
-                <text x="180" y="226" text-anchor="middle">θ = θ* + s(b* cos 8φ + o(1))</text>
+                <text class="world-domain-label dark-label" x="260" y="82" text-anchor="middle">Ω</text>
+                <text x="260" y="286" text-anchor="middle">a contractible domain on S² · the orange loop is ∂Ω</text>
               </svg>
             </div>
             <span>half-sphere</span><h3>A spherical cap bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández find a transverse meeting of a zonal Neumann branch with a nonzonal Dirichlet branch. Curvature separates the two spectral curves and produces smooth contractible Schiffer domains on the half-sphere.</p>
