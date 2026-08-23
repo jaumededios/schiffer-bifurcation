@@ -16,6 +16,8 @@ const state = {
 
 const X_MIN = -5;
 const X_MAX = 1.05;
+const THREE_X_MIN = -16;
+const THREE_CAMERA_FIT_ASPECT = 1.5;
 const TWO_PI = Math.PI * 2;
 const CYLINDER_WALL_MODES = [2, 3];
 const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
@@ -28,6 +30,7 @@ const threeState = {
   camera: null,
   group: null,
   pointer: null,
+  zoom: 1,
 };
 
 function boundary(theta, parameters = state) {
@@ -373,7 +376,7 @@ function colorFor(value) {
   return left.rgb.map((channel, i) => Math.round(channel + (right.rgb[i] - channel) * local));
 }
 
-function buildCylinderMeshData(solution, axialSegments = 96, angularSegments = 96) {
+function buildCylinderMeshData(solution, axialSegments = 160, angularSegments = 96) {
   const positions = [];
   const colors = [];
   const indices = [];
@@ -388,7 +391,7 @@ function buildCylinderMeshData(solution, axialSegments = 96, angularSegments = 9
     const sine = Math.sin(theta);
     for (let axialIndex = 0; axialIndex <= axialSegments; axialIndex++) {
       const fraction = axialIndex / axialSegments;
-      const x = X_MIN + fraction * (wall - X_MIN);
+      const x = THREE_X_MIN + fraction * (wall - THREE_X_MIN);
       positions.push(x, radius * cosine, radius * sine);
       const color = colorFor(fieldValue(x, theta, solution));
       colors.push(color[0] / 255, color[1] / 255, color[2] / 255);
@@ -408,12 +411,12 @@ function buildCylinderMeshData(solution, axialSegments = 96, angularSegments = 9
     }
   }
 
-  const latitudeLoops = [.2, .4, .6, .8].map((fraction) => {
+  const latitudeLoops = Array.from({ length: 9 }, (_, index) => (index + 1) / 10).map((fraction) => {
     const points = [];
     for (let angularIndex = 0; angularIndex <= angularSegments; angularIndex++) {
       const theta = -Math.PI + angularIndex / angularSegments * TWO_PI;
       const wall = boundary(theta, solution.parameters);
-      const x = X_MIN + fraction * (wall - X_MIN);
+      const x = THREE_X_MIN + fraction * (wall - THREE_X_MIN);
       points.push(x, radius * Math.cos(theta), radius * Math.sin(theta));
     }
     return points;
@@ -423,8 +426,8 @@ function buildCylinderMeshData(solution, axialSegments = 96, angularSegments = 9
     const theta = -Math.PI + lineIndex / 8 * TWO_PI;
     const wall = boundary(theta, solution.parameters);
     const points = [];
-    for (let axialIndex = 0; axialIndex <= 48; axialIndex++) {
-      const x = X_MIN + axialIndex / 48 * (wall - X_MIN);
+    for (let axialIndex = 0; axialIndex <= 120; axialIndex++) {
+      const x = THREE_X_MIN + axialIndex / 120 * (wall - THREE_X_MIN);
       points.push(x, radius * Math.cos(theta), radius * Math.sin(theta));
     }
     return points;
@@ -455,6 +458,9 @@ function resizeThreeRenderer() {
   const height = Math.max(320, wrap.clientHeight || 580);
   threeState.renderer.setSize(width, height, false);
   threeState.camera.aspect = width / height;
+  const portraitFit = Math.max(1, THREE_CAMERA_FIT_ASPECT / threeState.camera.aspect);
+  const baseDistance = Math.hypot(7.5, 5, 16);
+  threeState.camera.position.setLength(baseDistance * portraitFit * threeState.zoom);
   threeState.camera.updateProjectionMatrix();
 }
 
@@ -487,8 +493,8 @@ function installThreeInteraction(canvas) {
   canvas.addEventListener("wheel", (event) => {
     event.preventDefault();
     const factor = event.deltaY > 0 ? 1.08 : .92;
-    const length = Math.max(6.2, Math.min(15, threeState.camera.position.length() * factor));
-    threeState.camera.position.setLength(length);
+    threeState.zoom = Math.max(.62, Math.min(1.55, threeState.zoom * factor));
+    resizeThreeRenderer();
     renderThreeFrame();
   }, { passive: false });
 }
@@ -500,13 +506,13 @@ function setupThreeRenderer() {
   threeState.scene = new THREE.Scene();
   threeState.scene.background = new THREE.Color(0x101b20);
   threeState.camera = new THREE.PerspectiveCamera(38, 1, .1, 100);
-  threeState.camera.position.set(7.3, 4.2, 6.6);
+  threeState.camera.position.set(7.5, 5, 16);
   threeState.camera.lookAt(0, 0, 0);
   threeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
   threeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   wrap.insertBefore(threeState.renderer.domElement, $("#threeLoading"));
   threeState.group = new THREE.Group();
-  threeState.group.position.x = 2.1;
+  threeState.group.position.x = 8;
   threeState.group.rotation.x = -.18;
   threeState.group.rotation.y = -.16;
   threeState.scene.add(threeState.group);
