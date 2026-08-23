@@ -55,7 +55,7 @@ function parametersWithWall(parameters, higherCoefficients = [0, 0]) {
     wallCoefficients,
     // This is only a column rescaling of the decaying basis. Keep it fixed
     // while h2 and h3 move so the nonlinear Jacobian differentiates the
-    // physical wall dependence, not an arbitrary numerical normalization.
+    // This scaling retains the physical boundary dependence.
     radialShift: Math.abs(parameters.s) + .9,
   };
 }
@@ -302,7 +302,7 @@ function solveModalField(parameters) {
     }
   }
 
-  // With the wall fixed at the nonlinear iterate, finish with the exact linear
+  // At the fixed nonlinear boundary iterate, finish with the exact linear
   // least-squares minimizer in the separated field coefficients.
   solution = fitFieldAtWall(solution.parameters, modes, trainingCount);
 
@@ -717,7 +717,7 @@ function renderHeatmap() {
   context.fillText("θ = 0", 10, height / 2 + 8);
   context.fillText("θ = −π", 10, height - 19);
   context.fillStyle = "rgba(241,238,229,.38)";
-  context.fillText("s = 0 wall", zeroX + 7, 10);
+  context.fillText("s = 0 boundary", zeroX + 7, 10);
   context.restore();
 }
 
@@ -753,10 +753,10 @@ function drawBoundaryDiagram() {
   const label = svgElement("text", { x: 24, y: 186, fill: "rgba(241,238,229,.42)", "font-family": "DM Mono", "font-size": "8" }, svg);
   const h2 = solvedParameters.wallCoefficients?.[2] || 0;
   const h3 = solvedParameters.wallCoefficients?.[3] || 0;
-  label.textContent = state.s === 0 ? "Γ₀ · flat wall" : `Γs · h₂ ${h2.toFixed(3)} · h₃ ${h3.toFixed(3)}`;
+  label.textContent = state.s === 0 ? "Γ₀ · flat boundary" : `Γs · h₂ ${h2.toFixed(3)} · h₃ ${h3.toFixed(3)}`;
   svg.setAttribute("aria-label", state.s === 0
-    ? "Flat cylinder wall"
-    : `Solved wall with first mode ${state.s.toFixed(3)}, second mode ${h2.toFixed(4)}, and third mode ${h3.toFixed(4)}. The dashed curve is the unsolved first-mode wall.`);
+    ? "Flat cylinder boundary"
+    : `Computed boundary with first mode ${state.s.toFixed(3)}, second mode ${h2.toFixed(4)}, and third mode ${h3.toFixed(4)}. The dashed curve is the first-mode approximation.`);
 }
 
 function renderModeBars() {
@@ -802,7 +802,7 @@ function updateReadouts() {
   $("#dirichletValue").textContent = state.solution.dirichletL2.toExponential(2);
   $("#neumannValue").textContent = state.solution.neumannL2.toExponential(2);
   $("#decayValue").textContent = (1 / Math.sqrt(4 - state.lambda)).toFixed(2);
-  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `wall + field solve · s = ${state.s.toFixed(3)}`;
+  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `boundary and field solve · s = ${state.s.toFixed(3)}`;
 }
 
 function solveAndRender() {
@@ -1378,10 +1378,10 @@ function updateConeReadouts() {
   $("#coneDirichletValue").textContent = solution.dirichlet_rms === 0 ? "0 · exact base" : solution.dirichlet_rms.toExponential(2);
   $("#coneNeumannValue").textContent = solution.neumann_rms === 0 ? "0 · exact base" : solution.neumann_rms.toExponential(2);
   $("#coneDomainState").textContent = coneState.progress > .999
-    ? "integer landing · 28-fold seam closed"
-    : (coneState.progress < .001 ? "relaxed crossing · seam open" : `continuing branch · R = ${solution.R.toFixed(5)}`);
+    ? "R = N = 28 · planar lift defined"
+    : (coneState.progress < .001 ? "nonintegral crossing · angular gap present" : `computed branch · R = ${solution.R.toFixed(5)}`);
   const depthUnits = 5 + Math.pow(coneState.depth, 1.35) * (solution.R - 5);
-  $("#coneZoomValue").textContent = coneState.depth < .16 ? "rim" : (coneState.depth > .94 ? "tip" : `${depthUnits.toFixed(1)} units`);
+  $("#coneZoomValue").textContent = coneState.depth < .16 ? "boundary" : (coneState.depth > .94 ? "cone point" : `${depthUnits.toFixed(1)} units`);
 }
 
 function updateConeAxis() {
@@ -1391,11 +1391,11 @@ function updateConeAxis() {
   if (coneState.view === "slice") {
     left.textContent = "x = −5";
     center.textContent = "one quotient period ψ ∈ [−π, π]";
-    right.textContent = "rim x = 0";
+    right.textContent = "boundary x = 0";
   } else if (coneState.view === "cone") {
-    left.textContent = coneState.depth < .16 ? "local collar" : "toward cone tip";
+    left.textContent = coneState.depth < .16 ? "boundary collar" : "toward the cone point";
     center.textContent = "metric cone surface · drag / zoom";
-    right.textContent = "free rim";
+    right.textContent = "boundary";
   } else {
     left.textContent = "28 copies";
     center.textContent = "each sector angle = 2π/R";
@@ -1702,8 +1702,8 @@ function renderModesComparison() {
   drawModesSeries(context, cylinderRect, cylinderSelectedNormalized, MODES_COLORS.white, 1.7);
   drawModesSeries(context, coneRect, coneIntegerNormalized, MODES_COLORS.cyan, 3.8);
   drawModesSeries(context, coneRect, coneCurrentNormalized, MODES_COLORS.orange, 2.1);
-  drawModesRim(context, cylinderRect, "rim x = 0");
-  drawModesRim(context, coneRect, "rim r = R");
+  drawModesRim(context, cylinderRect, "boundary x = 0");
+  drawModesRim(context, coneRect, "boundary r = R");
 
   const symbol = cylinder.regime === "oscillatory" ? "ω" : "α";
   const cylinderEquation = cylinder.regime === "oscillatory"
@@ -1713,7 +1713,7 @@ function renderModesComparison() {
   const currentR = modesOrder();
   const coneRimValue = modesConeProfile(modesState.k, 0);
   drawModesPanelLabel(context, cylinderRect, `half-cylinder / k = ${modesState.k}`, cylinderEquation, cylinderDetail);
-  drawModesPanelLabel(context, coneRect, `cone / k = ${modesState.k}`, `J_{${modesState.k}R}(ρr/R)`, `R = ${currentR.toFixed(6)} · rim ${coneRimValue.toExponential(1)}`);
+  drawModesPanelLabel(context, coneRect, `cone / k = ${modesState.k}`, `J_{${modesState.k}R}(ρr/R)`, `R = ${currentR.toFixed(6)} · boundary value ${coneRimValue.toExponential(1)}`);
 
   if (cylinder.regime === "evanescent") {
     context.save();
@@ -2090,7 +2090,7 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
     context.textAlign = "left";
     context.fillText(`x = −${options.depth.toFixed(1)}`, plot.left, plot.top + plot.height + 13);
     context.textAlign = "right";
-    context.fillText("free rim x = 0", plot.left + plot.width, plot.top + plot.height + 13);
+    context.fillText("boundary x = 0", plot.left + plot.width, plot.top + plot.height + 13);
   }
   context.restore();
   const comparisonRect = {
@@ -2180,7 +2180,7 @@ function updateModesReadouts() {
   $("#modesWavelengthValue").textContent = `${TWO_PI.toFixed(3)} units`;
   $("#modesCurvatureValue").textContent = `1 / ${solution.R.toFixed(3)}`;
   if (gapDegrees < 5e-5) {
-    $("#modesPlotState").textContent = "integer landing · 28 copies close exactly";
+    $("#modesPlotState").textContent = "R = N = 28 · 28 sectors fit exactly";
   } else if (modesCropContainsSeam(solution)) {
     $("#modesPlotState").textContent = `R = ${solution.R.toFixed(6)} · seam inside main zoom`;
   } else {
@@ -2199,7 +2199,7 @@ function stopModesPlayback() {
   if (modesState.playFrame) cancelAnimationFrame(modesState.playFrame);
   modesState.playFrame = null;
   $("#modesPlayIcon").textContent = "▶";
-  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Repeat crossing → landing" : "Animate crossing → landing";
+  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Repeat crossing → integral order" : "Animate crossing → integral order";
 }
 
 function toggleModesPlayback() {
@@ -2708,7 +2708,7 @@ if (debyeData) {
     context.fillStyle = MODES_COLORS.faint;
     context.font = "7px DM Mono, monospace";
     context.fillText(isWave
-      ? `ω = ${debyeOmega.toFixed(4)} · same rim Cauchy data`
+      ? `ω = ${debyeOmega.toFixed(4)} · same boundary Cauchy data`
       : `α${series.mode} = ${series.alpha.toFixed(4)} · exp(α${series.mode}x)`, rect.left + 14, rect.top + 38);
     context.fillText("ordinary linear scale", rect.left + 14, rect.top + 54);
     context.textAlign = "right";
@@ -2744,7 +2744,7 @@ if (debyeData) {
     }
     [1, 2, 3].forEach((mode, index) => debyeDrawPanel(context, panels[index], debyeSeries(mode)));
     const phaseAdvance = debyeData.phaseRate * (debyeState.radius - debyeData.rReference);
-    canvas.setAttribute("aria-label", `At rim radius ${debyeState.radius.toFixed(2)}, exact regular Bessel modes are compared on a linear scale with their phase-matched cylinder limits between r zero minus five and r zero. Relative to radius 28, the phase has moved by ${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns.`);
+    canvas.setAttribute("aria-label", `At boundary radius ${debyeState.radius.toFixed(2)}, exact regular Bessel modes are compared on a linear scale with their phase-matched cylinder limits between r zero minus five and r zero. Relative to radius 28, the phase has changed by ${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns.`);
   }
 
   function updateDebyeReadouts() {
@@ -2756,7 +2756,7 @@ if (debyeData) {
     $("#debyePhaseValue").textContent = `Δξ = ${phaseAdvance.toFixed(3)} rad`;
     $("#debyeBetaValue").textContent = `${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns`;
     $("#debyeDecayValue").textContent = `${alpha2.toFixed(4)}, ${alpha3.toFixed(4)}`;
-    $("#debyePlotState").textContent = `r₀ = ${debyeState.radius.toFixed(2)} · exact Bessel samples · cylinder data matched at the rim`;
+    $("#debyePlotState").textContent = `r₀ = ${debyeState.radius.toFixed(2)} · exact Bessel samples · cylinder data matched at the boundary`;
   }
 
   function updateDebyeComparison() {

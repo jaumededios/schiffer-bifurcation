@@ -21,7 +21,7 @@
 
   // The older laboratories remain grouped together in the source file. Put the
   // live DOM in the same order as the visual argument so keyboard and screen-
-  // reader navigation follow the numbered story rather than CSS paint order.
+  // Reader navigation follows the numbered section order.
   const main = select("main");
   [
     ".intro",
@@ -40,8 +40,7 @@
     if (main && section) main.appendChild(section);
   });
 
-  // The linearization motivates the disk theorem, so it belongs to Section 2
-  // rather than to the definition of the Schiffer property in Section 1.
+  // Section 2 places the boundary variation before the disk classification.
   const diskSection = select("#disk-obstruction");
   const linearizationSection = select(".linearization-section");
   const diskRigidityHeading = select(".disk-rigidity-heading");
@@ -121,14 +120,14 @@
     context.font = "8px DM Mono, monospace";
     context.fillText("one quotient sector", cx + radius * .62, cy - 22);
     context.fillStyle = colors.faint;
-    context.fillText("the other 27 copies carry no new information", cx - radius, cy + radius + 31);
+    context.fillText("one sector determines all 28 copies", cx - radius, cy + radius + 31);
     context.restore();
   }
 
   function drawConeFrame(context, width, height, opacity) {
     context.save();
     context.globalAlpha = opacity;
-    drawFrameLabel(context, width, "02 / normalize", "The tiny sector becomes a long cone", "rim circumference 2π · length R");
+    drawFrameLabel(context, width, "02 / cone quotient", "Identify the sides of one fundamental sector", "boundary circumference 2π · cone parameter R");
     const left = width * .13;
     const right = width * .87;
     const cy = height * .56;
@@ -154,7 +153,7 @@
     context.beginPath(); context.moveTo(collarLeft, cy - rimHalf); context.lineTo(collarLeft, cy + rimHalf); context.stroke();
     context.setLineDash([]);
     context.fillStyle = colors.paper; context.font = "8px DM Mono, monospace";
-    context.fillText("tip", left - 7, cy + 20);
+    context.fillText("cone point", left - 7, cy + 20);
     context.fillText("five-unit collar", collarLeft + 7, cy - rimHalf - 13);
     context.fillStyle = colors.faint;
     context.fillText("R ≈ 28", (left + right) / 2 - 18, cy + rimHalf + 29);
@@ -326,7 +325,7 @@
     });
 
     // Radial generators stay attached to the same material points throughout
-    // the fold, making the wrapping motion legible rather than a morph.
+    // the fold, making the wrapping motion legible.
     for (let index = 1; index < 12; index++) {
       const angular = -1 + 2 * index / 12;
       const start = sheetPoint(0, angular);
@@ -442,7 +441,7 @@
     }
 
     // Trace only the two generators. When the tip has left the frame, the
-    // cone continues behind the drawing instead of acquiring a false wall.
+    // The cone continues behind the visible portion of the drawing.
     context.strokeStyle = `rgba(241,238,229,${.18 + .82 * materialBlend})`; context.lineWidth = 1.7;
     context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
     context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
@@ -533,11 +532,11 @@
     context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
     if (t > .05) {
       const orderLabel = t > .965 ? "N → ∞" : `N ≈ ${Math.round(28 / (1 - .9 * t))}`;
-      const tipMotion = t > .965 ? "tip at −∞" : returning ? "tip returns from the left" : "tip moves left";
+      const tipMotion = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
       context.fillText(`${orderLabel} · ${tipMotion}`, visibleLeft + 92, cx - half - 28);
     }
     context.fillStyle = colors.faint;
-    context.fillText(waveAmount > .5 ? "one rim point moves out while the opposite point moves in" : (t > .6 ? "on every fixed boundary window, the cone is now a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
+    context.fillText(waveAmount > .5 ? "opposite boundary points have opposite first variations" : (t > .6 ? "every fixed boundary collar converges to a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
     context.restore();
   }
 
@@ -696,7 +695,7 @@
     const caption = open < .92
       ? "cut the seam and open the cone"
       : transfer < .9
-        ? "one wiggly quotient sector lies flat"
+        ? "the deformed quotient sector in planar coordinates"
         : "rotate 28 identical sectors into the plane";
     context.fillText(caption, width * .5, cy + Math.min(118, height * .23) + 47);
   }
@@ -717,7 +716,7 @@
   function drawCollarFrame(context, width, height, opacity) {
     context.save();
     context.globalAlpha = opacity;
-    drawFrameLabel(context, width, "03 / local solve", "At the rim, the cone looks cylindrical", "five radial units · one angular wavelength");
+    drawFrameLabel(context, width, "03 / local solve", "The boundary collar is approximately cylindrical", "five radial units · one angular wavelength");
     const plot = { left: width * .12, top: height * .22, width: width * .76, height: height * .6 };
     roundedPanel(context, plot.left, plot.top, plot.width, plot.height);
     context.fillStyle = "#17303a"; context.fill();
@@ -746,14 +745,14 @@
     context.shadowColor = colors.orange; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
     context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace";
     context.fillText("x = −5", plot.left, plot.top + plot.height + 19);
-    context.textAlign = "right"; context.fillText("free rim x = h(ψ)", plot.left + plot.width, plot.top + plot.height + 19);
+    context.textAlign = "right"; context.fillText("boundary x = h(ψ)", plot.left + plot.width, plot.top + plot.height + 19);
     context.restore();
   }
 
   function drawLandingFrame(context, width, height, opacity) {
     context.save();
     context.globalAlpha = opacity;
-    drawFrameLabel(context, width, "04 / integer landing", "Twenty-eight copies close in the plane", "R = N = 28 · no seam");
+    drawFrameLabel(context, width, "04 / planar lift", "Twenty-eight sectors fit exactly", "R = N = 28");
     const radius = Math.min(width * .29, height * .36);
     const cx = width * .5;
     const cy = height * .55;
@@ -777,8 +776,8 @@
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryNames = ["see the N-fold repetition", "magnify one period", "identify its periodic sides", "send the tip to −∞", "perturb the cylinder", "bring the same cone back", "cut and unfold at integer R"];
-  const geometryStates = ["one field repeats on every sector", "the whole disk is magnified around one angular period", "the same material sector folds and its periodic sides meet", "N tends to infinity locally at the rim · the tip leaves left", "the free rim becomes x = h(ψ)", "the same boundary wave remains attached to the returning cone", "cut the seam · open the same cone · rotate N copies into the plane"];
+  const geometryNames = ["start with N-fold symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-N limit", "bifurcate on the half-cylinder", "return to finite R", "set R = N and lift to the plane"];
+  const geometryStates = ["the field is repeated in N sectors", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the perturbed boundary is x = h(ψ)", "the half-cylinder branch determines a branch on finite cones", "at R = N, the N sectors fit exactly in the plane"];
 
   function renderGeometryStory() {
     const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
@@ -795,7 +794,7 @@
         : local < .01
           ? segment
           : Math.min(6, segment + 1);
-    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28 at the lift" : "one material quotient sector");
+    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28 at the lift" : "the same quotient sector");
     select("#storyGeometryValue").textContent = geometryNames[active];
     select("#storyGeometryState").textContent = geometryStates[active];
     document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === active));
@@ -1109,7 +1108,7 @@
     select("#phaseStorySValue").textContent = `s = ${current.s.toFixed(4)}`;
     select("#phaseStoryRValue").textContent = current.R.toFixed(6);
     select("#phaseStoryPhaseValue").textContent = `${phaseDegrees.toFixed(4)}°`;
-    select("#phaseStoryState").textContent = phaseStoryState.progress < .002 ? "quadratic departure from the crossing" : (phaseStoryState.progress > .998 ? "integer landing reached" : `R has dropped ${(data.RStar - current.R).toFixed(5)}`);
+    select("#phaseStoryState").textContent = phaseStoryState.progress < .002 ? "quadratic variation from the crossing" : (phaseStoryState.progress > .998 ? "R = N reached" : `R has decreased by ${(data.RStar - current.R).toFixed(5)}`);
     renderPhaseStory();
   }
 
