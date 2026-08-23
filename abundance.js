@@ -209,21 +209,19 @@
     makeScaleExamples(model).forEach(function renderExample(example) {
       const row = document.createElement("tr");
       const values = [
-        example.lower.toFixed(1) + " ≤ R < " + example.upper.toFixed(1),
+        String(Math.floor(example.radius)),
         example.radius.toFixed(9),
         formatGap(example.gap, false),
-        example.score.toFixed(3),
       ];
-      const labels = ["log-order band", "crossing order R", "fractional gap", "score q(R)"];
+      const labels = ["integer N", "crossing order R", "gap R − N"];
       values.forEach(function renderValue(value, columnIndex) {
-        const cell = document.createElement(columnIndex === 1 ? "th" : "td");
-        if (columnIndex === 1) cell.scope = "row";
+        const cell = document.createElement(columnIndex === 0 ? "th" : "td");
+        if (columnIndex === 0) cell.scope = "row";
         cell.dataset.label = labels[columnIndex];
         cell.textContent = value;
         row.appendChild(cell);
       });
       row.dataset.radius = example.radius.toFixed(9);
-      row.dataset.score = example.score.toFixed(6);
       tableBody.appendChild(row);
     });
   }

@@ -1320,17 +1320,15 @@
         </div>
         <section class="abundance-examples" aria-labelledby="abundanceExamplesTitle">
           <header>
-            <span>Five scale records from the full search</span>
-            <h3 id="abundanceExamplesTitle">Unusually close, relative to their order.</h3>
-            <p>Write \(\{R\}=R^{-q(R)}\), or \(q(R)=-\log\{R\}/\log R\). Larger \(q\) means a smaller fractional gap after accounting for the scale of \(R\). We divide \(20\le R&lt;842\) into five equal logarithmic bands and retain the largest score in each band, so the list cannot cluster at a single order scale.</p>
+            <span>Five examples from the full search</span>
+            <h3 id="abundanceExamplesTitle">Five good values of \(R\).</h3>
           </header>
           <div class="abundance-examples-table-wrap">
             <table class="abundance-examples-table">
-              <thead><tr><th scope="col">log-order band</th><th scope="col">crossing order \(R\)</th><th scope="col">fractional gap \(\{R\}\)</th><th scope="col">score \(q(R)\)</th></tr></thead>
+              <thead><tr><th scope="col">integer \(N\)</th><th scope="col">crossing order \(R\)</th><th scope="col">gap \(R-N\)</th></tr></thead>
               <tbody id="abundanceExamplesBody"></tbody>
             </table>
           </div>
-          <p class="abundance-examples-note">Computed from the 10,000-row \(2\le\rho^2/R^2\le3\) search. The orange \(N=28\) running example is not ranked here because its spectral ratio is \(\lambda\approx3.317\), outside that window. The ranking describes the finite sample; the two-phase argument above supplies the theorem.</p>
         </section>
       </section>
     </main>
@@ -1368,7 +1366,7 @@
       <p>The real-order family panel filters the saved exhaustive crossing data to <span class="formula">\(10\le R_*\le30\)</span> and <span class="formula">\(2\le\lambda_*\le3\)</span>. Its orange points are computed Bessel coincidences. Its cyan curves are the asymptotic two-jets <span class="formula">\(R(s)=R_*-\Gamma(\lambda_*)s^2/2\)</span>, evaluated in the browser; they are not additional nonlinear continuations. White rings mark where that quadratic approximation alone meets an integer within the plotted <span class="formula">\(|s|\le1\)</span> window.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
-      <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. Below it, a five-row table uses the full search through <span class="formula">\(R\approx841\)</span>: on each of five equal logarithmic bands in <span class="formula">\(20\le R&lt;842\)</span>, it selects the largest scale-free score <span class="formula">\(q(R)=-\log\{R\}/\log R\)</span>, equivalently <span class="formula">\(\{R\}=R^{-q(R)}\)</span>. The orange <span class="formula">\(N=28\)</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
+      <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. The small table lists five particularly close examples from separated order scales in the full search through <span class="formula">\(R\approx841\)</span>. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
     </dialog>
 
     <script src="cone-data.js"></script>
