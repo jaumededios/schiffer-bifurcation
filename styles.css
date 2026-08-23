@@ -287,15 +287,15 @@ a { color: inherit; }
 .theorem-label span { color: var(--orange); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
 .theorem-label small { color: rgba(241,238,229,.42); font: 7px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .theorem-statement { max-width: 1080px; }
-.theorem-statement > p { margin: 0 0 21px; color: rgba(241,238,229,.63); font: 12px/1.82 var(--sans); }
+.theorem-statement > p { margin: 0 0 21px; color: rgba(241,238,229,.63); font: 13px/1.82 var(--sans); }
 .theorem-system { max-width: 620px; margin: 18px 0 25px; }
-.theorem-expansion { display: grid; gap: 9px; margin: 17px 0 23px; padding: 18px 20px; color: var(--paper); border-left: 2px solid var(--orange); background: rgba(255,116,73,.04); font: 10px/1.65 var(--mono); }
+.theorem-expansion { display: grid; gap: 9px; margin: 17px 0 23px; padding: 18px 20px; color: var(--paper); border-left: 2px solid var(--orange); background: rgba(255,116,73,.04); font-size: 15px; line-height: 1.65; }
 .theorem-expansion .katex-display { margin: 0; text-align: left; }
-.theorem-expansion .katex { font-size: .92em; }
+.cylinder-theorem .theorem-statement .katex { font-size: 15px; }
 .cylinder-needed-later { display: grid; grid-template-columns: 175px minmax(0,1fr); gap: 28px; margin: 23px 0; padding: 20px 22px; border: 1px solid rgba(255,116,73,.28); background: rgba(255,116,73,.035); }
 .cylinder-needed-later > span { color: var(--orange); font: 7px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.cylinder-needed-later p { margin: 0; color: rgba(241,238,229,.56); font-size: 9px; line-height: 1.78; }
-.theorem-statement .theorem-note { margin-bottom: 0; color: rgba(241,238,229,.43); font-size: 9px; }
+.cylinder-needed-later p { margin: 0; color: rgba(241,238,229,.56); font-size: 13px; line-height: 1.78; }
+.theorem-statement .theorem-note { margin-bottom: 0; color: rgba(241,238,229,.43); font-size: 13px; }
 .cylinder-jet-proof { margin: 0 0 42px 55px; }
 .cylinder-jet-proof-body { max-width: 900px; margin: 0 auto; padding: 0 0 42px; }
 .cylinder-proof-scope { display: block; padding: 32px 0; border-bottom: 1px solid var(--line-light); }

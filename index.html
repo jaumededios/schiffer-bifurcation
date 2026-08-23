@@ -597,7 +597,7 @@
         </div>
 
         <div class="cylinder-theorem">
-          <div class="theorem-label"><span>Theorem 5.1</span><small>uniformly for \(2\leq\lambda\leq3\)</small></div>
+          <div class="theorem-label"><span>Theorem 5.1</span><small>uniform half-cylinder branch</small></div>
           <div class="theorem-statement">
             <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
             <div class="theorem-system tex-display">
@@ -618,9 +618,9 @@
               \[\begin{aligned}
               u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
               &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
-              &amp;\quad-\frac{\lambda s^2}{4}
-              \left(\cos(\sqrt\lambda\,x)+e^{\alpha_2x}\cos2\theta\right)
-              +O(s^3).
+              &amp;\quad-\frac{\lambda s^2}{4}\cos(\sqrt\lambda\,x)\\
+              &amp;\quad-\frac{\lambda s^2}{4}e^{\alpha_2x}\cos2\theta\\
+              &amp;\quad+O(s^3).
               \end{aligned}\]
             </div>
             <div class="cylinder-needed-later">
