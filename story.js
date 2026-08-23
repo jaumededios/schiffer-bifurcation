@@ -78,6 +78,108 @@
     );
   }
 
+  // The two model geometries in Section 3 move slowly from the symmetric
+  // solution (s = 0) into the displayed nonradial branch.  The animation only
+  // runs while the section is visible, and reduced-motion users see one fixed
+  // nonzero member of the family.
+  const worldSection = select("#borrow-flexibility");
+  const cylinderDomainBack = select(".cylinder-domain-back");
+  const cylinderDomainFront = select(".cylinder-domain-front");
+  const cylinderBoundaryBack = select(".cylinder-boundary-back");
+  const cylinderBoundaryFront = select(".cylinder-boundary-front");
+  const sphereDomainFill = select(".sphere-domain-fill");
+  const sphereBoundaryBack = select(".sphere-boundary-back");
+  const sphereBoundaryFront = select(".sphere-boundary-front");
+
+  function worldPath(points, close = false) {
+    const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join("");
+    return close ? `${path}Z` : path;
+  }
+
+  function cylinderBoundaryHalf(baseX, start, end, branchAmount) {
+    const points = [];
+    for (let index = 0; index <= 56; index++) {
+      const theta = start + (end - start) * index / 56;
+      points.push({
+        x: baseX + 37 * Math.cos(theta) + 18 * branchAmount * Math.cos(theta - .65),
+        y: 150 + 88 * Math.sin(theta),
+      });
+    }
+    return points;
+  }
+
+  function renderWorldBifurcations(branchAmount) {
+    if (!cylinderDomainBack || !cylinderDomainFront || !cylinderBoundaryBack
+        || !cylinderBoundaryFront || !sphereDomainFill || !sphereBoundaryBack
+        || !sphereBoundaryFront) return;
+
+    const leftFront = cylinderBoundaryHalf(165, -Math.PI / 2, Math.PI / 2, branchAmount);
+    const rightFront = cylinderBoundaryHalf(355, -Math.PI / 2, Math.PI / 2, branchAmount);
+    const leftBack = cylinderBoundaryHalf(165, Math.PI / 2, 3 * Math.PI / 2, branchAmount);
+    const rightBack = cylinderBoundaryHalf(355, Math.PI / 2, 3 * Math.PI / 2, branchAmount);
+    cylinderDomainFront.setAttribute("d", worldPath([...leftFront, ...[...rightFront].reverse()], true));
+    cylinderDomainBack.setAttribute("d", worldPath([...leftBack, ...[...rightBack].reverse()], true));
+    cylinderBoundaryFront.setAttribute("d", `${worldPath(leftFront)}${worldPath(rightFront)}`);
+    cylinderBoundaryBack.setAttribute("d", `${worldPath(leftBack)}${worldPath(rightBack)}`);
+
+    const sphereFront = [];
+    const sphereBack = [];
+    for (let index = 0; index <= 96; index++) {
+      const theta = -Math.PI / 2 + Math.PI * index / 96;
+      const envelope = Math.cos(theta);
+      const displacement = 38 * branchAmount * envelope * (.67 + .33 * Math.cos(8 * theta));
+      const x = 260 + 111 * Math.sin(theta);
+      sphereFront.push({ x, y: 143 + displacement });
+      sphereBack.push({ x, y: 143 - displacement });
+    }
+    const frontPath = worldPath(sphereFront);
+    sphereDomainFill.setAttribute("d", `${frontPath}A111 111 0 0 0 149 143Z`);
+    sphereBoundaryFront.setAttribute("d", frontPath);
+    sphereBoundaryBack.setAttribute("d", worldPath(sphereBack));
+  }
+
+  if (worldSection) {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let worldAnimationFrame = null;
+    let worldAnimationElapsed = 0;
+    let worldAnimationPrevious = null;
+    let worldSectionVisible = false;
+    let worldLastRender = 0;
+
+    const stopWorldAnimation = () => {
+      if (worldAnimationFrame) cancelAnimationFrame(worldAnimationFrame);
+      worldAnimationFrame = null;
+      worldAnimationPrevious = null;
+    };
+    const worldAnimationTick = (now) => {
+      if (!worldSectionVisible || document.hidden) { stopWorldAnimation(); return; }
+      if (worldAnimationPrevious !== null) worldAnimationElapsed += Math.min(80, now - worldAnimationPrevious);
+      worldAnimationPrevious = now;
+      if (now - worldLastRender >= 32) {
+        const branchAmount = .5 - .5 * Math.cos(TAU * (worldAnimationElapsed % 18000) / 18000);
+        renderWorldBifurcations(branchAmount);
+        worldLastRender = now;
+      }
+      worldAnimationFrame = requestAnimationFrame(worldAnimationTick);
+    };
+    const syncWorldAnimation = () => {
+      if (reducedMotion) { stopWorldAnimation(); renderWorldBifurcations(.72); return; }
+      if (worldSectionVisible && !document.hidden && !worldAnimationFrame) {
+        worldAnimationFrame = requestAnimationFrame(worldAnimationTick);
+      } else if ((!worldSectionVisible || document.hidden) && worldAnimationFrame) {
+        stopWorldAnimation();
+      }
+    };
+
+    renderWorldBifurcations(reducedMotion ? .72 : 0);
+    const worldObserver = new IntersectionObserver((entries) => {
+      worldSectionVisible = entries.some((entry) => entry.isIntersecting);
+      syncWorldAnimation();
+    }, { threshold: .05 });
+    worldObserver.observe(worldSection);
+    document.addEventListener("visibilitychange", syncWorldAnimation);
+  }
+
   function fillRange(input) {
     const amount = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
     input.style.setProperty("--value", `${amount * 100}%`);
