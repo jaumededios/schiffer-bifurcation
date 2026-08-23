@@ -10,6 +10,7 @@
     link.addEventListener("click", () => { siteToc.open = false; });
   });
   const TAU = Math.PI * 2;
+  const GEOMETRY_PROFILE_PHASE = -Math.PI / 2;
   const colors = {
     ink: "#101b20",
     paper: "#f1eee5",
@@ -189,8 +190,9 @@
       const a0 = index / (copies * samplesPerCopy) * TAU;
       const a1 = (index + 1.03) / (copies * samplesPerCopy) * TAU;
       const middle = (a0 + a1) / 2;
-      const value = Math.cos(copies * middle);
-      const localRadius = radius * (1 - wiggle * landingWall(copies * middle) / 28);
+      const psi = copies * middle + GEOMETRY_PROFILE_PHASE;
+      const value = Math.cos(psi);
+      const localRadius = radius * (1 - wiggle * landingWall(psi) / 28);
       context.beginPath(); context.moveTo(cx, cy);
       context.lineTo(cx + localRadius * Math.cos(a0), cy + localRadius * Math.sin(a0));
       context.lineTo(cx + localRadius * Math.cos(a1), cy + localRadius * Math.sin(a1));
@@ -232,7 +234,7 @@
     context.beginPath();
     for (let index = 0; index <= 900; index++) {
       const angle = index / 900 * TAU;
-      const localRadius = radius * (1 - wiggle * landingWall(copies * angle) / 28);
+      const localRadius = radius * (1 - wiggle * landingWall(copies * angle + GEOMETRY_PROFILE_PHASE) / 28);
       const x = cx + localRadius * Math.cos(angle); const y = cy + localRadius * Math.sin(angle);
       if (!index) context.moveTo(x, y); else context.lineTo(x, y);
     }
@@ -440,8 +442,8 @@
       context.restore();
     }
 
-    // Trace only the two generators. When the tip has left the frame, the
-    // The cone continues behind the visible portion of the drawing.
+    // Trace the two visible generators. The cone continues behind the visible
+    // portion of the drawing after its point has left the frame.
     context.strokeStyle = `rgba(241,238,229,${.18 + .82 * materialBlend})`; context.lineWidth = 1.7;
     context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
     context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
@@ -471,14 +473,18 @@
 
     const axialScale = (right - surfaceLeft) / 28 * 1.45;
     function rimPoint(theta, deformed) {
-      // A quarter-turn phase makes the leading cos(psi-phi) mode legible in
-      // this side view: opposite rim points move in opposite axial directions.
-      const psi = theta - Math.PI / 2;
-      const shift = deformed ? waveAmount * axialScale * landingWall(psi) : 0;
+      const psi = theta + GEOMETRY_PROFILE_PHASE;
+      const wall = deformed ? waveAmount * landingWall(psi) : 0;
+      const radialScale = 1 - wall / 28;
+      const cylinderX = right + rimDepth * Math.cos(theta) - wall * axialScale;
+      const cylinderY = cx + half * Math.sin(theta);
+      const coneX = tip + radialScale * (right - tip + rimDepth * Math.cos(theta));
+      const coneY = cx + radialScale * half * Math.sin(theta);
+      const coneAmount = 1 - t;
       return {
-        x: right + rimDepth * Math.cos(theta) + shift,
-        y: cx + half * Math.sin(theta),
-        shift: shift,
+        x: lerp(cylinderX, coneX, coneAmount),
+        y: lerp(cylinderY, coneY, coneAmount),
+        shift: lerp(cylinderX, coneX, coneAmount) - (right + rimDepth * Math.cos(theta)),
       };
     }
 
@@ -560,8 +566,8 @@
       for (let sample = 0; sample < samples; sample++) {
         const local0 = -halfAngle + sample / samples * 2 * halfAngle;
         const local1 = -halfAngle + (sample + 1) / samples * 2 * halfAngle;
-        const psi0 = copies * local0;
-        const psi1 = copies * local1;
+        const psi0 = copies * local0 + GEOMETRY_PROFILE_PHASE;
+        const psi1 = copies * local1 + GEOMETRY_PROFILE_PHASE;
         const radius0 = radius * (1 - landingWall(psi0) / 28);
         const radius1 = radius * (1 - landingWall(psi1) / 28);
         const angle0 = rotation + local0;
@@ -586,7 +592,7 @@
       context.beginPath();
       for (let index = 0; index <= 1000; index++) {
         const angle = index / 1000 * TAU;
-        const psi = copies * angle;
+        const psi = copies * angle + GEOMETRY_PROFILE_PHASE;
         const localRadius = radius * (1 - landingWall(psi) / 28);
         const x = cx + localRadius * Math.cos(angle);
         const y = cy + localRadius * Math.sin(angle);
@@ -605,25 +611,26 @@
     const meshOpacity = 1 - ease((t - .64) / .11);
     const cy = height * .54;
     const finalRadius = Math.min(width * .27, height * .34);
-    const tip = lerp(width * .15, width * .5, transfer);
-    const length = lerp(width * .69, finalRadius, transfer);
+    const initialTip = width * .16;
+    const initialRight = width * .84;
+    const tip = lerp(initialTip, width * .5, transfer);
+    const length = lerp(initialRight - initialTip, finalRadius, transfer);
     const half = lerp(Math.min(118, height * .23), finalRadius * Math.sin(Math.PI / 28), transfer);
     const fold = 1 - open;
-    const depthProjection = .1;
+    const rimDepth = 10 * (1 - transfer);
 
     function boundaryScale(angular) {
-      return 1 - landingWall(Math.PI * angular) / 28;
+      return 1 - landingWall(Math.PI * angular + GEOMETRY_PROFILE_PHASE) / 28;
     }
 
-    function sheetPoint(fraction, angular) {
-      const radial = fraction * boundaryScale(angular);
+    function sheetPoint(fraction, angular, deformed = true) {
+      const radial = fraction * (deformed ? boundaryScale(angular) : 1);
+      const theta = Math.PI * angular;
       const flatY = radial * half * angular;
-      const coneY = radial * half * Math.sin(Math.PI * angular);
-      const coneZ = radial * half * Math.cos(Math.PI * angular);
+      const coneY = radial * half * Math.sin(theta);
       const y = lerp(flatY, coneY, fold);
-      const z = fold * coneZ;
       return {
-        x: tip + radial * length + depthProjection * z,
+        x: tip + radial * length + fold * radial * rimDepth * Math.cos(theta),
         y: cy + y,
       };
     }
@@ -644,28 +651,54 @@
         const p2 = sheetPoint(1, strip.a1);
         context.beginPath(); context.moveTo(p0.x, p0.y); context.lineTo(p1.x, p1.y); context.lineTo(p2.x, p2.y); context.closePath();
         const warmth = (strip.a0 + strip.a1 + 2) / 4;
-        context.fillStyle = warmth > .5 ? "rgba(255,116,73,.26)" : "rgba(77,162,163,.28)";
+        const alpha = .26 + .16 * fold;
+        context.fillStyle = warmth > .5
+          ? `rgba(255,116,73,${alpha})`
+          : `rgba(77,162,163,${alpha})`;
         context.fill();
       });
 
-      for (let radialIndex = 1; radialIndex <= 7; radialIndex++) {
+      for (let radialIndex = 0; radialIndex < 8; radialIndex++) {
+        const radial = .45 + radialIndex / 12;
         context.beginPath();
         for (let index = 0; index <= 140; index++) {
           const angular = -1 + 2 * index / 140;
-          const point = sheetPoint(radialIndex / 7, angular);
+          const point = sheetPoint(radial, angular);
           if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
         }
-        context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.3)" : "rgba(241,238,229,.18)";
-        context.lineWidth = radialIndex === 7 ? 1.5 : .8; context.stroke();
+        context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)";
+        context.lineWidth = 1; context.stroke();
       }
 
-      for (let index = 1; index < 12; index++) {
-        const angular = -1 + 2 * index / 12;
+      for (let index = -3; index <= 3; index++) {
+        const flatAngular = index / 3;
+        const coneAngular = Math.asin(flatAngular) / Math.PI;
+        const angular = lerp(flatAngular, coneAngular, fold);
         const start = sheetPoint(0, angular);
         const end = sheetPoint(1, angular);
         context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
-        context.strokeStyle = "rgba(241,238,229,.12)"; context.lineWidth = .8; context.stroke();
+        context.strokeStyle = index % 2 ? "rgba(77,162,163,.22)" : "rgba(241,238,229,.13)";
+        context.lineWidth = 1; context.stroke();
       }
+
+      if (fold > .02) {
+        context.beginPath();
+        for (let index = 0; index <= 240; index++) {
+          const point = sheetPoint(1, -1 + 2 * index / 240, false);
+          if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+        }
+        context.strokeStyle = `rgba(77,162,163,${.72 * fold})`;
+        context.setLineDash([4, 5]); context.lineWidth = 1.2; context.stroke(); context.setLineDash([]);
+      }
+
+      context.beginPath();
+      for (let index = 0; index <= 360; index++) {
+        const point = sheetPoint(1, -1 + 2 * index / 360);
+        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = colors.paper; context.lineWidth = 2.4;
+      context.shadowColor = colors.orange; context.shadowBlur = 7;
+      context.stroke(); context.shadowBlur = 0;
 
       const sideAStart = sheetPoint(0, -1);
       const sideAEnd = sheetPoint(1, -1);
@@ -704,7 +737,6 @@
     const scaled = Math.max(0, Math.min(1, progress)) * 6;
     const segment = Math.min(5, Math.floor(scaled));
     const local = scaled - segment;
-    if (progress >= 1) { drawNfoldDisk(context, width, height, { wiggle: 1, divisions: 0 }); return; }
     if (segment === 0) drawNfoldDisk(context, width, height, { selection: ease(local), divisions: 1 });
     else if (segment === 1) drawFoldingSector(context, width, height, local);
     else if (segment === 2) drawConeCylinder(context, width, height, local, 0);
@@ -762,7 +794,7 @@
     for (let index = 0; index <= 1400; index++) {
       const angle = index / 1400 * TAU;
       const psi = 28 * angle;
-      const physicalRadius = radius * (1 - landingWall(psi) / 28);
+      const physicalRadius = radius * (1 - landingWall(psi + GEOMETRY_PROFILE_PHASE) / 28);
       const x = cx + physicalRadius * Math.cos(angle);
       const y = cy + physicalRadius * Math.sin(angle);
       if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
@@ -826,6 +858,41 @@
       fillRange(select("#storyGeometryRange"));
       renderGeometryStory();
       if (amount >= 1) { stopGeometryPlayback(); return; }
+      geometryState.frame = requestAnimationFrame(tick);
+    };
+    geometryState.frame = requestAnimationFrame(tick);
+  }
+
+  function animateGeometryTo(target) {
+    const destination = Math.max(0, Math.min(1, target));
+    stopGeometryPlayback();
+    const startProgress = geometryState.progress;
+    const distance = Math.abs(destination - startProgress);
+    if (distance < .0005) {
+      geometryState.progress = destination;
+      geometryRange.value = destination;
+      fillRange(geometryRange);
+      renderGeometryStory();
+      return;
+    }
+    geometryState.playing = true;
+    select("#storyGeometryPlayIcon").textContent = "Ⅱ";
+    select("#storyGeometryPlayLabel").textContent = "Pause";
+    const start = performance.now();
+    const duration = Math.max(480, 9000 * distance);
+    const tick = (now) => {
+      if (!geometryState.playing) return;
+      const amount = Math.min(1, (now - start) / duration);
+      geometryState.progress = lerp(startProgress, destination, ease(amount));
+      geometryRange.value = geometryState.progress;
+      fillRange(geometryRange);
+      renderGeometryStory();
+      if (amount >= 1) {
+        geometryState.progress = destination;
+        stopGeometryPlayback();
+        renderGeometryStory();
+        return;
+      }
       geometryState.frame = requestAnimationFrame(tick);
     };
     geometryState.frame = requestAnimationFrame(tick);
@@ -1122,7 +1189,7 @@
     stopGeometryPlayback(); geometryState.progress = 0; geometryRange.value = 0; fillRange(geometryRange); renderGeometryStory();
   });
   document.querySelectorAll("[data-story-stage]").forEach((button) => button.addEventListener("click", () => {
-    stopGeometryPlayback(); geometryState.progress = Number(button.dataset.storyStage); geometryRange.value = geometryState.progress; fillRange(geometryRange); renderGeometryStory();
+    animateGeometryTo(Number(button.dataset.storyStage));
   }));
 
   const phaseRange = select("#phaseStoryRange");
