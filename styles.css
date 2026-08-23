@@ -241,10 +241,6 @@ a { color: inherit; }
 .geometry-toolbar > span:last-child { margin-left: auto; color: rgba(241,238,229,.35); font: 7px var(--mono); text-transform: uppercase; }
 .geometry-canvas-wrap { min-height: 0; position: relative; }
 #storyGeometryCanvas { display: block; width: 100%; height: 100%; }
-.geometry-principle { display: grid; grid-template-columns: .8fr 1.2fr; gap: 45px; padding: 35px; border: 1px solid var(--line-light); border-top: 0; }
-.geometry-principle strong { font: 300 27px/1.05 var(--serif); }
-.geometry-principle p { margin: 0; color: rgba(241,238,229,.46); font-size: 10px; line-height: 1.72; }
-
 .experiment-story-lead { display: grid; grid-template-columns: 1fr 1fr; gap: 45px; margin: 0 0 38px 55px; max-width: 1080px; }
 .experiment-story-lead p { margin: 0; color: rgba(241,238,229,.48); font-size: 10px; line-height: 1.72; }
 .experiment-story-lead p > span:first-child { display: block; margin-bottom: 9px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -710,7 +706,7 @@ body > footer { color: var(--ink); background: var(--paper); }
 :is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(.play-button, button:not(.tab-button)) { color: var(--ink); border-color: var(--line); }
 :is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(19,33,38,.14)); }
 
-:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .geometry-principle, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
+:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
 
 .light-story-heading .section-number { color: var(--ink); border-color: var(--ink); }
 .disk-section-lead,
@@ -720,7 +716,6 @@ body > footer { color: var(--ink); background: var(--paper); }
 .theorem-statement p,
 .disk-proof-conclusion p,
 .geometry-lead,
-.geometry-principle p,
 .experiment-story-lead,
 .cylinder-spectral-seed,
 .debye-lead,
@@ -867,7 +862,6 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .geometry-canvas-panel { min-height: 650px; grid-template-rows: 62px 550px 36px; }
   .geometry-toolbar { padding: 0 12px; }
   .geometry-toolbar > span:last-child { display: none; }
-  .geometry-principle { grid-template-columns: 1fr; }
   .cylinder-seed-copy, .cylinder-kernel-bridge, .cylinder-journal-note { grid-template-columns: 1fr; gap: 18px; padding: 27px 22px; }
   .cylinder-seed-copy > p:last-child { grid-column: auto; margin: 0; }
   .cylinder-seed-copy h3 { font-size: 29px; }
