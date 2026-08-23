@@ -54,6 +54,30 @@
     }
   }
 
+  // Subsection 5.1 follows the usual mathematical order: theorem, numerical
+  // illustration, and then the derivation of the linear and quadratic terms.
+  const halfCylinderHeading = select("#half-cylinder-strategy");
+  const halfCylinderIntroduction = select(".half-cylinder-introduction");
+  const cylinderTheorem = select(".cylinder-theorem");
+  const cylinderAppletIntroduction = select(".experiment-story-lead");
+  const cylinderLaboratory = select("#experiment > .laboratory");
+  const cylinderReadout = select("#experiment > .readout-strip");
+  const cylinderSeparation = select(".cylinder-spectral-seed");
+  const cylinderJetProof = select(".cylinder-jet-proof");
+  if (halfCylinderHeading && halfCylinderIntroduction && cylinderTheorem
+      && cylinderAppletIntroduction && cylinderLaboratory && cylinderReadout
+      && cylinderSeparation && cylinderJetProof) {
+    halfCylinderHeading.after(
+      halfCylinderIntroduction,
+      cylinderTheorem,
+      cylinderAppletIntroduction,
+      cylinderLaboratory,
+      cylinderReadout,
+      cylinderSeparation,
+      cylinderJetProof,
+    );
+  }
+
   function fillRange(input) {
     const amount = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
     input.style.setProperty("--value", `${amount * 100}%`);

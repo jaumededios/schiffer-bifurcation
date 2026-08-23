@@ -530,19 +530,23 @@
 
         <div id="half-cylinder-strategy" class="proof-strategy-subheading">
           <span>5.1 · the limiting half-cylinder</span>
-          <h3>A spectral coincidence produces a uniformly controlled bifurcating branch.</h3>
+          <h3>Uniform bifurcation for \(2\leq\lambda\leq3\).</h3>
+        </div>
+
+        <div class="half-cylinder-introduction">
+          <p>In this subsection we will show that the cylinder solution can be perturbed independently of the eigenvalue <span class="formula">\(\lambda\in[2,3]\)</span>: the same interval in the bifurcation parameter <span class="formula">\(s\)</span> works for every <span class="formula">\(\lambda\)</span> in this range.</p>
         </div>
 
         <div class="cylinder-spectral-seed">
           <div class="cylinder-seed-copy">
-            <p class="eyebrow">The spectral input</p>
-            <h3>A radial Neumann mode and a nonradial Dirichlet mode solve the same equation.</h3>
-            <p>Write <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span> on the flat half-cylinder <span class="formula">\(\{x\le 0\}\times S^1\)</span>. For every <span class="formula">\(\lambda&gt;1\)</span>, the following two separated modes solve the same Helmholtz equation.</p>
+            <p class="eyebrow">5.1.1 · separation of variables</p>
+            <h3>The kernel of the linearized problem is explicit.</h3>
+            <p>Let <span class="formula">\(\mathcal C_-=(-\infty,0]\times S^1\)</span> and <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span>. The undeformed Schiffer solution is independent of <span class="formula">\(\theta\)</span>. By Proposition 2.1, a first-order deformation of the boundary must come from a nonradial Dirichlet solution at the same eigenvalue. Separation of variables gives the two functions below.</p>
           </div>
 
           <div class="cylinder-mode-pair">
             <article>
-              <span>radial Neumann mode</span>
+              <span>the undeformed solution</span>
               <div class="tex-display">
                 \[
                 u_0(x)=\cos(\sqrt\lambda\,x),
@@ -556,7 +560,7 @@
               <p>This is the undeformed Schiffer solution: it is constant on the boundary and has zero normal derivative there.</p>
             </article>
             <article>
-              <span>first angular Dirichlet mode</span>
+              <span>the linearized deformation</span>
               <div class="tex-display">
                 \[
                 v_1(x,\theta)=\sin(\sqrt{\lambda-1}\,x)\cos\theta,
@@ -572,7 +576,7 @@
           </div>
 
           <div class="cylinder-kernel-bridge">
-            <strong>From the kernel to a moving boundary.</strong>
+            <strong>Recovering the boundary displacement.</strong>
             <div>
               <p>Write <span class="formula">\(h_s=s f+O(s^2)\)</span> and <span class="formula">\(u_s=u_0+s v+O(s^2)\)</span>. Linearizing the two boundary conditions at <span class="formula">\(x=0\)</span> gives</p>
               <div class="tex-display">
@@ -587,15 +591,15 @@
           </div>
 
           <div class="cylinder-journal-note">
-            <strong>Relation with the cylinder construction.</strong>
-            <p>The construction is the one-ended analogue of the argument of Fall–Minlend–Weth for Schiffer bifurcations in compact flat cylinders. In the half-cylinder model, the condition at the second boundary is replaced by boundedness as <span class="formula">\(x\to-\infty\)</span>. The local calculation at <span class="formula">\(x=0\)</span> is unchanged: the spectral coincidence supplies the kernel, separation of variables determines the complementary modes, and a local bifurcation theorem produces a nonlinear branch. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
+            <strong>Existence of the nonlinear branch.</strong>
+            <p>Fall, Minlend and Weth prove the corresponding bifurcation theorem for compact flat cylinders. The half-cylinder statement used here follows from the same separation-of-variables and local-bifurcation argument: the boundary condition at the second end is replaced by boundedness as <span class="formula">\(x\to-\infty\)</span>. For <span class="formula">\(2\leq\lambda\leq3\)</span>, the inverses on the complementary Fourier modes are bounded uniformly in <span class="formula">\(\lambda\)</span>. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
           </div>
         </div>
 
         <div class="cylinder-theorem">
-          <div class="theorem-label"><span>Theorem 5.1</span><small>uniform half-cylinder branch</small></div>
+          <div class="theorem-label"><span>Theorem 5.1</span><small>uniformly for \(2\leq\lambda\leq3\)</small></div>
           <div class="theorem-statement">
-            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span> and a compact interval <span class="formula">\(K\Subset(1,4)\)</span>. There is an <span class="formula">\(\varepsilon_K&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, with <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, defined for <span class="formula">\(\lambda\in K\)</span> and <span class="formula">\(|s|&lt;\varepsilon_K\)</span>, such that</p>
+            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
             <div class="theorem-system tex-display">
               \[
               \begin{cases}
@@ -609,30 +613,30 @@
             <div class="theorem-expansion tex-display">
               \[
               h_{\lambda,s}(\theta)
-              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O_K(s^3),
+              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O(s^3),
               \]
               \[\begin{aligned}
               u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
               &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
               &amp;\quad-\frac{\lambda s^2}{4}
               \left(\cos(\sqrt\lambda\,x)+e^{\alpha_2x}\cos2\theta\right)
-              +O_K(s^3).
+              +O(s^3).
               \end{aligned}\]
             </div>
             <div class="cylinder-needed-later">
               <span>Something we will need later</span>
               <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. In the cone calculation, the exponential derivative is replaced by the corresponding Bessel logarithmic derivative, whose large-radius limit is <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
             </div>
-            <p class="theorem-note">The remainders are uniform for <span class="formula">\(\lambda\in K\)</span> on every fixed boundary collar. Modes <span class="formula">\(k\ge2\)</span> are selected by their bounded tails <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>. The exclusion of <span class="formula">\(\lambda=1,4\)</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
+            <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
           </div>
         </div>
 
         <details class="cylinder-jet-proof proof-details">
-          <summary><span>Formal first- and second-order calculation</span><i>expand +</i></summary>
+          <summary><span>Derivation of the first- and second-order terms</span><i>expand +</i></summary>
           <div class="cylinder-jet-proof-body">
             <div class="cylinder-proof-scope">
-              <span>What this calculation proves</span>
-              <p>This Taylor calculation determines a necessary two-jet. Assume a <span class="formula">\(C^3\)</span> one-ended branch exists at fixed <span class="formula">\(\lambda\in(1,4)\)</span>. The compact-cylinder branches are constructed by <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth</a>, and the half-cylinder case uses the same separated-mode and local-bifurcation argument. The Schiffer equations then force the two-jet displayed above.</p>
+              <span>Proof of the expansion</span>
+              <p>Assume the branch supplied by Theorem 5.1 and fix <span class="formula">\(\lambda\in[2,3]\)</span>. Expanding the equation and the two boundary conditions determines its two-jet as follows.</p>
             </div>
 
             <div class="cylinder-proof-grid">
@@ -712,8 +716,7 @@
         </details>
 
         <div class="experiment-story-lead">
-          <p><span>Uniformity in \(\lambda\).</span> The size of the allowed perturbation can be chosen uniformly while <span class="formula">\(\lambda\)</span> stays away from the thresholds <span class="formula">\(1\)</span> and <span class="formula">\(4\)</span>. The corresponding estimate remains uniform in the large-radius cone problem.</p>
-          <p><span>Numerical approximation.</span> The plotted field is a finite Fourier approximation of this family. For each displayed pair <span class="formula">\((\lambda,s)\)</span>, the boundary graph and the Helmholtz field are solved simultaneously. The flat and three-dimensional panels show the same computed solution in two coordinate representations.</p>
+          <p>The applet below computes a finite Fourier approximation to the family in Theorem 5.1. For each <span class="formula">\((\lambda,s)\in[2,3]\times[-0.85,0.85]\)</span>, it solves simultaneously for the boundary graph and the Helmholtz field. The flat and three-dimensional panels display the same numerical solution in two coordinate systems.</p>
         </div>
 
         <div class="laboratory">
@@ -728,8 +731,8 @@
                 <label for="lambdaRange">spectral parameter <i>λ</i></label>
                 <output id="lambdaValue" for="lambdaRange">2.40</output>
               </div>
-              <input id="lambdaRange" type="range" min="1.01" max="3.99" value="2.40" step="0.01">
-              <div class="range-scale"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+              <input id="lambdaRange" type="range" min="2" max="3" value="2.40" step="0.01">
+              <div class="range-scale"><span>2</span><span>2.5</span><span>3</span></div>
               <p>This parameter determines the oscillatory normal frequency and the decay rate of each angular mode.</p>
             </div>
 
@@ -1461,7 +1464,7 @@
       <button id="closeMethod" type="button" aria-label="Close">×</button>
       <p class="eyebrow">Computational notes</p>
       <h2>What is exact, and what is computed numerically.</h2>
-      <p>The limiting problem is posed on the half-infinite cylinder <span class="formula">\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>. Uniformly for <span class="formula">\(\lambda\)</span> in each compact <span class="formula">\(K\Subset(1,4)\)</span>, the local bifurcation argument used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">\(h_{\lambda,s}=s\cos\theta+O_K(s^2)\)</span>. The finite window is only the portion of this infinite-domain solution displayed in the browser.</p>
+      <p>The limiting problem is posed on the half-infinite cylinder <span class="formula">\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>. The local bifurcation argument used for compact flat-cylinder domains gives a one-ended branch with <span class="formula">\(h_{\lambda,s}=s\cos\theta+O(s^2)\)</span>, uniformly for <span class="formula">\(2\leq\lambda\leq3\)</span>. The finite window is the portion of this infinite-domain solution displayed in the browser.</p>
       <p>We set <span class="formula">\(\Gamma_s:x=h_s(\theta)=s\cos(\theta-\phi)+h_2\cos 2(\theta-\phi)+h_3\cos 3(\theta-\phi)\)</span>. The mean translation is fixed to zero and <span class="formula">\(h_1=s\)</span> is the amplitude gauge. The field is a truncated sum of separated solutions of <span class="formula">\((\Delta+\lambda)u=0\)</span> in the physical cylinder coordinates.</p>
       <p>The <span class="formula">\(k=0\)</span> and <span class="formula">\(k=1\)</span> radial factors are oscillatory. For <span class="formula">\(k\ge2\)</span> they are <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\cos(k\theta)\)</span> and <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\sin(k\theta)\)</span>, which decay as <span class="formula">\(x\to-\infty\)</span>. Consequently, the interior PDE residual is identically zero.</p>
       <p>For the selected <span class="formula">\((\lambda,s)\)</span>, a damped Gauss–Newton solve with an analytic boundary Jacobian updates the field coefficients, <span class="formula">\(h_2\)</span>, and <span class="formula">\(h_3\)</span> simultaneously on at least 256 angular samples; a final column-scaled QR solve refines the field at the recovered boundary. Exponential modes are rescaled by constants to avoid overflow without changing their span. The reported defects are evaluated on a separate grid of at least 512 shifted samples in the normalized metric <span class="formula">\(\lVert f\rVert^2=(2\pi)^{-1}\int|f(\theta)|^2\,d\theta\)</span>. The two boundary corrections and independent <span class="formula">\(\lambda,s\)</span> sliders define a finite-dimensional free-boundary approximation. The reported defects measure its truncation error.</p>
