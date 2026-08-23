@@ -5,6 +5,10 @@
   if (!data) return;
   const crossingData = window.SCHIFFER_ABUNDANCE_DATA;
   const select = (selector) => document.querySelector(selector);
+  const siteToc = select(".site-toc");
+  siteToc?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => { siteToc.open = false; });
+  });
   const TAU = Math.PI * 2;
   const colors = {
     ink: "#101b20",

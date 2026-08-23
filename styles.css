@@ -31,6 +31,19 @@ a { color: inherit; }
 .status i, .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(77,162,163,.14); }
 .method-button { justify-self: end; padding: 0 0 5px; color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--ink); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
 
+.site-toc { position: fixed; z-index: 40; top: 92px; left: 18px; width: min(310px, calc(100vw - 36px)); color: var(--ink); background: var(--paper); border: 1px solid var(--line); box-shadow: 0 18px 55px rgba(19,33,38,.13); }
+.site-toc summary { min-height: 42px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; gap: 18px; list-style: none; cursor: pointer; font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.site-toc summary::-webkit-details-marker { display: none; }
+.site-toc summary i { color: var(--orange); font-style: normal; }
+.site-toc[open] summary i { font-size: 0; }
+.site-toc[open] summary i::after { content: "close −"; font-size: 8px; }
+.site-toc nav { display: grid; border-top: 1px solid var(--line); }
+.site-toc a { min-height: 39px; padding: 8px 14px; display: grid; grid-template-columns: 30px minmax(0,1fr); align-items: center; color: var(--muted); border-bottom: 1px solid var(--line); text-decoration: none; font-size: 10px; line-height: 1.35; }
+.site-toc a:last-child { border-bottom: 0; }
+.site-toc a:hover, .site-toc a:focus-visible { color: var(--ink); background: rgba(255,116,73,.07); outline: 0; }
+.site-toc a b { color: var(--orange); font: 7px var(--mono); font-weight: 400; }
+@media (min-width: 761px) { .site-toc:not([open]) { width: 220px; } }
+
 .intro { padding: 76px 7vw 92px; display: grid; grid-template-rows: auto auto auto; }
 .intro-index { display: flex; gap: 15px; color: var(--muted); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .intro-index span { color: var(--orange); }
@@ -664,6 +677,91 @@ footer { min-height: 190px; padding: 35px 4vw; display: grid; grid-template-colu
 footer span { opacity: .43; }
 footer a { text-decoration: none; }
 
+/* A single warm paper surface carries the exposition. Dark fields are reserved
+   for numerical canvases, where they are part of the common colour scale. */
+.intro,
+.story-question,
+.disk-obstruction,
+.borrow-flexibility,
+.geometric-escape,
+.experiment,
+.cone-experiment,
+.modes-experiment,
+.phase-story,
+.debye-experiment,
+.abundance-experiment,
+body > footer { color: var(--ink); background: var(--paper); }
+
+:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) { --line-light: var(--line); }
+:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(h2, h3, h4, strong, .tex-display, .formula) { color: var(--ink); }
+:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(p, li, summary, label, .control-value) { color: var(--muted); }
+:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(.play-button, button:not(.tab-button)) { color: var(--ink); border-color: var(--line); }
+:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(19,33,38,.14)); }
+
+:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion, .geometry-principle, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
+
+.light-story-heading .section-number { color: var(--ink); border-color: var(--ink); }
+.disk-section-lead,
+.linearization-explanation,
+.shape-variation-heading p,
+.linearization-core > div > p,
+.theorem-statement p,
+.disk-proof-conclusion p,
+.geometry-lead,
+.geometry-principle p,
+.experiment-story-lead,
+.cylinder-spectral-seed,
+.debye-lead,
+.real-order-bridge p,
+.basis-limit-copy,
+.phase-story-lead,
+.abundance-lead,
+.near-integer-theorem p,
+.abundance-conclusion p { color: var(--muted); }
+
+.linear-equations,
+.theorem-system,
+.abundance-conclusion .tex-display { color: var(--ink); }
+.proof-details summary { color: var(--ink); }
+.disk-obstruction .linearization-section { color: var(--ink); }
+.disk-obstruction :is(.variation-map, .shape-variation-figure figcaption, .disk-theorem-label small) { color: var(--muted); }
+.disk-obstruction .variation-domain { fill: rgba(19,33,38,.025); stroke: rgba(19,33,38,.82); }
+.disk-obstruction .variation-domain-label { fill: rgba(19,33,38,.82); }
+.disk-obstruction .variation-svg-label { fill: rgba(19,33,38,.5); }
+.disk-obstruction .variation-original-boundary { stroke: rgba(19,33,38,.48); }
+.disk-obstruction .variation-point.original { fill: var(--ink); }
+
+.geometric-escape .geometry-lead span { color: var(--ink); }
+.geometric-escape .geometry-stages button { color: var(--muted); }
+.geometric-escape .geometry-stages button.active { color: var(--ink); }
+
+.experiment :is(.equations, .range-scale, .solver-readout span, .mode-spectrum header, .mode-bar > span:first-child, .mode-bar output) { color: var(--muted); }
+.experiment :is(.solver-readout strong, .cylinder-mode-pair .tex-display, .cylinder-kernel-bridge .tex-display, .theorem-expansion) { color: var(--ink); }
+.experiment .theorem-label small { color: var(--muted); }
+.experiment .mode-bar-track { background: rgba(19,33,38,.1); }
+
+.debye-experiment .equations,
+.debye-experiment :is(.real-order-theorem > div small, .formula-display b, .formula-note) { color: var(--muted); }
+.debye-experiment .formula-display i,
+.debye-experiment .debye-conclusion strong { color: var(--ink); }
+
+.abundance-experiment .equations,
+.abundance-experiment :is(.abundance-readout span, .abundance-toolbar > div:last-child) { color: var(--muted); }
+.abundance-examples-table thead th { color: var(--muted); }
+.abundance-examples-table tbody th { color: var(--ink); }
+.abundance-examples-table tbody td { color: var(--muted); }
+.abundance-examples-table [data-label]::before { color: var(--muted); }
+
+/* Numerical fields retain one dark plotting ground. */
+:is(.geometry-canvas-panel, .canvas-panel, .cone-canvas-panel, .modes-plot-panel, .phase-story-plot, .phase-family-toolbar, .phase-family-canvas-wrap, .phase-family > footer, .collar-field-laboratory, .debye-laboratory, .abundance-plot-panel) { --line-light: rgba(241,238,229,.16); color: var(--paper); background: #101b20; }
+:is(.geometry-canvas-panel, .canvas-panel, .cone-canvas-panel, .modes-plot-panel, .phase-story-plot, .phase-family-toolbar, .phase-family-canvas-wrap, .phase-family > footer, .collar-field-laboratory, .debye-laboratory, .abundance-plot-panel) :is(h3, h4, strong, .tex-display, .formula) { color: var(--paper); }
+:is(.geometry-canvas-panel, .canvas-panel, .cone-canvas-panel, .modes-plot-panel, .phase-story-plot, .phase-family-toolbar, .phase-family-canvas-wrap, .phase-family > footer, .collar-field-laboratory, .debye-laboratory, .abundance-plot-panel) :is(p, li, summary, label, .control-value) { color: rgba(241,238,229,.62); }
+:is(.geometry-canvas-panel, .canvas-panel, .cone-canvas-panel, .modes-plot-panel, .phase-story-plot, .phase-family-toolbar, .phase-family-canvas-wrap, .phase-family > footer, .collar-field-laboratory, .debye-laboratory, .abundance-plot-panel) :is(.play-button, button:not(.tab-button)) { color: var(--paper); border-color: var(--line-light); }
+:is(.collar-field-laboratory, .debye-laboratory) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(241,238,229,.14)); }
+
+body > footer { border-top: 1px solid var(--line); }
+body > footer span { color: var(--muted); opacity: 1; }
+
 dialog { width: min(650px, calc(100vw - 40px)); max-height: calc(100vh - 40px); padding: 48px; overflow: auto; color: var(--ink); background: var(--paper); border: 1px solid var(--ink); box-shadow: 0 30px 120px rgba(0,0,0,.38); }
 dialog::backdrop { background: rgba(19,33,38,.72); backdrop-filter: blur(4px); }
 dialog h2 { margin-bottom: 25px; font-size: 49px; }
@@ -712,6 +810,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
 @media (max-width: 760px) {
   .topbar { padding: 0 20px; grid-template-columns: 1fr auto; }
   .status { display: none; }
+  .site-toc { position: relative; top: auto; left: auto; width: auto; margin: 18px 18px 0; box-shadow: none; }
   .intro { padding: 56px 24px 68px; }
   .intro h1 { margin: 54px 0 42px; font-size: clamp(42px,12vw,52px); line-height: .94; }
   .intro-bottom p { max-width: none; }
@@ -877,7 +976,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .abundance-examples-table tbody tr { display: grid; grid-template-columns: .65fr 1.2fr 1fr; border-bottom: 1px solid var(--line-light); }
   .abundance-examples-table tbody tr:last-child { border-bottom: 0; }
   .abundance-examples-table th, .abundance-examples-table td { min-width: 0; padding: 14px 12px; border-bottom: 0; text-align: left; }
-  .abundance-examples-table [data-label]::before { content: attr(data-label); display: block; margin-bottom: 7px; color: rgba(241,238,229,.3); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+  .abundance-examples-table [data-label]::before { content: attr(data-label); display: block; margin-bottom: 7px; color: var(--muted); font: 6px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
   footer { grid-template-columns: 1fr; gap: 18px; }
 }
 
