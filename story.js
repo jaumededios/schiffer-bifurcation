@@ -26,6 +26,7 @@
   const main = select("main");
   [
     ".intro",
+    ".paper-reading-guide",
     "#question",
     "#disk-obstruction",
     "#borrow-flexibility",
@@ -36,6 +37,7 @@
     "#cone-experiment",
     "#modes-experiment",
     "#abundance-experiment",
+    ".paper-references",
   ].forEach((selector) => {
     const section = select(selector);
     if (main && section) main.appendChild(section);
@@ -63,19 +65,33 @@
   const cylinderLaboratory = select("#experiment > .laboratory");
   const cylinderReadout = select("#experiment > .readout-strip");
   const cylinderSeparation = select(".cylinder-spectral-seed");
+  const uniformCylinderProof = select(".uniform-cylinder-proof");
   const cylinderJetProof = select(".cylinder-jet-proof");
   if (halfCylinderHeading && halfCylinderIntroduction && cylinderTheorem
       && cylinderAppletIntroduction && cylinderLaboratory && cylinderReadout
       && cylinderSeparation && cylinderJetProof) {
-    halfCylinderHeading.after(
-      halfCylinderIntroduction,
-      cylinderTheorem,
-      cylinderAppletIntroduction,
-      cylinderLaboratory,
-      cylinderReadout,
-      cylinderSeparation,
-      cylinderJetProof,
-    );
+    if (document.documentElement.classList.contains("paper-edition")) {
+      halfCylinderHeading.after(
+        halfCylinderIntroduction,
+        cylinderSeparation,
+        cylinderTheorem,
+        ...(uniformCylinderProof ? [uniformCylinderProof] : []),
+        cylinderJetProof,
+        cylinderAppletIntroduction,
+        cylinderLaboratory,
+        cylinderReadout,
+      );
+    } else {
+      halfCylinderHeading.after(
+        halfCylinderIntroduction,
+        cylinderTheorem,
+        cylinderAppletIntroduction,
+        cylinderLaboratory,
+        cylinderReadout,
+        cylinderSeparation,
+        cylinderJetProof,
+      );
+    }
   }
 
   // The two model geometries in Section 3 move slowly from the symmetric

@@ -34,6 +34,7 @@ a { color: inherit; }
 .brand svg { width: 27px; height: 27px; fill: none; stroke: var(--ink); stroke-width: 1.25; }
 .brand svg .accent { stroke: var(--orange); stroke-width: 2.5; }
 .status { display: flex; align-items: center; gap: 9px; font: 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.status a { color: var(--orange); text-decoration: none; border-bottom: 1px solid currentColor; }
 .status i, .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(77,162,163,.14); }
 .method-button { justify-self: end; padding: 0 0 5px; color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--ink); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
 
@@ -60,6 +61,8 @@ a { color: inherit; }
 .intro-bottom p { max-width: 900px; margin: 0 0 0 auto; color: var(--muted); font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72; }
 .intro-bottom p > span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
 .intro-bottom p > .katex { font-size: .92em; }
+.intro-bottom .edition-link { margin-top: 18px; font: 11px/1.5 var(--mono) !important; letter-spacing: .06em; text-transform: uppercase; }
+.intro-bottom .edition-link a { color: var(--orange); text-decoration-thickness: 1px; text-underline-offset: 4px; }
 
 /* KaTeX follows the typography and palette of the surrounding argument. */
 .katex, .katex-display, .katex-html { color: inherit; }
