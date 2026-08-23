@@ -208,13 +208,13 @@
     context.textAlign = "left";
     context.textBaseline = "alphabetic";
     context.fillStyle = colors.orange;
-    context.font = "8px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText(eyebrow.toUpperCase(), 24, 26);
     context.fillStyle = colors.paper;
     context.font = "300 25px Newsreader, serif";
     context.fillText(title, 24, 54);
     context.fillStyle = colors.faint;
-    context.font = "8px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.textAlign = "right";
     context.fillText(detail, width - 24, 27);
     context.restore();
@@ -244,7 +244,7 @@
     context.fill();
     context.strokeStyle = colors.orange; context.lineWidth = 1.5; context.stroke();
     context.fillStyle = colors.paper;
-    context.font = "8px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText("one quotient sector", cx + radius * .62, cy - 22);
     context.fillStyle = colors.faint;
     context.fillText("one sector determines all 28 copies", cx - radius, cy + radius + 31);
@@ -279,7 +279,7 @@
     context.strokeStyle = colors.cyan; context.setLineDash([4, 5]);
     context.beginPath(); context.moveTo(collarLeft, cy - rimHalf); context.lineTo(collarLeft, cy + rimHalf); context.stroke();
     context.setLineDash([]);
-    context.fillStyle = colors.paper; context.font = "8px DM Mono, monospace";
+    context.fillStyle = colors.paper; context.font = "10px DM Mono, monospace";
     context.fillText("cone point", left - 7, cy + 20);
     context.fillText("five-unit collar", collarLeft + 7, cy - rimHalf - 13);
     context.fillStyle = colors.faint;
@@ -366,7 +366,7 @@
     }
     context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
     if (options.showCaption !== false) {
-      context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+      context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
       context.fillText("the same angular profile repeats N times", cx, cy + radius + 34);
     }
     context.restore();
@@ -492,7 +492,7 @@
     context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
 
     if (fold < .94 && discard > .72) {
-      context.fillStyle = colors.cyan; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillStyle = colors.cyan; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
       context.fillText("THE SAME PERIODIC SIDE", sideAEnd.x + 8, sideAEnd.y - 7);
       context.fillText("THE SAME PERIODIC SIDE", sideBEnd.x + 8, sideBEnd.y + 13);
       const seam = { x: tip + length - depthProjection * half, y: cy };
@@ -512,12 +512,12 @@
       const seamEnd = sheetPoint(1, -1);
       context.beginPath(); context.moveTo(seamStart.x, seamStart.y); context.lineTo(seamEnd.x, seamEnd.y);
       context.strokeStyle = colors.cyan; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
-      context.fillStyle = colors.cyan; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillStyle = colors.cyan; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
       context.fillText("PERIODIC QUOTIENT SEAM", seamEnd.x + 9, seamEnd.y - 8);
     }
 
     context.globalAlpha = 1;
-    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
     const caption = zoom < .82
       ? "magnify the whole disk around one angular period"
       : discard < .9
@@ -658,10 +658,10 @@
         context.beginPath(); context.arc(moved.x, moved.y, 3, 0, TAU);
         context.fillStyle = index ? colors.cyan : colors.orange; context.fill();
       });
-      context.fillStyle = colors.orange; context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
       context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, right - 330), cx - half - 29);
     }
-    context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
     if (t > .05) {
       const orderLabel = t > .965 ? "N → ∞" : `N ≈ ${Math.round(28 / (1 - .9 * t))}`;
       const tipMotion = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
@@ -835,7 +835,7 @@
       context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
       context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
 
-      context.font = "7px DM Mono, monospace"; context.textAlign = "left";
+      context.font = "10px DM Mono, monospace"; context.textAlign = "left";
       if (fold > .72) {
         context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
         context.strokeStyle = colors.orange; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
@@ -850,7 +850,7 @@
 
     if (fan > .001) drawSectorFan(context, width, height, fan);
 
-    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
     const caption = open < .92
       ? "cut the seam and open the cone"
       : transfer < .9
@@ -901,7 +901,7 @@
     }
     context.strokeStyle = colors.paper; context.lineWidth = 2.3;
     context.shadowColor = colors.orange; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
-    context.fillStyle = colors.faint; context.font = "8px DM Mono, monospace";
+    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace";
     context.fillText("x = −5", plot.left, plot.top + plot.height + 19);
     context.textAlign = "right"; context.fillText("boundary x = h(ψ)", plot.left + plot.width, plot.top + plot.height + 19);
     context.restore();
@@ -928,7 +928,7 @@
     context.closePath(); context.fillStyle = gradient; context.fill();
     context.strokeStyle = colors.paper; context.lineWidth = 2; context.shadowColor = colors.orange; context.shadowBlur = 6; context.stroke();
     context.shadowBlur = 0;
-    context.fillStyle = colors.orange; context.font = "8px DM Mono, monospace"; context.textAlign = "center";
+    context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
     context.fillText("actual continued N = 28 boundary coefficients", cx, cy + radius + 30);
     context.restore();
   }
@@ -1099,7 +1099,7 @@
     context.fillRect(0, 0, width, height);
     if (!rows.length) {
       context.fillStyle = colors.faint;
-      context.font = "9px DM Mono, monospace";
+      context.font = "11px DM Mono, monospace";
       context.fillText("crossing data unavailable", 24, 34);
       return;
     }
@@ -1142,7 +1142,7 @@
 
     const labelEvery = compact ? 2 : 1;
     context.fillStyle = "rgba(241,238,229,.42)";
-    context.font = compact ? "6px DM Mono, monospace" : "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.textAlign = "center";
     context.textBaseline = "top";
     for (let integer = phaseFamilyRMin; integer <= phaseFamilyRMax; integer += 1) {
@@ -1166,7 +1166,7 @@
     context.rotate(-Math.PI / 2);
     context.textAlign = "center";
     context.fillStyle = colors.orange;
-    context.font = "8px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText("BRANCH PARAMETER  s", 0, 0);
     context.restore();
 
@@ -1213,7 +1213,7 @@
 
       if (row.reference) {
         context.fillStyle = colors.paper;
-        context.font = "7px DM Mono, monospace";
+        context.font = "10px DM Mono, monospace";
         context.textAlign = "center";
         context.textBaseline = "bottom";
         context.fillText("R* = 28.026397", point.x, point.y - 11);
@@ -1221,13 +1221,17 @@
     });
 
     context.fillStyle = colors.orange;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.textAlign = "left";
     context.textBaseline = "top";
     context.fillText("s = 0 · COMMON-ZERO CROSSINGS", plot.left + 8, zeroY - 29);
     context.fillStyle = colors.faint;
-    context.fillText("each quadratic jet opens toward decreasing R", plot.left + 8, plot.top + 10);
-    context.fillText("white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
+    context.fillText(compact
+      ? "quadratic jets bend toward smaller R"
+      : "each quadratic jet opens toward decreasing R", plot.left + 8, plot.top + 10);
+    context.fillText(compact
+      ? "rings: two-jet reaches an integer"
+      : "white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
 
     if (phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
       const point = pointGeometry[phaseFamilyState.hoverIndex];
@@ -1244,10 +1248,10 @@
       context.textAlign = "left";
       context.textBaseline = "top";
       context.fillStyle = colors.paper;
-      context.font = "8px DM Mono, monospace";
+      context.font = "10px DM Mono, monospace";
       context.fillText(`R* = ${point.row.R.toFixed(6)}`, boxX + 10, boxY + 10);
       context.fillStyle = colors.faint;
-      context.font = "7px DM Mono, monospace";
+      context.font = "10px DM Mono, monospace";
       context.fillText(`λ* = ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
       context.fillText(`quadratic drop at |s|=1: ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
       if (point.row.reference) {
@@ -1291,8 +1295,8 @@
     const currentS = phaseStoryState.progress * data.landingS;
     context.beginPath(); context.arc(xMap(currentS), yMap(current), 5, 0, TAU);
     context.fillStyle = colors.orange; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.5; context.stroke();
-    context.fillStyle = colors.paper; context.font = "9px DM Mono, monospace"; context.fillText(options.title, rect.left + 14, rect.top + 21);
-    context.fillStyle = colors.faint; context.font = "7px DM Mono, monospace"; context.fillText(options.subtitle, rect.left + 14, rect.top + 39);
+    context.fillStyle = colors.paper; context.font = "11px DM Mono, monospace"; context.fillText(options.title, rect.left + 14, rect.top + 21);
+    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.fillText(options.subtitle, rect.left + 14, rect.top + 39);
     context.textAlign = "right"; context.fillText(options.maximumLabel, plot.left + plot.width, plot.top + 10);
     context.fillText("0", plot.left - 8, plot.top + plot.height); context.restore();
   }

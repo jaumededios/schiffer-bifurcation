@@ -717,7 +717,7 @@ function renderHeatmap() {
 
   context.save();
   context.fillStyle = "rgba(241,238,229,.55)";
-  context.font = "9px DM Mono, monospace";
+  context.font = "11px DM Mono, monospace";
   context.textBaseline = "top";
   context.fillText("θ = +π", 10, 9);
   context.fillText("θ = 0", 10, height / 2 + 8);
@@ -1066,7 +1066,7 @@ function renderConeSlice() {
 
   context.save();
   context.fillStyle = "rgba(241,238,229,.56)";
-  context.font = "9px DM Mono, monospace";
+  context.font = "11px DM Mono, monospace";
   context.fillText("ψ = +π", 10, 17);
   context.fillText("ψ = 0", 10, height / 2 + 4);
   context.fillText("ψ = −π", 10, height - 12);
@@ -1098,7 +1098,7 @@ function drawUnfoldedSeamInset(context, width, solution, gap) {
   context.fillRect(left, top, boxWidth, boxHeight);
   context.strokeRect(left, top, boxWidth, boxHeight);
   context.fillStyle = "rgba(241,238,229,.55)";
-  context.font = "8px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText("SEAM MAGNIFIER", left + 11, top + 16);
   const centerX = left + boxWidth / 2;
   const centerY = top + boxHeight - 12;
@@ -1597,17 +1597,20 @@ function drawModesSeries(context, rect, values, color, width = 1.5, dash = []) {
 }
 
 function drawModesPanelLabel(context, rect, title, equation, detail) {
+  const compact = rect.width < 480;
   context.save();
   context.fillStyle = "rgba(241,238,229,.83)";
-  context.font = "8px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText(title.toUpperCase(), rect.left, rect.top - 33);
   context.fillStyle = MODES_COLORS.text;
-  context.font = "9px DM Mono, monospace";
+  context.font = "11px DM Mono, monospace";
   context.fillText(equation, rect.left, rect.top - 17);
-  context.fillStyle = MODES_COLORS.faint;
-  context.font = "7px DM Mono, monospace";
-  context.textAlign = "right";
-  context.fillText(detail, rect.left + rect.width, rect.top - 17);
+  if (!compact) {
+    context.fillStyle = MODES_COLORS.faint;
+    context.font = "10px DM Mono, monospace";
+    context.textAlign = "right";
+    context.fillText(detail, rect.left + rect.width, rect.top - 17);
+  }
   context.restore();
 }
 
@@ -1623,7 +1626,7 @@ function drawModesRim(context, rect, label) {
   context.translate(x - 5, rect.top + 10);
   context.rotate(-Math.PI / 2);
   context.fillStyle = MODES_COLORS.faint;
-  context.font = "6px DM Mono, monospace";
+  context.font = "11px DM Mono, monospace";
   context.textAlign = "right";
   context.fillText(label.toUpperCase(), 0, 0);
   context.restore();
@@ -1640,10 +1643,10 @@ function drawAngularStrip(context, rect) {
   drawModesSeries(context, rect, values, MODES_COLORS.white, 2.1);
   context.save();
   context.fillStyle = "rgba(241,238,229,.78)";
-  context.font = "8px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText(`SHARED ANGULAR FACTOR · cos(${modesState.k === 1 ? "ψ" : `${modesState.k}ψ`})`, rect.left, rect.top - 12);
   context.fillStyle = MODES_COLORS.faint;
-  context.font = "7px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText("−π", rect.left, rect.top + rect.height + 17);
   context.textAlign = "center";
   context.fillText("0", rect.left + rect.width / 2, rect.top + rect.height + 17);
@@ -1724,14 +1727,14 @@ function renderModesComparison() {
   if (cylinder.regime === "evanescent") {
     context.save();
     context.fillStyle = MODES_COLORS.faint;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText("dashed: growing branch rejected as x → −∞", cylinderRect.left + 8, cylinderRect.top + 15);
     context.restore();
   }
   if (modesState.k === 1 && modesState.transfer > .995) {
     context.save();
     context.fillStyle = MODES_COLORS.orange;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.textAlign = "right";
     context.fillText("J_R*(ρ*) = 0", coneRect.left + coneRect.width - 8, coneRect.top + 15);
     context.restore();
@@ -1897,10 +1900,10 @@ function modesDrawGlobal(context, rect, solution, fieldValue) {
   context.stroke();
 
   context.fillStyle = "rgba(241,238,229,.82)";
-  context.font = "8px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText("WHOLE 28-COPY ASSEMBLY", rect.left + 10, rect.top + 16);
   context.fillStyle = MODES_COLORS.faint;
-  context.font = "7px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillText(`R = ${solution.R.toFixed(6)} · s = ${solution.s.toFixed(4)}`, rect.left + 10, rect.top + 31);
   context.fillStyle = MODES_COLORS.cyan;
   context.fillText("1 λθ", cropPoints[1].x + 5, cropPoints[1].y - 5);
@@ -1958,6 +1961,7 @@ function modesRadialComparison(solution) {
 }
 
 function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
+  const compact = rect.width < 480;
   const plot = {
     left: rect.left + 8,
     top: rect.top + 25,
@@ -2006,14 +2010,14 @@ function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
   draw(bessel, MODES_COLORS.cyan, 2.2);
   draw(cylinder, MODES_COLORS.orange, 1.7);
 
-  context.font = "7px DM Mono, monospace";
+  context.font = "10px DM Mono, monospace";
   context.fillStyle = "rgba(241,238,229,.75)";
-  context.fillText("LOCAL k=1 · ORDER ↔ PHASE", rect.left + 8, rect.top + 14);
+  context.fillText(compact ? "LOCAL k=1" : "LOCAL k=1 · ORDER ↔ PHASE", rect.left + 8, rect.top + 14);
   context.textAlign = "right";
   context.fillStyle = MODES_COLORS.cyan;
-  context.fillText("BESSEL", rect.left + rect.width - 116, rect.top + 14);
+  context.fillText(compact ? "J_R" : "BESSEL", rect.left + rect.width - (compact ? 78 : 116), rect.top + 14);
   context.fillStyle = MODES_COLORS.orange;
-  context.fillText("DEBYE SIN/COS", rect.left + rect.width - 8, rect.top + 14);
+  context.fillText(compact ? "SIN/COS" : "DEBYE SIN/COS", rect.left + rect.width - 8, rect.top + 14);
   context.fillStyle = MODES_COLORS.faint;
   context.fillText(`Δξ = ${comparison.phaseDegrees.toFixed(3)}° · exact δ = ${comparison.exactPhaseDegrees.toFixed(3)}°`, rect.left + rect.width - 8, rect.top + rect.height - 5);
   context.textAlign = "left";
@@ -2086,11 +2090,11 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
   context.lineWidth = 1;
   context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
   context.fillStyle = "rgba(241,238,229,.83)";
-  context.font = `${compact ? 7 : 8}px DM Mono, monospace`;
+  context.font = "10px DM Mono, monospace";
   context.fillText(options.title, rect.left + (compact ? 8 : 12), rect.top + (compact ? 15 : 17));
   if (!compact) {
     context.fillStyle = MODES_COLORS.faint;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.textAlign = "right";
     context.fillText(options.detail, rect.left + rect.width - 12, rect.top + 17);
     context.textAlign = "left";
@@ -2388,7 +2392,7 @@ if (debyeData) {
     context.lineTo(width - .7, height);
     context.stroke();
     context.fillStyle = "rgba(241,238,229,.56)";
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText("θ = π", 9, 16);
     context.fillText("θ = 0", 9, height / 2 - 7);
     context.fillText("θ = −π", 9, height - 10);
@@ -2457,7 +2461,7 @@ if (debyeData) {
     context.lineWidth = 1.4;
     context.stroke();
     context.fillStyle = "rgba(241,238,229,.56)";
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText("one sector", 10, 17);
     context.fillText(`opening 2π / ${fold}`, 10, 32);
     context.restore();
@@ -2573,7 +2577,7 @@ if (debyeData) {
     context.lineWidth = 2.4;
     context.stroke();
     context.fillStyle = "rgba(241,238,229,.55)";
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText(`${collarFieldState.fold}-fold disk`, 10, 17);
     context.restore();
     renderCollarZoomConnectors(plot);
@@ -2685,7 +2689,7 @@ if (debyeData) {
     context.strokeStyle = MODES_COLORS.grid;
     context.fillStyle = MODES_COLORS.faint;
     context.lineWidth = 1;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     yTicks.forEach(({ value, label }) => {
       const y = yMap(value);
       context.beginPath();
@@ -2749,10 +2753,10 @@ if (debyeData) {
     context.strokeStyle = "rgba(241,238,229,.14)";
     context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
     context.fillStyle = "rgba(241,238,229,.86)";
-    context.font = "9px DM Mono, monospace";
+    context.font = "11px DM Mono, monospace";
     context.fillText(isWave ? "k = 1 · OSCILLATORY" : `k = ${series.mode} · EVANESCENT`, rect.left + 14, rect.top + 20);
     context.fillStyle = MODES_COLORS.faint;
-    context.font = "7px DM Mono, monospace";
+    context.font = "10px DM Mono, monospace";
     context.fillText(isWave
       ? `ω = ${debyeOmega.toFixed(4)} · same boundary Cauchy data`
       : `α${series.mode} = ${series.alpha.toFixed(4)} · exp(α${series.mode}x)`, rect.left + 14, rect.top + 38);

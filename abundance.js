@@ -389,7 +389,7 @@
 
     function drawAxes(plot) {
       context.lineWidth = 1;
-      context.font = "8px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       context.textBaseline = "middle";
       context.textAlign = "right";
 
@@ -426,20 +426,20 @@
       context.translate(15, (plot.top + plot.bottom) / 2);
       context.rotate(-Math.PI / 2);
       context.fillStyle = COLORS.muted;
-      context.font = "8px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "top";
       context.fillText("FRACTIONAL PART  R − FLOOR(R)", 0, 0);
       context.restore();
 
       context.fillStyle = COLORS.muted;
-      context.font = "8px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "bottom";
       context.fillText("LOGARITHMIC CROSSING ORDER R  ·  N = ⌊R⌋", (plot.left + plot.right) / 2, state.height - 8);
 
       context.fillStyle = "rgba(255,116,73,0.70)";
-      context.font = "7px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       context.textAlign = "left";
       context.textBaseline = "bottom";
       context.fillText("WITHIN 0.1 ABOVE AN INTEGER", plot.left + 7, plot.bottom - 7);
@@ -449,7 +449,7 @@
       const compact = plot.compact;
       const startX = compact ? plot.left : plot.right - 320;
       const y = 25;
-      context.font = "7px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       context.textBaseline = "middle";
       context.textAlign = "left";
 
@@ -521,7 +521,7 @@
         context.lineTo(labelX - 5, labelY + 5);
         context.stroke();
         context.fillStyle = COLORS.orange;
-        context.font = "8px 'DM Mono', monospace";
+        context.font = "10px 'DM Mono', monospace";
         context.textAlign = "left";
         context.textBaseline = "middle";
         context.fillText("N=28 · Δ=0.026397", labelX, labelY);
@@ -581,7 +581,7 @@
         );
       }
 
-      context.font = "8px 'DM Mono', monospace";
+      context.font = "10px 'DM Mono', monospace";
       const textWidth = lines.reduce(function widest(maximum, line) {
         return Math.max(maximum, context.measureText(line).width);
       }, 0);
@@ -604,7 +604,7 @@
         context.fillStyle = index === 0
           ? (state.hoverKind === "reference" ? COLORS.orange : COLORS.teal)
           : "rgba(241,238,229,0.76)";
-        context.font = (index === 0 ? "7px" : "8px") + " 'DM Mono', monospace";
+        context.font = "10px 'DM Mono', monospace";
         context.textAlign = "left";
         context.textBaseline = "top";
         context.fillText(text, x + 12, y + 10 + index * 15, boxWidth - 24);
