@@ -475,12 +475,14 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .legend-white { background: #fff4dc; }
 .modes-canvas-wrap { min-height: 0; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 45%,#20353b 0,#101b20 67%); }
 #modesCanvas { display: block; width: 100%; height: 100%; }
-.freedom-strip { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--line); border-top: 0; }
-.freedom-strip article { min-height: 260px; padding: 34px; border-right: 1px solid var(--line); }
-.freedom-strip article:last-child { border-right: 0; }
-.freedom-strip article > span { display: block; margin-bottom: 28px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.freedom-strip h3 { margin: 0; font: 300 28px/1.05 var(--serif); letter-spacing: -.02em; }
-.freedom-strip p { max-width: 390px; margin: 14px 0 0; color: var(--muted); font-size: 10px; line-height: 1.72; }
+.collar-limit-argument { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 42px; padding: 38px 34px 42px; border: 1px solid var(--line); border-top: 0; }
+.collar-limit-argument > span { color: var(--orange); font: 8px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.collar-limit-argument > div { min-width: 0; max-width: 940px; }
+.collar-limit-argument h3 { max-width: 790px; margin: 0 0 23px; font: 300 30px/1.08 var(--serif); letter-spacing: -.018em; }
+.collar-limit-argument p { max-width: 900px; margin: 13px 0; color: var(--muted); font-size: 12px; line-height: 1.78; }
+.collar-limit-argument .tex-display { max-width: 900px; margin: 17px 0; padding: 8px 16px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.18); }
+.collar-limit-argument .katex-display { text-align: left; }
+.collar-limit-argument .collar-limit-result { border-left-color: var(--teal); }
 
 .interpretation { display: grid; grid-template-columns: 50px 1fr 1fr; gap: 50px; padding: 110px 7vw; background: var(--paper-2); }
 .interpretation-copy { max-width: 580px; color: var(--muted); font-size: 14px; line-height: 1.75; }
@@ -934,9 +936,12 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .modes-controls { border-right: 0; border-bottom: 1px solid var(--line); }
   .modes-plot-panel { min-height: 862px; grid-template-rows: 66px 760px 36px; }
   .modes-plot-toolbar { padding: 0 13px; }
-  .freedom-strip { grid-template-columns: 1fr; }
-  .freedom-strip article { min-height: 215px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .freedom-strip article:last-child { border-bottom: 0; }
+  .collar-limit-argument { grid-template-columns: minmax(0,1fr); gap: 18px; padding: 27px 21px 31px; }
+  .collar-limit-argument > * { min-width: 0; }
+  .collar-limit-argument h3 { font-size: 27px; }
+  .collar-limit-argument p { font-size: 11px; }
+  .collar-limit-argument .tex-display { padding-left: 11px; padding-right: 8px; }
+  .collar-limit-argument .katex { font-size: .78em; }
   .interpretation { grid-template-columns: 35px 1fr; padding: 80px 24px; gap: 25px; }
   .interpretation-copy { grid-column: 2; }
   .phase-story { padding: 84px 18px 0; }
