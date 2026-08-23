@@ -33,12 +33,13 @@
         <a href="#question"><b>01</b><span>The Schiffer property</span></a>
         <a href="#disk-obstruction"><b>02</b><span>Rigidity of the disk</span></a>
         <a href="#borrow-flexibility"><b>03</b><span>Cylinder and sphere</span></a>
-        <a href="#geometric-escape"><b>04</b><span>From the plane to a cone</span></a>
-        <a href="#experiment"><b>05</b><span>The half-cylinder branch</span></a>
-        <a href="#debye-experiment"><b>06</b><span>Bessel modes near the boundary</span></a>
-        <a href="#phase-story"><b>07</b><span>Uniform decrease of the cone radius</span></a>
-        <a href="#modes-experiment"><b>08</b><span>Cone continuation</span></a>
-        <a href="#abundance-experiment"><b>09</b><span>Crossings near integer order</span></a>
+        <a href="#geometric-escape"><b>04</b><span>The intuition</span></a>
+        <a href="#experiment"><b>05</b><span>The proof strategy</span></a>
+        <a class="toc-subsection" href="#half-cylinder-strategy"><b>5.1</b><span>The half-cylinder branch</span></a>
+        <a class="toc-subsection" href="#debye-experiment"><b>5.2</b><span>From cylinders to cones</span></a>
+        <a class="toc-subsection" href="#phase-story"><b>5.3</b><span>Decrease of the cone radius</span></a>
+        <a class="toc-subsection" href="#modes-experiment"><b>5.4</b><span>Continuation to integral order</span></a>
+        <a class="toc-subsection" href="#abundance-experiment"><b>5.5</b><span>Crossings near integers</span></a>
       </nav>
     </details>
 
@@ -479,10 +480,10 @@
 
       <section id="geometric-escape" class="geometric-escape">
         <header class="experiment-header geometry-header">
-          <div><span class="section-number">04</span><div><p class="eyebrow">From the plane to the limiting geometry</p><h2>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h2></div></div>
+          <div><span class="section-number">04</span><div><p class="eyebrow">From the plane to the limiting geometry</p><h2>The intuition</h2></div></div>
           <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
-        <div class="geometry-lead"><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
+        <div class="geometry-lead"><h3>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h3><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
         <div class="geometry-laboratory">
           <aside class="geometry-controls">
             <div class="control-heading"><span>Planar quotient and large-\(N\) limit</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
@@ -511,16 +512,26 @@
           <div>
             <span class="section-number">05</span>
             <div>
-              <p class="eyebrow">The limiting problem</p>
-              <h2>The half-cylinder has a uniformly controlled bifurcating branch.</h2>
+              <p class="eyebrow">Structure of the argument</p>
+              <h2>The proof strategy</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Model equations">
-            <span>\(\Omega_{\lambda,s}=\{x&lt;h_{\lambda,s}(\theta)\}\)</span>
-            <span>\((x,\theta)\in\mathbb R\times S^1\)</span>
-            <small>half-cylinder</small>
+            <span>half-cylinder \(\longrightarrow\) cone</span>
+            <span>real \(R_*\longrightarrow R(s)=N\)</span>
+            <small>planar \(N\)-fold lift</small>
           </div>
         </header>
+
+        <div class="proof-strategy-lead">
+          <h3>The construction is carried out in five steps.</h3>
+          <p><strong>Subsection 5.1</strong> constructs a bifurcating Schiffer family on the half-cylinder. <strong>Subsection 5.2</strong> transfers this construction uniformly to cones of large real order by comparing their Bessel modes with the separated cylinder modes. <strong>Subsection 5.3</strong> computes the first nonzero variation of the cone parameter and proves that it decreases by an amount independent of the initial large crossing. <strong>Subsection 5.4</strong> follows the resulting cone geometry toward an integral value of the order. <strong>Subsection 5.5</strong> supplies common Bessel zeros arbitrarily close above integers, so the uniform decrease reaches an integer and the cone unfolds to a planar domain.</p>
+        </div>
+
+        <div id="half-cylinder-strategy" class="proof-strategy-subheading">
+          <span>5.1 · the limiting half-cylinder</span>
+          <h3>A spectral coincidence produces a uniformly controlled bifurcating branch.</h3>
+        </div>
 
         <div class="cylinder-spectral-seed">
           <div class="cylinder-seed-copy">
@@ -808,7 +819,7 @@
       <section id="cone-experiment" class="experiment cone-experiment" hidden aria-hidden="true">
         <header class="experiment-header cone-header">
           <div>
-            <span class="section-number">08</span>
+            <span class="section-number">5.4</span>
             <div>
               <p class="eyebrow">Nonlinear continuation on cones</p>
               <h2>The cone parameter decreases to \(R=28\).</h2>
@@ -921,7 +932,7 @@
       <section id="modes-experiment" class="modes-experiment">
         <header class="experiment-header modes-header">
           <div>
-            <span class="section-number">08</span>
+            <span class="section-number">5.4</span>
             <div>
               <p class="eyebrow">Global and boundary-scale coordinates</p>
               <h2>The same cone solution in two coordinate systems.</h2>
@@ -1029,15 +1040,15 @@
 
       <section id="phase-story" class="phase-story">
         <header class="story-heading">
-          <span class="section-number">07</span>
+          <span class="section-number">5.3</span>
           <div><p class="eyebrow">The computation along the bifurcating branch</p><h2>The variation of \(R\) determines the variation of the Debye phase.</h2></div>
         </header>
         <div class="phase-story-lead paper-copy">
           <p>Suppose that a real crossing has \(R_*=N+\delta\), where \(N\) is an integer and \(\delta&gt;0\). To prove that the nonlinear branch reaches \(R=N\), one needs a decrease in \(R\) that is uniform as \(R_*\to\infty\). We show that every sufficiently large crossing in the fixed window \(2\le\lambda_*\le3\) admits the same positive lower bound for this decrease.</p>
-          <p>Section 6 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
+          <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
         </div>
         <div class="uniform-drop-theorem">
-          <div class="uniform-drop-label"><span>Corollary 7.1</span><small>uniform decrease of \(R\)</small></div>
+          <div class="uniform-drop-label"><span>Corollary 5.3</span><small>uniform decrease of \(R\)</small></div>
           <div>
             <p>There are constants \(R_{\mathrm{drop}},s_*,\eta_*&gt;0\), independent of the crossing, such that every real-order crossing with</p>
             <div class="tex-display">
@@ -1118,7 +1129,7 @@
       <section id="debye-experiment" class="debye-experiment">
         <header class="experiment-header debye-header">
           <div>
-            <span class="section-number">06</span>
+            <span class="section-number">5.2</span>
             <div>
               <p class="eyebrow">The large-radius basis limit</p>
               <h2>Bessel modes converge to cylinder modes on fixed boundary collars.</h2>
@@ -1140,7 +1151,7 @@
             </div>
           </header>
           <div class="real-order-theorem">
-            <div><span>Theorem 6.1</span><small>uniform cone bifurcation</small></div>
+            <div><span>Theorem 5.2</span><small>uniform cone bifurcation</small></div>
             <article>
               <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
               <div class="tex-display">
@@ -1343,15 +1354,15 @@
 
       <section id="abundance-experiment" class="abundance-experiment">
         <header class="experiment-header abundance-header">
-          <div><span class="section-number">09</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>The common-zero condition holds arbitrarily close to integer order.</h2></div></div>
+          <div><span class="section-number">5.5</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>The common-zero condition holds arbitrarily close to integer order.</h2></div></div>
           <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
           <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone. The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
-          <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Section 7 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
+          <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
         </div>
         <div class="near-integer-theorem">
-          <span>Theorem 9.1 · near-integer crossings</span>
+          <span>Theorem 5.5 · near-integer crossings</span>
           <div>
             <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
             <div class="tex-display">
@@ -1367,7 +1378,7 @@
           </div>
         </div>
         <details class="abundance-proof-details proof-details">
-          <summary><span>Proof sketch of Theorem 9.1</span><i>expand +</i></summary>
+          <summary><span>Proof sketch of Theorem 5.5</span><i>expand +</i></summary>
           <div class="proof-argument abundance-proof-argument">
             <p><em>Proof sketch.</em> Put</p>
             <div class="tex-display">
@@ -1415,14 +1426,14 @@
           <span>Reaching integer order</span>
           <h3>The decrease in \(R\) exceeds the initial gap \(R_*-N\).</h3>
           <div>
-            <p>Apply Theorem 9.1 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Section 7. Along the resulting cone branch,</p>
+            <p>Apply Theorem 5.5 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Subsection 5.3. Along the resulting cone branch,</p>
             <div class="tex-display">
               \[
               R(0)=R_*&gt;N,\qquad
               R(s_*)\le R_*-\eta_*&lt;N.
               \]
             </div>
-            <p>By continuity, there is some \(0&lt;s_N&lt;s_*\) such that \(R(s_N)=N\). At this nonzero parameter, the cone lifts to a noncircular \(N\)-fold planar Schiffer domain. The finite set of plotted points illustrates the arithmetic argument; Theorem 9.1 makes the initial gap smaller than the uniform decrease supplied by Section 7.</p>
+            <p>By continuity, there is some \(0&lt;s_N&lt;s_*\) such that \(R(s_N)=N\). At this nonzero parameter, the cone lifts to a noncircular \(N\)-fold planar Schiffer domain. The finite set of plotted points illustrates the arithmetic argument; Theorem 5.5 makes the initial gap smaller than the uniform decrease supplied by Subsection 5.3.</p>
           </div>
         </div>
         <section class="abundance-examples" aria-labelledby="abundanceExamplesTitle">

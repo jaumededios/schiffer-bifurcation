@@ -42,6 +42,8 @@ a { color: inherit; }
 .site-toc a:last-child { border-bottom: 0; }
 .site-toc a:hover, .site-toc a:focus-visible { color: var(--ink); background: rgba(255,116,73,.07); outline: 0; }
 .site-toc a b { color: var(--orange); font: 7px var(--mono); font-weight: 400; }
+.site-toc a.toc-subsection { min-height: 34px; padding-left: 30px; background: rgba(19,33,38,.018); font-size: 9px; }
+.site-toc a.toc-subsection b { color: var(--teal); }
 @media (min-width: 761px) { .site-toc:not([open]) { width: 220px; } }
 
 .intro { padding: 76px 7vw 92px; display: grid; grid-template-rows: auto auto auto; }
@@ -223,7 +225,9 @@ a { color: inherit; }
 .borrow-conclusion p { max-width: 850px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.75; }
 
 .geometry-header { padding-bottom: 32px; }
-.geometry-lead { margin: 0 0 38px 55px; max-width: 870px; color: rgba(241,238,229,.52); font-size: 14px; line-height: 1.72; }
+.geometry-lead { margin: 0 0 38px 55px; max-width: 960px; color: rgba(241,238,229,.52); font-size: 14px; line-height: 1.72; }
+.geometry-lead h3 { max-width: 850px; margin: 0 0 20px; font: 300 36px/1.05 var(--serif); letter-spacing: -.018em; }
+.geometry-lead p { margin: 0; }
 .geometry-lead span { color: var(--paper); font-family: var(--mono); }
 .geometry-laboratory { display: grid; grid-template-columns: 340px minmax(0,1fr); min-height: 790px; border: 1px solid var(--line-light); }
 .geometry-controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); }
@@ -241,6 +245,13 @@ a { color: inherit; }
 .geometry-toolbar > span:last-child { margin-left: auto; color: rgba(241,238,229,.35); font: 7px var(--mono); text-transform: uppercase; }
 .geometry-canvas-wrap { min-height: 0; position: relative; }
 #storyGeometryCanvas { display: block; width: 100%; height: 100%; }
+.proof-strategy-lead { max-width: 1020px; margin: 0 0 50px 55px; padding: 0 0 0 24px; border-left: 2px solid var(--orange); }
+.proof-strategy-lead h3 { margin: 0 0 19px; font: 300 35px/1.05 var(--serif); letter-spacing: -.018em; }
+.proof-strategy-lead p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.82; }
+.proof-strategy-lead strong { color: var(--ink); font: 500 9px var(--mono); letter-spacing: .02em; }
+.proof-strategy-subheading { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; max-width: 1160px; margin: 0 0 25px 55px; padding-top: 34px; border-top: 1px solid var(--orange); scroll-margin-top: 32px; }
+.proof-strategy-subheading > span { color: var(--orange); font: 8px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.proof-strategy-subheading h3 { max-width: 780px; margin: 0; font: 300 35px/1.05 var(--serif); letter-spacing: -.018em; }
 .experiment-story-lead { display: grid; grid-template-columns: 1fr 1fr; gap: 45px; margin: 0 0 38px 55px; max-width: 1080px; }
 .experiment-story-lead p { margin: 0; color: rgba(241,238,229,.48); font-size: 10px; line-height: 1.72; }
 .experiment-story-lead p > span:first-child { display: block; margin-bottom: 9px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -786,7 +797,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .world-cards article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .world-cards article:last-child { border-bottom: 0; }
   .borrow-conclusion { margin-left: 0; }
-  .geometry-lead, .experiment-story-lead, .cylinder-spectral-seed { margin-left: 0; }
+  .geometry-lead, .proof-strategy-lead, .proof-strategy-subheading, .experiment-story-lead, .cylinder-spectral-seed { margin-left: 0; }
   .geometry-laboratory { grid-template-columns: 290px minmax(0,1fr); }
   .cylinder-theorem { grid-template-columns: 150px minmax(0,1fr); margin-left: 0; }
   .cylinder-jet-proof { margin-left: 0; }
@@ -881,6 +892,10 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .experiment-story-lead { grid-template-columns: 1fr; gap: 22px; }
   .experiment { padding: 65px 18px 0; }
   .experiment-header { display: block; }
+  .proof-strategy-lead { padding-left: 18px; }
+  .geometry-lead h3, .proof-strategy-lead h3 { font-size: 30px; }
+  .proof-strategy-subheading { grid-template-columns: 1fr; gap: 14px; }
+  .proof-strategy-subheading h3 { font-size: 30px; }
   .equations { margin-top: 30px; gap: 12px; flex-wrap: wrap; }
   .equations > span { padding-right: 12px; }
   .laboratory { grid-template-columns: 1fr; }
