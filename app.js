@@ -18,6 +18,9 @@ const X_MIN = -5;
 const X_MAX = 1.05;
 const THREE_X_MIN = -16;
 const THREE_CAMERA_FIT_ASPECT = 1.5;
+const THREE_RIM_WORLD_X = 8;
+const THREE_CAMERA_TARGET_X = THREE_RIM_WORLD_X - 1;
+const THREE_CAMERA_OFFSET = { x: 5.9, y: 3.9, z: 12.4 };
 const TWO_PI = Math.PI * 2;
 const CYLINDER_WALL_MODES = [2, 3];
 const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
@@ -459,8 +462,13 @@ function resizeThreeRenderer() {
   threeState.renderer.setSize(width, height, false);
   threeState.camera.aspect = width / height;
   const portraitFit = Math.max(1, THREE_CAMERA_FIT_ASPECT / threeState.camera.aspect);
-  const baseDistance = Math.hypot(7.5, 5, 16);
-  threeState.camera.position.setLength(baseDistance * portraitFit * threeState.zoom);
+  const cameraScale = portraitFit * threeState.zoom;
+  threeState.camera.position.set(
+    THREE_CAMERA_TARGET_X + THREE_CAMERA_OFFSET.x * cameraScale,
+    THREE_CAMERA_OFFSET.y * cameraScale,
+    THREE_CAMERA_OFFSET.z * cameraScale,
+  );
+  threeState.camera.lookAt(THREE_CAMERA_TARGET_X, 0, 0);
   threeState.camera.updateProjectionMatrix();
 }
 
@@ -505,14 +513,14 @@ function setupThreeRenderer() {
   const wrap = $("#threeWrap");
   threeState.scene = new THREE.Scene();
   threeState.scene.background = new THREE.Color(0x101b20);
-  threeState.camera = new THREE.PerspectiveCamera(38, 1, .1, 100);
-  threeState.camera.position.set(7.5, 5, 16);
-  threeState.camera.lookAt(0, 0, 0);
+  threeState.camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
   threeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
   threeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   wrap.insertBefore(threeState.renderer.domElement, $("#threeLoading"));
   threeState.group = new THREE.Group();
-  threeState.group.position.x = 8;
+  // Cylinder vertices use x=0 at the rim, so the group's local rotation
+  // origin is the rim. The camera looks one unit into the collar.
+  threeState.group.position.x = THREE_RIM_WORLD_X;
   threeState.group.rotation.x = -.18;
   threeState.group.rotation.y = -.16;
   threeState.scene.add(threeState.group);
