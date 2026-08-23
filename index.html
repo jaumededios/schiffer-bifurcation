@@ -1231,10 +1231,16 @@
         <div class="basis-limit-derivation paper-copy">
           <span>The limit on a fixed collar</span>
           <div>
-            <p>Put \(q=\sqrt\lambda\), \(\omega=\sqrt{\lambda-1}\), and \(\Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1})\). Debye's oscillatory formula gives</p>
-            <div class="tex-display important-equation">\[J_{r_0}(\sqrt\lambda(r_0+x))=A_{r_0}(x)\cos\!\left(r_0\Phi(\sqrt\lambda)-\frac\pi4+\omega x\right)+O(r_0^{-1}).\]</div>
+            <p>Put \(q=\sqrt\lambda\), \(\omega=\sqrt{\lambda-1}\), and \(\Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1})\). Debye's oscillatory large-order expansion, <a href="https://dlmf.nist.gov/10.19.E6" target="_blank" rel="noreferrer">DLMF (10.19.6) ↗</a>, gives</p>
+            <div class="tex-display important-equation">\[\begin{aligned}
+              J_{r_0}(\sqrt\lambda(r_0+x))
+              &amp;=A_{r_0}(x)\cos\!\left(\xi(r_0)+\omega x\right)\\
+              &amp;\quad+O(r_0^{-1}),\\
+              \xi(r_0)&amp;=r_0\Phi(\sqrt\lambda)-\frac\pi4.
+            \end{aligned}\]</div>
             <p>Thus changing \(r_0\) translates the local wave by the explicit phase rate \(d\xi/dr_0=\Phi(\sqrt\lambda)\). For the higher channels, the nonoscillatory Debye formula gives</p>
             <div class="tex-display important-equation">\[\frac{J_{kr_0}(\sqrt\lambda(r_0+x))}{J_{kr_0}(\sqrt\lambda r_0)}\longrightarrow e^{\sqrt{k^2-\lambda}\,x},\qquad k\ge2.\]</div>
+            <p>The last limit is the exponential regime of the same expansion, <a href="https://dlmf.nist.gov/10.19.E3" target="_blank" rel="noreferrer">DLMF (10.19.3) ↗</a>, applied with order \(kr_0\) and argument-to-order ratio \(\sqrt\lambda/k&lt;1\).</p>
           </div>
         </div>
 
