@@ -191,6 +191,10 @@ a { color: inherit; }
 .proof-details[open] > summary i::after { content: "collapse −"; font-size: 9px; }
 .disk-proof-body > :first-child { border-top: 0; }
 .disk-proof-body > :last-child { border-bottom: 0; }
+.disk-local-rigidity-theorem { margin-top: 42px; border-top-color: var(--orange); }
+.theorem-short-proof { display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 28px; margin-top: 25px; padding-top: 23px; border-top: 1px solid var(--line-light); }
+.theorem-short-proof > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.theorem-short-proof p { margin: 0; }
 .citation-line a, .literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }
@@ -840,6 +844,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .subsection-heading h3 { font-size: 31px; }
   .disk-rigidity-heading { margin-top: 58px; padding-top: 38px; }
   .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
+  .theorem-short-proof { grid-template-columns: 1fr; gap: 12px; }
   .disk-theorem-label small { max-width: none; }
   .disk-proof-grid, .disk-symmetry-grid { grid-template-columns: minmax(0,1fr); }
   .disk-proof-grid article, .disk-symmetry-grid article { padding: 27px 22px; border-right: 0; border-bottom: 1px solid var(--line-light); }
