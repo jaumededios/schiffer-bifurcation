@@ -503,17 +503,111 @@
               \end{cases}
               \]
             </div>
-            <p>The boundary and field begin with the explicit first angular mode</p>
+            <p>Use rotation in <span class="formula">\(\theta\)</span> to choose the cosine direction, axial translation to impose <span class="formula">\(\int_{S^1}h_{\lambda,s}=0\)</span>, and the first Fourier coefficient of <span class="formula">\(h_{\lambda,s}\)</span> as the branch parameter <span class="formula">\(s\)</span>. In this gauge, put <span class="formula">\(\beta=\sqrt{\lambda-1}\)</span> and <span class="formula">\(\alpha_2=\sqrt{4-\lambda}\)</span>. Then the boundary and field have the forced expansion</p>
             <div class="theorem-expansion tex-display">
-              \[h_{\lambda,s}(\theta)=s\cos\theta+O_K(s^2),\]
+              \[
+              h_{\lambda,s}(\theta)
+              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O_K(s^3),
+              \]
               \[\begin{aligned}
               u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
-              &amp;\quad+s\frac{\lambda}{\sqrt{\lambda-1}}\sin(\sqrt{\lambda-1}\,x)\cos\theta+O_K(s^2).
+              &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
+              &amp;\quad-\frac{\lambda s^2}{4}
+              \left(\cos(\sqrt\lambda\,x)+e^{\alpha_2x}\cos2\theta\right)
+              +O_K(s^3).
               \end{aligned}\]
+            </div>
+            <div class="cylinder-needed-later">
+              <span>Something we will need later</span>
+              <p>The quadratic self-interaction <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> forces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the wall coefficient is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. In the cone calculation this exponential slope is replaced by the corresponding Bessel logarithmic derivative; its large-radius limit is the same factor <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
             </div>
             <p class="theorem-note">The remainders are uniform for <span class="formula">\(\lambda\in K\)</span> on every fixed boundary collar. Modes <span class="formula">\(k\ge2\)</span> are selected by their bounded tails <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>. The exclusion of <span class="formula">\(\lambda=1,4\)</span> is exactly where the first oscillatory channel or the second evanescent channel degenerates.</p>
           </div>
         </div>
+
+        <details class="cylinder-jet-proof proof-details">
+          <summary><span>Formal first- and second-order calculation</span><i>expand +</i></summary>
+          <div class="cylinder-jet-proof-body">
+            <div class="cylinder-proof-scope">
+              <span>What this calculation proves</span>
+              <p>This is a necessary Taylor calculation, not an existence proof. Assume a <span class="formula">\(C^3\)</span> one-ended branch exists at fixed <span class="formula">\(\lambda\in(1,4)\)</span>. The compact-cylinder branches are constructed by <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth</a>, and the half-cylinder case uses the same separated-mode and local-bifurcation argument. Conditional on that existence, the Schiffer equations force the two-jet displayed above.</p>
+            </div>
+
+            <div class="cylinder-proof-grid">
+              <article>
+                <span>1 / Taylor ansatz and gauges</span>
+                <p>Set <span class="formula">\(u_0(x)=\cos(\sqrt\lambda\,x)\)</span> and write</p>
+                <div class="tex-display">
+                  \[
+                  \begin{aligned}
+                  h_s(\theta)&amp;=s f(\theta)+s^2g(\theta)+O(s^3),\\
+                  u_s(x,\theta)&amp;=u_0(x)+s v(x,\theta)+s^2w(x,\theta)+O(s^3).
+                  \end{aligned}
+                  \]
+                </div>
+                <p>We choose the even direction <span class="formula">\(f=\cos\theta\)</span>. The conditions <span class="formula">\(\int h_s=0\)</span> and <span class="formula">\([\cos\theta]h_s=s\)</span> remove axial translation and reparametrization of the branch.</p>
+              </article>
+
+              <article>
+                <span>2 / First order</span>
+                <p>Taylor expansion of <span class="formula">\(u_s(h_s(\theta),\theta)=1\)</span> and of the Neumann condition gives</p>
+                <div class="tex-display">
+                  \[
+                  v(0,\theta)=0,
+                  \qquad
+                  \partial_xv(0,\theta)=\lambda f(\theta).
+                  \]
+                </div>
+                <p>Since <span class="formula">\((\Delta+\lambda)v=0\)</span>, the bounded even solution in the first angular channel is therefore</p>
+                <div class="tex-display">
+                  \[
+                  v(x,\theta)=\frac{\lambda}{\beta}\sin(\beta x)\cos\theta,
+                  \qquad \beta=\sqrt{\lambda-1}.
+                  \]
+                </div>
+              </article>
+
+              <article>
+                <span>3 / Second-order boundary data</span>
+                <p>The Dirichlet condition at order <span class="formula">\(s^2\)</span> is</p>
+                <div class="tex-display">
+                  \[
+                  \begin{aligned}
+                  0&amp;=w(0,\theta)+f\,\partial_xv(0,\theta)
+                  +\frac12f^2u_0''(0),\\
+                  w(0,\theta)&amp;=-\frac\lambda2f^2
+                  =-\frac\lambda4(1+\cos2\theta).
+                  \end{aligned}
+                  \]
+                </div>
+                <p>For a graph boundary, <span class="formula">\(\partial_\nu u=0\)</span> is equivalent to <span class="formula">\(u_x-h_s' u_\theta=0\)</span>. Here <span class="formula">\(u_0'''(0)=v_{xx}(0,\theta)=v_\theta(0,\theta)=0\)</span>, so its quadratic part reduces to</p>
+                <div class="tex-display">
+                  \[
+                  \partial_xw(0,\theta)=\lambda g(\theta).
+                  \]
+                </div>
+              </article>
+
+              <article>
+                <span>4 / Solve the two forced modes</span>
+                <p>The interior equation is <span class="formula">\((\Delta+\lambda)w=0\)</span>. Only modes <span class="formula">\(0\)</span> and <span class="formula">\(2\)</span> occur, and boundedness at the infinite end gives</p>
+                <div class="tex-display">
+                  \[
+                  w(x,\theta)=-\frac\lambda4\cos(\sqrt\lambda\,x)
+                  -\frac\lambda4e^{\alpha_2x}\cos2\theta,
+                  \qquad \alpha_2=\sqrt{4-\lambda}.
+                  \]
+                </div>
+                <p>The zero-mean gauge removes the sine solution in the radial channel, while the amplitude gauge removes a homogeneous first harmonic. Finally, <span class="formula">\(g=\lambda^{-1}w_x(0,\cdot)\)</span>, hence</p>
+                <div class="tex-display proof-result">
+                  \[
+                  g(\theta)=-\frac{\sqrt{4-\lambda}}4\cos2\theta.
+                  \]
+                </div>
+              </article>
+            </div>
+          </div>
+        </details>
 
         <div class="experiment-story-lead">
           <p><span>What the theorem says.</span> The size of the allowed perturbation can be chosen uniformly while <span class="formula">\(\lambda\)</span> stays away from the thresholds <span class="formula">\(1\)</span> and <span class="formula">\(4\)</span>. This uniformity is what can later survive on sufficiently long cones.</p>
@@ -1025,6 +1119,21 @@
           </article>
 
           <p class="collar-field-caption">Each colored field is one selected separated eigenfunction, rather than a nonlinear sum of modes. Under the collar identification <span class="formula">\(\theta=\psi\)</span>, Panels 02 and 03 use the same coordinates and the same color scale. Panel 03 evaluates the exact regular Bessel profile; Panel 02 uses its cylinder mode with matching rim data. The cyan frame in Panel 04 is precisely the sector magnified in Panel 03.</p>
+        </div>
+
+        <div class="angular-quotient-note paper-copy">
+          <span>What happens to sine and cosine?</span>
+          <div>
+            <p>Let <span class="formula">\(\vartheta\)</span> be the planar polar angle. On one <span class="formula">\(N\)</span>-fold sector, the rescaled quotient coordinate is <span class="formula">\(\psi=N\vartheta\in S^1\)</span>. Consequently</p>
+            <div class="tex-display important-equation">
+              \[
+              \cos(kN\vartheta)=\cos(k\psi),
+              \qquad
+              \sin(kN\vartheta)=\sin(k\psi).
+              \]
+            </div>
+            <p>The sine/cosine pair does not disappear in the limit: it becomes the dependence on the periodic cylinder parameter. More precisely, <span class="formula">\(A\cos(k\psi)+B\sin(k\psi)=C\cos(k\psi-\phi)\)</span>, so this two-dimensional freedom is the choice of phase, or equivalently the origin of <span class="formula">\(\psi\)</span> around the cylinder. This is the angular phase; it is separate from the radial Bessel phase controlled by <span class="formula">\(r_0\)</span>.</p>
+          </div>
         </div>
 
         <div class="debye-laboratory">
