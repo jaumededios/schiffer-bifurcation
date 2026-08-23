@@ -139,8 +139,14 @@ a { color: inherit; }
 .linearization-details summary::-webkit-details-marker { display: none; }
 .linearization-details summary i { color: var(--orange); font-style: normal; }
 .linearization-details[open] summary i { font-size: 0; }.linearization-details[open] summary i::after { content: "collapse −"; font-size: 9px; }
-.linearization-details > div { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; padding-bottom: 52px; }
-.linearization-details > div p { margin: 0; padding: 25px; color: rgba(241,238,229,.5); background: rgba(255,255,255,.025); border: 1px solid var(--line-light); font-size: 10px; line-height: 1.75; }
+.proof-argument { max-width: 900px; margin: 0 auto; padding: 38px 0 48px; }
+.proof-argument p { margin: 0 0 18px; color: var(--muted); font-size: 11px; line-height: 1.86; }
+.proof-argument p > em:first-child { color: var(--ink); font: 400 17px var(--serif); }
+.proof-argument p > em:first-child::after { content: "\2002"; }
+.proof-argument .tex-display { margin: 16px 0 22px; padding-left: 25px; border-left: 1px solid var(--line-light); }
+.proof-argument .katex-display { text-align: left; }
+.proof-argument .proof-end { margin-bottom: 0; }
+.qed { float: right; margin-left: 18px; color: var(--ink); font: 17px var(--serif); }
 
 .subsection-heading { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; align-items: baseline; }
 .subsection-heading > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
@@ -158,32 +164,32 @@ a { color: inherit; }
 .disk-theorem-statement p { max-width: 820px; margin: 18px 0 0; }
 .disk-kernel-equation { margin: 20px 0; padding: 17px 20px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.025); }
 .disk-kernel-equation .katex-display { text-align: left; }
-.disk-proof-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-top: 0; }
-.disk-proof-grid article { min-width: 0; padding: 34px 36px; border-right: 1px solid var(--line-light); }
-.disk-proof-grid article:last-child { border-right: 0; }
+.disk-proof-body { max-width: 900px; margin: 0 auto; padding: 0 0 48px; }
+.disk-proof-grid, .disk-symmetry-grid { display: block; border: 0; }
+.disk-proof-grid article, .disk-symmetry-grid article { min-width: 0; padding: 34px 0 0; border: 0; }
+.disk-proof-grid article + article, .disk-symmetry-grid article + article { margin-top: 34px; padding-top: 34px; border-top: 1px solid var(--line-light); }
 .disk-proof-grid article > span, .disk-symmetry-grid article > span, .disk-proof-conclusion > span { display: block; margin-bottom: 20px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.disk-proof-grid p { max-width: 620px; margin: 14px 0; }
-.disk-proof-grid .tex-display { padding: 9px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
-.disk-proof-grid .katex { font-size: .86em; }
-.bourget-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; padding: 36px; border: 1px solid var(--line-light); border-top: 0; background: rgba(255,116,73,.025); }
+.disk-proof-grid p { max-width: 820px; margin: 14px 0; }
+.disk-proof-body .tex-display { max-width: 850px; margin: 18px 0; padding: 0; border: 0; }
+.disk-proof-body .katex { font-size: .9em; }
+.bourget-theorem { display: block; margin-top: 38px; padding: 38px 0 0; border: 0; border-top: 1px solid var(--line-light); background: transparent; }
+.bourget-theorem .disk-theorem-label { margin-bottom: 22px; }
 .bourget-theorem > div:last-child { min-width: 0; }
-.bourget-theorem .tex-display { max-width: 760px; margin: 20px 0; padding: 14px 18px; border: 1px solid rgba(255,116,73,.32); }
+.bourget-theorem .tex-display { max-width: 760px; margin: 20px 0; padding: 0; border: 0; }
 .bourget-theorem p { max-width: 850px; margin: 14px 0 0; }
 .bourget-theorem .citation-line { margin-top: 21px; padding-top: 16px; border-top: 1px solid var(--line-light); font-size: 7px; }
-.disk-symmetry-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-light); border-top: 0; }
-.disk-symmetry-grid article { min-width: 0; padding: 34px 36px; border-right: 1px solid var(--line-light); }
-.disk-symmetry-grid article:last-child { border-right: 0; }
+.disk-symmetry-grid { margin-top: 34px; padding-top: 1px; border-top: 1px solid var(--line-light); }
 .disk-symmetry-grid p { max-width: 630px; margin: 13px 0; }
-.disk-symmetry-grid .tex-display { margin: 13px 0; padding: 10px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.disk-symmetry-grid .tex-display { margin: 13px 0; padding: 0; border: 0; }
 .disk-symmetry-grid .katex { font-size: .85em; }
-.disk-proof-conclusion { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; padding: 36px; border: 1px solid var(--line-light); border-top: 0; }
+.disk-proof-conclusion { display: block; margin-top: 38px; padding: 38px 0 0; border: 0; border-top: 1px solid var(--line-light); }
 .disk-proof-conclusion > span { margin: 0; }
 .disk-proof-conclusion > div { min-width: 0; }
-.disk-proof-conclusion p { max-width: 900px; margin: 0 0 15px; }
-.disk-proof-conclusion .tex-display { max-width: 850px; margin: 14px 0 20px; padding: 13px 18px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.02); }
+.disk-proof-conclusion p { max-width: 900px; margin: 18px 0 15px; }
+.disk-proof-conclusion .tex-display { max-width: 850px; margin: 18px 0 22px; padding: 0; border: 0; background: transparent; }
 .disk-proof-conclusion .katex { font-size: .9em; }
-.proof-details { margin: 0; border: 1px solid var(--line-light); border-top: 0; }
-.proof-details > summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 36px; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.proof-details { margin: 0; border: 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.proof-details > summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .proof-details > summary::-webkit-details-marker { display: none; }
 .proof-details > summary i { color: var(--orange); font-style: normal; }
 .proof-details[open] > summary { border-bottom: 1px solid var(--line-light); }
@@ -192,9 +198,8 @@ a { color: inherit; }
 .disk-proof-body > :first-child { border-top: 0; }
 .disk-proof-body > :last-child { border-bottom: 0; }
 .disk-local-rigidity-theorem { margin-top: 42px; border-top-color: var(--orange); }
-.theorem-short-proof { display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 28px; margin-top: 25px; padding-top: 23px; border-top: 1px solid var(--line-light); }
-.theorem-short-proof > span { color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
-.theorem-short-proof p { margin: 0; }
+.disk-theorem-statement .theorem-short-proof { display: block; margin: 25px 0 0; padding-top: 23px; border-top: 1px solid var(--line-light); }
+.theorem-short-proof > em:first-child { color: var(--ink); font: 400 16px var(--serif); }
 .citation-line a, .literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }
@@ -284,20 +289,19 @@ a { color: inherit; }
 .cylinder-needed-later p { margin: 0; color: rgba(241,238,229,.56); font-size: 9px; line-height: 1.78; }
 .theorem-statement .theorem-note { margin-bottom: 0; color: rgba(241,238,229,.43); font-size: 9px; }
 .cylinder-jet-proof { margin: 0 0 42px 55px; }
-.cylinder-jet-proof-body { padding: 0 36px 36px; }
-.cylinder-proof-scope { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 45px; padding: 30px 0; border-bottom: 1px solid var(--line-light); }
-.cylinder-proof-scope > span { color: var(--orange); font: 7px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.cylinder-proof-scope p { max-width: 850px; margin: 0; color: rgba(241,238,229,.54); font-size: 9px; line-height: 1.78; }
+.cylinder-jet-proof-body { max-width: 900px; margin: 0 auto; padding: 0 0 42px; }
+.cylinder-proof-scope { display: block; padding: 32px 0; border-bottom: 1px solid var(--line-light); }
+.cylinder-proof-scope > span { display: block; margin-bottom: 14px; color: var(--orange); font: 7px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.cylinder-proof-scope p { max-width: 850px; margin: 0; color: rgba(241,238,229,.54); font-size: 10px; line-height: 1.82; }
 .cylinder-proof-scope a { color: var(--orange); text-underline-offset: 3px; }
-.cylinder-proof-grid { display: grid; grid-template-columns: 1fr 1fr; }
-.cylinder-proof-grid article { min-width: 0; padding: 31px 30px; border-bottom: 1px solid var(--line-light); }
-.cylinder-proof-grid article:nth-child(odd) { border-right: 1px solid var(--line-light); }
-.cylinder-proof-grid article:nth-last-child(-n+2) { border-bottom: 0; }
+.cylinder-proof-grid { display: block; }
+.cylinder-proof-grid article { min-width: 0; padding: 31px 0 0; border: 0; }
+.cylinder-proof-grid article + article { margin-top: 31px; padding-top: 31px; border-top: 1px solid var(--line-light); }
 .cylinder-proof-grid article > span { display: block; margin-bottom: 18px; color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.cylinder-proof-grid p { margin: 13px 0; color: rgba(241,238,229,.52); font-size: 9px; line-height: 1.76; }
-.cylinder-proof-grid .tex-display { margin: 13px 0; padding: 9px 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
-.cylinder-proof-grid .katex { font-size: .84em; }
-.cylinder-proof-grid .proof-result { color: #72c9c6; border-left: 2px solid var(--teal); background: rgba(77,162,163,.06); }
+.cylinder-proof-grid p { margin: 13px 0; color: rgba(241,238,229,.52); font-size: 10px; line-height: 1.82; }
+.cylinder-proof-grid .tex-display { margin: 18px 0; padding: 0 0 0 24px; border: 0; border-left: 1px solid var(--line-light); }
+.cylinder-proof-grid .katex { font-size: .9em; }
+.cylinder-proof-grid .proof-result { color: var(--ink); border-left-color: var(--teal); background: transparent; }
 [hidden] { display: none !important; }
 
 .experiment { color: var(--paper); background: var(--ink); padding: 82px 4vw 0; }
@@ -636,7 +640,9 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .near-integer-theorem p { max-width: 820px; margin: 0 0 12px; color: rgba(241,238,229,.53); font-size: 10px; line-height: 1.75; }
 .near-integer-theorem .tex-display { max-width: 760px; margin: 12px 0; padding: 8px 14px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.018); }
 .near-integer-theorem .katex-display { text-align: left; }
-.abundance-laboratory { display: grid; grid-template-columns: minmax(380px,.82fr) minmax(0,1.18fr); min-height: 760px; border: 1px solid var(--line-light); }
+.abundance-proof-details { max-width: 1160px; margin: 0 0 38px 55px; }
+.abundance-proof-argument { margin-left: 250px; }
+.abundance-laboratory { display: block; min-height: 760px; border: 1px solid var(--line-light); }
 .abundance-controls { display: flex; flex-direction: column; padding: 27px; border-right: 1px solid var(--line-light); }
 .abundance-control-block { padding: 26px 0 22px; border-bottom: 1px solid var(--line-light); }
 .abundance-control-block p { margin: 15px 0 0; color: rgba(241,238,229,.43); font-size: 9px; line-height: 1.65; }
@@ -644,15 +650,14 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .abundance-readout div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-light); }
 .abundance-readout span { color: rgba(241,238,229,.4); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .abundance-readout strong { color: rgba(241,238,229,.82); font: 9px var(--mono); text-align: right; }
-.abundance-proof-step { padding: 22px 0; border-bottom: 1px solid var(--line-light); }
-.abundance-proof-step > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .075em; }
-.abundance-proof-step p { margin: 11px 0 0; color: rgba(241,238,229,.45); font-size: 8px; line-height: 1.7; }
-.abundance-proof-step .tex-display { margin-top: 8px; }
-.abundance-proof-step .katex { font-size: .78em; }
+.abundance-readout-inline { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 0; padding: 0 21px; border-bottom: 1px solid var(--line-light); background: rgba(255,255,255,.012); }
+.abundance-readout-inline div { min-width: 0; padding: 13px 16px; border-right: 1px solid var(--line-light); border-bottom: 0; }
+.abundance-readout-inline div:first-child { padding-left: 0; }
+.abundance-readout-inline div:last-child { padding-right: 0; border-right: 0; }
 .abundance-provenance { margin-top: auto; padding-top: 25px; }
 .abundance-provenance > span { color: var(--orange); font: 7px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .abundance-provenance p { margin: 11px 0 0; color: rgba(241,238,229,.38); font-size: 8px; line-height: 1.68; }
-.abundance-plot-panel { min-width: 0; display: grid; grid-template-rows: 62px minmax(590px,1fr) 36px; background: #101b20; }
+.abundance-plot-panel { min-width: 0; display: grid; grid-template-rows: 62px 50px minmax(590px,1fr) 36px; background: #101b20; }
 .abundance-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 21px; border-bottom: 1px solid var(--line-light); }
 .abundance-toolbar > div:first-child { display: flex; align-items: center; gap: 11px; }
 .abundance-toolbar strong { color: rgba(241,238,229,.7); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
@@ -705,7 +710,7 @@ body > footer { color: var(--ink); background: var(--paper); }
 :is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(.play-button, button:not(.tab-button)) { color: var(--ink); border-color: var(--line); }
 :is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(19,33,38,.14)); }
 
-:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion, .geometry-principle, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
+:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .geometry-principle, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
 
 .light-story-heading .section-number { color: var(--ink); border-color: var(--ink); }
 .disk-section-lead,
@@ -781,7 +786,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .question-grid { margin-left: 0; gap: 42px; }
   .linearization-intro, .linearization-core { gap: 35px; }
   .linearization-core { padding: 32px; }
-  .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: 160px minmax(0,1fr); gap: 28px; }
+  .disk-rigidity-theorem { grid-template-columns: 160px minmax(0,1fr); gap: 28px; }
   .world-cards { grid-template-columns: 1fr; margin-left: 0; }
   .world-cards article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .world-cards article:last-child { border-bottom: 0; }
@@ -811,7 +816,8 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .phase-story-lab > aside { border-right: 0; border-bottom: 1px solid var(--line); }
   .abundance-lead { margin-left: 0; }
   .near-integer-theorem { margin-left: 0; }
-  .abundance-laboratory { grid-template-columns: 300px minmax(0,1fr); }
+  .abundance-proof-details { margin-left: 0; }
+  .abundance-proof-argument { margin-left: auto; }
 }
 
 @media (max-width: 760px) {
@@ -839,16 +845,13 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .shape-variation-diagrams svg:last-child { height: 185px; border: 0; }
   .linearization-core { margin-top: 38px; padding: 25px 20px; }
   .linear-theorem-label { padding-bottom: 22px; border-bottom: 1px solid var(--line-light); }
-  .linearization-details > div { grid-template-columns: 1fr; }
+  .proof-argument { padding: 32px 0 40px; }
   .subsection-heading { grid-template-columns: 1fr; gap: 14px; }
   .subsection-heading h3 { font-size: 31px; }
   .disk-rigidity-heading { margin-top: 58px; padding-top: 38px; }
-  .disk-rigidity-theorem, .bourget-theorem, .disk-proof-conclusion { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
-  .theorem-short-proof { grid-template-columns: 1fr; gap: 12px; }
+  .disk-rigidity-theorem { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
   .disk-theorem-label small { max-width: none; }
-  .disk-proof-grid, .disk-symmetry-grid { grid-template-columns: minmax(0,1fr); }
-  .disk-proof-grid article, .disk-symmetry-grid article { padding: 27px 22px; border-right: 0; border-bottom: 1px solid var(--line-light); }
-  .disk-proof-grid article:last-child, .disk-symmetry-grid article:last-child { border-bottom: 0; }
+  .disk-proof-grid article, .disk-symmetry-grid article { padding-top: 27px; }
   .disk-theorem-statement h3, .bourget-theorem h3 { font-size: 29px; }
   .disk-theorem-statement .katex, .bourget-theorem .katex, .disk-proof-conclusion .katex { font-size: .82em; }
   .proof-details > summary { padding: 22px; }
@@ -875,11 +878,10 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .cylinder-mode-pair .katex { font-size: .78em; }
   .cylinder-theorem { grid-template-columns: 1fr; gap: 24px; padding: 25px 20px; }
   .cylinder-needed-later { grid-template-columns: 1fr; gap: 11px; padding: 18px; }
-  .cylinder-jet-proof-body { padding: 0 20px 20px; }
-  .cylinder-proof-scope, .cylinder-proof-grid { grid-template-columns: minmax(0,1fr); }
-  .cylinder-proof-scope { gap: 13px; padding: 24px 0; }
-  .cylinder-proof-grid article { padding: 25px 0; border-right: 0 !important; border-bottom: 1px solid var(--line-light) !important; }
-  .cylinder-proof-grid article:last-child { border-bottom: 0 !important; }
+  .cylinder-jet-proof-body { padding: 0 0 30px; }
+  .cylinder-proof-scope { padding: 24px 0; }
+  .cylinder-proof-grid article { padding-top: 25px; }
+  .cylinder-proof-grid article + article { margin-top: 25px; }
   .cylinder-proof-grid .katex { font-size: .76em; }
   .theorem-system { grid-template-columns: 45px 1fr; }
   .experiment-story-lead { grid-template-columns: 1fr; gap: 22px; }
@@ -970,12 +972,12 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .abundance-header .equations { justify-content: flex-start; }
   .abundance-lead { grid-template-columns: 1fr; gap: 20px; }
   .near-integer-theorem { grid-template-columns: minmax(0,1fr); gap: 18px; padding: 26px 21px; }
-  .abundance-laboratory { grid-template-columns: 1fr; }
-  .abundance-controls { min-width: 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
-  .abundance-proof-step { min-width: 0; }
-  .abundance-plot-panel { min-height: 660px; grid-template-rows: 66px 558px 36px; }
+  .abundance-plot-panel { min-height: 760px; grid-template-rows: 66px auto 620px 36px; }
   .abundance-toolbar { padding: 0 12px; }
   .abundance-toolbar > div:last-child { display: none; }
+  .abundance-readout-inline { grid-template-columns: 1fr; padding: 0 12px; }
+  .abundance-readout-inline div, .abundance-readout-inline div:first-child, .abundance-readout-inline div:last-child { padding: 11px 0; border-right: 0; border-bottom: 1px solid var(--line-light); }
+  .abundance-readout-inline div:last-child { border-bottom: 0; }
   .abundance-conclusion { grid-template-columns: 1fr; min-height: 0; }
   .abundance-examples > header { grid-template-columns: 1fr; gap: 18px; }
   .abundance-examples-table { min-width: 0; table-layout: auto; }

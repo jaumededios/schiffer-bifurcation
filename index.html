@@ -148,10 +148,52 @@
           </div>
           <details class="linearization-details">
             <summary><span>Proof of Proposition 2.1</span><i>expand +</i></summary>
-            <div>
-              <p>Write \(\widehat u_t=u_t\circ\Phi_t\) on the fixed domain \(\Omega\), and define the shape derivative <span class="formula">\(w=\left.\frac d{dt}\right|_{0}\widehat u_t-\nabla u\mathbin{\cdot}V_0\)</span>. Differentiating the constant boundary condition gives <span class="formula">\(w=-f\partial_\nu u=0\)</span> on \(\partial\Omega\).</p>
-              <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu w+f\partial_{\nu\nu}u-\nabla_{\partial\Omega}u\mathbin{\cdot}\nabla_{\partial\Omega}f=0\)</span>. The tangential term vanishes because \(u=1\) on the boundary. Moreover, <span class="formula">\(\Delta u=\partial_{\nu\nu}u+\kappa\partial_\nu u+\Delta_{\partial\Omega}u\)</span> there; its last two terms vanish because <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span>. Thus <span class="formula">\(-\Delta u=\lambda u\)</span> gives <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>, and hence <span class="formula">\(\partial_\nu w=\lambda f\)</span>.</p>
-              <p>In the interior, differentiation gives <span class="formula">\((-\Delta-\lambda)w=\dot\lambda_0u\)</span>. Because \(u\) is radial, its projection onto every angular mode \(\ell\ge1\) is zero. Projecting the three differentiated equations onto such a mode gives (2.1). If \(f_\ell\ne0\), its Neumann trace shows that \(w_\ell\ne0\), so \(\lambda\) is a Dirichlet eigenvalue in that mode.</p>
+            <div class="proof-argument">
+              <p><em>Proof.</em> Pull the functions back to the fixed domain by writing \(\widehat u_t=u_t\circ\Phi_t\), and define the shape derivative</p>
+              <div class="tex-display">
+                \[
+                w=\left.\frac d{dt}\right|_{t=0}\widehat u_t-
+                \nabla u\mathbin{\cdot}V_0.
+                \]
+              </div>
+              <p>For \(p\in\partial\Omega\), the identity \(u_t(\Phi_t(p))=1\) gives \(\left.\frac d{dt}\right|_0\widehat u_t=0\). Since \(\nabla_{\partial\Omega}u=0\) and \(f=V_0\mathbin{\cdot}\nu\), it follows that</p>
+              <div class="tex-display">
+                \[
+                w=-f\,\partial_\nu u=0
+                \qquad\text{on }\partial\Omega.
+                \]
+              </div>
+              <p>The shape derivative of the Neumann condition is</p>
+              <div class="tex-display">
+                \[
+                \partial_\nu w+f\,\partial_{\nu\nu}u
+                -\nabla_{\partial\Omega}u\mathbin{\cdot}
+                \nabla_{\partial\Omega}f=0.
+                \]
+              </div>
+              <p>The last term vanishes because \(u=1\) on the boundary. On \(\partial\Omega\),</p>
+              <div class="tex-display">
+                \[
+                \Delta u=\partial_{\nu\nu}u+
+                \kappa\partial_\nu u+\Delta_{\partial\Omega}u
+                =\partial_{\nu\nu}u.
+                \]
+              </div>
+              <p>Using \(-\Delta u=\lambda u\), \(u=1\), and \(\partial_\nu u=0\), we obtain \(\partial_{\nu\nu}u=-\lambda\), and therefore</p>
+              <div class="tex-display">
+                \[
+                \partial_\nu w=\lambda f
+                \qquad\text{on }\partial\Omega.
+                \]
+              </div>
+              <p>Finally, differentiating the equation in the interior gives</p>
+              <div class="tex-display">
+                \[
+                (-\Delta-\lambda)w=\dot\lambda_0u
+                \qquad\text{in }\Omega.
+                \]
+              </div>
+              <p class="proof-end">Because \(u\) is radial, the right-hand side has zero projection onto every angular mode \(\ell\ge1\). Projecting the three identities above gives (2.1). If \(f_\ell\not\equiv0\), then \(\partial_\nu w_\ell=\lambda f_\ell\) implies \(w_\ell\not\equiv0\); hence \(w_\ell\) is a Dirichlet eigenfunction with eigenvalue \(\lambda\). <span class="qed" aria-label="end of proof">□</span></p>
             </div>
           </details>
         </div>
@@ -201,8 +243,8 @@
           <div class="disk-proof-body">
         <div class="disk-proof-grid">
           <article>
-            <span>Proof · the radial base solution</span>
-            <p>Every radial solution regular at the origin is a multiple of \(J_0(\rho r)\). The normalization \(u_0=1\) on \(r=1\) gives</p>
+            <span>Radial base solution</span>
+            <p><em>Proof.</em> Every radial solution regular at the origin is a multiple of \(J_0(\rho r)\). The normalization \(u_0=1\) on \(r=1\) gives</p>
             <div class="tex-display">
               \[
               u_0(r)=\frac{J_0(\rho r)}{J_0(\rho)},\qquad \lambda=\rho^2.
@@ -218,7 +260,7 @@
             <p>Thus \(J_1(\rho)=0\). Interlacing of the zeros of \(J_0\) and \(J_1\) ensures that \(J_0(\rho)\ne0\), so the normalization is well-defined.</p>
           </article>
           <article>
-            <span>Proof · separation of the nonradial modes</span>
+            <span>Separation of the nonradial modes</span>
             <p>Write the \(\ell\)-th Fourier component of the linearized field as</p>
             <div class="tex-display">
               \[
@@ -315,7 +357,7 @@
               =\{0\}.
               \]
             </div>
-            <p>Rotations contribute no additional normal mode: their velocity is tangent to the circle, so \(f=0\). This proves that the disk is linearly rigid after quotienting by the translation and dilation symmetries, and that there is no other infinitesimal shape deformation from which to bifurcate.</p>
+            <p>Rotations contribute no additional normal mode: their velocity is tangent to the circle, so \(f=0\). This proves that the disk is linearly rigid after quotienting by the translation and dilation symmetries, and that there is no other infinitesimal shape deformation from which to bifurcate. <span class="qed" aria-label="end of proof">□</span></p>
           </div>
         </div>
           </div>
@@ -329,10 +371,7 @@
           <div class="disk-theorem-statement">
             <h3>There are no nontrivial smooth perturbations of a Schiffer disk.</h3>
             <p>Fix \(0&lt;\alpha&lt;1\) and the radial Schiffer solution \((D,u_0,\rho^2)\) above. In a sufficiently small \(C^{2,\alpha}\) neighborhood of this triple, every Schiffer domain is a translated and dilated disk. Equivalently, after fixing the area and barycenter, the disk is isolated.</p>
-            <div class="theorem-short-proof">
-              <span>Proof</span>
-              <p>Fixing the area removes the constant boundary mode, and fixing the barycenter removes \(\cos\theta\) and \(\sin\theta\). Proposition 2.2 says that the normalized linearization has zero kernel. This boundary linearization is elliptic Fredholm of index zero, so it is invertible on the normalized slice. The implicit-function theorem therefore makes the disk the unique nearby normalized solution. Undoing the normalization recovers exactly the dilation and translation families displayed in the proof of Proposition 2.2.</p>
-            </div>
+            <p class="theorem-short-proof"><em>Proof.</em> Fixing the area removes the constant boundary mode, and fixing the barycenter removes \(\cos\theta\) and \(\sin\theta\). Proposition 2.2 says that the normalized linearization has zero kernel. This boundary linearization is elliptic Fredholm of index zero, so it is invertible on the normalized slice. The implicit-function theorem therefore makes the disk the unique nearby normalized solution. Undoing the normalization recovers exactly the dilation and translation families displayed in the proof of Proposition 2.2. <span class="qed" aria-label="end of proof">□</span></p>
           </div>
         </div>
       </section>
@@ -1317,31 +1356,47 @@
             <p>The scatter plot below is a finite numerical sample of these coincidences. The theorem itself comes from aligning the fixed-order McMahon phase and the large-order Debye phase.</p>
           </div>
         </div>
+        <details class="abundance-proof-details proof-details">
+          <summary><span>Proof sketch of Theorem 9.1</span><i>expand +</i></summary>
+          <div class="proof-argument abundance-proof-argument">
+            <p><em>Proof sketch.</em> Put</p>
+            <div class="tex-display">
+              \[
+              \Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1}),
+              \qquad \sqrt2&lt;q&lt;\sqrt3.
+              \]
+            </div>
+            <p>The fixed-order McMahon expansion and the large-order Debye expansion give, in the relevant range,</p>
+            <div class="tex-display">
+              \[
+              \begin{aligned}
+              j_{1,n}&=\pi\left(n+\frac14\right)+o(1),\\
+              N\Phi\!\left(\frac{j_{N,m}}N\right)
+              &=\pi\left(m-\frac14\right)+o(1).
+              \end{aligned}
+              \]
+            </div>
+            <p>Choose \(q_*\in(\sqrt2,\sqrt3)\) such that \(1\), \(q_*/\pi\), and \(\Phi(q_*)/\pi\) are linearly independent over \(\mathbb Q\). Kronecker's theorem makes the orbit</p>
+            <div class="tex-display">
+              \[
+              N\longmapsto
+              \left(N\frac{q_*}{\pi},
+              N\frac{\Phi(q_*)}{\pi}\right)
+              \pmod{\mathbb Z^2}
+              \]
+            </div>
+            <p>dense in the two-torus. Hence, for arbitrarily large integers \(N\), the two phases can be chosen simultaneously so that a zero \(j_{1,n}\) lies just above \(Nq_*\), while a zero \(j_{N,m}\) lies just below it. The errors in the two asymptotic formulae tend to zero, so their gap can be made arbitrarily small.</p>
+            <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
+          </div>
+        </details>
         <div class="abundance-laboratory">
-          <aside class="abundance-controls abundance-proof">
-            <div class="control-heading"><span>Why near-integer crossings exist</span></div>
-            <div class="abundance-proof-step">
-              <span>01 / two asymptotic phases</span>
-              <div class="tex-display">\[j_{1,n}=\pi\left(n+\frac14\right)+o(1),\qquad N\Phi(j_{N,m}/N)=\pi\left(m-\frac14\right)+o(1).\]</div>
-              <p>McMahon controls the fixed-order zero; Debye controls the zero whose order and argument are both large.</p>
-            </div>
-            <div class="abundance-proof-step">
-              <span>02 / align them simultaneously</span>
-              <div class="tex-display">\[N\longmapsto\left(N\frac{q_*}{\pi},N\frac{\Phi(q_*)}{\pi}\right)\pmod{\mathbb Z^2}.\]</div>
-              <p>Choose \(q_*\in(\sqrt2,\sqrt3)\) so that the two frequencies and \(1\) are rationally independent. Kronecker's theorem makes this orbit dense in the two-torus.</p>
-            </div>
-            <div class="abundance-proof-step">
-              <span>03 / close the remaining zero gap</span>
-              <p>One phase places \(j_{1,n}\) just above \(Nq_*\); the other places \(j_{N,m}\) just below it. Since \(\nu\mapsto j_{\nu,m}\) is strictly increasing with a uniform positive speed, a small increase from \(N\) produces the real order \(R\).</p>
-            </div>
-            <div class="abundance-readout">
+          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
+            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through N = 200</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
+            <div class="abundance-readout abundance-readout-inline">
               <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
               <div><span>smallest sample \(R-\lfloor R\rfloor\)</span><strong id="abundanceBestValue">—</strong></div>
               <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
             </div>
-          </aside>
-          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
-            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through N = 200</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
             <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
             <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=200\)</span></div>
           </section>
