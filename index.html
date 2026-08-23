@@ -80,10 +80,10 @@
         <div class="linearization-section">
           <div class="linearization-intro">
             <p class="eyebrow">2.1 · the linearized problem</p>
-            <h3>Infinitesimal deformations are controlled by a Dirichlet kernel.</h3>
+            <h3>Differentiating a family of Schiffer domains produces a Dirichlet eigenfunction.</h3>
             <div class="linearization-explanation">
-              <p>Let \((\Omega_t,u_t,\lambda_t)\) be a \(C^1\) family satisfying (1.1), with \((\Omega_0,u_0,\lambda_0)=(\Omega,u,\lambda)\). Write a moving boundary point as \(p_t=p+t f(p)\nu(p)+O(t^2)\), and set \(v=\left.\frac d{dt}\right|_{t=0}u_t\), \(\mu=\left.\frac d{dt}\right|_{t=0}\lambda_t\). We call \((f,v,\mu)\) the infinitesimal deformation of the family.</p>
-              <p>The scalar \(f\) is the normal velocity of the boundary. A tangential velocity changes only the parametrization, not the domain. When the base solution is radial, the nonzero angular modes of this first-order problem have a particularly simple description.</p>
+              <p>Let \(V_t\) be a smooth time-dependent vector field with flow \(\Phi_t\), and put \(\Omega_t=\Phi_t(\Omega)\). Its normal component \(f=V_0\mathbin{\cdot}\nu\) is the first-order motion of the boundary; the tangential component only changes its parametrization.</p>
+              <p>Suppose every \(\Omega_t\) carries a solution \((u_t,\lambda_t)\) of (1.1). The theorem below states the necessary condition obtained by differentiating this genuine family at \(t=0\).</p>
             </div>
           </div>
           <figure class="shape-variation-figure">
@@ -125,30 +125,33 @@
             <figcaption>To first order, \(\partial\Omega_t=\{p+t f(p)\nu(p):p\in\partial\Omega\}\). Positive values of \(f\) move the boundary outward and negative values move it inward.</figcaption>
           </figure>
           <div class="linearization-core">
-            <div class="linear-equations tex-display" aria-label="The nonradial linearized problem">
-              \[
-              \begin{cases}
-              (-\Delta-\lambda)v=0 &amp; \text{in }\Omega,\\
-              v=0 &amp; \text{on }\partial\Omega,\\
-              \partial_\nu v=\lambda f &amp; \text{on }\partial\Omega.
-              \end{cases}
-              \]
-              <span class="equation-number">(2.1)</span>
+            <div class="linear-theorem-label">
+              <span>Theorem 2.1</span>
+              <small>a necessary spectral condition for deformation</small>
             </div>
             <div class="linear-stability-criterion">
-              <span>Theorem 2.1 · linearized kernel</span>
-              <p>Assume that \(\Omega\) is rotationally symmetric and that \(u\) is radial. In every angular mode \(\ell\ge1\), the linearized shape kernel consists precisely of the pairs \((f_\ell,v_\ell)\) satisfying (2.1).</p>
-              <p>Projection onto \(v_\ell\) therefore identifies this kernel with the Dirichlet eigenspace of \(-\Delta\) at eigenvalue \(\lambda\) in mode \(\ell\); the boundary velocity is recovered by \(f_\ell=\lambda^{-1}\partial_\nu v_\ell\).</p>
-              <p>If \(\lambda\) is not a Dirichlet eigenvalue in that angular mode, then \(v_\ell=0\) and hence \(f_\ell=0\). Absence of a common eigenvalue is exactly the first-order obstruction to deforming the domain in that mode.</p>
-              <p>This is what we mean by <em>linear stability</em>: after the symmetry directions are removed, the kernel of the linearized problem is zero. It is a first-order statement and does not, by itself, prove nonlinear local rigidity.</p>
+              <h3>A nonradial first-order deformation forces a Dirichlet eigenvalue.</h3>
+              <p>Let \(\Omega\) be rotationally symmetric, and let \((u,\lambda)\) be a radial solution of (1.1). Suppose \(\Omega_t=\Phi_t(\Omega)\) is a smooth family as above and that each \(\Omega_t\) has a Schiffer solution \((u_t,\lambda_t)\) depending smoothly on \(t\), with \((u_0,\lambda_0)=(u,\lambda)\).</p>
+              <p>Let \(w\) be the shape derivative of \(u_t\), and let \(w_\ell\) and \(f_\ell\) denote the angular Fourier components of \(w\) and \(f=V_0\mathbin{\cdot}\nu\) in a mode \(\ell\ge1\). Then</p>
+              <div class="linear-equations tex-display" aria-label="The equation satisfied by a nonradial component of the shape derivative">
+                \[
+                \begin{aligned}
+                -\Delta w_\ell&amp;=\lambda w_\ell &amp;&amp; \text{in }\Omega,\\
+                w_\ell&amp;=0,\qquad \partial_\nu w_\ell=\lambda f_\ell &amp;&amp; \text{on }\partial\Omega.
+                \end{aligned}
+                \]
+                <span class="equation-number">(2.1)</span>
+              </div>
+              <p>If \(f_\ell\not\equiv0\), then \(w_\ell\not\equiv0\). The first two relations in (2.1) therefore say precisely that \(w_\ell\) is a Dirichlet eigenfunction of \(-\Delta\) with eigenvalue \(\lambda\). Consequently, if \(\lambda\) is not in the Dirichlet spectrum in mode \(\ell\), the boundary cannot move to first order in that mode.</p>
+              <p>Thus the Schiffer solution is <em>linearly stable</em>, modulo geometric symmetries, when no nonradial Dirichlet eigenfunction occurs at \(\lambda\). This is only a first-order obstruction; it does not by itself prove nonlinear local rigidity.</p>
             </div>
           </div>
           <details class="linearization-details">
             <summary><span>Proof of Theorem 2.1</span><i>expand +</i></summary>
             <div>
-              <p>Write a moving boundary point as \(p_t=p+t f(p)\nu(p)+O(t^2)\). Differentiating \(u_t(p_t)=1\) gives \(v+f\partial_\nu u=0\) on \(\partial\Omega\). Since the base solution satisfies \(\partial_\nu u=0\), we obtain \(v=0\).</p>
-              <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu v+f\partial_{\nu\nu}u=0\)</span>. Since <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span> on the boundary, all tangential derivatives vanish there and the PDE yields <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>. Therefore <span class="formula">\(\partial_\nu v=\lambda f\)</span>.</p>
-              <p>In the interior, differentiation gives <span class="formula">\((-\Delta-\lambda)v=\mu u\)</span>. On a rotationally symmetric base, <span class="formula">\(u\)</span> is radial; projecting onto any nonzero angular mode removes the right-hand side and gives the homogeneous Dirichlet eigenvalue equation above.</p>
+              <p>Write \(\widehat u_t=u_t\circ\Phi_t\) on the fixed domain \(\Omega\), and define the shape derivative <span class="formula">\(w=\left.\frac d{dt}\right|_{0}\widehat u_t-\nabla u\mathbin{\cdot}V_0\)</span>. Differentiating the constant boundary condition gives <span class="formula">\(w=-f\partial_\nu u=0\)</span> on \(\partial\Omega\).</p>
+              <p>Differentiating the Neumann condition gives <span class="formula">\(\partial_\nu w+f\partial_{\nu\nu}u-\nabla_{\partial\Omega}u\mathbin{\cdot}\nabla_{\partial\Omega}f=0\)</span>. The tangential term vanishes because \(u=1\) on the boundary. Moreover, <span class="formula">\(\Delta u=\partial_{\nu\nu}u+\kappa\partial_\nu u+\Delta_{\partial\Omega}u\)</span> there; its last two terms vanish because <span class="formula">\(u=1\)</span> and <span class="formula">\(\partial_\nu u=0\)</span>. Thus <span class="formula">\(-\Delta u=\lambda u\)</span> gives <span class="formula">\(\partial_{\nu\nu}u=-\lambda\)</span>, and hence <span class="formula">\(\partial_\nu w=\lambda f\)</span>.</p>
+              <p>In the interior, differentiation gives <span class="formula">\((-\Delta-\lambda)w=\dot\lambda_0u\)</span>. Because \(u\) is radial, its projection onto every angular mode \(\ell\ge1\) is zero. Projecting the three differentiated equations onto such a mode gives (2.1). If \(f_\ell\ne0\), its Neumann trace shows that \(w_\ell\ne0\), so \(\lambda\) is a Dirichlet eigenvalue in that mode.</p>
             </div>
           </details>
         </div>

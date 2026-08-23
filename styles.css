@@ -122,15 +122,18 @@ a { color: inherit; }
 .variation-point.moved { fill: var(--orange); }
 .variation-distance { stroke: var(--orange); stroke-width: 1.4; }
 .shape-variation-figure figcaption { margin: 0; padding: 18px 28px; color: rgba(241,238,229,.46); border-top: 1px solid var(--line-light); font-size: 10px; line-height: 1.7; }
-.linearization-core { display: grid; grid-template-columns: minmax(330px,.8fr) minmax(350px,1.2fr); gap: 52px; align-items: start; margin-top: 34px; padding: 38px; border: 1px solid var(--line-light); border-top: 1px solid var(--orange); background: rgba(255,255,255,.018); }
+.linearization-core { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; align-items: start; margin-top: 34px; padding: 38px; border: 1px solid var(--line-light); border-top: 1px solid var(--orange); background: rgba(255,255,255,.018); }
 .linear-equations, .theorem-system { min-width: 0; overflow-x: auto; color: var(--paper); }
-.linear-equations { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
+.linear-equations { max-width: 840px; margin: 22px 0 24px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
 .linear-equations .katex-display, .theorem-system .katex-display { margin: 0; text-align: left; }
 .linear-equations .katex, .theorem-system .katex { font-size: 1.08em; }
-.linear-stability-criterion { padding-left: 32px; border-left: 1px solid var(--line-light); }
-.linear-stability-criterion > span { display: block; margin-bottom: 18px; color: var(--orange); font: 8px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.linear-theorem-label { display: flex; flex-direction: column; gap: 8px; }
+.linear-theorem-label span { color: var(--orange); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.linear-theorem-label small { max-width: 165px; color: var(--muted); font: 7px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .065em; }
+.linear-stability-criterion { min-width: 0; }
+.linear-stability-criterion h3 { max-width: 780px; margin: 0 0 20px; font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
 .linear-stability-criterion p { margin: 0 0 15px; color: rgba(241,238,229,.55); font-size: 11px; line-height: 1.78; }
-.linear-stability-criterion p:last-child { margin-bottom: 0; padding-top: 16px; color: rgba(241,238,229,.72); border-top: 1px solid var(--line-light); }
+.linear-stability-criterion p:last-child { margin-bottom: 0; }
 .linearization-details { margin-top: 28px; border-top: 1px solid var(--line-light); }
 .linearization-details summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .linearization-details summary::-webkit-details-marker { display: none; }
@@ -831,7 +834,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .shape-variation-diagrams svg:first-child, .shape-variation-diagrams .variation-map { display: none; }
   .shape-variation-diagrams svg:last-child { height: 185px; border: 0; }
   .linearization-core { margin-top: 38px; padding: 25px 20px; }
-  .linear-stability-criterion { padding: 25px 0 0; border-top: 1px solid var(--line-light); border-left: 0; }
+  .linear-theorem-label { padding-bottom: 22px; border-bottom: 1px solid var(--line-light); }
   .linearization-details > div { grid-template-columns: 1fr; }
   .subsection-heading { grid-template-columns: 1fr; gap: 14px; }
   .subsection-heading h3 { font-size: 31px; }
