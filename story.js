@@ -3,6 +3,7 @@
 
   const data = window.CONE_NUMERICS;
   if (!data) return;
+  const crossingData = window.SCHIFFER_ABUNDANCE_DATA;
   const select = (selector) => document.querySelector(selector);
   const TAU = Math.PI * 2;
   const colors = {
@@ -849,6 +850,189 @@
   }
 
   const phaseStoryState = { progress: 0 };
+  const phaseFamilyState = { hoverIndex: -1, geometry: null };
+
+  function cylinderLimitGamma(lambda) {
+    return Math.sqrt((lambda - 1) * (4 - lambda))
+      / (4 * Math.acos(1 / Math.sqrt(lambda)));
+  }
+
+  function phaseFamilyRows() {
+    if (!crossingData || !crossingData.columns) return [];
+    const rows = [];
+    const columns = crossingData.columns;
+    for (let index = 0; index < columns.R.length; index += 1) {
+      const R = columns.R[index];
+      if (R < 10) continue;
+      if (R > 30) break;
+      const rho = columns.rho[index];
+      const lambda = (rho / R) ** 2;
+      if (lambda < 2 || lambda > 3) continue;
+      rows.push({ index, R, rho, lambda, gamma: cylinderLimitGamma(lambda) });
+    }
+    return rows;
+  }
+
+  function renderPhaseFamily() {
+    const canvas = select("#phaseFamilyCanvas");
+    const wrap = select("#phaseFamilyCanvasWrap");
+    if (!canvas || !wrap) return;
+    const minimumHeight = window.innerWidth < 680 ? 520 : 390;
+    const { context, width, height } = canvasMetrics("#phaseFamilyCanvas", "#phaseFamilyCanvasWrap", minimumHeight);
+    const rows = phaseFamilyRows();
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = colors.ink;
+    context.fillRect(0, 0, width, height);
+    if (!rows.length) {
+      context.fillStyle = colors.faint;
+      context.font = "9px DM Mono, monospace";
+      context.fillText("crossing data unavailable", 24, 34);
+      return;
+    }
+
+    const compact = width < 680;
+    const plot = {
+      left: compact ? 46 : 66,
+      top: compact ? 46 : 42,
+      width: width - (compact ? 66 : 94),
+      height: height - (compact ? 92 : 82),
+    };
+    const xMap = (R) => plot.left + (R - 10) / 20 * plot.width;
+    const yMap = (s) => plot.top + (1 - (s + 1) / 2) * plot.height;
+    const zeroY = yMap(0);
+
+    context.save();
+    context.strokeStyle = "rgba(241,238,229,.075)";
+    context.lineWidth = 1;
+    for (let integer = 10; integer <= 30; integer += 1) {
+      const x = xMap(integer);
+      context.beginPath();
+      context.moveTo(x, plot.top);
+      context.lineTo(x, plot.top + plot.height);
+      context.stroke();
+    }
+    [-1, -.5, .5, 1].forEach((s) => {
+      context.beginPath();
+      context.moveTo(plot.left, yMap(s));
+      context.lineTo(plot.left + plot.width, yMap(s));
+      context.stroke();
+    });
+
+    context.strokeStyle = "rgba(241,238,229,.52)";
+    context.lineWidth = 1.5;
+    context.beginPath();
+    context.moveTo(plot.left, zeroY);
+    context.lineTo(plot.left + plot.width, zeroY);
+    context.stroke();
+
+    const labelEvery = compact ? 2 : 1;
+    context.fillStyle = "rgba(241,238,229,.42)";
+    context.font = compact ? "6px DM Mono, monospace" : "7px DM Mono, monospace";
+    context.textAlign = "center";
+    context.textBaseline = "top";
+    for (let integer = 10; integer <= 30; integer += 1) {
+      const x = xMap(integer);
+      const tick = integer % 5 === 0 ? 8 : 5;
+      context.strokeStyle = integer % 5 === 0 ? colors.paper : "rgba(241,238,229,.6)";
+      context.beginPath();
+      context.moveTo(x, zeroY - tick);
+      context.lineTo(x, zeroY + tick);
+      context.stroke();
+      if ((integer - 10) % labelEvery === 0) context.fillText(String(integer), x, zeroY + 12);
+    }
+
+    context.textAlign = "right";
+    context.textBaseline = "middle";
+    [-1, -.5, 0, .5, 1].forEach((s) => {
+      context.fillText(s > 0 ? `+${s}` : String(s), plot.left - 11, yMap(s));
+    });
+    context.save();
+    context.translate(15, plot.top + plot.height / 2);
+    context.rotate(-Math.PI / 2);
+    context.textAlign = "center";
+    context.fillStyle = colors.orange;
+    context.font = "8px DM Mono, monospace";
+    context.fillText("BRANCH PARAMETER  s", 0, 0);
+    context.restore();
+
+    const pointGeometry = [];
+    rows.forEach((row, rowIndex) => {
+      const active = rowIndex === phaseFamilyState.hoverIndex;
+      const integerGap = row.R - Math.floor(row.R);
+      const predictedLanding = integerGap > 0 && integerGap <= row.gamma / 2;
+      context.beginPath();
+      const samples = 100;
+      for (let sample = 0; sample <= samples; sample += 1) {
+        const s = -1 + 2 * sample / samples;
+        const predictedR = row.R - .5 * row.gamma * s * s;
+        const x = xMap(predictedR);
+        const y = yMap(s);
+        if (sample === 0) context.moveTo(x, y); else context.lineTo(x, y);
+      }
+      context.strokeStyle = active || predictedLanding ? "#72c9c6" : "rgba(77,162,163,.48)";
+      context.lineWidth = active ? 2.8 : (predictedLanding ? 2.1 : 1.25);
+      context.stroke();
+
+      if (predictedLanding) {
+        const landingS = Math.sqrt(2 * integerGap / row.gamma);
+        [-landingS, landingS].forEach((s) => {
+          context.beginPath();
+          context.arc(xMap(Math.floor(row.R)), yMap(s), 3.2, 0, TAU);
+          context.fillStyle = colors.ink;
+          context.fill();
+          context.strokeStyle = colors.paper;
+          context.lineWidth = 1.2;
+          context.stroke();
+        });
+      }
+
+      const point = { x: xMap(row.R), y: zeroY, row };
+      pointGeometry.push(point);
+      context.beginPath();
+      context.arc(point.x, point.y, active ? 5.5 : 4, 0, TAU);
+      context.fillStyle = colors.orange;
+      context.fill();
+      context.strokeStyle = active ? colors.paper : colors.ink;
+      context.lineWidth = active ? 1.5 : 1;
+      context.stroke();
+    });
+
+    context.fillStyle = colors.orange;
+    context.font = "7px DM Mono, monospace";
+    context.textAlign = "left";
+    context.textBaseline = "top";
+    context.fillText("s = 0 · COMMON-ZERO CROSSINGS", plot.left + 8, zeroY - 29);
+    context.fillStyle = colors.faint;
+    context.fillText("each quadratic jet opens toward decreasing R", plot.left + 8, plot.top + 10);
+    context.fillText("white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
+
+    if (phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
+      const point = pointGeometry[phaseFamilyState.hoverIndex];
+      const boxWidth = compact ? 174 : 205;
+      const boxHeight = 66;
+      const boxX = Math.min(Math.max(point.x + 12, plot.left + 4), plot.left + plot.width - boxWidth - 4);
+      const boxY = point.y > plot.top + plot.height / 2
+        ? point.y - boxHeight - 15
+        : point.y + 15;
+      context.fillStyle = "rgba(10,19,23,.96)";
+      context.fillRect(boxX, boxY, boxWidth, boxHeight);
+      context.strokeStyle = "rgba(255,116,73,.7)";
+      context.strokeRect(boxX + .5, boxY + .5, boxWidth - 1, boxHeight - 1);
+      context.textAlign = "left";
+      context.textBaseline = "top";
+      context.fillStyle = colors.paper;
+      context.font = "8px DM Mono, monospace";
+      context.fillText(`R* = ${point.row.R.toFixed(6)}`, boxX + 10, boxY + 10);
+      context.fillStyle = colors.faint;
+      context.font = "7px DM Mono, monospace";
+      context.fillText(`λ* = ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
+      context.fillText(`quadratic drop at |s|=1: ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
+    }
+    context.restore();
+
+    phaseFamilyState.geometry = { pointGeometry, width, height };
+    canvas.setAttribute("aria-label", `${rows.length} computed crossings with real order between 10 and 30 and spectral ratio between 2 and 3. Every displayed quadratic branch jet bends toward smaller real order as the magnitude of s increases.`);
+  }
 
   function drawPhasePanel(context, rect, options) {
     context.save();
@@ -943,12 +1127,38 @@
   phaseRange.addEventListener("input", (event) => { phaseStoryState.progress = Number(event.target.value); fillRange(event.target); updatePhaseStory(); });
   select("#phaseStoryResetButton").addEventListener("click", () => { phaseStoryState.progress = 0; phaseRange.value = 0; fillRange(phaseRange); updatePhaseStory(); });
 
+  const phaseFamilyCanvas = select("#phaseFamilyCanvas");
+  if (phaseFamilyCanvas) {
+    phaseFamilyCanvas.addEventListener("pointermove", (event) => {
+      if (!phaseFamilyState.geometry) return;
+      const bounds = phaseFamilyCanvas.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) * phaseFamilyState.geometry.width / bounds.width;
+      const y = (event.clientY - bounds.top) * phaseFamilyState.geometry.height / bounds.height;
+      let nearest = -1;
+      let nearestDistance = 15;
+      phaseFamilyState.geometry.pointGeometry.forEach((point, index) => {
+        const distance = Math.hypot(point.x - x, point.y - y);
+        if (distance < nearestDistance) { nearest = index; nearestDistance = distance; }
+      });
+      if (nearest !== phaseFamilyState.hoverIndex) {
+        phaseFamilyState.hoverIndex = nearest;
+        renderPhaseFamily();
+      }
+    });
+    phaseFamilyCanvas.addEventListener("pointerleave", () => {
+      if (phaseFamilyState.hoverIndex < 0) return;
+      phaseFamilyState.hoverIndex = -1;
+      renderPhaseFamily();
+    });
+  }
+
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { renderGeometryStory(); renderPhaseStory(); }, 140);
+    resizeTimer = setTimeout(() => { renderGeometryStory(); renderPhaseStory(); renderPhaseFamily(); }, 140);
   });
 
   renderGeometryStory();
   updatePhaseStory();
+  renderPhaseFamily();
 })();

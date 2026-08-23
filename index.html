@@ -942,7 +942,29 @@
           <div><p class="eyebrow">The computation along the bifurcating branch</p><h2>The radius drift determines the Debye phase drift.</h2></div>
         </header>
         <div class="phase-story-lead paper-copy">
+          <p>Suppose the real crossing order lies just to the right of an integer, \(R_*=N+\delta\). Can the nonlinear branch reach \(N\)? It is not enough to know that one particular branch bends left: the amount of motion must not shrink to zero as \(R_*\to\infty\). The point of this section is that every sufficiently large crossing in the fixed window \(2\le\lambda_*\le3\) admits the same small but definite leftward move.</p>
           <p>Section 6 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
+        </div>
+        <div class="uniform-drop-theorem">
+          <div class="uniform-drop-label"><span>Corollary 7.1</span><small>uniform leftward motion</small></div>
+          <div>
+            <p>There are constants \(R_{\mathrm{drop}},s_*,\eta_*&gt;0\), independent of the crossing, such that every real-order crossing with</p>
+            <div class="tex-display">
+              \[
+              \begin{gathered}
+              R_*\ge R_{\mathrm{drop}},\qquad J_1(\rho)=J_{R_*}(\rho)=0,\\
+              2\le\dfrac{\rho^2}{R_*^2}\le3,
+              \end{gathered}
+              \]
+            </div>
+            <p>has a cone branch defined through \(s=s_*\) for which</p>
+            <div class="tex-display uniform-drop-result">
+              \[
+              R(0)=R_*,\qquad R(s_*)\le R_*-\eta_*.
+              \]
+            </div>
+            <p>The number \(\eta_*\) may be tiny, but it is the same for every sufficiently large \(R_*\). This is the analytic input needed for integer landing.</p>
+          </div>
         </div>
         <div class="phase-derivation-grid">
           <article>
@@ -987,6 +1009,19 @@
           </aside>
           <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic departure from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>integer landing</span></div></section>
         </div>
+        <section class="phase-family" aria-labelledby="phaseFamilyTitle">
+          <header>
+            <span>What the calculation predicts across real order</span>
+            <div>
+              <h3 id="phaseFamilyTitle">The cylinder-limit two-jet points every displayed crossing to the left.</h3>
+              <p>The orange points are the eleven computed crossings with \(10\le R_*\le30\) and \(2\le\lambda_*\le3\). From each point we draw only the quadratic prediction \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\). These cyan curves are local two-jets, not eleven numerically continued nonlinear branches.</p>
+            </div>
+          </header>
+          <div class="phase-family-toolbar"><strong>real crossing order versus branch parameter</strong><span>orange: computed common zero · cyan: predicted two-jet</span></div>
+          <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real line from order 10 to 30 with integer ticks, computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
+          <footer><span>\(R=10\)</span><span>integer orders marked on \(s=0\)</span><span>\(R=30\)</span></footer>
+          <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the upper and lower halves of each sideways parabola. What matters for the proof is not that every displayed crossing reaches an integer, but that all sufficiently large branches move left by a common amount. The final section finds crossings whose initial gap is smaller than that amount.</p>
+        </section>
       </section>
 
       <section id="debye-experiment" class="debye-experiment">
@@ -1004,6 +1039,40 @@
             <small>\(\lambda=2.4\) fixed</small>
           </div>
         </header>
+
+        <section class="real-order-bridge" aria-labelledby="realOrderTheoremTitle">
+          <header>
+            <span>Before taking the large-radius limit</span>
+            <div>
+              <h3 id="realOrderTheoremTitle">The cone problem is defined for real order.</h3>
+              <p>On the plane, an \(N\)-fold quotient requires \(N\in\mathbb N\). On the cone with metric \(g_R=dr^2+(r^2/R^2)d\psi^2\), however, \(R&gt;0\) is an ordinary real parameter and the regular separated modes are \(J_{kR}\). Nothing in the cone equation requires \(R\) to be an integer. Integrality enters only at the final step, when the cone is unfolded into a planar \(N\)-fold domain.</p>
+            </div>
+          </header>
+          <div class="real-order-theorem">
+            <div><span>Theorem 6.1</span><small>uniform cone bifurcation</small></div>
+            <article>
+              <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
+              <div class="tex-display">
+                \[
+                \begin{gathered}
+                R_*\ge R_{\mathrm{unif}},\qquad J_1(\rho)=J_{R_*}(\rho)=0,\\
+                2\le\lambda_*:=\dfrac{\rho^2}{R_*^2}\le3.
+                \end{gathered}
+                \]
+              </div>
+              <p>has a nontrivial \(C^3\) cone branch \(s\mapsto(R(s),u_s,h_s)\), defined for the same interval \(|s|\le s_*\), with</p>
+              <div class="tex-display real-order-result">
+                \[
+                \begin{gathered}
+                R(0)=R_*,\qquad h_s(\psi)=s\cos\psi+O(s^2),\\
+                \displaystyle\sup_{|s|\le s_*}|R'''(s)|\le C_3.
+                \end{gathered}
+                \]
+              </div>
+              <p>No hypothesis \(R_*\in\mathbb N\) occurs. At any individual smaller simple crossing, the usual local bifurcation theorem still gives a branch, although its interval may depend on that crossing. For large \(R_*\), a fixed rim collar converges to the half-cylinder of Theorem 5.1; this supplies the constants uniformly. The finitely many crossings in any bounded spectral window are the non-asymptotic part of the same picture.</p>
+            </article>
+          </div>
+        </section>
 
         <div class="debye-lead paper-copy">
           <p>Let the cone have rim radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: on the fixed coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
@@ -1183,12 +1252,28 @@
 
       <section id="abundance-experiment" class="abundance-experiment">
         <header class="experiment-header abundance-header">
-          <div><span class="section-number">09</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>Common zeros occur arbitrarily close to integer order.</h2></div></div>
+          <div><span class="section-number">09</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>The common-zero condition can be met arbitrarily close to an integer.</h2></div></div>
           <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
-          <p>Each dot is a computed common zero \(\rho=j_{1,n}=j_{R,m}\), plotted at \((R,\{R\})\). The horizontal coordinate is logarithmic and the plot stops at \(N=200\): far enough to reveal repeated near-integer returns while keeping the individual crossings legible.</p>
-          <p>A point near the bottom has \(R=N+\delta\) with \(0&lt;\delta\ll1\). Once the uniform nonlinear branch is known to decrease \(R\) by a fixed amount, such a crossing can land on \(N\) and unfold into the plane.</p>
+          <p><strong>Why these two zeros?</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone. The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence is exactly the one-dimensional kernel from which the cone branch bifurcates.</p>
+          <p><strong>Why must \(R\) be near an integer?</strong> The cone branch exists for real \(R\), but it becomes a planar \(N\)-fold domain only when \(R=N\in\mathbb N\). Section 7 supplies a uniform leftward drop \(\eta_*\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
+        </div>
+        <div class="near-integer-theorem">
+          <span>Theorem 9.1 · near-integer crossings</span>
+          <div>
+            <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
+            <div class="tex-display">
+              \[
+              \begin{gathered}
+              N&lt;R_*&lt;N+\delta,\\
+              J_1(\rho)=J_{R_*}(\rho)=0,\\
+              2&lt;\dfrac{\rho^2}{R_*^2}&lt;3.
+              \end{gathered}
+              \]
+            </div>
+            <p>The scatter plot below is a finite numerical sample of these coincidences. The theorem itself comes from aligning the fixed-order McMahon phase and the large-order Debye phase.</p>
+          </div>
         </div>
         <div class="abundance-laboratory">
           <aside class="abundance-controls abundance-proof">
@@ -1220,9 +1305,18 @@
           </section>
         </div>
         <div class="abundance-conclusion">
-          <span>Existence theorem</span>
-          <h3>The finite dots illustrate; the two-phase argument supplies arbitrary precision.</h3>
-          <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), the phase alignment produces \(N\ge N_{\min}\) and a crossing \(N&lt;R&lt;N+\delta\) with \(2&lt;\rho^2/R^2&lt;3\). The arithmetic input makes the initial gap smaller than the uniform analytic radius drop; it is this comparison—not visual equidistribution of the dots—that closes the proof.</p>
+          <span>Integer landing</span>
+          <h3>The branch moves left farther than the initial arithmetic gap.</h3>
+          <div>
+            <p>Choose the crossing theorem with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform drop from Section 7. Along its cone branch,</p>
+            <div class="tex-display">
+              \[
+              R(0)=R_*&gt;N,\qquad
+              R(s_*)\le R_*-\eta_*&lt;N.
+              \]
+            </div>
+            <p>Continuity gives some \(0&lt;s_N&lt;s_*\) with \(R(s_N)=N\). At this nonzero parameter the cone unfolds into a noncircular \(N\)-fold planar Schiffer domain. The finite dots illustrate the arithmetic; the near-integer theorem makes the gap smaller than whatever uniform leftward motion the analysis supplies.</p>
+          </div>
         </div>
         <section class="abundance-examples" aria-labelledby="abundanceExamplesTitle">
           <header>
@@ -1271,6 +1365,7 @@
       <hr>
       <p class="eyebrow">Geometric schematic and phase drift</p>
       <p>The seven-stage disk–cone figure is a geometric schematic, not a PDE computation: its repeated disk field and intermediate cone shading explain the quotient and limiting operations. Its last outline is different—that boundary is reconstructed from the stored coefficients at the numerical <span class="formula">\(N=28\)</span> landing. In the order/phase graph, cyan solid curves interpolate the actual continuation records and orange solid curves show the quadratic tangent law from <span class="formula">\(R''(0)\)</span>.</p>
+      <p>The real-order family panel filters the saved exhaustive crossing data to <span class="formula">\(10\le R_*\le30\)</span> and <span class="formula">\(2\le\lambda_*\le3\)</span>. Its orange points are computed Bessel coincidences. Its cyan curves are the asymptotic two-jets <span class="formula">\(R(s)=R_*-\Gamma(\lambda_*)s^2/2\)</span>, evaluated in the browser; they are not additional nonlinear continuations. White rings mark where that quadratic approximation alone meets an integer within the plotted <span class="formula">\(|s|\le1\)</span> window.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
       <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. Below it, a five-row table uses the full search through <span class="formula">\(R\approx841\)</span>: on each of five equal logarithmic bands in <span class="formula">\(20\le R&lt;842\)</span>, it selects the largest scale-free score <span class="formula">\(q(R)=-\log\{R\}/\log R\)</span>, equivalently <span class="formula">\(\{R\}=R^{-q(R)}\)</span>. The orange <span class="formula">\(N=28\)</span> point is the separate continued example and is excluded from that ranking because its spectral ratio lies above the search window. The accompanying text gives the actual mechanism—simultaneous McMahon and Debye phase alignment by Kronecker's theorem—so the finite data illustrate rather than substitute for the near-integer theorem.</p>
