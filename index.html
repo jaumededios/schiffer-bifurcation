@@ -1119,12 +1119,12 @@
             <span>What the calculation predicts across real order</span>
             <div>
               <h3 id="phaseFamilyTitle">The quadratic approximation predicts a decrease in \(R\) at every displayed crossing.</h3>
-              <p>The orange points are the eleven computed crossings with \(10\le R_*\le30\) and \(2\le\lambda_*\le3\). From each point, the cyan curve shows the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\).</p>
+              <p>Thirteen orange points are all the crossings in the exhaustive search with \(6\le R_*\le30\) and \(2\le\lambda_*\le3\). The outlined point is the running example \(R_*=28.026397\ldots\), computed separately at \(\lambda_*=3.317011\ldots\). From each point, the cyan curve shows the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\).</p>
             </div>
           </header>
-          <div class="phase-family-toolbar"><strong>real crossing order versus branch parameter</strong><span>orange: computed common zero · cyan: predicted two-jet</span></div>
-          <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real line from order 10 to 30 with integer ticks, computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
-          <footer><span>\(R=10\)</span><span>integer orders marked on \(s=0\)</span><span>\(R=30\)</span></footer>
+          <div class="phase-family-toolbar"><strong>real crossing order versus branch parameter</strong><span>orange: \([2,3]\) search · outlined: \(R_*=28.026397\) · cyan: two-jet</span></div>
+          <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real line from order 6 to 30 with integer ticks, fourteen computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
+          <footer><span>\(R=6\)</span><span>integer orders marked on \(s=0\)</span><span>\(R=30\)</span></footer>
           <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the two branches of each parabola in the \((R,s)\)-plane. The proof uses the fact that the decrease in \(R\) is bounded below uniformly at all sufficiently large crossings. The final section finds crossings whose distance from an integer is smaller than this uniform bound.</p>
         </section>
       </section>
@@ -1495,7 +1495,7 @@
       <hr>
       <p class="eyebrow">Geometric construction and phase variation</p>
       <p>The seven-stage disk–cone figure describes the quotient and limiting operations geometrically. PDE data enter in the final boundary, reconstructed from the stored coefficients at the computed endpoint <span class="formula">\(R=N=28\)</span>. In the order/phase graph, cyan solid curves interpolate the continuation records, and orange solid curves show the quadratic approximation determined by <span class="formula">\(R''(0)\)</span>.</p>
-      <p>The real-order family panel filters the saved exhaustive crossing data to <span class="formula">\(10\le R_*\le30\)</span> and <span class="formula">\(2\le\lambda_*\le3\)</span>. Its orange points are computed Bessel coincidences. Its cyan curves are the asymptotic two-jets <span class="formula">\(R(s)=R_*-\Gamma(\lambda_*)s^2/2\)</span>, evaluated in the browser. White rings mark where that quadratic approximation meets an integer within the plotted <span class="formula">\(|s|\le1\)</span> window.</p>
+      <p>The real-order family panel filters the saved exhaustive crossing data to <span class="formula">\(6\le R_*\le30\)</span> and <span class="formula">\(2\le\lambda_*\le3\)</span>. It also includes the separately computed running example <span class="formula">\(R_*=28.026397\ldots\)</span>, whose spectral ratio is <span class="formula">\(\lambda_*=3.317011\ldots\)</span>. Its cyan curves are the asymptotic two-jets <span class="formula">\(R(s)=R_*-\Gamma(\lambda_*)s^2/2\)</span>, evaluated in the browser. White rings mark where that quadratic approximation meets an integer within the plotted <span class="formula">\(|s|\le1\)</span> window.</p>
       <hr>
       <p class="eyebrow">Near-integer crossing search</p>
       <p>The final scatter plot filters the saved common-zero data to <span class="formula">\(N\le200\)</span> and uses a logarithmic horizontal <span class="formula">\(R\)</span>-axis. The small table lists five particularly close examples from separated order ranges in the full search through <span class="formula">\(R\approx841\)</span>. The proof uses simultaneous McMahon and Debye phase alignment through Kronecker's theorem. The finite data illustrate the resulting distribution of crossings.</p>

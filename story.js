@@ -1047,6 +1047,8 @@
 
   const phaseStoryState = { progress: 0 };
   const phaseFamilyState = { hoverIndex: -1, geometry: null };
+  const phaseFamilyRMin = 6;
+  const phaseFamilyRMax = 30;
 
   function cylinderLimitGamma(lambda) {
     return Math.sqrt((lambda - 1) * (4 - lambda))
@@ -1059,13 +1061,29 @@
     const columns = crossingData.columns;
     for (let index = 0; index < columns.R.length; index += 1) {
       const R = columns.R[index];
-      if (R < 10) continue;
-      if (R > 30) break;
+      if (R < phaseFamilyRMin) continue;
+      if (R > phaseFamilyRMax) break;
       const rho = columns.rho[index];
       const lambda = (rho / R) ** 2;
       if (lambda < 2 || lambda > 3) continue;
-      rows.push({ index, R, rho, lambda, gamma: cylinderLimitGamma(lambda) });
+      rows.push({ index, R, rho, lambda, gamma: cylinderLimitGamma(lambda), reference: false });
     }
+    const reference = crossingData.meta?.reference;
+    if (reference
+      && reference.R >= phaseFamilyRMin
+      && reference.R <= phaseFamilyRMax
+      && reference.lambda > 1
+      && reference.lambda < 4) {
+      rows.push({
+        index: -1,
+        R: reference.R,
+        rho: reference.rho,
+        lambda: reference.lambda,
+        gamma: cylinderLimitGamma(reference.lambda),
+        reference: true,
+      });
+    }
+    rows.sort((left, right) => left.R - right.R);
     return rows;
   }
 
@@ -1093,14 +1111,15 @@
       width: width - (compact ? 66 : 94),
       height: height - (compact ? 92 : 82),
     };
-    const xMap = (R) => plot.left + (R - 10) / 20 * plot.width;
+    const xMap = (R) => plot.left
+      + (R - phaseFamilyRMin) / (phaseFamilyRMax - phaseFamilyRMin) * plot.width;
     const yMap = (s) => plot.top + (1 - (s + 1) / 2) * plot.height;
     const zeroY = yMap(0);
 
     context.save();
     context.strokeStyle = "rgba(241,238,229,.075)";
     context.lineWidth = 1;
-    for (let integer = 10; integer <= 30; integer += 1) {
+    for (let integer = phaseFamilyRMin; integer <= phaseFamilyRMax; integer += 1) {
       const x = xMap(integer);
       context.beginPath();
       context.moveTo(x, plot.top);
@@ -1126,7 +1145,7 @@
     context.font = compact ? "6px DM Mono, monospace" : "7px DM Mono, monospace";
     context.textAlign = "center";
     context.textBaseline = "top";
-    for (let integer = 10; integer <= 30; integer += 1) {
+    for (let integer = phaseFamilyRMin; integer <= phaseFamilyRMax; integer += 1) {
       const x = xMap(integer);
       const tick = integer % 5 === 0 ? 8 : 5;
       context.strokeStyle = integer % 5 === 0 ? colors.paper : "rgba(241,238,229,.6)";
@@ -1134,7 +1153,7 @@
       context.moveTo(x, zeroY - tick);
       context.lineTo(x, zeroY + tick);
       context.stroke();
-      if ((integer - 10) % labelEvery === 0) context.fillText(String(integer), x, zeroY + 12);
+      if ((integer - phaseFamilyRMin) % labelEvery === 0) context.fillText(String(integer), x, zeroY + 12);
     }
 
     context.textAlign = "right";
@@ -1165,8 +1184,8 @@
         const y = yMap(s);
         if (sample === 0) context.moveTo(x, y); else context.lineTo(x, y);
       }
-      context.strokeStyle = active || predictedLanding ? "#72c9c6" : "rgba(77,162,163,.48)";
-      context.lineWidth = active ? 2.8 : (predictedLanding ? 2.1 : 1.25);
+      context.strokeStyle = active || predictedLanding || row.reference ? "#72c9c6" : "rgba(77,162,163,.48)";
+      context.lineWidth = active ? 2.8 : (row.reference ? 2.35 : (predictedLanding ? 2.1 : 1.25));
       context.stroke();
 
       if (predictedLanding) {
@@ -1185,12 +1204,20 @@
       const point = { x: xMap(row.R), y: zeroY, row };
       pointGeometry.push(point);
       context.beginPath();
-      context.arc(point.x, point.y, active ? 5.5 : 4, 0, TAU);
+      context.arc(point.x, point.y, active ? 6.3 : (row.reference ? 5.4 : 4), 0, TAU);
       context.fillStyle = colors.orange;
       context.fill();
-      context.strokeStyle = active ? colors.paper : colors.ink;
-      context.lineWidth = active ? 1.5 : 1;
+      context.strokeStyle = active || row.reference ? colors.paper : colors.ink;
+      context.lineWidth = active ? 1.8 : (row.reference ? 1.5 : 1);
       context.stroke();
+
+      if (row.reference) {
+        context.fillStyle = colors.paper;
+        context.font = "7px DM Mono, monospace";
+        context.textAlign = "center";
+        context.textBaseline = "bottom";
+        context.fillText("R* = 28.026397", point.x, point.y - 11);
+      }
     });
 
     context.fillStyle = colors.orange;
@@ -1205,7 +1232,7 @@
     if (phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
       const point = pointGeometry[phaseFamilyState.hoverIndex];
       const boxWidth = compact ? 174 : 205;
-      const boxHeight = 66;
+      const boxHeight = point.row.reference ? 82 : 66;
       const boxX = Math.min(Math.max(point.x + 12, plot.left + 4), plot.left + plot.width - boxWidth - 4);
       const boxY = point.y > plot.top + plot.height / 2
         ? point.y - boxHeight - 15
@@ -1223,11 +1250,16 @@
       context.font = "7px DM Mono, monospace";
       context.fillText(`λ* = ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
       context.fillText(`quadratic drop at |s|=1: ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
+      if (point.row.reference) {
+        context.fillStyle = colors.orange;
+        context.fillText("running example · separate λ-window", boxX + 10, boxY + 62);
+      }
     }
     context.restore();
 
     phaseFamilyState.geometry = { pointGeometry, width, height };
-    canvas.setAttribute("aria-label", `${rows.length} computed crossings with real order between 10 and 30 and spectral ratio between 2 and 3. Every displayed quadratic branch jet bends toward smaller real order as the magnitude of s increases.`);
+    const windowRows = rows.filter((row) => !row.reference).length;
+    canvas.setAttribute("aria-label", `${windowRows} computed crossings with real order between 6 and 30 and spectral ratio between 2 and 3, together with the separately computed running example at order 28.026397. Every displayed quadratic branch jet bends toward smaller real order as the magnitude of s increases.`);
   }
 
   function drawPhasePanel(context, rect, options) {
