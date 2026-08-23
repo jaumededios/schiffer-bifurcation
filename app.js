@@ -2491,6 +2491,45 @@ if (debyeData) {
     context.closePath();
   }
 
+  function renderCollarZoomConnectors(plot) {
+    const svg = $("#collarZoomConnectors");
+    const laboratory = svg?.parentElement;
+    const patchCanvas = $("#collarConeCanvas");
+    const diskCanvas = $("#collarDiskCanvas");
+    if (!svg || !laboratory || !patchCanvas || !diskCanvas || window.innerWidth <= 760) return;
+
+    const laboratoryRect = laboratory.getBoundingClientRect();
+    const patchRect = patchCanvas.getBoundingClientRect();
+    const diskRect = diskCanvas.getBoundingClientRect();
+    const toLaboratoryPoint = (rect, point) => ({
+      x: rect.left - laboratoryRect.left + point.x,
+      y: rect.top - laboratoryRect.top + point.y,
+    });
+
+    // The two endpoints are the same two outer corners of the selected sector,
+    // first in the whole disk and then in the magnified sector coordinates.
+    const diskTop = toLaboratoryPoint(diskRect, collarDiskPoint(0, Math.PI, plot));
+    const diskBottom = toLaboratoryPoint(diskRect, collarDiskPoint(0, -Math.PI, plot));
+    const patchTop = toLaboratoryPoint(
+      patchRect,
+      collarPatchPoint(0, Math.PI, patchRect.width, patchRect.height)
+    );
+    const patchBottom = toLaboratoryPoint(
+      patchRect,
+      collarPatchPoint(0, -Math.PI, patchRect.width, patchRect.height)
+    );
+
+    svg.setAttribute("viewBox", `0 0 ${laboratoryRect.width} ${laboratoryRect.height}`);
+    [["#collarZoomConnectorTop", patchTop, diskTop], ["#collarZoomConnectorBottom", patchBottom, diskBottom]]
+      .forEach(([selector, from, to]) => {
+        const line = $(selector);
+        line.setAttribute("x1", from.x.toFixed(2));
+        line.setAttribute("y1", from.y.toFixed(2));
+        line.setAttribute("x2", to.x.toFixed(2));
+        line.setAttribute("y2", to.y.toFixed(2));
+      });
+  }
+
   function renderCollarDisk() {
     const canvas = $("#collarDiskCanvas");
     const wrap = canvas.parentElement;
@@ -2531,9 +2570,10 @@ if (debyeData) {
     context.font = "7px DM Mono, monospace";
     context.fillText(`${collarFieldState.fold}-fold disk`, 10, 17);
     context.restore();
+    renderCollarZoomConnectors(plot);
     canvas.setAttribute(
       "aria-label",
-      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; a cyan sector marks the collar shown in the preceding panel.`
+      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; a cyan sector and two guide lines identify the collar enlarged in the preceding panel.`
     );
   }
 
