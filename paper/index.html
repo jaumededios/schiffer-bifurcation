@@ -110,17 +110,22 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
-          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions — the value of the unknown at the boundary — or Neumann boundary conditions — the normal derivative, or flux, at the boundary. Schiffer wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
+          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions — the value of the unknown at the boundary — or Neumann boundary conditions — the normal derivative, or flux, at the boundary. Schiffer, in the 50s, wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
           <div class="tex-display">
             \[
             \begin{cases}
-            -\Delta u=\lambda u &amp; \text{in }\Omega,\\
+            (\Delta+\lambda)u=0 &amp; \text{in }\Omega,\\
             u=1 &amp; \text{on }\partial\Omega,\\
             \partial_\nu u=0 &amp; \text{on }\partial\Omega,
             \end{cases}
+            \qquad
+            \begin{aligned}
+            &amp;\lambda&gt;0,\\
+            &amp;u\ \text{nonconstant.}
+            \end{aligned}
             \]
           </div>
-          <p>Here \(\lambda&gt;0\) and \(u\) is not constant. Since the problem is overdetermined, it is reasonable to expect no solutions. However, disks do have solutions: any radially symmetric Neumann eigenfunction will do. Radial symmetry on a disk makes the boundary value constant, and we can rescale \(u\) to make that constant one.</p>
+          <p>Since the problem is overdetermined, it is reasonable to expect no solutions. However, disks do have solutions: any radially symmetric Neumann eigenfunction will do. Radial symmetry on a disk makes the boundary value constant, and we can rescale \(u\) to make that constant one.</p>
           <p>Curiously enough, the radial solutions of \((\Delta+\lambda)u=0\) are given by \(J_0(\sqrt\lambda\,|x|)\), so they satisfy the Neumann condition if \(J_0'(\sqrt\lambda\,r)=0\). And \(J_0'\) is a multiple of \(J_1\), so disks solve the Schiffer problem exactly when \(\sqrt\lambda\,r=\rho_\star\), a zero of \(J_1\). This is the same condition we saw above for the Pompeiu problem. That seemingly innocent coincidence turns out to have a deeper reason: for bounded, simply connected, smooth domains the Pompeiu and Schiffer problems are equivalent. This was proved by Williams in 1976.</p>
         </div>
 
