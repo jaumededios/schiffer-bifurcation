@@ -26,6 +26,7 @@
   const main = select("main");
   [
     ".intro",
+    "#introduction",
     ".paper-reading-guide",
     "#question",
     "#disk-obstruction",
@@ -38,6 +39,7 @@
     "#modes-experiment",
     "#abundance-experiment",
     ".paper-references",
+    "#references",
   ].forEach((selector) => {
     const section = select(selector);
     if (main && section) main.appendChild(section);

@@ -1111,6 +1111,67 @@ dialog p:not(.eyebrow) {
 .abundance-examples-table tbody td { font-size: var(--type-caption); }
 .abundance-examples-table tbody th { font-size: var(--type-proof); }
 
+/* Introduction · Pompeiu's question, Chakalov's disk, and Williams' equivalence.
+   Sits between the hero and section 01; shares the flex order of .intro so that
+   document order decides, and reuses the light paper surface. */
+.story-intro { order: 0; padding: 96px 7vw 104px; color: var(--ink); background: var(--paper); --line-light: var(--line); }
+.story-intro .intro-lead { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(400px,.88fr); gap: 72px; align-items: start; margin: 54px 0 0 70px; }
+.intro-copy { max-width: 720px; color: var(--muted); font-size: 15px; line-height: 1.82; }
+.intro-copy h3 { max-width: 780px; margin: 0 0 20px; color: var(--ink); font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
+.intro-copy p { margin: 0 0 17px; }
+.intro-copy p:last-child { margin-bottom: 0; }
+.intro-copy a { color: var(--orange); text-underline-offset: 3px; }
+.intro-copy-wide { max-width: 900px; margin: 60px 0 0 70px; }
+.story-intro .intro-statement { min-height: 0; padding: 44px 34px 28px; }
+.story-intro .intro-statement > .katex-system { min-height: 100px; margin-top: 6px; }
+.story-intro .intro-statement > p { margin: 18px 0 0; font-size: 13px; line-height: 1.7; }
+
+.intro-proof { margin: 40px 0 0 70px; max-width: 960px; }
+.intro-proof + .intro-proof { margin-top: 0; border-top: 0; }
+.intro-proof-body { max-width: 830px; padding: 10px 0 32px; color: var(--muted); font-size: var(--type-proof); line-height: 1.82; }
+.intro-proof-body p { margin: 0 0 16px; }
+.intro-proof-body .tex-display { margin: 22px 0; color: var(--ink); }
+.intro-proof-aside { margin-top: 24px; padding-left: 17px; border-left: 1px solid var(--line); }
+
+.intro-shapes { margin: 72px 0 0 70px; max-width: 1000px; padding: 0; }
+.intro-shapes figcaption { max-width: 780px; }
+.intro-shapes figcaption p:last-child { margin: 0 0 30px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+.intro-shapes-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border: 1px solid var(--line); }
+.intro-shape { padding: 28px 24px 26px; border-right: 1px solid var(--line); }
+.intro-shape:last-child { border-right: 0; }
+.intro-shape svg { display: block; width: 100%; max-width: 205px; margin: 0 auto 20px; }
+.intro-shape-line { fill: rgba(19,33,38,.035); stroke: var(--ink); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+.intro-shape-ghost { fill: none; stroke: var(--orange); stroke-width: 1; opacity: .75; vector-effect: non-scaling-stroke; }
+.intro-shape b { display: block; color: var(--ink); font: 400 11px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.intro-shape small { display: block; margin-top: 9px; color: var(--muted); font-size: 11px; line-height: 1.65; }
+
+.intro-close { margin-top: 52px; }
+.intro-close p { max-width: 900px; }
+
+/* References. `main` is a flex column with explicit section order values, so
+   this needs one of its own to stay at the bottom. */
+.site-references { order: 20; padding: 84px 7vw 100px; color: var(--ink); background: var(--paper); border-top: 1px solid var(--ink); }
+.site-references h2 { margin: 0 0 42px; font-size: clamp(44px, 5vw, 70px); }
+.site-references ol { max-width: 980px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.site-references li { display: grid; grid-template-columns: 42px minmax(0,1fr); gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.site-references li > span { color: var(--orange); font: 11px var(--mono); }
+.site-references li p { margin: 0; color: var(--muted); font-size: var(--type-proof); line-height: 1.72; }
+.site-references li b { color: var(--ink); font-weight: 500; }
+.site-references a { color: var(--ink); text-decoration-color: var(--orange); text-underline-offset: 3px; }
+
+@media (max-width: 1000px) {
+  .story-intro .intro-lead { grid-template-columns: minmax(0,1fr); gap: 36px; margin-left: 0; }
+  .intro-copy-wide, .intro-proof, .intro-shapes { margin-left: 0; }
+}
+@media (max-width: 760px) {
+  .story-intro { padding: 64px 6vw 72px; }
+  .site-references { padding: 70px 24px 82px; }
+  .intro-copy h3 { font-size: 27px; }
+  .intro-shapes-row { grid-template-columns: minmax(0,1fr); }
+  .intro-shape { border-right: 0; border-bottom: 1px solid var(--line); }
+  .intro-shape:last-child { border-bottom: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

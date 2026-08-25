@@ -401,6 +401,9 @@
 }
 
 .paper-references {
+  /* main is a flex column whose sections carry explicit order values; without
+     one this section would join the order-0 group and render near the top. */
+  order: 20;
   margin: 0;
   padding: 84px 7vw 100px;
   color: var(--ink);
