@@ -31,6 +31,7 @@
     <details class="site-toc">
       <summary><span>Table of contents</span><i aria-hidden="true">open +</i></summary>
       <nav aria-label="Table of contents">
+        <a href="#introduction"><b>I</b><span>Pompeiu and Schiffer</span></a>
         <a href="#question"><b>01</b><span>The Schiffer problem</span></a>
         <a href="#disk-obstruction"><b>02</b><span>Why the disk is locally rigid</span></a>
         <a href="#borrow-flexibility"><b>03</b><span>Bifurcation on the cylinder and sphere</span></a>
@@ -53,6 +54,147 @@
           <p><strong>Abstract.</strong> Schiffer's conjecture asks whether an overdetermined Laplace eigenvalue problem characterizes the disk among smooth bounded planar domains. We explain a construction of noncircular planar solutions. The proof studies rotationally symmetric domains through cone quotients.</p>
           <p>A large cone approaches a half-cylinder on every fixed boundary collar. Uniform bifurcation estimates transfer the cylinder branch to the cone. A number-theoretic argument chooses a branch that reaches an integer cone order and unfolds into the plane.</p>
           <p class="edition-link"><a href="../">Open the visual-first interactive edition →</a></p>
+        </div>
+      </section>
+
+      <section id="introduction" class="story-intro">
+        <div class="story-heading light-story-heading">
+          <span class="section-number">I</span>
+          <div><p class="eyebrow">Pompeiu 1929 · Schiffer · Williams</p><h2>Two questions that turned out to be one question.</h2></div>
+        </div>
+
+        <div class="intro-lead">
+          <div class="intro-copy">
+            <h3>Pompeiu asked whether a function is determined by its averages.</h3>
+            <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
+            <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{R(\Omega)}f(x)\,dx=0\) for every rigid motion \(R\), is it necessarily true that \(f(x)=0\)?</p>
+            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu proved that squares have it, although his proof needed the extra assumption that \(f\) tends to a limit at infinity; Christov later removed it. In the same year he also asserted that the <em>disk</em> has the property, and published a proof of it. That proof was wrong, and the disk turned out to be the one classical shape that fails.</p>
+            <p>Fifteen years later, in 1944, Chakalov proved that balls fail to have the Pompeiu property. Deciding whether any <em>other</em> domain fails has stayed open ever since; polygons, non-circular ellipses and convex domains with a corner all have the property. The disk's failure unfolds from a single line.</p>
+          </div>
+          <div class="equation-system intro-statement" role="img" aria-label="The integral of f over sigma of Omega equals zero for every rigid motion sigma implies f is identically zero">
+            <span class="system-label">\(\operatorname{Pompeiu}(\Omega)\)</span>
+            <div class="katex-system tex-display">
+              \[
+              \int_{\sigma(\Omega)}f(x)\,dx=0
+              \quad\text{for every rigid motion }\sigma
+              \]
+            </div>
+            <p>The domain has the Pompeiu property when this forces \(f\equiv0\).</p>
+          </div>
+        </div>
+
+        <details class="proof-details intro-proof">
+          <summary><span>Why the disk fails: one convolution</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Use only the translations first. Writing \(\check\Omega=-\Omega\) for the reflected template,</p>
+            <div class="tex-display">
+              \[
+              \int_{\Omega+t}f(x)\,dx=\bigl(f*\mathbf 1_{\check\Omega}\bigr)(t),
+              \]
+            </div>
+            <p>so the hypothesis says that this convolution vanishes identically — and conversely. The Fourier transform, taken throughout as \(\widehat g(\xi)=\int g(x)e^{-ix\cdot\xi}\,dx\), turns a convolution into a product:</p>
+            <div class="tex-display">
+              \[
+              \widehat f(\xi)\,\widehat{\mathbf 1_{\check\Omega}}(\xi)=0 .
+              \]
+            </div>
+            <p>Read this as a statement about supports, since \(\widehat f\) need only be a distribution: \(\widehat f\) has to live inside the zero set of \(\widehat{\mathbf 1_{\check\Omega}}\), which is the same set as the zero set of \(\widehat{\mathbf 1_\Omega}\) because \(\mathbf 1_\Omega\) is real. For a disk of radius \(r\) that zero set is unusually generous, because the transform is radial:</p>
+            <div class="tex-display">
+              \[
+              \widehat{\mathbf 1_{B_r}}(\xi)=2\pi r\,\frac{J_1(r|\xi|)}{|\xi|},
+              \]
+            </div>
+            <p>an expression that extends continuously to \(\widehat{\mathbf 1_{B_r}}(0)=\pi r^2\), and vanishes exactly when \(r|\xi|\) is a <em>positive</em> zero of the Bessel function \(J_1\) — that is, on a whole family of concentric <em>circles</em>. Fix such a zero \(j_{1,m}\), set \(\lambda=(j_{1,m}/r)^2\), and take the plane wave</p>
+            <div class="tex-display">
+              \[
+              f(x)=\cos\bigl(\sqrt\lambda\,x_1\bigr).
+              \]
+            </div>
+            <p>Its transform is carried by the two points \(\xi=\pm\sqrt\lambda\,e_1\), which lie on the circle \(|\xi|=\sqrt\lambda\) where \(\widehat{\mathbf 1_{B_r}}\) vanishes. The product above is zero, so every translate of the disk integrates \(f\) to zero — and every rigid image of a disk is a translate of it, so all rigid motions are covered. <span class="qed">□</span></p>
+            <p class="intro-proof-aside">The same picture explains the positive results. The transform of the square \([-a,a]^2\) is \(4\sin(a\xi_1)\sin(a\xi_2)/(\xi_1\xi_2)\), so away from the two coordinate axes its zero set is a grid of straight lines — and a circle centred at the origin meets finitely many of those lines, in finitely many points, rather than lying inside them. Brown, Schreiber and Taylor proved the converse of what we used above: a domain fails the Pompeiu property <em>only if</em> \(\widehat{\mathbf 1_\Omega}\) vanishes identically on some circle \(|\xi|=\rho\), \(\rho&gt;0\), centred at the origin. Being centred at the origin is the whole content of the criterion — that is what encodes the rotations — and it is what puts squares, polygons and non-circular ellipses on the other side of the question.</p>
+            <p class="intro-proof-aside">Notice also what the counterexample function is: \(f\) satisfies \(\Delta f+\lambda f=0\). A plane wave at exactly the frequency the disk cannot see. That is not a coincidence, and it is the bridge to the next question.</p>
+          </div>
+        </details>
+
+        <div class="intro-copy intro-copy-wide">
+          <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
+          <p>In the 1950s Schiffer arrived at the disk from a different direction. Suppose a domain carries a nonconstant eigenfunction of the Laplacian that is <em>both</em> constant along the boundary and has vanishing normal derivative there. A disk does, once for every positive zero of \(J_1\). Is it the only one? The precise system is (1.1) below, and S. T. Yau listed the planar case as Problem 80 in his 1982 collection of open problems in geometry.</p>
+          <p>The two questions look unrelated. One is about integral geometry and tomography, the other about an overdetermined boundary value problem. In 1976 Williams proved that for bounded, simply connected domains with smooth boundary they are the same question: such a domain fails the Pompeiu property precisely when it carries a Schiffer solution. Everything since — including this construction — has lived on both sides of that equivalence at once.</p>
+        </div>
+
+        <details class="proof-details intro-proof">
+          <summary><span>From Schiffer to Pompeiu: one Green identity</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>This is the easy direction, and it needs no assumption on the topology. Let \((u,\lambda)\) solve the Schiffer system on \(\Omega\), and let \(f\) be <em>any</em> solution of \(\Delta f+\lambda f=0\) on the whole plane — the plane wave \(f(x)=\cos(\sqrt\lambda\,x_1)\) will do. Fix a rigid motion \(\sigma\) and write \(\Omega_\sigma=\sigma(\Omega)\), \(u_\sigma=u\circ\sigma^{-1}\), which solves the same system on \(\Omega_\sigma\). Green's second identity reads</p>
+            <div class="tex-display">
+              \[
+              \int_{\Omega_\sigma}\bigl(u_\sigma\Delta f-f\Delta u_\sigma\bigr)
+              =\int_{\partial\Omega_\sigma}\bigl(u_\sigma\,\partial_\nu f-f\,\partial_\nu u_\sigma\bigr).
+              \]
+            </div>
+            <p>The left-hand side vanishes, because both functions solve the same Helmholtz equation and the two terms become \(-\lambda u_\sigma f\) and \(-\lambda f u_\sigma\). On the right-hand side the boundary conditions \(u_\sigma=1\) and \(\partial_\nu u_\sigma=0\) collapse the integrand to \(\partial_\nu f\). Hence</p>
+            <div class="tex-display">
+              \[
+              0=\int_{\partial\Omega_\sigma}\partial_\nu f
+              =\int_{\Omega_\sigma}\Delta f
+              =-\lambda\int_{\Omega_\sigma}f,
+              \]
+            </div>
+            <p>the middle step being the divergence theorem. Since \(\lambda&gt;0\), the integral of \(f\) over \(\Omega_\sigma\) is zero, and \(\sigma\) was arbitrary. The plane wave is a Pompeiu counterexample for \(\Omega\). <span class="qed">□</span></p>
+          </div>
+        </details>
+
+        <details class="proof-details intro-proof">
+          <summary><span>From Pompeiu to Schiffer: one division in Fourier space</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(R(\Omega)\), and use \(\widehat{\mathbf 1_{R(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(R^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(R\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\). That circle is not a point: \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\), so the origin is not in the support of \(\widehat f\) and \(\xi_0\neq0\). Write \(\lambda=|\xi_0|^2&gt;0\).</p>
+            <p>Now divide. The numerator below vanishes on the circle where the denominator does, so the quotient has no pole there and</p>
+            <div class="tex-display">
+              \[
+              \widehat v(\xi)=\frac{\widehat{\mathbf 1_\Omega}(\xi)}{\lambda-|\xi|^2}
+              \qquad\text{makes sense, with}\qquad
+              (\Delta+\lambda)v=\mathbf 1_\Omega \ \text{ on }\mathbb R^2 .
+              \]
+            </div>
+            <p>Set \(u=1-\lambda v\). Inside \(\Omega\) this gives \((\Delta+\lambda)u=\lambda-\lambda=0\). Outside \(\Omega\), \(v\) solves the homogeneous Helmholtz equation and decays, so Rellich's uniqueness theorem forces \(v\equiv0\) on the unbounded component of the complement.</p>
+            <p>This is the one place where simple connectivity is spent: with no holes the complement is a single piece, so the vanishing that starts at infinity reaches all the way to \(\partial\Omega\). Since \(v\) and \(\nabla v\) are continuous across the boundary, \(v=0\) and \(\partial_\nu v=0\) there, which is exactly \(u=1\) and \(\partial_\nu u=0\) on \(\partial\Omega\). Finally \(u\) is nonconstant, since a constant solution of \((\Delta+\lambda)u=0\) with \(\lambda&gt;0\) is identically zero while \(u=1\) on the boundary. So \(\Omega\) carries a Schiffer solution. <span class="qed">□</span></p>
+            <p class="intro-proof-aside">Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and checking that \(v\) is regular enough to have boundary values and decays fast enough for Rellich, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</p>
+          </div>
+        </details>
+
+        <figure class="intro-shapes">
+          <figcaption>
+            <p class="eyebrow">What a counterexample looks like</p>
+            <p>Both questions predicted a disk. The domain constructed here is not a disk, but it is not exotic either: its radius oscillates by about \(1.3\%\) around a circle, twenty-eight times. Everyday objects carry the same profile with deeper ripples.</p>
+          </figcaption>
+          <div class="intro-shapes-row">
+            <div class="intro-shape">
+              <svg viewBox="0 0 180 180" role="img" aria-label="A nearly circular outline with twenty-eight very shallow ripples, shown at true scale, with the same outline exaggerated eight times behind it">
+                <path class="intro-shape-ghost" d="M148.6 90.0L149.5 89.0L151.9 88.0L154.9 86.9L157.8 85.6L160.1 84.4L161.4 83.1L161.8 81.9L161.2 80.8L159.6 79.9L157.1 79.1L154.0 78.6L150.8 78.2L148.2 77.7L147.2 77.0L147.8 75.8L149.9 74.3L152.6 72.5L155.2 70.7L157.1 68.9L158.1 67.4L158.2 66.1L157.3 65.2L155.6 64.7L153.0 64.5L149.9 64.6L146.6 64.9L144.0 65.0L142.8 64.6L143.2 63.3L144.9 61.4L147.2 59.0L149.2 56.6L150.7 54.5L151.4 52.8L151.2 51.6L150.1 50.9L148.3 50.7L145.8 51.1L142.7 52.0L139.6 53.0L137.1 53.6L135.8 53.4L135.9 52.1L137.1 49.9L138.8 47.1L140.3 44.3L141.3 41.9L141.5 40.1L141.1 38.9L139.9 38.5L138.1 38.7L135.7 39.7L132.9 41.2L130.1 42.9L127.9 44.1L126.6 44.2L126.4 42.9L127.0 40.4L128.0 37.3L128.9 34.2L129.3 31.7L129.1 29.9L128.4 28.8L127.2 28.6L125.5 29.3L123.4 30.8L121.0 32.8L118.6 35.1L116.7 36.8L115.4 37.2L115.0 36.0L115.1 33.4L115.4 30.1L115.5 27.0L115.3 24.4L114.8 22.7L113.9 21.8L112.6 21.9L111.1 22.9L109.3 24.8L107.5 27.4L105.7 30.1L104.2 32.2L103.0 32.8L102.3 31.8L101.8 29.2L101.4 26.0L100.9 22.9L100.1 20.4L99.2 18.8L98.1 18.2L96.9 18.6L95.6 19.9L94.4 22.2L93.1 25.1L92.0 28.1L91.0 30.5L90.0 31.4L89.0 30.5L88.0 28.1L86.9 25.1L85.6 22.2L84.4 19.9L83.1 18.6L81.9 18.2L80.8 18.8L79.9 20.4L79.1 22.9L78.6 26.0L78.2 29.2L77.7 31.8L77.0 32.8L75.8 32.2L74.3 30.1L72.5 27.4L70.7 24.8L68.9 22.9L67.4 21.9L66.1 21.8L65.2 22.7L64.7 24.4L64.5 27.0L64.6 30.1L64.9 33.4L65.0 36.0L64.6 37.2L63.3 36.8L61.4 35.1L59.0 32.8L56.6 30.8L54.5 29.3L52.8 28.6L51.6 28.8L50.9 29.9L50.7 31.7L51.1 34.2L52.0 37.3L53.0 40.4L53.6 42.9L53.4 44.2L52.1 44.1L49.9 42.9L47.1 41.2L44.3 39.7L41.9 38.7L40.1 38.5L38.9 38.9L38.5 40.1L38.7 41.9L39.7 44.3L41.2 47.1L42.9 49.9L44.1 52.1L44.2 53.4L42.9 53.6L40.4 53.0L37.3 52.0L34.2 51.1L31.7 50.7L29.9 50.9L28.8 51.6L28.6 52.8L29.3 54.5L30.8 56.6L32.8 59.0L35.1 61.4L36.8 63.3L37.2 64.6L36.0 65.0L33.4 64.9L30.1 64.6L27.0 64.5L24.4 64.7L22.7 65.2L21.8 66.1L21.9 67.4L22.9 68.9L24.8 70.7L27.4 72.5L30.1 74.3L32.2 75.8L32.8 77.0L31.8 77.7L29.2 78.2L26.0 78.6L22.9 79.1L20.4 79.9L18.8 80.8L18.2 81.9L18.6 83.1L19.9 84.4L22.2 85.6L25.1 86.9L28.1 88.0L30.5 89.0L31.4 90.0L30.5 91.0L28.1 92.0L25.1 93.1L22.2 94.4L19.9 95.6L18.6 96.9L18.2 98.1L18.8 99.2L20.4 100.1L22.9 100.9L26.0 101.4L29.2 101.8L31.8 102.3L32.8 103.0L32.2 104.2L30.1 105.7L27.4 107.5L24.8 109.3L22.9 111.1L21.9 112.6L21.8 113.9L22.7 114.8L24.4 115.3L27.0 115.5L30.1 115.4L33.4 115.1L36.0 115.0L37.2 115.4L36.8 116.7L35.1 118.6L32.8 121.0L30.8 123.4L29.3 125.5L28.6 127.2L28.8 128.4L29.9 129.1L31.7 129.3L34.2 128.9L37.3 128.0L40.4 127.0L42.9 126.4L44.2 126.6L44.1 127.9L42.9 130.1L41.2 132.9L39.7 135.7L38.7 138.1L38.5 139.9L38.9 141.1L40.1 141.5L41.9 141.3L44.3 140.3L47.1 138.8L49.9 137.1L52.1 135.9L53.4 135.8L53.6 137.1L53.0 139.6L52.0 142.7L51.1 145.8L50.7 148.3L50.9 150.1L51.6 151.2L52.8 151.4L54.5 150.7L56.6 149.2L59.0 147.2L61.4 144.9L63.3 143.2L64.6 142.8L65.0 144.0L64.9 146.6L64.6 149.9L64.5 153.0L64.7 155.6L65.2 157.3L66.1 158.2L67.4 158.1L68.9 157.1L70.7 155.2L72.5 152.6L74.3 149.9L75.8 147.8L77.0 147.2L77.7 148.2L78.2 150.8L78.6 154.0L79.1 157.1L79.9 159.6L80.8 161.2L81.9 161.8L83.1 161.4L84.4 160.1L85.6 157.8L86.9 154.9L88.0 151.9L89.0 149.5L90.0 148.6L91.0 149.5L92.0 151.9L93.1 154.9L94.4 157.8L95.6 160.1L96.9 161.4L98.1 161.8L99.2 161.2L100.1 159.6L100.9 157.1L101.4 154.0L101.8 150.8L102.3 148.2L103.0 147.2L104.2 147.8L105.7 149.9L107.5 152.6L109.3 155.2L111.1 157.1L112.6 158.1L113.9 158.2L114.8 157.3L115.3 155.6L115.5 153.0L115.4 149.9L115.1 146.6L115.0 144.0L115.4 142.8L116.7 143.2L118.6 144.9L121.0 147.2L123.4 149.2L125.5 150.7L127.2 151.4L128.4 151.2L129.1 150.1L129.3 148.3L128.9 145.8L128.0 142.7L127.0 139.6L126.4 137.1L126.6 135.8L127.9 135.9L130.1 137.1L132.9 138.8L135.7 140.3L138.1 141.3L139.9 141.5L141.1 141.1L141.5 139.9L141.3 138.1L140.3 135.7L138.8 132.9L137.1 130.1L135.9 127.9L135.8 126.6L137.1 126.4L139.6 127.0L142.7 128.0L145.8 128.9L148.3 129.3L150.1 129.1L151.2 128.4L151.4 127.2L150.7 125.5L149.2 123.4L147.2 121.0L144.9 118.6L143.2 116.7L142.8 115.4L144.0 115.0L146.6 115.1L149.9 115.4L153.0 115.5L155.6 115.3L157.3 114.8L158.2 113.9L158.1 112.6L157.1 111.1L155.2 109.3L152.6 107.5L149.9 105.7L147.8 104.2L147.2 103.0L148.2 102.3L150.8 101.8L154.0 101.4L157.1 100.9L159.6 100.1L161.2 99.2L161.8 98.1L161.4 96.9L160.1 95.6L157.8 94.4L154.9 93.1L151.9 92.0L149.5 91.0Z"></path>
+                <path class="intro-shape-line" d="M155.1 90.0L155.2 89.0L155.5 87.9L155.8 86.8L156.1 85.8L156.3 84.7L156.4 83.6L156.4 82.5L156.2 81.5L155.8 80.4L155.4 79.4L154.8 78.4L154.3 77.5L153.8 76.5L153.4 75.5L153.3 74.5L153.3 73.4L153.4 72.3L153.5 71.2L153.5 70.0L153.3 69.0L153.0 67.9L152.6 67.0L152.1 66.0L151.4 65.1L150.7 64.3L149.9 63.5L149.2 62.7L148.6 61.8L148.3 60.8L148.1 59.7L147.9 58.6L147.7 57.5L147.4 56.4L147.0 55.4L146.5 54.5L145.9 53.6L145.2 52.8L144.3 52.1L143.4 51.5L142.5 50.8L141.6 50.2L140.9 49.4L140.3 48.5L139.9 47.6L139.5 46.5L139.0 45.5L138.5 44.5L137.9 43.6L137.2 42.8L136.4 42.1L135.5 41.5L134.5 41.0L133.5 40.5L132.4 40.1L131.5 39.7L130.6 39.1L129.8 38.4L129.2 37.5L128.5 36.6L127.9 35.7L127.2 34.8L126.4 34.1L125.5 33.5L124.6 33.0L123.6 32.6L122.5 32.3L121.4 32.1L120.3 31.9L119.2 31.7L118.2 31.4L117.3 30.8L116.5 30.1L115.7 29.3L114.9 28.6L114.0 27.9L113.0 27.4L112.1 27.0L111.0 26.7L110.0 26.5L108.8 26.5L107.7 26.6L106.6 26.7L105.5 26.7L104.5 26.6L103.5 26.2L102.5 25.7L101.6 25.2L100.6 24.6L99.6 24.2L98.5 23.8L97.5 23.6L96.4 23.6L95.3 23.7L94.2 23.9L93.2 24.2L92.1 24.5L91.0 24.8L90.0 24.9L89.0 24.8L87.9 24.5L86.8 24.2L85.8 23.9L84.7 23.7L83.6 23.6L82.5 23.6L81.5 23.8L80.4 24.2L79.4 24.6L78.4 25.2L77.5 25.7L76.5 26.2L75.5 26.6L74.5 26.7L73.4 26.7L72.3 26.6L71.2 26.5L70.0 26.5L69.0 26.7L67.9 27.0L67.0 27.4L66.0 27.9L65.1 28.6L64.3 29.3L63.5 30.1L62.7 30.8L61.8 31.4L60.8 31.7L59.7 31.9L58.6 32.1L57.5 32.3L56.4 32.6L55.4 33.0L54.5 33.5L53.6 34.1L52.8 34.8L52.1 35.7L51.5 36.6L50.8 37.5L50.2 38.4L49.4 39.1L48.5 39.7L47.6 40.1L46.5 40.5L45.5 41.0L44.5 41.5L43.6 42.1L42.8 42.8L42.1 43.6L41.5 44.5L41.0 45.5L40.5 46.5L40.1 47.6L39.7 48.5L39.1 49.4L38.4 50.2L37.5 50.8L36.6 51.5L35.7 52.1L34.8 52.8L34.1 53.6L33.5 54.5L33.0 55.4L32.6 56.4L32.3 57.5L32.1 58.6L31.9 59.7L31.7 60.8L31.4 61.8L30.8 62.7L30.1 63.5L29.3 64.3L28.6 65.1L27.9 66.0L27.4 67.0L27.0 67.9L26.7 69.0L26.5 70.0L26.5 71.2L26.6 72.3L26.7 73.4L26.7 74.5L26.6 75.5L26.2 76.5L25.7 77.5L25.2 78.4L24.6 79.4L24.2 80.4L23.8 81.5L23.6 82.5L23.6 83.6L23.7 84.7L23.9 85.8L24.2 86.8L24.5 87.9L24.8 89.0L24.9 90.0L24.8 91.0L24.5 92.1L24.2 93.2L23.9 94.2L23.7 95.3L23.6 96.4L23.6 97.5L23.8 98.5L24.2 99.6L24.6 100.6L25.2 101.6L25.7 102.5L26.2 103.5L26.6 104.5L26.7 105.5L26.7 106.6L26.6 107.7L26.5 108.8L26.5 110.0L26.7 111.0L27.0 112.1L27.4 113.0L27.9 114.0L28.6 114.9L29.3 115.7L30.1 116.5L30.8 117.3L31.4 118.2L31.7 119.2L31.9 120.3L32.1 121.4L32.3 122.5L32.6 123.6L33.0 124.6L33.5 125.5L34.1 126.4L34.8 127.2L35.7 127.9L36.6 128.5L37.5 129.2L38.4 129.8L39.1 130.6L39.7 131.5L40.1 132.4L40.5 133.5L41.0 134.5L41.5 135.5L42.1 136.4L42.8 137.2L43.6 137.9L44.5 138.5L45.5 139.0L46.5 139.5L47.6 139.9L48.5 140.3L49.4 140.9L50.2 141.6L50.8 142.5L51.5 143.4L52.1 144.3L52.8 145.2L53.6 145.9L54.5 146.5L55.4 147.0L56.4 147.4L57.5 147.7L58.6 147.9L59.7 148.1L60.8 148.3L61.8 148.6L62.7 149.2L63.5 149.9L64.3 150.7L65.1 151.4L66.0 152.1L67.0 152.6L67.9 153.0L69.0 153.3L70.0 153.5L71.2 153.5L72.3 153.4L73.4 153.3L74.5 153.3L75.5 153.4L76.5 153.8L77.5 154.3L78.4 154.8L79.4 155.4L80.4 155.8L81.5 156.2L82.5 156.4L83.6 156.4L84.7 156.3L85.8 156.1L86.8 155.8L87.9 155.5L89.0 155.2L90.0 155.1L91.0 155.2L92.1 155.5L93.2 155.8L94.2 156.1L95.3 156.3L96.4 156.4L97.5 156.4L98.5 156.2L99.6 155.8L100.6 155.4L101.6 154.8L102.5 154.3L103.5 153.8L104.5 153.4L105.5 153.3L106.6 153.3L107.7 153.4L108.8 153.5L110.0 153.5L111.0 153.3L112.1 153.0L113.0 152.6L114.0 152.1L114.9 151.4L115.7 150.7L116.5 149.9L117.3 149.2L118.2 148.6L119.2 148.3L120.3 148.1L121.4 147.9L122.5 147.7L123.6 147.4L124.6 147.0L125.5 146.5L126.4 145.9L127.2 145.2L127.9 144.3L128.5 143.4L129.2 142.5L129.8 141.6L130.6 140.9L131.5 140.3L132.4 139.9L133.5 139.5L134.5 139.0L135.5 138.5L136.4 137.9L137.2 137.2L137.9 136.4L138.5 135.5L139.0 134.5L139.5 133.5L139.9 132.4L140.3 131.5L140.9 130.6L141.6 129.8L142.5 129.2L143.4 128.5L144.3 127.9L145.2 127.2L145.9 126.4L146.5 125.5L147.0 124.6L147.4 123.6L147.7 122.5L147.9 121.4L148.1 120.3L148.3 119.2L148.6 118.2L149.2 117.3L149.9 116.5L150.7 115.7L151.4 114.9L152.1 114.0L152.6 113.0L153.0 112.1L153.3 111.0L153.5 110.0L153.5 108.8L153.4 107.7L153.3 106.6L153.3 105.5L153.4 104.5L153.8 103.5L154.3 102.5L154.8 101.6L155.4 100.6L155.8 99.6L156.2 98.5L156.4 97.5L156.4 96.4L156.3 95.3L156.1 94.2L155.8 93.2L155.5 92.1L155.2 91.0Z"></path>
+              </svg>
+              <b>the counterexample</b>
+              <small>28 ripples · true amplitude 1.3% of the radius · the faint outline is the same boundary drawn with the ripples multiplied by eight</small>
+            </div>
+            <div class="intro-shape">
+              <svg viewBox="0 0 180 180" role="img" aria-label="A twelve-lobed scalloped outline, the shape of a Hong Kong two dollar coin">
+                <path class="intro-shape-line" d="M159.6 90.0L159.5 88.5L159.1 87.0L158.4 85.5L157.6 84.1L156.5 82.7L155.4 81.4L154.3 80.1L153.2 78.9L152.2 77.6L151.4 76.4L150.7 75.1L150.2 73.9L150.0 72.5L149.9 71.1L150.1 69.6L150.3 68.0L150.6 66.4L151.0 64.7L151.3 63.0L151.5 61.3L151.5 59.7L151.3 58.1L150.9 56.6L150.3 55.2L149.4 53.9L148.3 52.8L147.0 51.9L145.6 51.1L144.0 50.4L142.4 49.8L140.7 49.3L139.2 48.7L137.7 48.2L136.3 47.5L135.1 46.8L134.1 45.9L133.2 44.9L132.5 43.7L131.8 42.3L131.3 40.8L130.7 39.3L130.2 37.6L129.6 36.0L128.9 34.4L128.1 33.0L127.2 31.7L126.1 30.6L124.8 29.7L123.4 29.1L121.9 28.7L120.3 28.5L118.7 28.5L117.0 28.7L115.3 29.0L113.6 29.4L112.0 29.7L110.4 29.9L108.9 30.1L107.5 30.0L106.1 29.8L104.9 29.3L103.6 28.6L102.4 27.8L101.1 26.8L99.9 25.7L98.6 24.6L97.3 23.5L95.9 22.4L94.5 21.6L93.0 20.9L91.5 20.5L90.0 20.4L88.5 20.5L87.0 20.9L85.5 21.6L84.1 22.4L82.7 23.5L81.4 24.6L80.1 25.7L78.9 26.8L77.6 27.8L76.4 28.6L75.1 29.3L73.9 29.8L72.5 30.0L71.1 30.1L69.6 29.9L68.0 29.7L66.4 29.4L64.7 29.0L63.0 28.7L61.3 28.5L59.7 28.5L58.1 28.7L56.6 29.1L55.2 29.7L53.9 30.6L52.8 31.7L51.9 33.0L51.1 34.4L50.4 36.0L49.8 37.6L49.3 39.3L48.7 40.8L48.2 42.3L47.5 43.7L46.8 44.9L45.9 45.9L44.9 46.8L43.7 47.5L42.3 48.2L40.8 48.7L39.3 49.3L37.6 49.8L36.0 50.4L34.4 51.1L33.0 51.9L31.7 52.8L30.6 53.9L29.7 55.2L29.1 56.6L28.7 58.1L28.5 59.7L28.5 61.3L28.7 63.0L29.0 64.7L29.4 66.4L29.7 68.0L29.9 69.6L30.1 71.1L30.0 72.5L29.8 73.9L29.3 75.1L28.6 76.4L27.8 77.6L26.8 78.9L25.7 80.1L24.6 81.4L23.5 82.7L22.4 84.1L21.6 85.5L20.9 87.0L20.5 88.5L20.4 90.0L20.5 91.5L20.9 93.0L21.6 94.5L22.4 95.9L23.5 97.3L24.6 98.6L25.7 99.9L26.8 101.1L27.8 102.4L28.6 103.6L29.3 104.9L29.8 106.1L30.0 107.5L30.1 108.9L29.9 110.4L29.7 112.0L29.4 113.6L29.0 115.3L28.7 117.0L28.5 118.7L28.5 120.3L28.7 121.9L29.1 123.4L29.7 124.8L30.6 126.1L31.7 127.2L33.0 128.1L34.4 128.9L36.0 129.6L37.6 130.2L39.3 130.7L40.8 131.3L42.3 131.8L43.7 132.5L44.9 133.2L45.9 134.1L46.8 135.1L47.5 136.3L48.2 137.7L48.7 139.2L49.3 140.7L49.8 142.4L50.4 144.0L51.1 145.6L51.9 147.0L52.8 148.3L53.9 149.4L55.2 150.3L56.6 150.9L58.1 151.3L59.7 151.5L61.3 151.5L63.0 151.3L64.7 151.0L66.4 150.6L68.0 150.3L69.6 150.1L71.1 149.9L72.5 150.0L73.9 150.2L75.1 150.7L76.4 151.4L77.6 152.2L78.9 153.2L80.1 154.3L81.4 155.4L82.7 156.5L84.1 157.6L85.5 158.4L87.0 159.1L88.5 159.5L90.0 159.6L91.5 159.5L93.0 159.1L94.5 158.4L95.9 157.6L97.3 156.5L98.6 155.4L99.9 154.3L101.1 153.2L102.4 152.2L103.6 151.4L104.9 150.7L106.1 150.2L107.5 150.0L108.9 149.9L110.4 150.1L112.0 150.3L113.6 150.6L115.3 151.0L117.0 151.3L118.7 151.5L120.3 151.5L121.9 151.3L123.4 150.9L124.8 150.3L126.1 149.4L127.2 148.3L128.1 147.0L128.9 145.6L129.6 144.0L130.2 142.4L130.7 140.7L131.3 139.2L131.8 137.7L132.5 136.3L133.2 135.1L134.1 134.1L135.1 133.2L136.3 132.5L137.7 131.8L139.2 131.3L140.7 130.7L142.4 130.2L144.0 129.6L145.6 128.9L147.0 128.1L148.3 127.2L149.4 126.1L150.3 124.8L150.9 123.4L151.3 121.9L151.5 120.3L151.5 118.7L151.3 117.0L151.0 115.3L150.6 113.6L150.3 112.0L150.1 110.4L149.9 108.9L150.0 107.5L150.2 106.1L150.7 104.9L151.4 103.6L152.2 102.4L153.2 101.1L154.3 99.9L155.4 98.6L156.5 97.3L157.6 95.9L158.4 94.5L159.1 93.0L159.5 91.5Z"></path>
+              </svg>
+              <b>a Hong Kong $2 coin</b>
+              <small>a dodecagonal scallop, in circulation since 1975</small>
+            </div>
+            <div class="intro-shape">
+              <svg viewBox="0 0 180 180" role="img" aria-label="A circular outline with a finely fluted rim, the shape of a scalloped biscuit">
+                <path class="intro-shape-line" d="M157.6 90.0L157.4 88.9L156.8 87.8L155.9 86.8L155.1 85.7L154.4 84.7L154.1 83.7L154.2 82.6L154.7 81.5L155.3 80.3L155.9 79.1L156.3 77.9L156.3 76.8L155.9 75.8L155.0 74.8L154.0 74.0L153.0 73.1L152.1 72.3L151.6 71.3L151.5 70.2L151.7 69.0L152.1 67.8L152.5 66.5L152.7 65.2L152.4 64.1L151.8 63.2L150.8 62.4L149.7 61.8L148.5 61.2L147.5 60.5L146.8 59.6L146.5 58.6L146.5 57.4L146.6 56.1L146.7 54.7L146.6 53.5L146.2 52.5L145.4 51.7L144.3 51.1L143.0 50.7L141.7 50.3L140.6 49.8L139.8 49.1L139.3 48.2L139.0 47.0L138.9 45.7L138.7 44.3L138.4 43.1L137.8 42.2L136.9 41.6L135.7 41.3L134.3 41.1L133.0 41.0L131.8 40.7L130.9 40.2L130.2 39.4L129.7 38.3L129.3 37.0L128.9 35.7L128.3 34.6L127.5 33.8L126.5 33.4L125.3 33.3L123.9 33.4L122.6 33.5L121.4 33.5L120.4 33.2L119.5 32.5L118.8 31.5L118.2 30.3L117.6 29.2L116.8 28.2L115.9 27.6L114.8 27.3L113.5 27.5L112.2 27.9L111.0 28.3L109.8 28.5L108.7 28.4L107.7 27.9L106.9 27.0L106.0 26.0L105.2 25.0L104.2 24.1L103.2 23.7L102.1 23.7L100.9 24.1L99.7 24.7L98.5 25.3L97.4 25.8L96.3 25.9L95.3 25.6L94.3 24.9L93.2 24.1L92.2 23.2L91.1 22.6L90.0 22.4L88.9 22.6L87.8 23.2L86.8 24.1L85.7 24.9L84.7 25.6L83.7 25.9L82.6 25.8L81.5 25.3L80.3 24.7L79.1 24.1L77.9 23.7L76.8 23.7L75.8 24.1L74.8 25.0L74.0 26.0L73.1 27.0L72.3 27.9L71.3 28.4L70.2 28.5L69.0 28.3L67.8 27.9L66.5 27.5L65.2 27.3L64.1 27.6L63.2 28.2L62.4 29.2L61.8 30.3L61.2 31.5L60.5 32.5L59.6 33.2L58.6 33.5L57.4 33.5L56.1 33.4L54.7 33.3L53.5 33.4L52.5 33.8L51.7 34.6L51.1 35.7L50.7 37.0L50.3 38.3L49.8 39.4L49.1 40.2L48.2 40.7L47.0 41.0L45.7 41.1L44.3 41.3L43.1 41.6L42.2 42.2L41.6 43.1L41.3 44.3L41.1 45.7L41.0 47.0L40.7 48.2L40.2 49.1L39.4 49.8L38.3 50.3L37.0 50.7L35.7 51.1L34.6 51.7L33.8 52.5L33.4 53.5L33.3 54.7L33.4 56.1L33.5 57.4L33.5 58.6L33.2 59.6L32.5 60.5L31.5 61.2L30.3 61.8L29.2 62.4L28.2 63.2L27.6 64.1L27.3 65.2L27.5 66.5L27.9 67.8L28.3 69.0L28.5 70.2L28.4 71.3L27.9 72.3L27.0 73.1L26.0 74.0L25.0 74.8L24.1 75.8L23.7 76.8L23.7 77.9L24.1 79.1L24.7 80.3L25.3 81.5L25.8 82.6L25.9 83.7L25.6 84.7L24.9 85.7L24.1 86.8L23.2 87.8L22.6 88.9L22.4 90.0L22.6 91.1L23.2 92.2L24.1 93.2L24.9 94.3L25.6 95.3L25.9 96.3L25.8 97.4L25.3 98.5L24.7 99.7L24.1 100.9L23.7 102.1L23.7 103.2L24.1 104.2L25.0 105.2L26.0 106.0L27.0 106.9L27.9 107.7L28.4 108.7L28.5 109.8L28.3 111.0L27.9 112.2L27.5 113.5L27.3 114.8L27.6 115.9L28.2 116.8L29.2 117.6L30.3 118.2L31.5 118.8L32.5 119.5L33.2 120.4L33.5 121.4L33.5 122.6L33.4 123.9L33.3 125.3L33.4 126.5L33.8 127.5L34.6 128.3L35.7 128.9L37.0 129.3L38.3 129.7L39.4 130.2L40.2 130.9L40.7 131.8L41.0 133.0L41.1 134.3L41.3 135.7L41.6 136.9L42.2 137.8L43.1 138.4L44.3 138.7L45.7 138.9L47.0 139.0L48.2 139.3L49.1 139.8L49.8 140.6L50.3 141.7L50.7 143.0L51.1 144.3L51.7 145.4L52.5 146.2L53.5 146.6L54.7 146.7L56.1 146.6L57.4 146.5L58.6 146.5L59.6 146.8L60.5 147.5L61.2 148.5L61.8 149.7L62.4 150.8L63.2 151.8L64.1 152.4L65.2 152.7L66.5 152.5L67.8 152.1L69.0 151.7L70.2 151.5L71.3 151.6L72.3 152.1L73.1 153.0L74.0 154.0L74.8 155.0L75.8 155.9L76.8 156.3L77.9 156.3L79.1 155.9L80.3 155.3L81.5 154.7L82.6 154.2L83.7 154.1L84.7 154.4L85.7 155.1L86.8 155.9L87.8 156.8L88.9 157.4L90.0 157.6L91.1 157.4L92.2 156.8L93.2 155.9L94.3 155.1L95.3 154.4L96.3 154.1L97.4 154.2L98.5 154.7L99.7 155.3L100.9 155.9L102.1 156.3L103.2 156.3L104.2 155.9L105.2 155.0L106.0 154.0L106.9 153.0L107.7 152.1L108.7 151.6L109.8 151.5L111.0 151.7L112.2 152.1L113.5 152.5L114.8 152.7L115.9 152.4L116.8 151.8L117.6 150.8L118.2 149.7L118.8 148.5L119.5 147.5L120.4 146.8L121.4 146.5L122.6 146.5L123.9 146.6L125.3 146.7L126.5 146.6L127.5 146.2L128.3 145.4L128.9 144.3L129.3 143.0L129.7 141.7L130.2 140.6L130.9 139.8L131.8 139.3L133.0 139.0L134.3 138.9L135.7 138.7L136.9 138.4L137.8 137.8L138.4 136.9L138.7 135.7L138.9 134.3L139.0 133.0L139.3 131.8L139.8 130.9L140.6 130.2L141.7 129.7L143.0 129.3L144.3 128.9L145.4 128.3L146.2 127.5L146.6 126.5L146.7 125.3L146.6 123.9L146.5 122.6L146.5 121.4L146.8 120.4L147.5 119.5L148.5 118.8L149.7 118.2L150.8 117.6L151.8 116.8L152.4 115.9L152.7 114.8L152.5 113.5L152.1 112.2L151.7 111.0L151.5 109.8L151.6 108.7L152.1 107.7L153.0 106.9L154.0 106.0L155.0 105.2L155.9 104.2L156.3 103.2L156.3 102.1L155.9 100.9L155.3 99.7L154.7 98.5L154.2 97.4L154.1 96.3L154.4 95.3L155.1 94.3L155.9 93.2L156.8 92.2L157.4 91.1Z"></path>
+              </svg>
+              <b>a fluted biscuit</b>
+              <small>the same construction as the coin, with more and shallower lobes</small>
+            </div>
+          </div>
+        </figure>
+
+        <div class="intro-copy intro-copy-wide intro-close">
+          <p>Both questions were answered in August 2026, twice and independently: <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora and de Dios Pont</a> constructed infinitely many planar counterexamples by bifurcation, one for each of infinitely many symmetry orders \(N\), and two days earlier <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer">Colbrook and Stepaniants</a> produced one of ten-fold symmetry by a computer-assisted argument. The rest of this site is an exposition of the first of the two.</p>
         </div>
       </section>
 
@@ -81,8 +223,8 @@
         <div class="question-grid">
           <div class="question-copy">
             <p>A smooth bounded domain \(\Omega\subset\mathbb R^2\) is said to have the <em>Schiffer property</em> if there are \(\lambda&gt;0\) and a nonconstant function \(u\) satisfying (1.1).</p>
-            <p>The boundary value has been normalized to \(1\). Indeed, if the common boundary value were \(0\), then both the Dirichlet and Neumann data would vanish and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). Thus any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value equal to \(1\).</p>
-            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct Schiffer solutions on noncircular domains.</p>
+            <p>Normalizing the boundary value to \(1\) costs nothing. If the common boundary value were \(0\), then the Dirichlet and the Neumann data would both vanish, and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). So any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value \(1\).</p>
+            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data on the boundary, not both. That a disk satisfies it anyway is a one-line computation. On \(B_r\), take \(u\) proportional to \(J_0(\sqrt\lambda\,|x|)\); it solves \(-\Delta u=\lambda u\), and it is constant on \(\partial B_r\) because it is radial. Since \(J_0'=-J_1\), its normal derivative on \(\partial B_r\) is a multiple of \(J_1(\sqrt\lambda\,r)\), so the Neumann condition holds precisely when \(\sqrt\lambda\,r\) is a positive zero of \(J_1\) — one solution for each such zero. The rest of this site constructs solutions on domains that are not disks.</p>
           </div>
           <div class="equation-system hero-equation sans-display-math" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
             <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
@@ -1216,7 +1358,7 @@
         </details>
 
         <div class="debye-lead paper-copy">
-          <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
+          <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). At a crossing the boundary radius and the Bessel order are the same number: there \(\lambda=\rho^2/R^2\), and the boundary sits at \(\sqrt\lambda\,r_0=\rho\), so \(r_0=\rho/\sqrt\lambda=R\). That is why one letter serves for both. After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
         </div>
 
         <div class="debye-formula-grid latex-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
@@ -1410,6 +1552,7 @@
         <div class="phase-story-lead paper-copy">
           <p>Suppose that a real crossing has \(R_*=N+\delta\), where \(N\) is an integer and \(\delta&gt;0\). To prove that the nonlinear branch reaches \(R=N\), one needs a decrease in \(R\) that is uniform as \(R_*\to\infty\). We show that every sufficiently large crossing in the fixed window \(2\le\lambda_*\le3\) admits the same positive lower bound for this decrease.</p>
           <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
+          <p>One caveat about the laboratory below. It runs on the crossing \(R_*=28.026397\ldots\), whose spectral ratio is \(\lambda_*=3.317011\ldots\), and that value lies <em>outside</em> the window \(2\le\lambda_*\le3\) assumed in Corollary 5.3 and in Theorems 5.1 and 5.2. It is shown because it is the crossing whose branch was continued numerically all the way to an integer. The proof runs instead on the crossings inside the window, which subsection 5.5 supplies; the formulas of this subsection are exact at either value.</p>
         </div>
         <div class="uniform-drop-theorem">
           <div class="uniform-drop-label"><span>Corollary 5.3</span><small>uniform decrease of \(R\)</small></div>
@@ -1436,11 +1579,11 @@
           <article>
             <span>01 / compute the variation of \(R\)</span>
             <h3>The second harmonic determines the sign.</h3>
-            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) produces only modes \(0\) and \(2\). If \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\), the regular second harmonic and its boundary slope are</p>
+            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\) and the first variation of \(R\) is quadratic in \(s\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) leaves only the modes \(0\) and \(2\) standing, so the sign is decided by the second harmonic. Two pieces of notation: \(t=r/R_*\in[0,1]\) is the radius normalized to the boundary, so that \(\sqrt{\lambda_*}\,r=\rho t\); and \(j_{\nu,m}\) is the \(m\)-th positive zero of \(J_\nu\), with \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\) its derivative in the order. Zeros of \(J_\nu\) increase with \(\nu\), so \(d_*&gt;0\). The regular second harmonic and its boundary slope are</p>
             <div class="tex-display phase-tex">\[W_2(t)=-\frac{\rho^2}{4}\frac{J_{2R_*}(\rho t)}{J_{2R_*}(\rho)},\qquad S_2=W_2'(1)=-\frac{\rho^3}{4}\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}.\]</div>
-            <p>At cubic order the first-harmonic solvability condition is \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), where \(Q(1)=-\rho d_*\) and \(\mu=R_*^2R''(0)/2\). Solving this scalar equation gives the exact curvature</p>
+            <p>At cubic order the mode-1 component has to be solvable again, and that forces a single scalar condition. Write \(V_1\) for the mode-1 radial profile generated at this order and \(Q\) for the mode-1 profile carrying the derivative in the Bessel order, whose boundary value is \(Q(1)=-\rho d_*\), and let \(\mu=R_*^2R''(0)/2\) be the coefficient with which the order moves along the branch. The condition reads \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), a scalar equation whose solution is the exact curvature</p>
             <div class="tex-display phase-tex boxed-equation">\[R''(0)=-\frac{\sqrt{\lambda_*}}{4R_*d_*}\left(2+\rho\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}\right).\]</div>
-            <p>For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
+            <p>Both factors on the right have a definite sign: \(d_*&gt;0\) as noted, and the bracket is positive — at the crossing displayed below it equals \(27.1\) — so \(R''(0)&lt;0\) and the cone radius does decrease. For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
             <div class="tex-display phase-tex">\[R''(0)=-\Gamma(\lambda_*)+O(R_*^{-1}),\qquad \Gamma(\lambda)=\frac{\sqrt{(\lambda-1)(4-\lambda)}}{4\arccos(\lambda^{-1/2})}>0.\]</div>
           </article>
           <article>
@@ -1623,7 +1766,7 @@
               \end{aligned}
               \]
             </div>
-            <p>The next subsection computes <span class="formula">\(R''(0)\)</span> from the nonlinear boundary equations.</p>
+            <p>The curvature <span class="formula">\(R''(0)\)</span> was computed in subsection 5.3 from the nonlinear boundary equations; it is negative, so the phase advances as the branch leaves the crossing.</p>
           </div>
         </div>
       </section>
@@ -1634,7 +1777,7 @@
           <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
-          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone. The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
+          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
           <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
         </div>
         <div class="near-integer-theorem">

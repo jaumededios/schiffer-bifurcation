@@ -66,7 +66,7 @@
             <h3>Pompeiu asked whether a function is determined by its averages.</h3>
             <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
             <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{R(\Omega)}f(x)\,dx=0\) for every rigid motion \(R\), is it necessarily true that \(f(x)=0\)?</p>
-            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu proved that squares have it. In the same year he also asserted that the <em>disk</em> has the property, and published a proof of it. That proof was wrong, and the disk turned out to be the one classical shape that fails.</p>
+            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu proved that squares have it, although his proof needed the extra assumption that \(f\) tends to a limit at infinity; Christov later removed it. In the same year he also asserted that the <em>disk</em> has the property, and published a proof of it. That proof was wrong, and the disk turned out to be the one classical shape that fails.</p>
             <p>Fifteen years later, in 1944, Chakalov proved that balls fail to have the Pompeiu property. Deciding whether any <em>other</em> domain fails has stayed open ever since; polygons, non-circular ellipses and convex domains with a corner all have the property. The disk's failure unfolds from a single line.</p>
           </div>
           <div class="equation-system intro-statement" role="img" aria-label="The integral of f over sigma of Omega equals zero for every rigid motion sigma implies f is identically zero">
@@ -116,7 +116,7 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
-          <p>In the 1950s Schiffer arrived at the disk from a different direction. Suppose a domain carries a nonconstant eigenfunction of the Laplacian that is <em>both</em> constant along the boundary and has vanishing normal derivative there. A disk does, once for every positive zero of \(J_1\). Is it the only one? The precise system is (1.1) in the next section, and S. T. Yau listed the planar case as Problem 80 in his 1982 collection of open problems in geometry.</p>
+          <p>In the 1950s Schiffer arrived at the disk from a different direction. Suppose a domain carries a nonconstant eigenfunction of the Laplacian that is <em>both</em> constant along the boundary and has vanishing normal derivative there. A disk does, once for every positive zero of \(J_1\). Is it the only one? The precise system is (1.1) below, and S. T. Yau listed the planar case as Problem 80 in his 1982 collection of open problems in geometry.</p>
           <p>The two questions look unrelated. One is about integral geometry and tomography, the other about an overdetermined boundary value problem. In 1976 Williams proved that for bounded, simply connected domains with smooth boundary they are the same question: such a domain fails the Pompeiu property precisely when it carries a Schiffer solution. Everything since — including this construction — has lived on both sides of that equivalence at once.</p>
         </div>
 
@@ -204,8 +204,8 @@
         <div class="question-grid">
           <div class="question-copy">
             <p>A smooth bounded domain \(\Omega\subset\mathbb R^2\) is said to have the <em>Schiffer property</em> if there are \(\lambda&gt;0\) and a nonconstant function \(u\) satisfying (1.1).</p>
-            <p>The boundary value has been normalized to \(1\). Indeed, if the common boundary value were \(0\), then both the Dirichlet and Neumann data would vanish and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). Thus any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value equal to \(1\).</p>
-            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data, not both. Every disk has infinitely many radial solutions, one for each positive zero of <span class="formula">\(J_1\)</span>. Schiffer conjectured that disks were the only bounded planar domains with this property. We will construct Schiffer solutions on noncircular domains.</p>
+            <p>Normalizing the boundary value to \(1\) costs nothing. If the common boundary value were \(0\), then the Dirichlet and the Neumann data would both vanish, and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). So any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value \(1\).</p>
+            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data on the boundary, not both. That a disk satisfies it anyway is a one-line computation. On \(B_r\), take \(u\) proportional to \(J_0(\sqrt\lambda\,|x|)\); it solves \(-\Delta u=\lambda u\), and it is constant on \(\partial B_r\) because it is radial. Since \(J_0'=-J_1\), its normal derivative on \(\partial B_r\) is a multiple of \(J_1(\sqrt\lambda\,r)\), so the Neumann condition holds precisely when \(\sqrt\lambda\,r\) is a positive zero of \(J_1\) — one solution for each such zero. The rest of this site constructs solutions on domains that are not disks.</p>
           </div>
           <div class="equation-system hero-equation sans-display-math" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
             <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
@@ -1209,7 +1209,7 @@
               \end{aligned}
               \]
             </div>
-            <p>The next subsection computes <span class="formula">\(R''(0)\)</span> from the nonlinear boundary equations.</p>
+            <p>The curvature <span class="formula">\(R''(0)\)</span> was computed in subsection 5.3 from the nonlinear boundary equations; it is negative, so the phase advances as the branch leaves the crossing.</p>
           </div>
         </div>
       </section>
@@ -1222,6 +1222,7 @@
         <div class="phase-story-lead paper-copy">
           <p>Suppose that a real crossing has \(R_*=N+\delta\), where \(N\) is an integer and \(\delta&gt;0\). To prove that the nonlinear branch reaches \(R=N\), one needs a decrease in \(R\) that is uniform as \(R_*\to\infty\). We show that every sufficiently large crossing in the fixed window \(2\le\lambda_*\le3\) admits the same positive lower bound for this decrease.</p>
           <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
+          <p>One caveat about the laboratory below. It runs on the crossing \(R_*=28.026397\ldots\), whose spectral ratio is \(\lambda_*=3.317011\ldots\), and that value lies <em>outside</em> the window \(2\le\lambda_*\le3\) assumed in Corollary 5.3 and in Theorems 5.1 and 5.2. It is shown because it is the crossing whose branch was continued numerically all the way to an integer. The proof runs instead on the crossings inside the window, which subsection 5.5 supplies; the formulas of this subsection are exact at either value.</p>
         </div>
         <div class="uniform-drop-theorem">
           <div class="uniform-drop-label"><span>Corollary 5.3</span><small>uniform decrease of \(R\)</small></div>
@@ -1248,11 +1249,11 @@
           <article>
             <span>01 / compute the variation of \(R\)</span>
             <h3>The second harmonic determines the sign.</h3>
-            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) produces only modes \(0\) and \(2\). If \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\), the regular second harmonic and its boundary slope are</p>
+            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\) and the first variation of \(R\) is quadratic in \(s\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) leaves only the modes \(0\) and \(2\) standing, so the sign is decided by the second harmonic. Two pieces of notation: \(t=r/R_*\in[0,1]\) is the radius normalized to the boundary, so that \(\sqrt{\lambda_*}\,r=\rho t\); and \(j_{\nu,m}\) is the \(m\)-th positive zero of \(J_\nu\), with \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\) its derivative in the order. Zeros of \(J_\nu\) increase with \(\nu\), so \(d_*&gt;0\). The regular second harmonic and its boundary slope are</p>
             <div class="tex-display phase-tex">\[W_2(t)=-\frac{\rho^2}{4}\frac{J_{2R_*}(\rho t)}{J_{2R_*}(\rho)},\qquad S_2=W_2'(1)=-\frac{\rho^3}{4}\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}.\]</div>
-            <p>At cubic order the first-harmonic solvability condition is \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), where \(Q(1)=-\rho d_*\) and \(\mu=R_*^2R''(0)/2\). Solving this scalar equation gives the exact curvature</p>
+            <p>At cubic order the mode-1 component has to be solvable again, and that forces a single scalar condition. Write \(V_1\) for the mode-1 radial profile generated at this order and \(Q\) for the mode-1 profile carrying the derivative in the Bessel order, whose boundary value is \(Q(1)=-\rho d_*\), and let \(\mu=R_*^2R''(0)/2\) be the coefficient with which the order moves along the branch. The condition reads \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), a scalar equation whose solution is the exact curvature</p>
             <div class="tex-display phase-tex boxed-equation">\[R''(0)=-\frac{\sqrt{\lambda_*}}{4R_*d_*}\left(2+\rho\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}\right).\]</div>
-            <p>For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
+            <p>Both factors on the right have a definite sign: \(d_*&gt;0\) as noted, and the bracket is positive — at the crossing displayed below it equals \(27.1\) — so \(R''(0)&lt;0\) and the cone radius does decrease. For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
             <div class="tex-display phase-tex">\[R''(0)=-\Gamma(\lambda_*)+O(R_*^{-1}),\qquad \Gamma(\lambda)=\frac{\sqrt{(\lambda-1)(4-\lambda)}}{4\arccos(\lambda^{-1/2})}>0.\]</div>
           </article>
           <article>
@@ -1353,7 +1354,7 @@
         </section>
 
         <div class="debye-lead paper-copy">
-          <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
+          <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). At a crossing the boundary radius and the Bessel order are the same number: there \(\lambda=\rho^2/R^2\), and the boundary sits at \(\sqrt\lambda\,r_0=\rho\), so \(r_0=\rho/\sqrt\lambda=R\). That is why one letter serves for both. After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
         </div>
 
         <div class="debye-formula-grid latex-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
@@ -1545,7 +1546,7 @@
           <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
-          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone. The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
+          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
           <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
         </div>
         <div class="near-integer-theorem">
