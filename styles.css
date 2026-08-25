@@ -1123,7 +1123,7 @@ dialog p:not(.eyebrow) {
 .intro-copy a { color: var(--orange); text-underline-offset: 3px; }
 .intro-copy-wide { max-width: 900px; margin: 60px 0 0 70px; }
 .story-intro .intro-statement { min-height: 0; padding: 44px 34px 28px; }
-.story-intro .intro-statement > .katex-system { min-height: 100px; margin-top: 6px; }
+.story-intro .intro-statement .intro-question { margin: 0; color: var(--ink); font-size: 17px; line-height: 1.62; }
 .story-intro .intro-statement > p { margin: 18px 0 0; font-size: 13px; line-height: 1.7; }
 
 .intro-proof { margin: 40px 0 0 70px; max-width: 960px; }
