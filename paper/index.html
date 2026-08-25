@@ -68,7 +68,7 @@
             <h3>Pompeiu asked whether a function is determined by its averages.</h3>
             <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
             <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{\sigma(\Omega)}f(x)\,dx=0\) for every rigid motion \(\sigma\), is it necessarily true that \(f(x)=0\)?</p>
-            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property. Deciding whether any other domain fails has stayed open ever since; polygons, ellipses other than disks, and convex domains with corners all have the Pompeiu property.</p>
+            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property: \(f(x)=\cos(\sqrt\lambda\,x_1)\) is a counterexample for a disk of radius \(r\) whenever \(\rho_\star=\sqrt\lambda\,r\) is a zero of the Bessel function \(J_1\). Deciding whether any other domain fails has stayed open ever since; polygons, ellipses other than disks, and convex domains with corners all have the Pompeiu property.</p>
           </div>
           <div class="equation-system intro-statement" role="img" aria-label="The integral of f over sigma of Omega, for every rigid motion sigma">
             <span class="system-label">\(\operatorname{Pompeiu}(\Omega)\)</span>
@@ -115,8 +115,18 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
-          <p>In the 1950s Schiffer arrived at the disk from a different direction. Suppose a domain carries a nonconstant eigenfunction of the Laplacian that is <em>both</em> constant along the boundary and has vanishing normal derivative there. A disk does, once for every positive zero of \(J_1\). Is it the only one? The precise system is (1.1) below, and S. T. Yau listed the planar case as Problem 80 in his 1982 collection of open problems in geometry.</p>
-          <p>The two questions look unrelated. One is about integral geometry and tomography, the other about an overdetermined boundary value problem. In 1976 Williams proved that for bounded, simply connected domains with smooth boundary they are the same question: such a domain fails the Pompeiu property precisely when it carries a Schiffer solution.</p>
+          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions — the value of the unknown at the boundary — or Neumann boundary conditions — the normal derivative, or flux, at the boundary. Schiffer wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
+          <div class="tex-display">
+            \[
+            \begin{cases}
+            -\Delta u=\lambda u &amp; \text{in }\Omega,\\
+            u=1 &amp; \text{on }\partial\Omega,\\
+            \partial_\nu u=0 &amp; \text{on }\partial\Omega,
+            \end{cases}
+            \]
+          </div>
+          <p>Here \(\lambda&gt;0\) and \(u\) is not constant. Since the problem is overdetermined, it is reasonable to expect no solutions. However, disks do have solutions: any radially symmetric Neumann eigenfunction will do. Radial symmetry on a disk makes the boundary value constant, and we can rescale \(u\) to make that constant one.</p>
+          <p>Curiously enough, the radial solutions of \((\Delta+\lambda)u=0\) are given by \(J_0(\sqrt\lambda\,|x|)\), so they satisfy the Neumann condition if \(J_0'(\sqrt\lambda\,r)=0\). And \(J_0'\) is a multiple of \(J_1\), so disks solve the Schiffer problem exactly when \(\sqrt\lambda\,r=\rho_\star\), a zero of \(J_1\). This is the same condition we saw above for the Pompeiu problem. That seemingly innocent coincidence turns out to have a deeper reason: for bounded, simply connected, smooth domains the Pompeiu and Schiffer problems are equivalent. This was proved by Williams in 1976.</p>
         </div>
 
         <details class="proof-details intro-proof">
@@ -162,7 +172,7 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>A Schiffer domain is a critical point of a Neumann eigenvalue.</h3>
-          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) — which is (1.1). Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
+          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) — which is the Schiffer system above. Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
         </div>
 
         <details class="proof-details intro-proof">
@@ -187,7 +197,7 @@
         </details>
 
         <div class="intro-copy intro-copy-wide">
-          <p>Reading the condition this way also says what must happen for one Schiffer domain to deform into another, and this is where Dirichlet eigenvalues enter. Suppose \(\Omega_t\) is a smooth family of Schiffer domains through \(\Omega\), with normal velocity \(f\), and let \(w\) be the shape derivative of \(u_t\). Differentiating the three conditions in (1.1) gives, in each angular mode \(\ell\ge1\),</p>
+          <p>Reading the condition this way also says what must happen for one Schiffer domain to deform into another, and this is where Dirichlet eigenvalues enter. Suppose \(\Omega_t\) is a smooth family of Schiffer domains through \(\Omega\), with normal velocity \(f\), and let \(w\) be the shape derivative of \(u_t\). Differentiating the three conditions of the Schiffer system gives, in each angular mode \(\ell\ge1\),</p>
           <div class="tex-display">
             \[
             \begin{aligned}
@@ -204,7 +214,7 @@
         <details class="proof-details intro-proof">
           <summary><span>Where the Dirichlet eigenfunction comes from</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>Differentiate each condition of (1.1) along the family. From \(u_t=1\) on \(\partial\Omega_t\) the shape derivative satisfies \(w=-f\,\partial_\nu u\) on \(\partial\Omega\), and \(\partial_\nu u=0\), so \(w=0\) there.</p>
+            <p>Differentiate each condition of the Schiffer system along the family. From \(u_t=1\) on \(\partial\Omega_t\) the shape derivative satisfies \(w=-f\,\partial_\nu u\) on \(\partial\Omega\), and \(\partial_\nu u=0\), so \(w=0\) there.</p>
             <p>From \(\partial_\nu u_t=0\) on \(\partial\Omega_t\) one gets \(\partial_\nu w+f\,\partial_{\nu\nu}u-\nabla_{\partial\Omega}u\cdot\nabla_{\partial\Omega}f=0\). The last term drops because \(u\) is constant on the boundary. For the middle one, split the Laplacian at the boundary as \(\Delta u=\partial_{\nu\nu}u+H\,\partial_\nu u+\Delta_{\partial\Omega}u\); the second and third terms vanish, so \(\partial_{\nu\nu}u=\Delta u=-\lambda u=-\lambda\). Hence \(\partial_\nu w=\lambda f\).</p>
             <p>Separating into angular modes gives the system above. Section 02 states this as Proposition 2.1 and takes it through to the nonlinear rigidity of the disk. <span class="qed">□</span></p>
           </div>
