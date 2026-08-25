@@ -65,51 +65,49 @@
           <div class="intro-copy">
             <h3>Pompeiu asked whether a function is determined by its averages.</h3>
             <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
-            <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{R(\Omega)}f(x)\,dx=0\) for every rigid motion \(R\), is it necessarily true that \(f(x)=0\)?</p>
-            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu proved that squares have it, although his proof needed the extra assumption that \(f\) tends to a limit at infinity; Christov later removed it. In the same year he also asserted that the <em>disk</em> has the property, and published a proof of it. That proof was wrong, and the disk turned out to be the one classical shape that fails.</p>
-            <p>Fifteen years later, in 1944, Chakalov proved that balls fail to have the Pompeiu property. Deciding whether any <em>other</em> domain fails has stayed open ever since; polygons, non-circular ellipses and convex domains with a corner all have the property. The disk's failure unfolds from a single line.</p>
+            <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{\sigma(\Omega)}f(x)\,dx=0\) for every rigid motion \(\sigma\), is it necessarily true that \(f(x)=0\)?</p>
+            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property. Deciding whether any other domain fails has stayed open ever since; polygons, ellipses other than disks, and convex domains with corners all have the Pompeiu property.</p>
           </div>
-          <div class="equation-system intro-statement" role="img" aria-label="The integral of f over sigma of Omega equals zero for every rigid motion sigma implies f is identically zero">
+          <div class="equation-system intro-statement" role="img" aria-label="The integral of f over sigma of Omega, for every rigid motion sigma">
             <span class="system-label">\(\operatorname{Pompeiu}(\Omega)\)</span>
             <div class="katex-system tex-display">
               \[
-              \int_{\sigma(\Omega)}f(x)\,dx=0
+              \int_{\sigma(\Omega)}f(x)\,dx
               \quad\text{for every rigid motion }\sigma
               \]
             </div>
-            <p>The domain has the Pompeiu property when this forces \(f\equiv0\).</p>
+            <p>\(\Omega\) has the Pompeiu property when \(f\) can be recovered from these numbers.</p>
           </div>
         </div>
 
         <details class="proof-details intro-proof">
           <summary><span>Why the disk fails: one convolution</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>Use only the translations first. Writing \(\check\Omega=-\Omega\) for the reflected template,</p>
+            <p>Let \(\Omega\) be a disk of radius \(r\) centred at the origin and let \(t\in\mathbb R^2\). Restricting Pompeiu's condition to the translations alone,</p>
             <div class="tex-display">
               \[
-              \int_{\Omega+t}f(x)\,dx=\bigl(f*\mathbf 1_{\check\Omega}\bigr)(t),
+              \int_{\Omega+t}f(x)\,dx
+              =\int_{\mathbb R^2}\mathbf 1_{\Omega}(t-x)f(x)\,dx
+              =(\mathbf 1_{\Omega}*f)(t)=0,
+              \qquad\forall\,t\in\mathbb R^2 .
               \]
             </div>
-            <p>so the hypothesis says that this convolution vanishes identically — and conversely. The Fourier transform, taken throughout as \(\widehat g(\xi)=\int g(x)e^{-ix\cdot\xi}\,dx\), turns a convolution into a product:</p>
+            <p>Now take the Fourier transform, which turns a convolution into a product. We obtain \(\widehat f(\xi)\,\widehat{\mathbf 1_{\Omega}}(\xi)=0\) for all \(\xi\). Since</p>
             <div class="tex-display">
               \[
-              \widehat f(\xi)\,\widehat{\mathbf 1_{\check\Omega}}(\xi)=0 .
+              \widehat{\mathbf 1_{\Omega}}(\xi)=2\pi r\,\frac{J_1(r|\xi|)}{|\xi|},
               \]
             </div>
-            <p>Read this as a statement about supports, since \(\widehat f\) need only be a distribution: \(\widehat f\) has to live inside the zero set of \(\widehat{\mathbf 1_{\check\Omega}}\), which is the same set as the zero set of \(\widehat{\mathbf 1_\Omega}\) because \(\mathbf 1_\Omega\) is real. For a disk of radius \(r\) that zero set is unusually generous, because the transform is radial:</p>
+            <p>with \(J_1\) the first Bessel function, it is natural to take</p>
             <div class="tex-display">
               \[
-              \widehat{\mathbf 1_{B_r}}(\xi)=2\pi r\,\frac{J_1(r|\xi|)}{|\xi|},
+              f(x)=\cos\bigl(\sqrt\lambda\,x_1\bigr),
+              \qquad
+              \lambda=\Bigl(\frac{j_{1,m}}{r}\Bigr)^{\!2},
               \]
             </div>
-            <p>an expression that extends continuously to \(\widehat{\mathbf 1_{B_r}}(0)=\pi r^2\), and vanishes exactly when \(r|\xi|\) is a <em>positive</em> zero of the Bessel function \(J_1\) — that is, on a whole family of concentric <em>circles</em>. Fix such a zero \(j_{1,m}\), set \(\lambda=(j_{1,m}/r)^2\), and take the plane wave</p>
-            <div class="tex-display">
-              \[
-              f(x)=\cos\bigl(\sqrt\lambda\,x_1\bigr).
-              \]
-            </div>
-            <p>Its transform is carried by the two points \(\xi=\pm\sqrt\lambda\,e_1\), which lie on the circle \(|\xi|=\sqrt\lambda\) where \(\widehat{\mathbf 1_{B_r}}\) vanishes. The product above is zero, so every translate of the disk integrates \(f\) to zero — and every rigid image of a disk is a translate of it, so all rigid motions are covered. <span class="qed">□</span></p>
-            <p class="intro-proof-aside">The same picture explains the positive results. The transform of the square \([-a,a]^2\) is \(4\sin(a\xi_1)\sin(a\xi_2)/(\xi_1\xi_2)\), so away from the two coordinate axes its zero set is a grid of straight lines — and a circle centred at the origin meets finitely many of those lines, in finitely many points, rather than lying inside them. Brown, Schreiber and Taylor proved the converse of what we used above: a domain fails the Pompeiu property <em>only if</em> \(\widehat{\mathbf 1_\Omega}\) vanishes identically on some circle \(|\xi|=\rho\), \(\rho&gt;0\), centred at the origin. Being centred at the origin is the whole content of the criterion — that is what encodes the rotations — and it is what puts squares, polygons and non-circular ellipses on the other side of the question.</p>
+            <p>where \(j_{1,m}\) is any positive zero of \(J_1\). Then \(\widehat f(\xi)\), as a distribution, is supported on \(|\xi|=\sqrt\lambda=j_{1,m}/r\), which is exactly where \(J_1(r|\xi|)=0\). The product vanishes, so every translate of the disk integrates \(f\) to zero — and every rigid motion of a disk is a translation of it, so all rigid motions are covered. One can also perform the direct two-dimensional integral and see that \(f(x)=\cos(\sqrt\lambda\,x_1)\) integrates to zero on every disk of radius \(r\). <span class="qed">□</span></p>
+            <p class="intro-proof-aside">The same picture explains why other shapes work. Brown, Schreiber and Taylor proved the converse of what we used: a domain fails the Pompeiu property <em>only if</em> \(\widehat{\mathbf 1_\Omega}\) vanishes on a whole circle \(|\xi|=\rho\), \(\rho&gt;0\), centred at the origin. The disk is generous enough to do that. A square is not: its transform is \(4\sin(a\xi_1)\sin(a\xi_2)/(\xi_1\xi_2)\), whose zero set is a grid of straight lines, and a circle centred at the origin crosses such a grid in finitely many points rather than lying inside it.</p>
             <p class="intro-proof-aside">Notice also what the counterexample function is: \(f\) satisfies \(\Delta f+\lambda f=0\). A plane wave at exactly the frequency the disk cannot see. That is not a coincidence, and it is the bridge to the next question.</p>
           </div>
         </details>
@@ -117,7 +115,7 @@
         <div class="intro-copy intro-copy-wide">
           <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
           <p>In the 1950s Schiffer arrived at the disk from a different direction. Suppose a domain carries a nonconstant eigenfunction of the Laplacian that is <em>both</em> constant along the boundary and has vanishing normal derivative there. A disk does, once for every positive zero of \(J_1\). Is it the only one? The precise system is (1.1) below, and S. T. Yau listed the planar case as Problem 80 in his 1982 collection of open problems in geometry.</p>
-          <p>The two questions look unrelated. One is about integral geometry and tomography, the other about an overdetermined boundary value problem. In 1976 Williams proved that for bounded, simply connected domains with smooth boundary they are the same question: such a domain fails the Pompeiu property precisely when it carries a Schiffer solution. Everything since — including this construction — has lived on both sides of that equivalence at once.</p>
+          <p>The two questions look unrelated. One is about integral geometry and tomography, the other about an overdetermined boundary value problem. In 1976 Williams proved that for bounded, simply connected domains with smooth boundary they are the same question: such a domain fails the Pompeiu property precisely when it carries a Schiffer solution.</p>
         </div>
 
         <details class="proof-details intro-proof">
@@ -145,7 +143,7 @@
         <details class="proof-details intro-proof">
           <summary><span>From Pompeiu to Schiffer: one division in Fourier space</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(R(\Omega)\), and use \(\widehat{\mathbf 1_{R(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(R^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(R\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\). That circle is not a point: \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\), so the origin is not in the support of \(\widehat f\) and \(\xi_0\neq0\). Write \(\lambda=|\xi_0|^2&gt;0\).</p>
+            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\). That circle is not a point: \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\), so the origin is not in the support of \(\widehat f\) and \(\xi_0\neq0\). Write \(\lambda=|\xi_0|^2&gt;0\).</p>
             <p>Now divide. The numerator below vanishes on the circle where the denominator does, so the quotient has no pole there and</p>
             <div class="tex-display">
               \[
@@ -160,6 +158,57 @@
           </div>
         </details>
 
+
+        <div class="intro-copy intro-copy-wide">
+          <h3>A Schiffer domain is a critical point of a Neumann eigenvalue.</h3>
+          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) — which is (1.1). Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
+        </div>
+
+        <details class="proof-details intro-proof">
+          <summary><span>Why the boundary condition is a criticality condition</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Deform with normal velocity \(f=V\cdot\nu\) on \(\partial\Omega\). The Hadamard formula for a simple Neumann eigenvalue is</p>
+            <div class="tex-display">
+              \[
+              \mu'(0)=\int_{\partial\Omega}\bigl(|\nabla u|^{2}-\mu u^{2}\bigr)f\,d\sigma .
+              \]
+            </div>
+            <p>On \(\partial\Omega\) the Neumann condition \(\partial_\nu u=0\) leaves only the tangential part of the gradient, and if \(u\equiv c\) on the boundary then that part vanishes too. What is left is</p>
+            <div class="tex-display">
+              \[
+              \mu'(0)=-\mu c^{2}\int_{\partial\Omega}f\,d\sigma
+              =-\mu c^{2}\,\frac{d}{dt}\Big|_{t=0}|\Omega_t| ,
+              \]
+            </div>
+            <p>which is zero for every area-preserving deformation. The constant \(c\) is not zero: if it were, \(u\) and \(\partial_\nu u\) would both vanish on \(\partial\Omega\) and unique continuation would force \(u\equiv0\). <span class="qed">□</span></p>
+            <p class="intro-proof-aside">The converse needs one more step. Criticality under the area constraint gives the Lagrange condition \(|\nabla u|^2-\mu u^2=\text{const}\) on \(\partial\Omega\), which looks weaker; Fall and Weth show that any nontrivial solution of it has \(u^2\) constant on the boundary, so on a connected boundary \(u\) itself is constant. Simplicity of \(\mu\) is not a technicality here. The ball in \(\mathbb R^n\) maximizes the first nonzero Neumann eigenvalue at fixed volume, so it is certainly critical, yet that eigenvalue has multiplicity \(n\) and none of its eigenfunctions is constant on the sphere.</p>
+          </div>
+        </details>
+
+        <div class="intro-copy intro-copy-wide">
+          <p>Reading the condition this way also says what must happen for one Schiffer domain to deform into another, and this is where Dirichlet eigenvalues enter. Suppose \(\Omega_t\) is a smooth family of Schiffer domains through \(\Omega\), with normal velocity \(f\), and let \(w\) be the shape derivative of \(u_t\). Differentiating the three conditions in (1.1) gives, in each angular mode \(\ell\ge1\),</p>
+          <div class="tex-display">
+            \[
+            \begin{aligned}
+            -\Delta w_\ell&amp;=\lambda w_\ell &amp;&amp;\text{in }\Omega,\\
+            w_\ell&amp;=0,\qquad \partial_\nu w_\ell=\lambda f_\ell &amp;&amp;\text{on }\partial\Omega .
+            \end{aligned}
+            \]
+          </div>
+          <p>If the boundary really moves in mode \(\ell\), then \(f_\ell\not\equiv0\), so \(w_\ell\not\equiv0\); and the first two lines say that \(w_\ell\) is then a <em>Dirichlet</em> eigenfunction of \(-\Delta\) at the very same \(\lambda\). So a single number \(\lambda\) has to be at once a Neumann eigenvalue whose eigenfunction is constant on the boundary, and a Dirichlet eigenvalue in a nonradial mode. Two spectra with no reason to meet are forced to meet.</p>
+          <p>On the disk that coincidence is \(J_1(\rho)=0\) together with \(J_\ell(\rho)=0\), where \(\rho=\sqrt\lambda\,r\); the Bourget–Siegel theorem says two Bessel functions of distinct integer order share no positive zero, and the remaining mode \(\ell=1\) is only translation. That is the rigidity of the disk, and section 02 carries it out in full.</p>
+          <p>Everything after that is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer \(\ell\) is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
+        </div>
+
+        <details class="proof-details intro-proof">
+          <summary><span>Where the Dirichlet eigenfunction comes from</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Differentiate each condition of (1.1) along the family. From \(u_t=1\) on \(\partial\Omega_t\) the shape derivative satisfies \(w=-f\,\partial_\nu u\) on \(\partial\Omega\), and \(\partial_\nu u=0\), so \(w=0\) there.</p>
+            <p>From \(\partial_\nu u_t=0\) on \(\partial\Omega_t\) one gets \(\partial_\nu w+f\,\partial_{\nu\nu}u-\nabla_{\partial\Omega}u\cdot\nabla_{\partial\Omega}f=0\). The last term drops because \(u\) is constant on the boundary. For the middle one, split the Laplacian at the boundary as \(\Delta u=\partial_{\nu\nu}u+H\,\partial_\nu u+\Delta_{\partial\Omega}u\); the second and third terms vanish, so \(\partial_{\nu\nu}u=\Delta u=-\lambda u=-\lambda\). Hence \(\partial_\nu w=\lambda f\).</p>
+            <p>Separating into angular modes gives the system above. Section 02 states this as Proposition 2.1 and takes it through to the nonlinear rigidity of the disk. <span class="qed">□</span></p>
+          </div>
+        </details>
+
         <figure class="intro-shapes">
           <figcaption>
             <p class="eyebrow">What a counterexample looks like</p>
@@ -167,12 +216,11 @@
           </figcaption>
           <div class="intro-shapes-row">
             <div class="intro-shape">
-              <svg viewBox="0 0 180 180" role="img" aria-label="A nearly circular outline with twenty-eight very shallow ripples, shown at true scale, with the same outline exaggerated eight times behind it">
-                <path class="intro-shape-ghost" d="M148.6 90.0L149.5 89.0L151.9 88.0L154.9 86.9L157.8 85.6L160.1 84.4L161.4 83.1L161.8 81.9L161.2 80.8L159.6 79.9L157.1 79.1L154.0 78.6L150.8 78.2L148.2 77.7L147.2 77.0L147.8 75.8L149.9 74.3L152.6 72.5L155.2 70.7L157.1 68.9L158.1 67.4L158.2 66.1L157.3 65.2L155.6 64.7L153.0 64.5L149.9 64.6L146.6 64.9L144.0 65.0L142.8 64.6L143.2 63.3L144.9 61.4L147.2 59.0L149.2 56.6L150.7 54.5L151.4 52.8L151.2 51.6L150.1 50.9L148.3 50.7L145.8 51.1L142.7 52.0L139.6 53.0L137.1 53.6L135.8 53.4L135.9 52.1L137.1 49.9L138.8 47.1L140.3 44.3L141.3 41.9L141.5 40.1L141.1 38.9L139.9 38.5L138.1 38.7L135.7 39.7L132.9 41.2L130.1 42.9L127.9 44.1L126.6 44.2L126.4 42.9L127.0 40.4L128.0 37.3L128.9 34.2L129.3 31.7L129.1 29.9L128.4 28.8L127.2 28.6L125.5 29.3L123.4 30.8L121.0 32.8L118.6 35.1L116.7 36.8L115.4 37.2L115.0 36.0L115.1 33.4L115.4 30.1L115.5 27.0L115.3 24.4L114.8 22.7L113.9 21.8L112.6 21.9L111.1 22.9L109.3 24.8L107.5 27.4L105.7 30.1L104.2 32.2L103.0 32.8L102.3 31.8L101.8 29.2L101.4 26.0L100.9 22.9L100.1 20.4L99.2 18.8L98.1 18.2L96.9 18.6L95.6 19.9L94.4 22.2L93.1 25.1L92.0 28.1L91.0 30.5L90.0 31.4L89.0 30.5L88.0 28.1L86.9 25.1L85.6 22.2L84.4 19.9L83.1 18.6L81.9 18.2L80.8 18.8L79.9 20.4L79.1 22.9L78.6 26.0L78.2 29.2L77.7 31.8L77.0 32.8L75.8 32.2L74.3 30.1L72.5 27.4L70.7 24.8L68.9 22.9L67.4 21.9L66.1 21.8L65.2 22.7L64.7 24.4L64.5 27.0L64.6 30.1L64.9 33.4L65.0 36.0L64.6 37.2L63.3 36.8L61.4 35.1L59.0 32.8L56.6 30.8L54.5 29.3L52.8 28.6L51.6 28.8L50.9 29.9L50.7 31.7L51.1 34.2L52.0 37.3L53.0 40.4L53.6 42.9L53.4 44.2L52.1 44.1L49.9 42.9L47.1 41.2L44.3 39.7L41.9 38.7L40.1 38.5L38.9 38.9L38.5 40.1L38.7 41.9L39.7 44.3L41.2 47.1L42.9 49.9L44.1 52.1L44.2 53.4L42.9 53.6L40.4 53.0L37.3 52.0L34.2 51.1L31.7 50.7L29.9 50.9L28.8 51.6L28.6 52.8L29.3 54.5L30.8 56.6L32.8 59.0L35.1 61.4L36.8 63.3L37.2 64.6L36.0 65.0L33.4 64.9L30.1 64.6L27.0 64.5L24.4 64.7L22.7 65.2L21.8 66.1L21.9 67.4L22.9 68.9L24.8 70.7L27.4 72.5L30.1 74.3L32.2 75.8L32.8 77.0L31.8 77.7L29.2 78.2L26.0 78.6L22.9 79.1L20.4 79.9L18.8 80.8L18.2 81.9L18.6 83.1L19.9 84.4L22.2 85.6L25.1 86.9L28.1 88.0L30.5 89.0L31.4 90.0L30.5 91.0L28.1 92.0L25.1 93.1L22.2 94.4L19.9 95.6L18.6 96.9L18.2 98.1L18.8 99.2L20.4 100.1L22.9 100.9L26.0 101.4L29.2 101.8L31.8 102.3L32.8 103.0L32.2 104.2L30.1 105.7L27.4 107.5L24.8 109.3L22.9 111.1L21.9 112.6L21.8 113.9L22.7 114.8L24.4 115.3L27.0 115.5L30.1 115.4L33.4 115.1L36.0 115.0L37.2 115.4L36.8 116.7L35.1 118.6L32.8 121.0L30.8 123.4L29.3 125.5L28.6 127.2L28.8 128.4L29.9 129.1L31.7 129.3L34.2 128.9L37.3 128.0L40.4 127.0L42.9 126.4L44.2 126.6L44.1 127.9L42.9 130.1L41.2 132.9L39.7 135.7L38.7 138.1L38.5 139.9L38.9 141.1L40.1 141.5L41.9 141.3L44.3 140.3L47.1 138.8L49.9 137.1L52.1 135.9L53.4 135.8L53.6 137.1L53.0 139.6L52.0 142.7L51.1 145.8L50.7 148.3L50.9 150.1L51.6 151.2L52.8 151.4L54.5 150.7L56.6 149.2L59.0 147.2L61.4 144.9L63.3 143.2L64.6 142.8L65.0 144.0L64.9 146.6L64.6 149.9L64.5 153.0L64.7 155.6L65.2 157.3L66.1 158.2L67.4 158.1L68.9 157.1L70.7 155.2L72.5 152.6L74.3 149.9L75.8 147.8L77.0 147.2L77.7 148.2L78.2 150.8L78.6 154.0L79.1 157.1L79.9 159.6L80.8 161.2L81.9 161.8L83.1 161.4L84.4 160.1L85.6 157.8L86.9 154.9L88.0 151.9L89.0 149.5L90.0 148.6L91.0 149.5L92.0 151.9L93.1 154.9L94.4 157.8L95.6 160.1L96.9 161.4L98.1 161.8L99.2 161.2L100.1 159.6L100.9 157.1L101.4 154.0L101.8 150.8L102.3 148.2L103.0 147.2L104.2 147.8L105.7 149.9L107.5 152.6L109.3 155.2L111.1 157.1L112.6 158.1L113.9 158.2L114.8 157.3L115.3 155.6L115.5 153.0L115.4 149.9L115.1 146.6L115.0 144.0L115.4 142.8L116.7 143.2L118.6 144.9L121.0 147.2L123.4 149.2L125.5 150.7L127.2 151.4L128.4 151.2L129.1 150.1L129.3 148.3L128.9 145.8L128.0 142.7L127.0 139.6L126.4 137.1L126.6 135.8L127.9 135.9L130.1 137.1L132.9 138.8L135.7 140.3L138.1 141.3L139.9 141.5L141.1 141.1L141.5 139.9L141.3 138.1L140.3 135.7L138.8 132.9L137.1 130.1L135.9 127.9L135.8 126.6L137.1 126.4L139.6 127.0L142.7 128.0L145.8 128.9L148.3 129.3L150.1 129.1L151.2 128.4L151.4 127.2L150.7 125.5L149.2 123.4L147.2 121.0L144.9 118.6L143.2 116.7L142.8 115.4L144.0 115.0L146.6 115.1L149.9 115.4L153.0 115.5L155.6 115.3L157.3 114.8L158.2 113.9L158.1 112.6L157.1 111.1L155.2 109.3L152.6 107.5L149.9 105.7L147.8 104.2L147.2 103.0L148.2 102.3L150.8 101.8L154.0 101.4L157.1 100.9L159.6 100.1L161.2 99.2L161.8 98.1L161.4 96.9L160.1 95.6L157.8 94.4L154.9 93.1L151.9 92.0L149.5 91.0Z"></path>
+              <svg viewBox="0 0 180 180" role="img" aria-label="A nearly circular outline with twenty-eight very shallow ripples, drawn at true scale">
                 <path class="intro-shape-line" d="M155.1 90.0L155.2 89.0L155.5 87.9L155.8 86.8L156.1 85.8L156.3 84.7L156.4 83.6L156.4 82.5L156.2 81.5L155.8 80.4L155.4 79.4L154.8 78.4L154.3 77.5L153.8 76.5L153.4 75.5L153.3 74.5L153.3 73.4L153.4 72.3L153.5 71.2L153.5 70.0L153.3 69.0L153.0 67.9L152.6 67.0L152.1 66.0L151.4 65.1L150.7 64.3L149.9 63.5L149.2 62.7L148.6 61.8L148.3 60.8L148.1 59.7L147.9 58.6L147.7 57.5L147.4 56.4L147.0 55.4L146.5 54.5L145.9 53.6L145.2 52.8L144.3 52.1L143.4 51.5L142.5 50.8L141.6 50.2L140.9 49.4L140.3 48.5L139.9 47.6L139.5 46.5L139.0 45.5L138.5 44.5L137.9 43.6L137.2 42.8L136.4 42.1L135.5 41.5L134.5 41.0L133.5 40.5L132.4 40.1L131.5 39.7L130.6 39.1L129.8 38.4L129.2 37.5L128.5 36.6L127.9 35.7L127.2 34.8L126.4 34.1L125.5 33.5L124.6 33.0L123.6 32.6L122.5 32.3L121.4 32.1L120.3 31.9L119.2 31.7L118.2 31.4L117.3 30.8L116.5 30.1L115.7 29.3L114.9 28.6L114.0 27.9L113.0 27.4L112.1 27.0L111.0 26.7L110.0 26.5L108.8 26.5L107.7 26.6L106.6 26.7L105.5 26.7L104.5 26.6L103.5 26.2L102.5 25.7L101.6 25.2L100.6 24.6L99.6 24.2L98.5 23.8L97.5 23.6L96.4 23.6L95.3 23.7L94.2 23.9L93.2 24.2L92.1 24.5L91.0 24.8L90.0 24.9L89.0 24.8L87.9 24.5L86.8 24.2L85.8 23.9L84.7 23.7L83.6 23.6L82.5 23.6L81.5 23.8L80.4 24.2L79.4 24.6L78.4 25.2L77.5 25.7L76.5 26.2L75.5 26.6L74.5 26.7L73.4 26.7L72.3 26.6L71.2 26.5L70.0 26.5L69.0 26.7L67.9 27.0L67.0 27.4L66.0 27.9L65.1 28.6L64.3 29.3L63.5 30.1L62.7 30.8L61.8 31.4L60.8 31.7L59.7 31.9L58.6 32.1L57.5 32.3L56.4 32.6L55.4 33.0L54.5 33.5L53.6 34.1L52.8 34.8L52.1 35.7L51.5 36.6L50.8 37.5L50.2 38.4L49.4 39.1L48.5 39.7L47.6 40.1L46.5 40.5L45.5 41.0L44.5 41.5L43.6 42.1L42.8 42.8L42.1 43.6L41.5 44.5L41.0 45.5L40.5 46.5L40.1 47.6L39.7 48.5L39.1 49.4L38.4 50.2L37.5 50.8L36.6 51.5L35.7 52.1L34.8 52.8L34.1 53.6L33.5 54.5L33.0 55.4L32.6 56.4L32.3 57.5L32.1 58.6L31.9 59.7L31.7 60.8L31.4 61.8L30.8 62.7L30.1 63.5L29.3 64.3L28.6 65.1L27.9 66.0L27.4 67.0L27.0 67.9L26.7 69.0L26.5 70.0L26.5 71.2L26.6 72.3L26.7 73.4L26.7 74.5L26.6 75.5L26.2 76.5L25.7 77.5L25.2 78.4L24.6 79.4L24.2 80.4L23.8 81.5L23.6 82.5L23.6 83.6L23.7 84.7L23.9 85.8L24.2 86.8L24.5 87.9L24.8 89.0L24.9 90.0L24.8 91.0L24.5 92.1L24.2 93.2L23.9 94.2L23.7 95.3L23.6 96.4L23.6 97.5L23.8 98.5L24.2 99.6L24.6 100.6L25.2 101.6L25.7 102.5L26.2 103.5L26.6 104.5L26.7 105.5L26.7 106.6L26.6 107.7L26.5 108.8L26.5 110.0L26.7 111.0L27.0 112.1L27.4 113.0L27.9 114.0L28.6 114.9L29.3 115.7L30.1 116.5L30.8 117.3L31.4 118.2L31.7 119.2L31.9 120.3L32.1 121.4L32.3 122.5L32.6 123.6L33.0 124.6L33.5 125.5L34.1 126.4L34.8 127.2L35.7 127.9L36.6 128.5L37.5 129.2L38.4 129.8L39.1 130.6L39.7 131.5L40.1 132.4L40.5 133.5L41.0 134.5L41.5 135.5L42.1 136.4L42.8 137.2L43.6 137.9L44.5 138.5L45.5 139.0L46.5 139.5L47.6 139.9L48.5 140.3L49.4 140.9L50.2 141.6L50.8 142.5L51.5 143.4L52.1 144.3L52.8 145.2L53.6 145.9L54.5 146.5L55.4 147.0L56.4 147.4L57.5 147.7L58.6 147.9L59.7 148.1L60.8 148.3L61.8 148.6L62.7 149.2L63.5 149.9L64.3 150.7L65.1 151.4L66.0 152.1L67.0 152.6L67.9 153.0L69.0 153.3L70.0 153.5L71.2 153.5L72.3 153.4L73.4 153.3L74.5 153.3L75.5 153.4L76.5 153.8L77.5 154.3L78.4 154.8L79.4 155.4L80.4 155.8L81.5 156.2L82.5 156.4L83.6 156.4L84.7 156.3L85.8 156.1L86.8 155.8L87.9 155.5L89.0 155.2L90.0 155.1L91.0 155.2L92.1 155.5L93.2 155.8L94.2 156.1L95.3 156.3L96.4 156.4L97.5 156.4L98.5 156.2L99.6 155.8L100.6 155.4L101.6 154.8L102.5 154.3L103.5 153.8L104.5 153.4L105.5 153.3L106.6 153.3L107.7 153.4L108.8 153.5L110.0 153.5L111.0 153.3L112.1 153.0L113.0 152.6L114.0 152.1L114.9 151.4L115.7 150.7L116.5 149.9L117.3 149.2L118.2 148.6L119.2 148.3L120.3 148.1L121.4 147.9L122.5 147.7L123.6 147.4L124.6 147.0L125.5 146.5L126.4 145.9L127.2 145.2L127.9 144.3L128.5 143.4L129.2 142.5L129.8 141.6L130.6 140.9L131.5 140.3L132.4 139.9L133.5 139.5L134.5 139.0L135.5 138.5L136.4 137.9L137.2 137.2L137.9 136.4L138.5 135.5L139.0 134.5L139.5 133.5L139.9 132.4L140.3 131.5L140.9 130.6L141.6 129.8L142.5 129.2L143.4 128.5L144.3 127.9L145.2 127.2L145.9 126.4L146.5 125.5L147.0 124.6L147.4 123.6L147.7 122.5L147.9 121.4L148.1 120.3L148.3 119.2L148.6 118.2L149.2 117.3L149.9 116.5L150.7 115.7L151.4 114.9L152.1 114.0L152.6 113.0L153.0 112.1L153.3 111.0L153.5 110.0L153.5 108.8L153.4 107.7L153.3 106.6L153.3 105.5L153.4 104.5L153.8 103.5L154.3 102.5L154.8 101.6L155.4 100.6L155.8 99.6L156.2 98.5L156.4 97.5L156.4 96.4L156.3 95.3L156.1 94.2L155.8 93.2L155.5 92.1L155.2 91.0Z"></path>
               </svg>
               <b>the counterexample</b>
-              <small>28 ripples · true amplitude 1.3% of the radius · the faint outline is the same boundary drawn with the ripples multiplied by eight</small>
+              <small>the \(N=28\) domain of the paper, drawn at true scale · 28 ripples of amplitude 1.3% of the radius</small>
             </div>
             <div class="intro-shape">
               <svg viewBox="0 0 180 180" role="img" aria-label="A twelve-lobed scalloped outline, the shape of a Hong Kong two dollar coin">
@@ -192,7 +240,7 @@
         </figure>
 
         <div class="intro-copy intro-copy-wide intro-close">
-          <p>Both questions were answered in August 2026, twice and independently: <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora and de Dios Pont</a> constructed infinitely many planar counterexamples by bifurcation, one for each of infinitely many symmetry orders \(N\), and two days earlier <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer">Colbrook and Stepaniants</a> produced one of ten-fold symmetry by a computer-assisted argument. The rest of this site is an exposition of the first of the two.</p>
+          <p>Both questions were answered in early August 2026, by <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer">Colbrook–Stepaniants</a> and <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>. The rest of the site exposes those proofs.</p>
         </div>
       </section>
 
@@ -1650,11 +1698,12 @@
           <li><span>[6]</span><p>S. A. Williams, <a href="https://doi.org/10.1007/BF01360881" target="_blank" rel="noreferrer"><em>A partial solution of the Pompeiu problem</em></a>, <em>Mathematische Annalen</em> <b>223</b> (1976), 183–190. The equivalence between the two problems.</p></li>
           <li><span>[7]</span><p>S.-T. Yau, <em>Problem section</em>, in <em>Seminar on Differential Geometry</em>, Annals of Mathematics Studies <b>102</b>, Princeton University Press, 1982, pp. 669–706. Schiffer's conjecture is Problem 80, p. 688; it appears never to have been published by Schiffer himself.</p></li>
           <li><span>[8]</span><p>V. V. Volchkov, <a href="https://doi.org/10.1007/978-94-010-0023-9" target="_blank" rel="noreferrer"><em>Integral Geometry and Convolution Equations</em></a>, Kluwer, Dordrecht, 2003. The source for the attributions to Pompeiu, Chakalov and Christov.</p></li>
-          <li><span>[9]</span><p>M. M. Fall, I. A. Minlend and T. Weth, <a href="https://doi.org/10.4171/JEMS/1612" target="_blank" rel="noreferrer"><em>The Schiffer problem on the cylinder and on the 2-sphere</em></a>, <em>Journal of the European Mathematical Society</em> (2025).</p></li>
-          <li><span>[10]</span><p>G. Cao-Labora and A. J. Fernández, <a href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer"><em>A contractible Schiffer counterexample on the half-sphere</em></a>, arXiv:2510.05732 (2025).</p></li>
-          <li><span>[11]</span><p>M. J. Colbrook and G. Stepaniants, <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer"><em>A computer-assisted counterexample to the planar Pompeiu and Schiffer conjectures</em></a>, arXiv:2608.01579 (2026).</p></li>
-          <li><span>[12]</span><p>G. Cao-Labora and J. de Dios Pont, <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer"><em>Counterexamples to Schiffer's Conjecture</em></a>, arXiv:2608.05114 (2026). The construction expounded here.</p></li>
-          <li><span>[13]</span><p>F. W. J. Olver et al., editors, <a href="https://dlmf.nist.gov/10" target="_blank" rel="noreferrer"><em>NIST Digital Library of Mathematical Functions, Chapter 10: Bessel Functions</em></a>.</p></li>
+          <li><span>[9]</span><p>M. M. Fall and T. Weth, <a href="https://doi.org/10.1007/s12220-018-00115-w" target="_blank" rel="noreferrer"><em>Critical domains for the first nonzero Neumann eigenvalue in Riemannian manifolds</em></a>, <em>Journal of Geometric Analysis</em> <b>29</b> (2019), 3221–3247. The shape derivative used above, and its converse.</p></li>
+          <li><span>[10]</span><p>M. M. Fall, I. A. Minlend and T. Weth, <a href="https://doi.org/10.4171/JEMS/1612" target="_blank" rel="noreferrer"><em>The Schiffer problem on the cylinder and on the 2-sphere</em></a>, <em>Journal of the European Mathematical Society</em> (2025).</p></li>
+          <li><span>[11]</span><p>G. Cao-Labora and A. J. Fernández, <a href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer"><em>A contractible Schiffer counterexample on the half-sphere</em></a>, arXiv:2510.05732 (2025).</p></li>
+          <li><span>[12]</span><p>M. J. Colbrook and G. Stepaniants, <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer"><em>A computer-assisted counterexample to the planar Pompeiu and Schiffer conjectures</em></a>, arXiv:2608.01579 (2026).</p></li>
+          <li><span>[13]</span><p>G. Cao-Labora and J. de Dios Pont, <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer"><em>Counterexamples to Schiffer's Conjecture</em></a>, arXiv:2608.05114 (2026). The construction expounded here.</p></li>
+          <li><span>[14]</span><p>F. W. J. Olver et al., editors, <a href="https://dlmf.nist.gov/10" target="_blank" rel="noreferrer"><em>NIST Digital Library of Mathematical Functions, Chapter 10: Bessel Functions</em></a>.</p></li>
         </ol>
       </section>
     </main>
