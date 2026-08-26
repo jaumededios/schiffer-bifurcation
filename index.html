@@ -31,8 +31,6 @@
       <summary><span>Table of contents</span><i aria-hidden="true">open +</i></summary>
       <nav aria-label="Table of contents">
         <a href="#introduction"><b>I</b><span>Pompeiu and Schiffer</span></a>
-        <a href="#question"><b>01</b><span>The Schiffer property</span></a>
-        <a href="#disk-obstruction"><b>02</b><span>Rigidity of the disk</span></a>
         <a href="#borrow-flexibility"><b>03</b><span>Cylinder and sphere</span></a>
         <a href="#geometric-escape"><b>04</b><span>The intuition</span></a>
         <a href="#experiment"><b>05</b><span>The proof strategy</span></a>
@@ -192,19 +190,56 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>What happens if we look for \(\Omega\) close to a ball.</h3>
-          <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction. Then, if we impose that \((u+\delta u,\ \Omega+\delta\Omega\,\nu)\) also solves Schiffer, at the linear level we read:</p>
+          <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction.</p>
+        </div>
+
+        <figure class="shape-variation-figure intro-variation-figure">
+          <div class="shape-variation-heading">
+            <span>The normal perturbation</span>
+            <p>The perturbed domain \(\Omega+\delta\Omega\,\nu\) is obtained by pushing every boundary point \(p\) along the outward normal by \(\delta\Omega(p)\). Only that normal motion changes the domain to first order; sliding the boundary along itself merely relabels its points.</p>
+          </div>
+          <div class="shape-variation-diagrams">
+            <svg viewBox="0 0 440 300" role="img" aria-label="A domain with alternating inward and outward normal arrows prescribed by delta Omega">
+              <defs><marker id="normalArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
+              <circle class="variation-domain" cx="220" cy="145" r="88"/>
+              <text class="variation-domain-label" x="220" y="151" text-anchor="middle">&#937;</text>
+              <g class="variation-normal-field" marker-end="url(#normalArrow)">
+                <line x1="308" y1="145" x2="322" y2="145"/>
+                <line x1="264" y1="221.2" x2="257" y2="209.1"/>
+                <line x1="176" y1="221.2" x2="169" y2="233.3"/>
+                <line x1="132" y1="145" x2="146" y2="145"/>
+                <line x1="176" y1="68.8" x2="169" y2="56.7"/>
+                <line x1="264" y1="68.8" x2="257" y2="80.9"/>
+              </g>
+              <text class="variation-svg-label" x="220" y="278" text-anchor="middle">the normal perturbation &#948;&#937;&#183;&#957;</text>
+              <text class="variation-sign-label" x="326" y="132">&#948;&#937; &gt; 0</text>
+              <text class="variation-sign-label" x="258" y="202">&#948;&#937; &lt; 0</text>
+            </svg>
+            <div class="variation-map"><span>\(p\longmapsto p+\delta\Omega\,\nu\)</span><i aria-hidden="true">&rarr;</i></div>
+            <svg viewBox="0 0 440 300" role="img" aria-label="The original boundary in a dashed line and the perturbed boundary in orange">
+              <path class="variation-deformed-domain" transform="translate(-580 -20)" d="M 902.0 165.0 C 902.0 173.4, 898.9 183.0, 894.6 190.3 C 890.3 197.7, 882.8 204.0, 876.2 209.0 C 869.7 214.0, 861.8 216.9, 855.2 220.2 C 848.7 223.6, 842.8 225.7, 837.0 229.1 C 831.2 232.5, 826.4 236.5, 820.2 240.4 C 814.0 244.4, 807.6 249.8, 800.0 253.0 C 792.4 256.2, 783.2 259.5, 774.7 259.6 C 766.2 259.6, 756.3 257.6, 749.0 253.3 C 741.7 249.1, 735.0 241.6, 730.8 234.2 C 726.6 226.8, 724.8 217.2, 723.8 209.0 C 722.8 200.8, 724.2 192.5, 724.6 185.2 C 724.9 177.9, 726.0 171.7, 726.0 165.0 C 726.0 158.3, 724.9 152.1, 724.6 144.8 C 724.2 137.5, 722.8 129.2, 723.8 121.0 C 724.8 112.8, 726.6 103.2, 730.8 95.8 C 735.0 88.4, 741.7 80.9, 749.0 76.7 C 756.3 72.4, 766.2 70.4, 774.7 70.4 C 783.2 70.5, 792.4 73.8, 800.0 77.0 C 807.6 80.2, 814.0 85.6, 820.2 89.6 C 826.4 93.5, 831.2 97.5, 837.0 100.9 C 842.8 104.3, 848.7 106.4, 855.2 109.8 C 861.8 113.1, 869.7 116.0, 876.2 121.0 C 882.8 126.0, 890.3 132.3, 894.6 139.7 C 898.9 147.0, 902.0 156.6, 902.0 165.0 Z"/>
+              <circle class="variation-original-boundary" cx="220" cy="145" r="88"/>
+              <circle class="variation-point original" cx="308" cy="145" r="3"/>
+              <circle class="variation-point moved" cx="322" cy="145" r="3"/>
+              <line class="variation-distance" x1="308" y1="145" x2="322" y2="145"/>
+              <text class="variation-domain-label" x="220" y="151" text-anchor="middle">&#937;&#8242;</text>
+              <text class="variation-svg-label" x="139" y="48">&#8706;&#937;</text>
+              <text class="variation-svg-label accent" x="311" y="74">&#8706;&#937;&#8242;</text>
+              <text class="variation-sign-label" x="315" y="132">&#948;&#937;(p)</text>
+              <text class="variation-svg-label" x="220" y="278" text-anchor="middle">dashed: original &#183; orange: perturbed</text>
+            </svg>
+          </div>
+          <figcaption>Writing \(\Omega'=\Omega+\delta\Omega\,\nu\) for the perturbed domain. Positive \(\delta\Omega\) moves the boundary outward and negative \(\delta\Omega\) moves it inward.</figcaption>
+        </figure>
+
+        <div class="intro-copy intro-copy-wide">
+          <p>Then, if we impose that \((u+\delta u,\ \Omega+\delta\Omega\,\nu)\) also solves Schiffer, at the linear level we read:</p>
           <div class="tex-display">
             \[
             \begin{cases}
-            (\Delta+\lambda)(u+\delta u)=0,\\[2pt]
-            u|_{\partial\Omega}+\delta\Omega\,\partial_\nu u|_{\partial\Omega}+\delta u|_{\partial\Omega}+\text{l.o.}=1,\\[2pt]
-            \partial_\nu u|_{\partial\Omega}+\partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u+\text{l.o.}=0,
-            \end{cases}
-            \quad\Longrightarrow\quad
-            \begin{cases}
             (\Delta+\lambda)\delta u=0,\\[2pt]
             \delta u|_{\partial\Omega}=0,\\[2pt]
-            \partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u=0,
+            \partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u=0.
             \end{cases}
             \]
           </div>
@@ -212,7 +247,7 @@
 
         <div class="intro-lead">
           <div class="intro-copy">
-            <p>where in the second system we neglect lower order terms and just look at the linear ones. The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
+            <p>The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
             <p>This approach has been used in overdetermined problems. Unfortunately, the only planar Schiffer examples we know are balls, and there Siegel proved that there is no agreement of Neumann and Dirichlet eigenvalues, blocking the route described above.</p>
           </div>
           <div class="equation-system intro-statement" role="img" aria-label="A Schiffer example can be perturbed when lambda is also a Dirichlet eigenvalue">
@@ -223,16 +258,34 @@
         </div>
 
         <details class="proof-details intro-proof">
-          <summary><span>The small computation: \(\partial_\nu^2u=-\lambda\) on the boundary</span><i>expand +</i></summary>
+          <summary><span>Deriving the linearized problem, and its trivial solutions</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>At a boundary point, split the Laplacian into its normal, mean-curvature and tangential parts,</p>
+            <p><em>The expansion.</em> Impose the Schiffer system on the perturbed pair. The interior equation is already linear in \(u+\delta u\). The two boundary conditions are imposed on \(\partial\Omega'\), whose points are \(p+\delta\Omega(p)\,\nu(p)\) with \(p\in\partial\Omega\), so reading them back on \(\partial\Omega\) costs one Taylor step along the normal:</p>
+            <div class="tex-display">
+              \[
+              \begin{cases}
+              (\Delta+\lambda)(u+\delta u)=0,\\[2pt]
+              u|_{\partial\Omega}+\delta\Omega\,\partial_\nu u|_{\partial\Omega}+\delta u|_{\partial\Omega}+\text{l.o.}=1,\\[2pt]
+              \partial_\nu u|_{\partial\Omega}+\partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u+\text{l.o.}=0,
+              \end{cases}
+              \]
+            </div>
+            <p>where l.o. collects everything at least quadratic in \((\delta u,\delta\Omega)\). Now we use that \((u,\Omega)\) already solves the problem. On the second line \(u|_{\partial\Omega}=1\) cancels the right hand side and \(\partial_\nu u|_{\partial\Omega}=0\) kills the term carrying \(\delta\Omega\), leaving \(\delta u|_{\partial\Omega}=0\); on the third line the same Neumann condition removes the first term. Discarding l.o. gives the linearized system above.</p>
+            <p><em>The small computation.</em> At a boundary point, split the Laplacian into its normal, mean-curvature and tangential parts,</p>
             <div class="tex-display">
               \[
               \Delta u=\partial_\nu^2u+H\,\partial_\nu u+\Delta_{\partial\Omega}u .
               \]
             </div>
-            <p>The Neumann condition \(\partial_\nu u=0\) kills the second term, and \(u\equiv1\) on \(\partial\Omega\) kills the third. Hence \(\partial_\nu^2u=\Delta u=-\lambda u=-\lambda\) there, and the third linearized equation reads \(-\lambda\,\delta\Omega+\partial_\nu\delta u=0\), that is, \(\delta\Omega=\partial_\nu\delta u/\lambda\). <span class="qed">□</span></p>
-            <p class="intro-proof-aside">Section 02 runs the same linearization in angular modes and takes it through to the nonlinear rigidity of the disk, where the coincidence to be excluded is \(J_1(\rho)=0\) together with \(J_\ell(\rho)=0\), \(\rho=\sqrt\lambda\,r\). Siegel's theorem says two Bessel functions of distinct integer order share no positive zero, and the remaining mode \(\ell=1\) is only a translation.</p>
+            <p>The Neumann condition \(\partial_\nu u=0\) kills the second term, and \(u\equiv1\) on \(\partial\Omega\) kills the third. Hence \(\partial_\nu^2u=\Delta u=-\lambda u=-\lambda\) there, and the third linearized equation reads \(-\lambda\,\delta\Omega+\partial_\nu\delta u=0\), that is, \(\delta\Omega=\partial_\nu\delta u/\lambda\).</p>
+            <p><em>The trivial solutions.</em> The linearized system always has solutions that carry no information, because the Schiffer problem is blind to rigid motions and to scaling. Take for \(\Omega\) the unit disk \(D\), with \(u_0(r)=J_0(\rho r)/J_0(\rho)\) and \(\lambda=\rho^2\), where \(J_1(\rho)=0\). Translating gives an exact family of solutions, \(\Omega_t=D+ta\) with \(u_t(x)=u_0(x-ta)\) and \(\lambda_t=\rho^2\); differentiating it at \(t=0\) produces</p>
+            <div class="tex-display">
+              \[
+              \delta\Omega(\theta)=a\cdot(\cos\theta,\sin\theta)=a_1\cos\theta+a_2\sin\theta .
+              \]
+            </div>
+            <p>Dilating gives another one, \(\Omega_t=(1+ct)D\) with \(u_t(x)=u_0\!\left(x/(1+ct)\right)\) and \(\lambda_t=\rho^2/(1+ct)^2\), whose normal velocity is the constant \(\delta\Omega(\theta)=c\); here the eigenvalue has to move, because the Laplacian scales like the inverse of a length squared. Rotating contributes nothing at all: the velocity is tangent to the circle, so \(\delta\Omega=0\).</p>
+            <p>A genuinely new Schiffer domain must therefore produce a \(\delta\Omega\) outside the span of \(\{1,\cos\theta,\sin\theta\}\), and near a disk there is none. Expanding \(\delta u\) in angular modes, the mode \(\ell\) survives only if \(J_\ell(\rho)=0\) on top of \(J_1(\rho)=0\), and the Bourget&ndash;Siegel theorem says that two Bessel functions of distinct integer order share no positive zero. So every \(\ell\ge2\) dies, \(\ell=1\) is a translation and \(\ell=0\) is a dilation: the disk is rigid, and this is the obstruction Siegel's theorem provides. <span class="qed" aria-label="end of proof">&#9633;</span></p>
           </div>
         </details>
 
@@ -300,337 +353,12 @@
         </div>
       </section>
 
-      <section id="question" class="story-question">
-        <div class="story-heading">
-          <span class="section-number">01</span>
-          <div><p class="eyebrow">The overdetermined eigenvalue problem</p><h2>Which domains have the Schiffer property?</h2></div>
-        </div>
-        <div class="question-grid">
-          <div class="question-copy">
-            <p>A smooth bounded domain \(\Omega\subset\mathbb R^2\) is said to have the <em>Schiffer property</em> if there are \(\lambda&gt;0\) and a nonconstant function \(u\) satisfying (1.1).</p>
-            <p>Normalizing the boundary value to \(1\) costs nothing. If the common boundary value were \(0\), then the Dirichlet and the Neumann data would both vanish, and uniqueness for the elliptic Cauchy problem would force \(u\equiv0\). So any nontrivial solution has a nonzero boundary value, and rescaling \(u\) makes that value \(1\).</p>
-            <p>The system is overdetermined: a second-order elliptic equation normally prescribes either Dirichlet data or Neumann data on the boundary, not both. That a disk satisfies it anyway is a one-line computation. On \(B_r\), take \(u\) proportional to \(J_0(\sqrt\lambda\,|x|)\); it solves \(-\Delta u=\lambda u\), and it is constant on \(\partial B_r\) because it is radial. Since \(J_0'=-J_1\), its normal derivative on \(\partial B_r\) is a multiple of \(J_1(\sqrt\lambda\,r)\), so the Neumann condition holds precisely when \(\sqrt\lambda\,r\) is a positive zero of \(J_1\) — one solution for each such zero. The rest of this site constructs solutions on domains that are not disks.</p>
-          </div>
-          <div class="equation-system hero-equation sans-display-math" role="img" aria-label="Minus Laplacian u equals lambda u inside Omega, while u equals one and its normal derivative equals zero on the boundary">
-            <span class="system-label">\(\operatorname{Schiffer}(\Omega)\)</span>
-            <div class="katex-system tex-display">
-              \[
-              \begin{cases}
-              -\Delta u=\lambda u &amp; \text{in }\Omega,\\
-              u=1 &amp; \text{on }\partial\Omega,\\
-              \partial_\nu u=0 &amp; \text{on }\partial\Omega.
-              \end{cases}
-              \]
-            </div>
-            <span class="equation-number">(1.1)</span>
-            <p>\(\lambda&gt;0\) and \(u\) is not constant.</p>
-          </div>
-        </div>
-        <div class="linearization-section">
-          <div class="linearization-intro">
-            <p class="eyebrow">2.1 · the linearized problem</p>
-            <h3>Differentiating a family of Schiffer domains produces a Dirichlet eigenfunction.</h3>
-            <div class="linearization-explanation">
-              <p>Let \(V_t\) be a smooth time-dependent vector field with flow \(\Phi_t\), and put \(\Omega_t=\Phi_t(\Omega)\). Its normal component \(f=V_0\mathbin{\cdot}\nu\) is the first-order motion of the boundary; the tangential component only changes its parametrization.</p>
-              <p>Suppose every \(\Omega_t\) carries a solution \((u_t,\lambda_t)\) of (1.1). Proposition 2.1 states the necessary condition obtained by differentiating this genuine family at \(t=0\).</p>
-            </div>
-          </div>
-          <figure class="shape-variation-figure">
-            <div class="shape-variation-heading">
-              <span>Figure 2.1 · the flow and its normal velocity</span>
-              <p>The flow sends \(p\in\partial\Omega\) to \(\Phi_t(p)=p+tV_0(p)+O(t^2)\). Only the normal component \(f=V_0\mathbin{\cdot}\nu\) changes the domain to first order; the tangential component merely reparametrizes its boundary.</p>
-            </div>
-            <div class="shape-variation-diagrams">
-              <svg viewBox="0 0 440 300" role="img" aria-label="A domain with alternating inward and outward normal arrows prescribed by the function f">
-                <defs><marker id="normalArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
-                <circle class="variation-domain" cx="220" cy="145" r="88"/>
-                <text class="variation-domain-label" x="220" y="151" text-anchor="middle">Ω</text>
-                <g class="variation-normal-field" marker-end="url(#normalArrow)">
-                  <line x1="308" y1="145" x2="322" y2="145"/>
-                  <line x1="264" y1="221.2" x2="257" y2="209.1"/>
-                  <line x1="176" y1="221.2" x2="169" y2="233.3"/>
-                  <line x1="132" y1="145" x2="146" y2="145"/>
-                  <line x1="176" y1="68.8" x2="169" y2="56.7"/>
-                  <line x1="264" y1="68.8" x2="257" y2="80.9"/>
-                </g>
-                <text class="variation-svg-label" x="220" y="278" text-anchor="middle">the normal component fν = (V₀·ν)ν</text>
-                <text class="variation-sign-label" x="326" y="132">f &gt; 0</text>
-                <text class="variation-sign-label" x="267" y="202">f &lt; 0</text>
-              </svg>
-              <div class="variation-map"><span>\(p\longmapsto\Phi_t(p)\)</span><i aria-hidden="true">→</i></div>
-              <svg viewBox="0 0 440 300" role="img" aria-label="The original boundary in a dashed line and the deformed boundary in orange">
-                <path class="variation-deformed-domain" transform="translate(-580 -20)" d="M 902.0 165.0 C 902.0 173.4, 898.9 183.0, 894.6 190.3 C 890.3 197.7, 882.8 204.0, 876.2 209.0 C 869.7 214.0, 861.8 216.9, 855.2 220.2 C 848.7 223.6, 842.8 225.7, 837.0 229.1 C 831.2 232.5, 826.4 236.5, 820.2 240.4 C 814.0 244.4, 807.6 249.8, 800.0 253.0 C 792.4 256.2, 783.2 259.5, 774.7 259.6 C 766.2 259.6, 756.3 257.6, 749.0 253.3 C 741.7 249.1, 735.0 241.6, 730.8 234.2 C 726.6 226.8, 724.8 217.2, 723.8 209.0 C 722.8 200.8, 724.2 192.5, 724.6 185.2 C 724.9 177.9, 726.0 171.7, 726.0 165.0 C 726.0 158.3, 724.9 152.1, 724.6 144.8 C 724.2 137.5, 722.8 129.2, 723.8 121.0 C 724.8 112.8, 726.6 103.2, 730.8 95.8 C 735.0 88.4, 741.7 80.9, 749.0 76.7 C 756.3 72.4, 766.2 70.4, 774.7 70.4 C 783.2 70.5, 792.4 73.8, 800.0 77.0 C 807.6 80.2, 814.0 85.6, 820.2 89.6 C 826.4 93.5, 831.2 97.5, 837.0 100.9 C 842.8 104.3, 848.7 106.4, 855.2 109.8 C 861.8 113.1, 869.7 116.0, 876.2 121.0 C 882.8 126.0, 890.3 132.3, 894.6 139.7 C 898.9 147.0, 902.0 156.6, 902.0 165.0 Z"/>
-                <circle class="variation-original-boundary" cx="220" cy="145" r="88"/>
-                <circle class="variation-point original" cx="308" cy="145" r="3"/>
-                <circle class="variation-point moved" cx="322" cy="145" r="3"/>
-                <line class="variation-distance" x1="308" y1="145" x2="322" y2="145"/>
-                <text class="variation-domain-label" x="220" y="151" text-anchor="middle">Ωₜ</text>
-                <text class="variation-svg-label" x="139" y="48">∂Ω</text>
-                <text class="variation-svg-label accent" x="311" y="74">∂Ωₜ</text>
-                <text class="variation-sign-label" x="315" y="132">t f(p)</text>
-                <text class="variation-svg-label" x="220" y="278" text-anchor="middle">dashed: original · orange: deformed</text>
-              </svg>
-            </div>
-            <figcaption>The orange curve represents the same first-order domain as \(\{p+t f(p)\nu(p):p\in\partial\Omega\}\): the tangential part of \(V_0\) has been discarded because it only changes which boundary parameter labels a point. Positive \(f\) moves outward and negative \(f\) moves inward.</figcaption>
-          </figure>
-          <div class="linearization-core">
-            <div class="linear-theorem-label">
-              <span>Proposition 2.1</span>
-              <small>a necessary spectral condition for deformation</small>
-            </div>
-            <div class="linear-stability-criterion">
-              <h3>A nonradial first-order deformation forces a Dirichlet eigenvalue.</h3>
-              <p>Let \(\Omega\) be rotationally symmetric, and let \((u,\lambda)\) be a radial solution of (1.1). Suppose \(\Omega_t=\Phi_t(\Omega)\) is a smooth family as above and that each \(\Omega_t\) has a Schiffer solution \((u_t,\lambda_t)\) depending smoothly on \(t\), with \((u_0,\lambda_0)=(u,\lambda)\).</p>
-              <p>Let \(w\) be the shape derivative of \(u_t\), and let \(w_\ell\) and \(f_\ell\) denote the angular Fourier components of \(w\) and \(f=V_0\mathbin{\cdot}\nu\) in a mode \(\ell\ge1\). Then</p>
-              <div class="linear-equations tex-display" aria-label="The equation satisfied by a nonradial component of the shape derivative">
-                \[
-                \begin{aligned}
-                -\Delta w_\ell&amp;=\lambda w_\ell &amp;&amp; \text{in }\Omega,\\
-                w_\ell&amp;=0,\qquad \partial_\nu w_\ell=\lambda f_\ell &amp;&amp; \text{on }\partial\Omega.
-                \end{aligned}
-                \]
-                <span class="equation-number">(2.1)</span>
-              </div>
-              <p>If \(f_\ell\not\equiv0\), then \(w_\ell\not\equiv0\). The first two relations in (2.1) therefore say precisely that \(w_\ell\) is a Dirichlet eigenfunction of \(-\Delta\) with eigenvalue \(\lambda\). Consequently, if \(\lambda\) is not in the Dirichlet spectrum in mode \(\ell\), the boundary cannot move to first order in that mode.</p>
-              <p>Thus the absence of a nonradial Dirichlet eigenfunction at \(\lambda\) gives <em>linear stability</em> modulo geometric symmetries. Nonlinear local rigidity requires the additional argument in Proposition 2.2 and Theorem 2.3.</p>
-            </div>
-          </div>
-          <details class="linearization-details">
-            <summary><span>Proof of Proposition 2.1</span><i>expand +</i></summary>
-            <div class="proof-argument">
-              <p><em>Proof.</em> Pull the functions back to the fixed domain by writing \(\widehat u_t=u_t\circ\Phi_t\), and define the shape derivative</p>
-              <div class="tex-display">
-                \[
-                w=\left.\frac d{dt}\right|_{t=0}\widehat u_t-
-                \nabla u\mathbin{\cdot}V_0.
-                \]
-              </div>
-              <p>For \(p\in\partial\Omega\), the identity \(u_t(\Phi_t(p))=1\) gives \(\left.\frac d{dt}\right|_0\widehat u_t=0\). Since \(\nabla_{\partial\Omega}u=0\) and \(f=V_0\mathbin{\cdot}\nu\), it follows that</p>
-              <div class="tex-display">
-                \[
-                w=-f\,\partial_\nu u=0
-                \qquad\text{on }\partial\Omega.
-                \]
-              </div>
-              <p>The shape derivative of the Neumann condition is</p>
-              <div class="tex-display">
-                \[
-                \partial_\nu w+f\,\partial_{\nu\nu}u
-                -\nabla_{\partial\Omega}u\mathbin{\cdot}
-                \nabla_{\partial\Omega}f=0.
-                \]
-              </div>
-              <p>The last term vanishes because \(u=1\) on the boundary. On \(\partial\Omega\),</p>
-              <div class="tex-display">
-                \[
-                \Delta u=\partial_{\nu\nu}u+
-                \kappa\partial_\nu u+\Delta_{\partial\Omega}u
-                =\partial_{\nu\nu}u.
-                \]
-              </div>
-              <p>Using \(-\Delta u=\lambda u\), \(u=1\), and \(\partial_\nu u=0\), we obtain \(\partial_{\nu\nu}u=-\lambda\), and therefore</p>
-              <div class="tex-display">
-                \[
-                \partial_\nu w=\lambda f
-                \qquad\text{on }\partial\Omega.
-                \]
-              </div>
-              <p>Finally, differentiating the equation in the interior gives</p>
-              <div class="tex-display">
-                \[
-                (-\Delta-\lambda)w=\dot\lambda_0u
-                \qquad\text{in }\Omega.
-                \]
-              </div>
-              <p class="proof-end">Because \(u\) is radial, the right-hand side has zero projection onto every angular mode \(\ell\ge1\). Projecting the three identities above gives (2.1). If \(f_\ell\not\equiv0\), then \(\partial_\nu w_\ell=\lambda f_\ell\) implies \(w_\ell\not\equiv0\); hence \(w_\ell\) is a Dirichlet eigenfunction with eigenvalue \(\lambda\). <span class="qed" aria-label="end of proof">□</span></p>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section id="disk-obstruction" class="disk-obstruction">
-        <header class="story-heading light-story-heading">
-          <span class="section-number">02</span>
-          <div><p class="eyebrow">The Schiffer property near a disk</p><h2>Can a Schiffer disk be perturbed?</h2></div>
-        </header>
-        <div class="disk-section-lead">
-          <p>The argument has two inputs and one conclusion. Proposition 2.1 differentiates a moving Schiffer domain and produces a Dirichlet eigenfunction. Proposition 2.2 solves that linearized problem on the disk: Bourget's hypothesis removes every higher angular mode, leaving only dilation and translation. After center and scale are fixed, the linearized operator is invertible, and local rigidity follows.</p>
-        </div>
-        <div class="subsection-heading disk-rigidity-heading">
-          <span>2.2 · classification on the disk</span>
-          <h3>On the disk, the linearized equation has only the geometric solutions.</h3>
-        </div>
-        <div class="disk-rigidity-theorem">
-          <div class="disk-theorem-label">
-            <span>Proposition 2.2</span>
-            <small>classification of the linearized disk problem</small>
-          </div>
-          <div class="disk-theorem-statement">
-            <h3>Every solution of the linearized disk problem is a dilation or a translation.</h3>
-            <p>Let \(D\subset\mathbb R^2\) be the unit disk. Fix \(\rho&gt;0\) with \(J_1(\rho)=0\), and set \(u_0(r)=J_0(\rho r)/J_0(\rho)\) and \(\lambda_0=\rho^2\). Suppose \((f,w,\mu)\) satisfies the equations obtained by differentiating (1.1):</p>
-            <div class="disk-linearized-system tex-display">
-              \[
-              \begin{aligned}
-              (-\Delta-\rho^2)w&amp;=\mu u_0 &&\text{in }D,\\
-              w&amp;=0,\qquad \partial_\nu w=\rho^2f &&\text{on }\partial D.
-              \end{aligned}
-              \]
-            </div>
-            <p>Then its boundary velocity has the form</p>
-            <div class="disk-kernel-equation tex-display">
-              \[
-              f(\theta)=c+a_1\cos\theta+a_2\sin\theta
-              \qquad(c,a_1,a_2\in\mathbb R).
-              \]
-            </div>
-            <p>Conversely, every such velocity is realized by an exact family obtained by dilating and translating the disk. Thus these are exactly the solutions of the linearized shape problem.</p>
-          </div>
-        </div>
-
-        <details class="disk-proof-details proof-details">
-          <summary><span>Proof of Proposition 2.2</span><i>expand +</i></summary>
-          <div class="disk-proof-body">
-        <div class="disk-proof-grid">
-          <article>
-            <span>Radial base solution</span>
-            <p><em>Proof.</em> Every radial solution regular at the origin is a multiple of \(J_0(\rho r)\). The normalization \(u_0=1\) on \(r=1\) gives</p>
-            <div class="tex-display">
-              \[
-              u_0(r)=\frac{J_0(\rho r)}{J_0(\rho)},\qquad \lambda=\rho^2.
-              \]
-            </div>
-            <p>The Neumann condition is</p>
-            <div class="tex-display">
-              \[
-              \partial_r u_0(1)
-              =-\rho\frac{J_1(\rho)}{J_0(\rho)}=0.
-              \]
-            </div>
-            <p>Thus \(J_1(\rho)=0\). Interlacing of the zeros of \(J_0\) and \(J_1\) ensures that \(J_0(\rho)\ne0\), so the normalization is well-defined.</p>
-          </article>
-          <article>
-            <span>Separation of the nonradial modes</span>
-            <p>Write the \(\ell\)-th Fourier component of the linearized field as</p>
-            <div class="tex-display">
-              \[
-              \begin{aligned}
-              w_\ell(r,\theta)&amp;=J_\ell(\rho r)\Phi_\ell(\theta),\\
-              \Phi_\ell(\theta)&amp;=A_\ell\cos(\ell\theta)+B_\ell\sin(\ell\theta),
-              \qquad \ell\ge1.
-              \end{aligned}
-              \]
-            </div>
-            <p>Regularity at \(r=0\) excludes \(Y_\ell\). The Dirichlet condition \(w_\ell=0\) at \(r=1\) gives</p>
-            <div class="tex-display">
-              \[
-              J_\ell(\rho)A_\ell=J_\ell(\rho)B_\ell=0.
-              \]
-            </div>
-            <p>If \(J_\ell(\rho)\ne0\), then \(w_\ell=0\), and the boundary equation in (2.1) gives \(f_\ell=0\). Hence a nonzero shape mode of order \(\ell\) requires the common zero \(J_1(\rho)=J_\ell(\rho)=0\).</p>
-          </article>
-        </div>
-
-        <div class="bourget-theorem">
-          <div class="disk-theorem-label">
-            <span>Bourget–Siegel theorem</span>
-            <small>Bourget's hypothesis, proved by Siegel</small>
-          </div>
-          <div>
-            <h3>Distinct integer-order Bessel functions have no common positive zero.</h3>
-            <div class="tex-display">
-              \[
-              \begin{gathered}
-              m,n\in\mathbb Z_{\ge0},\qquad m\ne n,\qquad \rho&gt;0,\\
-              \Longrightarrow\quad
-              \neg\bigl(J_m(\rho)=J_n(\rho)=0\bigr).
-              \end{gathered}
-              \]
-            </div>
-            <p>Apply the theorem with \(m=1\) and \(n=\ell\). Since the radial Schiffer solution already satisfies \(J_1(\rho)=0\), every angular mode \(\ell\ge2\) vanishes in the linearized shape kernel. The only nonradial modes left are \(\cos\theta\) and \(\sin\theta\).</p>
-            <p class="citation-line">References: <a href="https://dlmf.nist.gov/10.21" target="_blank" rel="noreferrer">DLMF §10.21</a>; Watson, <em>A Treatise on the Theory of Bessel Functions</em>, §15.28; <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>.</p>
-          </div>
-        </div>
-
-        <div class="disk-symmetry-grid">
-          <article>
-            <span>Translations · \(\ell=1\)</span>
-            <p>For \(a\in\mathbb R^2\), translation gives an exact family of Schiffer triples:</p>
-            <div class="tex-display">
-              \[
-              \begin{aligned}
-              \Omega_t&amp;=D+ta,\\
-              u_t(x)&amp;=u_0(x-ta),\\
-              \lambda_t&amp;=\rho^2.
-              \end{aligned}
-              \]
-            </div>
-            <p>Its normal velocity is</p>
-            <div class="tex-display">
-              \[
-              f_a(\theta)=a\cdot(\cos\theta,\sin\theta)
-              =a_1\cos\theta+a_2\sin\theta.
-              \]
-            </div>
-            <p>Thus the entire \(\ell=1\) kernel is exactly the two-dimensional translation orbit.</p>
-          </article>
-          <article>
-            <span>Dilations · \(\ell=0\)</span>
-            <p>For \(c\in\mathbb R\), dilation also gives an exact family:</p>
-            <div class="tex-display">
-              \[
-              \begin{aligned}
-              \Omega_t&amp;=(1+ct)D,\\
-              u_t(x)&amp;=u_0\!\left(\frac{x}{1+ct}\right),\\
-              \lambda_t&amp;=\frac{\rho^2}{(1+ct)^2}.
-              \end{aligned}
-              \]
-            </div>
-            <p>The boundary moves with constant normal velocity \(f_c(\theta)=c\). The eigenvalue changes because the Laplacian scales by inverse length squared. Since \(J_0(\rho)\ne0\), the radial Dirichlet operator \(-\Delta-\rho^2\) is invertible; hence this one-dimensional dilation family exhausts the radial solutions of the linearized system.</p>
-          </article>
-        </div>
-
-        <div class="disk-proof-conclusion">
-          <span>Conclusion of the proof</span>
-          <div>
-            <p>The zeroth Fourier mode of \(f\) is dilation; its first harmonics are translations; and the Bourget–Siegel theorem excludes every higher harmonic. Therefore</p>
-            <div class="tex-display">
-              \[
-              \mathcal K_{\mathrm{shape}}
-              =\underbrace{\operatorname{span}\{1\}}_{\text{dilation}}
-              \oplus
-              \underbrace{\operatorname{span}\{\cos\theta,\sin\theta\}}_{\text{translations}},
-              \]
-              \[
-              \mathcal K_{\mathrm{shape}}\big/
-              \operatorname{span}\{1,\cos\theta,\sin\theta\}
-              =\{0\}.
-              \]
-            </div>
-            <p>Rotations contribute no additional normal mode: their velocity is tangent to the circle, so \(f=0\). This proves that the disk is linearly rigid after quotienting by the translation and dilation symmetries, and that there is no other infinitesimal shape deformation from which to bifurcate. <span class="qed" aria-label="end of proof">□</span></p>
-          </div>
-        </div>
-          </div>
-        </details>
-
-        <div class="disk-rigidity-theorem disk-local-rigidity-theorem">
-          <div class="disk-theorem-label">
-            <span>Theorem 2.3</span>
-            <small>local rigidity of the Schiffer disk</small>
-          </div>
-          <div class="disk-theorem-statement">
-            <h3>There are no nontrivial smooth perturbations of a Schiffer disk.</h3>
-            <p>Fix \(0&lt;\alpha&lt;1\) and the radial Schiffer solution \((D,u_0,\rho^2)\) above. In a sufficiently small \(C^{2,\alpha}\) neighborhood of this triple, every Schiffer domain is a translated and dilated disk. Equivalently, after fixing the area and barycenter, the disk is isolated.</p>
-            <p class="theorem-short-proof"><em>Proof.</em> Fixing the area removes the constant boundary mode, and fixing the barycenter removes \(\cos\theta\) and \(\sin\theta\). Proposition 2.2 says that the normalized linearization has zero kernel. This boundary linearization is elliptic Fredholm of index zero, so it is invertible on the normalized slice. The implicit-function theorem therefore makes the disk the unique nearby normalized solution. Undoing the normalization recovers exactly the dilation and translation families displayed in the proof of Proposition 2.2. <span class="qed" aria-label="end of proof">□</span></p>
-          </div>
-        </div>
-      </section>
-
-      <section id="borrow-flexibility" class="borrow-flexibility">
+<section id="borrow-flexibility" class="borrow-flexibility">
         <header class="story-heading">
           <span class="section-number">03</span>
           <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the spectral coincidence excluded on the disk.</h2></div>
         </header>
-        <div class="borrow-lead"><p>Proposition 2.1 tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The figures below vary the branch parameter <span class="formula">\(s\)</span> slowly, beginning at the symmetric domain <span class="formula">\(s=0\)</span>.</p></div>
+        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The figures below vary the branch parameter <span class="formula">\(s\)</span> slowly, beginning at the symmetric domain <span class="formula">\(s=0\)</span>.</p></div>
         <div class="world-cards">
           <article>
             <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated compact domain on a three-dimensional flat cylinder whose two boundary loops vary with the bifurcation parameter s">
@@ -789,7 +517,7 @@
           <div class="cylinder-seed-copy">
             <p class="eyebrow">5.1.1 · separation of variables</p>
             <h3>The kernel of the linearized problem is explicit.</h3>
-            <p>Let <span class="formula">\(\mathcal C_-=(-\infty,0]\times S^1\)</span> and <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span>. The undeformed Schiffer solution is independent of <span class="formula">\(\theta\)</span>. By Proposition 2.1, a first-order deformation of the boundary must come from a nonradial Dirichlet solution at the same eigenvalue. Separation of variables gives the two functions below.</p>
+            <p>Let <span class="formula">\(\mathcal C_-=(-\infty,0]\times S^1\)</span> and <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span>. The undeformed Schiffer solution is independent of <span class="formula">\(\theta\)</span>. By the linearization above, a first-order deformation of the boundary must come from a nonradial Dirichlet solution at the same eigenvalue. Separation of variables gives the two functions below.</p>
           </div>
 
           <div class="cylinder-mode-pair">

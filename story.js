@@ -28,8 +28,6 @@
     ".intro",
     "#introduction",
     ".paper-reading-guide",
-    "#question",
-    "#disk-obstruction",
     "#borrow-flexibility",
     "#geometric-escape",
     "#experiment",
@@ -44,19 +42,6 @@
     const section = select(selector);
     if (main && section) main.appendChild(section);
   });
-
-  // Section 2 places the boundary variation before the disk classification.
-  const diskSection = select("#disk-obstruction");
-  const linearizationSection = select(".linearization-section");
-  const diskRigidityHeading = select(".disk-rigidity-heading");
-  if (diskSection && linearizationSection && diskRigidityHeading) {
-    diskSection.insertBefore(linearizationSection, diskRigidityHeading);
-    const variationFigure = select(".shape-variation-figure");
-    const linearizationCore = select(".linearization-core");
-    if (variationFigure && linearizationCore) {
-      linearizationSection.insertBefore(linearizationCore, variationFigure);
-    }
-  }
 
   // Subsection 5.1 follows the usual mathematical order: theorem, numerical
   // illustration, and then the derivation of the linear and quadratic terms.

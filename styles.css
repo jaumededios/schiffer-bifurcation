@@ -73,8 +73,6 @@ a { color: inherit; }
 .katex-inline-sans .mord:not([class*="math"]) { font-family: KaTeX_SansSerif, var(--sans); }
 
 .intro { order: 0; }
-.story-question { order: 1; padding: 105px 7vw 0; background: var(--paper); }
-.disk-obstruction { order: 2; padding: 105px 7vw 100px; color: var(--paper); background: var(--ink); }
 .borrow-flexibility { order: 3; padding: 110px 7vw; background: var(--paper-2); }
 .geometric-escape { order: 4; padding: 105px 7vw 0; color: var(--paper); background: var(--ink); }
 #experiment { order: 5; }
@@ -86,30 +84,10 @@ a { color: inherit; }
 
 .story-heading { display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: start; gap: 28px; }
 .story-heading h2 { max-width: 1000px; }
-.question-grid { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(420px,.88fr); gap: 72px; align-items: start; margin: 54px 0 0 70px; padding-bottom: 74px; }
-.question-copy { max-width: 720px; color: var(--muted); font-size: 15px; line-height: 1.82; }
-.question-copy p:first-child { margin-top: 0; }
 .equation-system { position: relative; min-height: 250px; padding: 50px 38px 29px; color: var(--muted); border: 1px solid var(--line); background: rgba(19,33,38,.025); }
 .system-label { position: absolute; left: 20px; top: 20px; color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
 .equation-number { color: var(--muted); font: 11px var(--mono); white-space: nowrap; }
 .equation-system > .equation-number { position: absolute; right: 20px; top: 20px; }
-.katex-system { display: grid; min-height: 126px; place-items: center; overflow-x: auto; }
-.katex-system .katex-display { margin: 0; }
-.katex-system .katex { font-size: 1.2em; }
-.sans-display-math .katex .mathnormal,
-.sans-display-math .katex .mathrm,
-.sans-display-math .katex .mainrm,
-.sans-display-math .katex .mord:not([class*="math"]) { font-family: KaTeX_SansSerif, var(--sans); }
-.hero-equation > p { margin: 28px 0 0; padding-top: 18px; color: var(--muted); border-top: 1px solid var(--line); font: 11px var(--mono); }
-.disk-section-lead { max-width: 910px; margin: 42px 0 0 70px; color: rgba(241,238,229,.6); font-size: 14px; line-height: 1.76; }
-.disk-section-lead p { margin: 0; }
-.linearization-section { margin: 62px 0 0; padding: 0; color: var(--paper); background: transparent; }
-.linearization-intro { display: grid; grid-template-columns: minmax(280px,.7fr) minmax(420px,1.3fr); gap: 60px; align-items: start; }
-.linearization-intro .eyebrow { grid-column: 1/-1; margin-bottom: -26px; }
-.linearization-intro h3 { margin: 0; max-width: 620px; font: 300 38px/1.06 var(--serif); }
-.linearization-explanation { max-width: 720px; color: rgba(241,238,229,.57); font-size: 12px; line-height: 1.8; }
-.linearization-explanation p { margin: 0 0 15px; }
-.linearization-explanation p:last-child { margin-bottom: 0; }
 .shape-variation-figure { max-width: 930px; margin: 32px auto 0; border: 1px solid var(--line-light); }
 .shape-variation-heading { display: grid; grid-template-columns: minmax(230px,.7fr) minmax(420px,1.3fr); gap: 50px; padding: 24px 28px; border-bottom: 1px solid var(--line-light); }
 .shape-variation-heading > span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
@@ -133,23 +111,9 @@ a { color: inherit; }
 .variation-point.moved { fill: var(--orange); }
 .variation-distance { stroke: var(--orange); stroke-width: 1.4; }
 .shape-variation-figure figcaption { margin: 0; padding: 18px 28px; color: rgba(241,238,229,.46); border-top: 1px solid var(--line-light); font-size: 11px; line-height: 1.7; }
-.linearization-core { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; align-items: start; margin-top: 34px; padding: 38px; border: 1px solid var(--line-light); border-top: 1px solid var(--orange); background: rgba(255,255,255,.018); }
-.linear-equations, .theorem-system { min-width: 0; overflow-x: auto; color: var(--paper); }
-.linear-equations { max-width: 840px; margin: 22px 0 24px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
-.linear-equations .katex-display, .theorem-system .katex-display { margin: 0; text-align: left; }
-.linear-equations .katex, .theorem-system .katex { font-size: 1.08em; }
-.linear-theorem-label { display: flex; flex-direction: column; gap: 8px; }
-.linear-theorem-label span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
-.linear-theorem-label small { max-width: 165px; color: var(--muted); font: 11px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .065em; }
-.linear-stability-criterion { min-width: 0; }
-.linear-stability-criterion h3 { max-width: 780px; margin: 0 0 20px; font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
-.linear-stability-criterion p { margin: 0 0 15px; color: rgba(241,238,229,.55); font-size: 11px; line-height: 1.78; }
-.linear-stability-criterion p:last-child { margin-bottom: 0; }
-.linearization-details { margin-top: 28px; border-top: 1px solid var(--line-light); }
-.linearization-details summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.linearization-details summary::-webkit-details-marker { display: none; }
-.linearization-details summary i { color: var(--orange); font-style: normal; }
-.linearization-details[open] summary i { font-size: 0; }.linearization-details[open] summary i::after { content: "collapse −"; font-size: 11px; }
+.theorem-system { min-width: 0; overflow-x: auto; color: var(--paper); }
+.theorem-system .katex-display { margin: 0; text-align: left; }
+.theorem-system .katex { font-size: 1.08em; }
 .proof-argument { max-width: 900px; margin: 0 auto; padding: 38px 0 48px; }
 .proof-argument p { margin: 0 0 18px; color: var(--muted); font-size: 11px; line-height: 1.86; }
 .proof-argument p > em:first-child { color: var(--ink); font: 400 17px var(--serif); }
@@ -159,46 +123,7 @@ a { color: inherit; }
 .proof-argument .proof-end { margin-bottom: 0; }
 .qed { float: right; margin-left: 18px; color: var(--ink); font: 17px var(--serif); }
 
-.subsection-heading { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; align-items: baseline; }
-.subsection-heading > span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
-.subsection-heading h3 { max-width: 820px; margin: 0; font: 300 38px/1.05 var(--serif); letter-spacing: -.018em; }
-.disk-rigidity-heading { margin-top: 74px; padding-top: 48px; border-top: 1px solid var(--line-light); }
-
 .light-story-heading .section-number { border-color: var(--paper); }
-.disk-rigidity-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 42px; margin-top: 52px; padding: 36px; border: 1px solid var(--line-light); }
-.disk-theorem-label { display: flex; flex-direction: column; gap: 8px; }
-.disk-theorem-label span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
-.disk-theorem-label small { max-width: 165px; color: rgba(241,238,229,.4); font: 11px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .065em; }
-.disk-theorem-statement { max-width: 940px; }
-.disk-theorem-statement h3, .bourget-theorem h3 { max-width: 790px; margin: 0; font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
-.disk-theorem-statement p, .disk-proof-grid p, .bourget-theorem p, .disk-symmetry-grid p, .disk-proof-conclusion p { color: rgba(241,238,229,.54); font-size: 11px; line-height: 1.76; }
-.disk-theorem-statement p { max-width: 820px; margin: 18px 0 0; }
-.disk-kernel-equation { margin: 20px 0; padding: 17px 20px; border-left: 2px solid var(--orange); background: rgba(255,255,255,.025); }
-.disk-kernel-equation .katex-display { text-align: left; }
-.disk-proof-body { max-width: 900px; margin: 0 auto; padding: 0 0 48px; }
-.disk-proof-grid, .disk-symmetry-grid { display: block; border: 0; }
-.disk-proof-grid article, .disk-symmetry-grid article { min-width: 0; padding: 34px 0 0; border: 0; }
-.disk-proof-grid article + article, .disk-symmetry-grid article + article { margin-top: 34px; padding-top: 34px; border-top: 1px solid var(--line-light); }
-.disk-proof-grid article > span, .disk-symmetry-grid article > span, .disk-proof-conclusion > span { display: block; margin-bottom: 20px; color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.disk-proof-grid p { max-width: 820px; margin: 14px 0; }
-.disk-proof-body .tex-display { max-width: 850px; margin: 18px 0; padding: 0; border: 0; }
-.disk-proof-body .katex { font-size: .9em; }
-.bourget-theorem { display: block; margin-top: 38px; padding: 38px 0 0; border: 0; border-top: 1px solid var(--line-light); background: transparent; }
-.bourget-theorem .disk-theorem-label { margin-bottom: 22px; }
-.bourget-theorem > div:last-child { min-width: 0; }
-.bourget-theorem .tex-display { max-width: 760px; margin: 20px 0; padding: 0; border: 0; }
-.bourget-theorem p { max-width: 850px; margin: 14px 0 0; }
-.bourget-theorem .citation-line { margin-top: 21px; padding-top: 16px; border-top: 1px solid var(--line-light); font-size: 11px; }
-.disk-symmetry-grid { margin-top: 34px; padding-top: 1px; border-top: 1px solid var(--line-light); }
-.disk-symmetry-grid p { max-width: 630px; margin: 13px 0; }
-.disk-symmetry-grid .tex-display { margin: 13px 0; padding: 0; border: 0; }
-.disk-symmetry-grid .katex { font-size: .85em; }
-.disk-proof-conclusion { display: block; margin-top: 38px; padding: 38px 0 0; border: 0; border-top: 1px solid var(--line-light); }
-.disk-proof-conclusion > span { margin: 0; }
-.disk-proof-conclusion > div { min-width: 0; }
-.disk-proof-conclusion p { max-width: 900px; margin: 18px 0 15px; }
-.disk-proof-conclusion .tex-display { max-width: 850px; margin: 18px 0 22px; padding: 0; border: 0; background: transparent; }
-.disk-proof-conclusion .katex { font-size: .9em; }
 .proof-details { margin: 0; border: 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
 .proof-details > summary { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; color: rgba(241,238,229,.72); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .proof-details > summary::-webkit-details-marker { display: none; }
@@ -206,12 +131,7 @@ a { color: inherit; }
 .proof-details[open] > summary { border-bottom: 1px solid var(--line-light); }
 .proof-details[open] > summary i { font-size: 0; }
 .proof-details[open] > summary i::after { content: "collapse −"; font-size: 11px; }
-.disk-proof-body > :first-child { border-top: 0; }
-.disk-proof-body > :last-child { border-bottom: 0; }
-.disk-local-rigidity-theorem { margin-top: 42px; border-top-color: var(--orange); }
-.disk-theorem-statement .theorem-short-proof { display: block; margin: 25px 0 0; padding-top: 23px; border-top: 1px solid var(--line-light); }
-.theorem-short-proof > em:first-child { color: var(--ink); font: 400 16px var(--serif); }
-.citation-line a, .literature-link { color: var(--orange); text-underline-offset: 3px; }
+.literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }
 .world-cards { display: grid; grid-template-columns: 1fr 1fr; margin-left: 70px; border: 1px solid var(--line); }
@@ -714,8 +634,6 @@ footer a { text-decoration: none; }
 /* A single warm paper surface carries the exposition. Dark fields are reserved
    for numerical canvases, where they are part of the common colour scale. */
 .intro,
-.story-question,
-.disk-obstruction,
 .borrow-flexibility,
 .geometric-escape,
 .experiment,
@@ -726,21 +644,17 @@ footer a { text-decoration: none; }
 .abundance-experiment,
 body > footer { color: var(--ink); background: var(--paper); }
 
-:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) { --line-light: var(--line); }
-:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(h2, h3, h4, strong, .tex-display, .formula) { color: var(--ink); }
-:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(p, li, summary, label, .control-value) { color: var(--muted); }
-:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(.play-button, button:not(.tab-button)) { color: var(--ink); border-color: var(--line); }
-:is(.disk-obstruction, .geometric-escape, .experiment, .debye-experiment, .abundance-experiment) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(19,33,38,.14)); }
+:is(.geometric-escape, .experiment, .debye-experiment, .abundance-experiment) { --line-light: var(--line); }
+:is(.geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(h2, h3, h4, strong, .tex-display, .formula) { color: var(--ink); }
+:is(.geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(p, li, summary, label, .control-value) { color: var(--muted); }
+:is(.geometric-escape, .experiment, .debye-experiment, .abundance-experiment) :is(.play-button, button:not(.tab-button)) { color: var(--ink); border-color: var(--line); }
+:is(.geometric-escape, .experiment, .debye-experiment, .abundance-experiment) input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(19,33,38,.14)); }
 
-:is(.shape-variation-figure, .linearization-core, .disk-rigidity-theorem, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
+:is(.shape-variation-figure, .cylinder-theorem, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .angular-quotient-note, .debye-conclusion, .near-integer-theorem, .abundance-conclusion, .abundance-examples) { background: rgba(255,255,255,.16); }
 
 .light-story-heading .section-number { color: var(--ink); border-color: var(--ink); }
-.disk-section-lead,
-.linearization-explanation,
-.shape-variation-heading p,
-.linearization-core > div > p,
+.story-intro .shape-variation-heading p,
 .theorem-statement p,
-.disk-proof-conclusion p,
 .geometry-lead,
 .experiment-story-lead,
 .cylinder-spectral-seed,
@@ -752,17 +666,16 @@ body > footer { color: var(--ink); background: var(--paper); }
 .near-integer-theorem p,
 .abundance-conclusion p { color: var(--muted); }
 
-.linear-equations,
 .theorem-system,
 .abundance-conclusion .tex-display { color: var(--ink); }
 .proof-details summary { color: var(--ink); }
-.disk-obstruction .linearization-section { color: var(--ink); }
-.disk-obstruction :is(.variation-map, .shape-variation-figure figcaption, .disk-theorem-label small) { color: var(--muted); }
-.disk-obstruction .variation-domain { fill: rgba(19,33,38,.025); stroke: rgba(19,33,38,.82); }
-.disk-obstruction .variation-domain-label { fill: rgba(19,33,38,.82); }
-.disk-obstruction .variation-svg-label { fill: rgba(19,33,38,.5); }
-.disk-obstruction .variation-original-boundary { stroke: rgba(19,33,38,.48); }
-.disk-obstruction .variation-point.original { fill: var(--ink); }
+
+.story-intro :is(.variation-map, .shape-variation-figure figcaption) { color: var(--muted); }
+.story-intro .variation-domain { fill: rgba(19,33,38,.025); stroke: rgba(19,33,38,.82); }
+.story-intro .variation-domain-label { fill: rgba(19,33,38,.82); }
+.story-intro .variation-svg-label { fill: rgba(19,33,38,.5); }
+.story-intro .variation-original-boundary { stroke: rgba(19,33,38,.48); }
+.story-intro .variation-point.original { fill: var(--ink); }
 
 .geometric-escape .geometry-lead span { color: var(--ink); }
 .geometric-escape .geometry-stages button { color: var(--muted); }
@@ -806,10 +719,6 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
 
 @media (max-width: 1000px) {
   .intro h1 { font-size: clamp(65px, 13vw, 120px); }
-  .question-grid { margin-left: 0; gap: 42px; }
-  .linearization-intro, .linearization-core { gap: 35px; }
-  .linearization-core { padding: 32px; }
-  .disk-rigidity-theorem { grid-template-columns: 160px minmax(0,1fr); gap: 28px; }
   .world-cards { grid-template-columns: 1fr; margin-left: 0; }
   .world-cards article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .world-cards article:last-child { border-bottom: 0; }
@@ -850,33 +759,15 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .intro { padding: 56px 24px 68px; }
   .intro h1 { margin: 54px 0 42px; font-size: clamp(42px,12vw,52px); line-height: .94; }
   .intro-bottom p { max-width: none; }
-  .story-question, .borrow-flexibility { padding: 80px 24px; }
-  .disk-obstruction { padding: 80px 24px; }
+  .borrow-flexibility { padding: 80px 24px; }
   .geometric-escape { padding: 80px 18px 0; }
   .story-heading { grid-template-columns: 34px minmax(0,1fr); gap: 20px; }
-  .question-grid { grid-template-columns: 1fr; margin-top: 45px; padding-bottom: 60px; }
   .equation-system { min-height: 260px; padding: 54px 18px 30px; }
-  .katex-system .katex { font-size: .98em; }
-  .disk-section-lead { margin-left: 0; }
-  .linearization-section { margin: 52px 0 0; padding: 0; }
-  .linearization-intro, .linearization-core { grid-template-columns: 1fr; }
-  .linearization-intro .eyebrow { margin-bottom: -13px; }
-  .linearization-intro h3 { font-size: 31px; }
   .shape-variation-heading { grid-template-columns: 1fr; gap: 12px; }
   .shape-variation-diagrams { grid-template-columns: 1fr; }
   .shape-variation-diagrams svg:first-child, .shape-variation-diagrams .variation-map { display: none; }
   .shape-variation-diagrams svg:last-child { height: 185px; border: 0; }
-  .linearization-core { margin-top: 38px; padding: 25px 20px; }
-  .linear-theorem-label { padding-bottom: 22px; border-bottom: 1px solid var(--line-light); }
   .proof-argument { padding: 32px 0 40px; }
-  .subsection-heading { grid-template-columns: 1fr; gap: 14px; }
-  .subsection-heading h3 { font-size: 31px; }
-  .disk-rigidity-heading { margin-top: 58px; padding-top: 38px; }
-  .disk-rigidity-theorem { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 27px 22px; }
-  .disk-theorem-label small { max-width: none; }
-  .disk-proof-grid article, .disk-symmetry-grid article { padding-top: 27px; }
-  .disk-theorem-statement h3, .bourget-theorem h3 { font-size: 29px; }
-  .disk-theorem-statement .katex, .bourget-theorem .katex, .disk-proof-conclusion .katex { font-size: .82em; }
   .proof-details > summary { padding: 22px; }
   .borrow-lead, .world-cards, .borrow-conclusion { margin-left: 0; }
   .world-cards { grid-template-columns: 1fr; }
@@ -1032,10 +923,7 @@ dialog p:not(.eyebrow) {
   line-height: 1.78;
 }
 
-:is(
-  .intro-bottom,
-  .question-copy,
-  .disk-section-lead,
+:is(.intro-bottom,
   .borrow-lead,
   .geometry-lead,
   .proof-strategy-lead,
@@ -1052,45 +940,37 @@ dialog p:not(.eyebrow) {
   line-height: 1.76;
 }
 
-:is(
-  .control-block,
+:is(.control-block,
   .modes-control-block,
   .collar-field-control-block,
   .debye-control-block,
   .abundance-control-block
 ) p:not(.eyebrow),
-:is(
-  .shape-variation-heading,
+:is(.shape-variation-heading,
   .shape-variation-figure,
   .collar-field-laboratory
 ) :is(p, figcaption),
-:is(
-  .formula-note,
+:is(.formula-note,
   .phase-family-note,
-  .abundance-provenance,
-  .citation-line
-) {
+  .abundance-provenance) {
   font-size: var(--type-caption) !important;
   line-height: 1.72;
 }
 
-:is(
-  .control-label,
+:is(.control-label,
   .control-heading,
   .play-button,
   .view-button,
   .collar-trig-switch button,
   .secondary-controls summary,
   .proof-details > summary,
-  .linearization-details summary,
   .method-button,
   .site-toc a
 ) {
   font-size: var(--type-control) !important;
 }
 
-:is(
-  .solver-readout,
+:is(.solver-readout,
   .crossing-card,
   .modes-status,
   .phase-story-readout,
@@ -1104,7 +984,6 @@ dialog p:not(.eyebrow) {
 .formula,
 .katex { font-size: 1em !important; }
 .katex-display > .katex { font-size: var(--type-math) !important; }
-.katex-system .katex { font-size: 1.18em !important; }
 :is(.world-mode-pair, .cylinder-mode-pair) { overflow-x: auto; }
 
 .abundance-examples-table thead th { font-size: var(--type-label); }
@@ -1177,6 +1056,8 @@ dialog p:not(.eyebrow) {
 }
 
 /* The movable disk over cos(x1), at the end of the introduction's first part. */
+.intro-variation-figure { max-width: 900px; margin: 44px 0 0 70px; }
+@media (max-width: 1000px) { .intro-variation-figure { margin-left: 0; } }
 .pompeiu-figure { max-width: 790px; margin: 48px 0 0 70px; padding: 0; }
 .pompeiu-figure figcaption { max-width: 740px; margin-bottom: 22px; }
 .pompeiu-figure figcaption p:last-child { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
