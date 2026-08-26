@@ -108,6 +108,25 @@
           </div>
         </details>
 
+
+        <figure class="pompeiu-figure" id="pompeiuFigure">
+          <figcaption>
+            <p class="eyebrow">Move the disk</p>
+            <p>The colour is \(\cos(x_1)\), on the same scale the numerical figures use further down. Choose a radius, then drag the disk anywhere in the plane; the number below is its integral over the disk.</p>
+          </figcaption>
+          <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
+            <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false">small &middot; r = 1.2</button>
+            <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true">r = 3.8317&hellip; &middot; zero of J<sub>1</sub></button>
+            <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false">large &middot; r = 5.4236&hellip;</button>
+          </div>
+          <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk over the field cosine of x one"></canvas>
+          <div class="pompeiu-readout">
+            <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
+            <strong id="pompeiuValue">0.000</strong>
+            <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
+          </div>
+        </figure>
+
         <div class="intro-copy intro-copy-wide">
           <h3>Schiffer asked a question regarding Neumann eigenfunctions of the Laplacian.</h3>
           <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions (the value of the unknown at the boundary) or Neumann boundary conditions (the normal derivative, or flux, at the boundary). Schiffer, in the 50s, wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
@@ -2013,5 +2032,6 @@
     <script src="../app.js"></script>
     <script src="../story.js"></script>
     <script src="../abundance.js"></script>
+    <script src="../pompeiu.js"></script>
   </body>
 </html>
