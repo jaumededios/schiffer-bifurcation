@@ -375,498 +375,266 @@
     context.restore();
   }
 
+  // One material sheet is used from the selected planar sector to the final
+  // planar lift. Its material coordinates are radial∈[0,1] and angular∈[-1,1].
+  // Changing `fold`, `tip`, and `wave` changes only the embedding of those
+  // points, so no renderer handoff can move the surface by a pixel.
+  function geometrySheetState(width, height, options = {}) {
+    const tip = options.tip ?? width * .16;
+    const right = options.right ?? width * .84;
+    const surfaceLeft = options.surfaceLeft ?? Math.max(-width * .12, tip);
+    return {
+      tip,
+      right,
+      length: right - tip,
+      cy: height * .54,
+      half: options.half ?? Math.min(118, height * .23),
+      fold: options.fold ?? 1,
+      flatOpening: options.flatOpening ?? Math.PI / 28,
+      wave: options.wave ?? 0,
+      rimDepth: 10,
+      radialStart: Math.max(0, Math.min(.985, (surfaceLeft - tip) / (right - tip))),
+    };
+  }
+
+  function geometrySheetPoint(sheet, radial, angular, deformed = true) {
+    const theta = Math.PI * angular;
+    const wall = deformed ? sheet.wave * landingWall(theta + GEOMETRY_PROFILE_PHASE) : 0;
+    const materialRadius = radial * (1 - wall / 28);
+    const flatAngle = sheet.flatOpening * angular;
+    const flatX = sheet.tip + materialRadius * sheet.length * Math.cos(flatAngle);
+    const flatY = sheet.cy + materialRadius * sheet.length * Math.sin(flatAngle);
+    const foldedX = sheet.tip + materialRadius * (sheet.length + sheet.rimDepth * Math.cos(theta));
+    const foldedY = sheet.cy + materialRadius * sheet.half * Math.sin(theta);
+    return {
+      x: lerp(flatX, foldedX, sheet.fold),
+      y: lerp(flatY, foldedY, sheet.fold),
+    };
+  }
+
+  function geometryStripColor(angular, depth, fold) {
+    const value = Math.cos(Math.PI * angular + GEOMETRY_PROFILE_PHASE);
+    const alpha = .2 + .1 * Math.abs(value) + .055 * fold * Math.max(0, depth);
+    return value >= 0
+      ? `rgba(255,116,73,${alpha})`
+      : `rgba(77,162,163,${alpha + .015})`;
+  }
+
+  function drawGeometrySheet(context, sheet, options = {}) {
+    const opacity = options.opacity ?? 1;
+    if (opacity <= .0001) return;
+    const seamOpacity = options.seamOpacity ?? 1;
+    const stripCount = 40;
+    const strips = [];
+    for (let index = 0; index < stripCount; index++) {
+      const a0 = -1 + 2 * index / stripCount;
+      const a1 = -1 + 2 * (index + 1) / stripCount;
+      strips.push({ a0, a1, depth: Math.cos(Math.PI * (a0 + a1) / 2) });
+    }
+    strips.sort((left, right) => left.depth - right.depth);
+
+    context.save();
+    context.globalAlpha *= opacity;
+    strips.forEach((strip) => {
+      const p00 = geometrySheetPoint(sheet, sheet.radialStart, strip.a0);
+      const p10 = geometrySheetPoint(sheet, 1, strip.a0);
+      const p11 = geometrySheetPoint(sheet, 1, strip.a1);
+      const p01 = geometrySheetPoint(sheet, sheet.radialStart, strip.a1);
+      context.beginPath();
+      context.moveTo(p00.x, p00.y); context.lineTo(p10.x, p10.y);
+      context.lineTo(p11.x, p11.y); context.lineTo(p01.x, p01.y);
+      context.closePath();
+      context.fillStyle = geometryStripColor((strip.a0 + strip.a1) / 2, strip.depth, sheet.fold);
+      context.fill();
+    });
+
+    for (let index = 1; index < 12; index++) {
+      const angular = -1 + 2 * index / 12;
+      const start = geometrySheetPoint(sheet, sheet.radialStart, angular);
+      const end = geometrySheetPoint(sheet, 1, angular);
+      context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
+      context.strokeStyle = index % 2 ? "rgba(241,238,229,.13)" : "rgba(77,162,163,.28)";
+      context.lineWidth = .8; context.stroke();
+    }
+
+    for (let radialIndex = 1; radialIndex <= 7; radialIndex++) {
+      const radial = lerp(sheet.radialStart, 1, radialIndex / 7);
+      context.beginPath();
+      for (let index = 0; index <= 160; index++) {
+        const point = geometrySheetPoint(sheet, radial, -1 + 2 * index / 160);
+        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.28)" : "rgba(241,238,229,.17)";
+      context.lineWidth = radialIndex === 7 ? 1.25 : .8; context.stroke();
+    }
+
+    if (sheet.wave > .001) {
+      context.beginPath();
+      for (let index = 0; index <= 280; index++) {
+        const point = geometrySheetPoint(sheet, 1, -1 + 2 * index / 280, false);
+        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = `rgba(77,162,163,${.7 * sheet.wave})`;
+      context.setLineDash([4, 5]); context.lineWidth = 1.2; context.stroke(); context.setLineDash([]);
+    }
+
+    context.beginPath();
+    for (let index = 0; index <= 400; index++) {
+      const point = geometrySheetPoint(sheet, 1, -1 + 2 * index / 400);
+      if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
+    }
+    context.strokeStyle = colors.paper; context.lineWidth = 2.4;
+    context.shadowColor = sheet.wave > .001 ? colors.orange : colors.cyan;
+    context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
+
+    if (seamOpacity > .001) {
+      [-1, 1].forEach((angular) => {
+        const start = geometrySheetPoint(sheet, sheet.radialStart, angular);
+        const end = geometrySheetPoint(sheet, 1, angular);
+        context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
+        context.strokeStyle = `rgba(77,162,163,${seamOpacity})`;
+        context.lineWidth = 2.2; context.stroke();
+      });
+    }
+    context.restore();
+  }
+
   function drawFoldingSector(context, width, height, amount) {
     const t = Math.max(0, Math.min(1, amount));
     const zoom = ease(t / .5);
     const discard = ease((t - .3) / .25);
     const materialOpacity = ease((t - .12) / .2);
-    const fold = ease((t - .57) / .43);
+    const fold = ease((t - .55) / .45);
     const fullDiskRadius = Math.min(width * .27, height * .34);
-    const diskCx = lerp(width * .5, width * .15, zoom);
-    const diskRadius = lerp(fullDiskRadius, width * .69, zoom);
-    const diskOpacity = 1 - discard;
+    const diskCx = lerp(width * .5, width * .16, zoom);
+    const diskRadius = lerp(fullDiskRadius, width * .68, zoom);
+    const targetHalf = Math.min(118, height * .23);
+    const flatOpening = lerp(Math.PI / 28, Math.atan2(targetHalf, width * .68), zoom);
 
-    // Magnify the entire disk about the selected period. Only after most of
-    // the circle has moved outside the frame do the repeated copies fade. The
-    // highlighted sector below occupies the same material points throughout.
-    if (diskOpacity > .001) {
+    if (discard < .999) {
       drawNfoldDisk(context, width, height, {
         cx: diskCx,
+        cy: height * .54,
         radius: diskRadius,
         selection: 1,
-        opacity: diskOpacity,
+        divisions: 1,
+        opacity: 1 - discard,
         showCaption: false,
       });
     }
 
-    const cy = height * .54;
-    const targetHalf = Math.min(118, height * .23);
-    const tip = diskCx;
-    const length = diskRadius;
-    const half = lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, zoom);
-    const depthProjection = .1;
-
-    function sheetPoint(radial, angular) {
-      const flatY = radial * half * angular;
-      // At fold=1, angular in [-1,1] traverses a full circle. Its two
-      // endpoints agree, so the two radial sides have become one seam.
-      const coneY = radial * half * Math.sin(Math.PI * angular);
-      const coneZ = radial * half * Math.cos(Math.PI * angular);
-      const y = lerp(flatY, coneY, fold);
-      const z = fold * coneZ;
-      return {
-        x: tip + radial * length + depthProjection * z,
-        y: cy + y,
-        z: z,
-      };
-    }
-
-    context.save();
-    context.globalAlpha *= materialOpacity;
-
-    // Draw the angular strips back-to-front. At the start they partition one
-    // flat triangle; at the end they are the visible faces of one cone.
-    const strips = [];
-    const stripCount = 30;
-    for (let index = 0; index < stripCount; index++) {
-      const a0 = -1 + 2 * index / stripCount;
-      const a1 = -1 + 2 * (index + 1) / stripCount;
-      strips.push({ a0: a0, a1: a1, depth: Math.cos(Math.PI * (a0 + a1) / 2) });
-    }
-    strips.sort((leftStrip, rightStrip) => leftStrip.depth - rightStrip.depth);
-    strips.forEach((strip, index) => {
-      const p0 = sheetPoint(0, strip.a0);
-      const p1 = sheetPoint(1, strip.a0);
-      const p2 = sheetPoint(1, strip.a1);
-      context.beginPath();
-      context.moveTo(p0.x, p0.y);
-      context.lineTo(p1.x, p1.y);
-      context.lineTo(p2.x, p2.y);
-      context.closePath();
-      const warmth = (strip.a0 + strip.a1 + 2) / 4;
-      context.fillStyle = warmth > .5
-        ? `rgba(255,116,73,${.16 + .16 * strip.depth * fold + .08 * zoom})`
-        : `rgba(77,162,163,${.18 + .12 * strip.depth * fold + .08 * zoom})`;
-      context.fill();
-      if (index % 3 === 0) {
-        context.strokeStyle = "rgba(241,238,229,.055)";
-        context.lineWidth = .6;
-        context.stroke();
-      }
+    const sheet = geometrySheetState(width, height, {
+      tip: diskCx,
+      right: diskCx + diskRadius,
+      half: lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, zoom),
+      flatOpening,
+      fold,
     });
-
-    // Radial generators stay attached to the same material points throughout
-    // the fold, making the wrapping motion legible.
-    for (let index = 1; index < 12; index++) {
-      const angular = -1 + 2 * index / 12;
-      const start = sheetPoint(0, angular);
-      const end = sheetPoint(1, angular);
-      context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
-      context.strokeStyle = index % 2
-        ? "rgba(241,238,229,.13)"
-        : "rgba(77,162,163,.28)";
-      context.lineWidth = .8; context.stroke();
-    }
-
-    // Lines transverse to the generators begin as straight segments and curl
-    // into closed ellipses. This is the most direct visual cue for folding.
-    for (let radialIndex = 1; radialIndex <= 7; radialIndex++) {
-      const radial = radialIndex / 7;
-      context.beginPath();
-      for (let index = 0; index <= 120; index++) {
-        const point = sheetPoint(radial, -1 + 2 * index / 120);
-        if (index === 0) context.moveTo(point.x, point.y);
-        else context.lineTo(point.x, point.y);
-      }
-      context.strokeStyle = radialIndex % 2
-        ? "rgba(255,116,73,.32)"
-        : "rgba(241,238,229,.18)";
-      context.lineWidth = radialIndex === 7 ? 1.6 : .8;
-      context.stroke();
-    }
-
-    const sideAStart = sheetPoint(0, -1);
-    const sideAEnd = sheetPoint(1, -1);
-    const sideBStart = sheetPoint(0, 1);
-    const sideBEnd = sheetPoint(1, 1);
-    context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
-    context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
-    context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
-    context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
-
-    if (fold < .94 && discard > .72) {
-      context.fillStyle = colors.cyan; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("THE SAME PERIODIC SIDE", sideAEnd.x + 8, sideAEnd.y - 7);
-      context.fillText("THE SAME PERIODIC SIDE", sideBEnd.x + 8, sideBEnd.y + 13);
-      const seam = { x: tip + length - depthProjection * half, y: cy };
-      [sideAEnd, sideBEnd].forEach((edge) => {
-        const arrowEnd = {
-          x: lerp(edge.x, seam.x, .42),
-          y: lerp(edge.y, seam.y, .42),
-        };
-        context.beginPath(); context.moveTo(edge.x, edge.y); context.lineTo(arrowEnd.x, arrowEnd.y);
-        context.strokeStyle = "rgba(77,162,163,.62)";
-        context.setLineDash([3, 4]); context.lineWidth = 1; context.stroke(); context.setLineDash([]);
-      });
-    }
-
-    if (fold > .88) {
-      const seamStart = sheetPoint(0, -1);
-      const seamEnd = sheetPoint(1, -1);
-      context.beginPath(); context.moveTo(seamStart.x, seamStart.y); context.lineTo(seamEnd.x, seamEnd.y);
-      context.strokeStyle = colors.cyan; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
-      context.fillStyle = colors.cyan; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("PERIODIC QUOTIENT SEAM", seamEnd.x + 9, seamEnd.y - 8);
-    }
-
-    context.globalAlpha = 1;
-    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-    const caption = zoom < .82
-      ? "magnify the whole disk around one angular period"
-      : discard < .9
-        ? "the repeated copies leave the frame; the selected sector stays fixed"
-      : fold < .88
-        ? "identify the two copies of the periodic side"
-        : "the same sector has folded into the quotient cone";
-    context.fillText(caption, width * .5, cy + targetHalf + 47);
-    context.restore();
+    drawGeometrySheet(context, sheet, { opacity: materialOpacity });
   }
 
   function drawConeCylinder(context, width, height, cylinderAmount, waveAmount, returning = false) {
     const t = ease(cylinderAmount);
-    const materialBlend = ease(t / .18);
-    const cx = height > 520 ? height * .54 : height * .5;
-    const right = width * .84;
-    const half = Math.min(118, height * .23);
-    const visibleLeft = width * .08;
     const tip = lerp(width * .16, -width * 2.6, t);
     const surfaceLeft = Math.max(-width * .12, tip);
-    const slopeFactor = t + (1 - t) * Math.max(0, (surfaceLeft - tip) / (right - tip));
-    const leftHalf = half * slopeFactor;
-    const rimDepth = 10;
-    context.save();
-    const gradient = context.createLinearGradient(surfaceLeft, 0, right, 0);
-    gradient.addColorStop(0, "rgba(12,22,27,.04)"); gradient.addColorStop(.7, "rgba(77,162,163,.28)"); gradient.addColorStop(1, "rgba(255,116,73,.28)");
-    context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx + half); context.lineTo(surfaceLeft, cx + leftHalf); context.closePath();
-    context.fillStyle = gradient; context.fill();
-    const curvature = context.createLinearGradient(0, cx - half, 0, cx + half);
-    curvature.addColorStop(0, "rgba(4,10,13,.34)");
-    curvature.addColorStop(.24, "rgba(241,238,229,.055)");
-    curvature.addColorStop(.52, "rgba(77,162,163,.09)");
-    curvature.addColorStop(.82, "rgba(4,10,13,.22)");
-    curvature.addColorStop(1, "rgba(4,10,13,.42)");
-    context.fillStyle = curvature; context.fill();
+    const sheet = geometrySheetState(width, height, {
+      tip,
+      right: width * .84,
+      surfaceLeft,
+      half: Math.min(118, height * .23),
+      fold: 1,
+      wave: waveAmount,
+    });
+    drawGeometrySheet(context, sheet);
 
-    // At the handoff from the folding stage, retain the two colored halves of
-    // the material sector. They fade only after the very same cone starts to
-    // lengthen, preventing a visual replacement at the stage boundary.
-    if (materialBlend < .999) {
-      context.save(); context.globalAlpha = 1 - materialBlend;
-      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.lineTo(right, cx); context.closePath();
-      context.fillStyle = "rgba(77,162,163,.42)"; context.fill();
-      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.lineTo(right, cx); context.closePath();
-      context.fillStyle = "rgba(255,116,73,.42)"; context.fill();
-      context.beginPath(); context.moveTo(surfaceLeft, cx); context.lineTo(right, cx);
-      context.strokeStyle = colors.cyan; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
-      context.restore();
-    }
-
-    // Trace the two visible generators. The cone continues behind the visible
-    // portion of the drawing after its point has left the frame.
-    context.strokeStyle = `rgba(241,238,229,${.18 + .82 * materialBlend})`; context.lineWidth = 1.7;
-    context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
-    context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
-    if (materialBlend < .999) {
-      context.strokeStyle = `rgba(77,162,163,${1 - materialBlend})`;
-      context.beginPath(); context.moveTo(surfaceLeft, cx - leftHalf); context.lineTo(right, cx - half); context.stroke();
-      context.beginPath(); context.moveTo(surfaceLeft, cx + leftHalf); context.lineTo(right, cx + half); context.stroke();
-    }
-
-    for (let index = -3; index <= 3; index++) {
-      const q = index / 3; const yLeft = cx + q * leftHalf; const yRight = cx + q * half;
-      context.beginPath(); context.moveTo(surfaceLeft, yLeft); context.lineTo(right, yRight);
-      context.strokeStyle = index % 2 ? "rgba(77,162,163,.22)" : "rgba(241,238,229,.13)"; context.lineWidth = 1; context.stroke();
-    }
-    for (let index = 0; index < 8; index++) {
-      const q = .45 + index / 12; const x = lerp(surfaceLeft, right, q);
-      const localHalf = lerp(leftHalf, half, q);
-      context.beginPath(); context.ellipse(x, cx, 5 + 4 * q, localHalf, 0, 0, TAU);
-      context.strokeStyle = index % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)"; context.lineWidth = 1; context.stroke();
-    }
-
-    // A bright front arc and a faint rear arc give the surface genuine depth.
-    context.beginPath(); context.ellipse(right, cx, rimDepth, half, 0, -Math.PI / 2, Math.PI / 2);
-    context.strokeStyle = "rgba(241,238,229,.32)"; context.lineWidth = 1; context.stroke();
-    context.beginPath(); context.ellipse(right, cx, rimDepth, half, 0, Math.PI / 2, 3 * Math.PI / 2);
-    context.strokeStyle = "rgba(16,27,32,.78)"; context.lineWidth = 1.1; context.stroke();
-
-    const axialScale = (right - surfaceLeft) / 28 * 1.45;
-    function rimPoint(theta, deformed) {
-      const psi = theta + GEOMETRY_PROFILE_PHASE;
-      const wall = deformed ? waveAmount * landingWall(psi) : 0;
-      const radialScale = 1 - wall / 28;
-      const cylinderX = right + rimDepth * Math.cos(theta) - wall * axialScale;
-      const cylinderY = cx + half * Math.sin(theta);
-      const coneX = tip + radialScale * (right - tip + rimDepth * Math.cos(theta));
-      const coneY = cx + radialScale * half * Math.sin(theta);
-      const coneAmount = 1 - t;
-      return {
-        x: lerp(cylinderX, coneX, coneAmount),
-        y: lerp(cylinderY, coneY, coneAmount),
-        shift: lerp(cylinderX, coneX, coneAmount) - (right + rimDepth * Math.cos(theta)),
-      };
-    }
-
-    if (waveAmount > .015) {
-      for (let index = 0; index < 120; index++) {
-        const theta0 = index / 120 * TAU;
-        const theta1 = (index + 1) / 120 * TAU;
-        const base0 = rimPoint(theta0, false);
-        const base1 = rimPoint(theta1, false);
-        const moved1 = rimPoint(theta1, true);
-        const moved0 = rimPoint(theta0, true);
-        context.beginPath(); context.moveTo(base0.x, base0.y); context.lineTo(base1.x, base1.y);
-        context.lineTo(moved1.x, moved1.y); context.lineTo(moved0.x, moved0.y); context.closePath();
-        context.fillStyle = (moved0.shift + moved1.shift) > 0
-          ? "rgba(255,116,73,.13)"
-          : "rgba(77,162,163,.11)";
-        context.fill();
-      }
-
-      context.beginPath();
-      for (let index = 0; index <= 240; index++) {
-        const point = rimPoint(index / 240 * TAU, false);
-        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-      }
-      context.strokeStyle = "rgba(77,162,163,.72)"; context.setLineDash([4, 5]); context.lineWidth = 1.2; context.stroke(); context.setLineDash([]);
-    }
-
-    context.beginPath();
-    for (let index = 0; index <= 360; index++) {
-      const point = rimPoint(index / 360 * TAU, true);
-      if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-    }
-    context.closePath();
-    context.strokeStyle = waveAmount > .01 || materialBlend > .92 ? colors.paper : colors.orange; context.lineWidth = 2.4;
-    context.shadowColor = waveAmount ? colors.orange : colors.cyan; context.shadowBlur = 7;
-    context.stroke(); context.shadowBlur = 0;
-
-    if (waveAmount > .2) {
-      [Math.PI / 2, 3 * Math.PI / 2].forEach((theta, index) => {
-        const base = rimPoint(theta, false);
-        const moved = rimPoint(theta, true);
-        context.beginPath(); context.moveTo(base.x, base.y); context.lineTo(moved.x, moved.y);
-        context.strokeStyle = index ? colors.cyan : colors.orange;
-        context.lineWidth = 1.4; context.stroke();
-        context.beginPath(); context.arc(moved.x, moved.y, 3, 0, TAU);
-        context.fillStyle = index ? colors.cyan : colors.orange; context.fill();
-      });
-      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, right - 330), cx - half - 29);
-    }
-    context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-    if (t > .05) {
+    const orderOpacity = ease(t / .12);
+    if (orderOpacity > .001) {
+      context.save(); context.globalAlpha *= orderOpacity;
+      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
       const orderLabel = t > .965 ? "N → ∞" : `N ≈ ${Math.round(28 / (1 - .9 * t))}`;
       const tipMotion = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
-      context.fillText(`${orderLabel} · ${tipMotion}`, visibleLeft + 92, cx - half - 28);
-    }
-    context.fillStyle = colors.faint;
-    context.fillText(waveAmount > .5 ? "opposite boundary points have opposite first variations" : (t > .6 ? "every fixed boundary collar converges to a half-cylinder" : "the quotient cone"), width * .53, cx + half + 42);
-    context.restore();
-  }
-
-  function drawSectorFan(context, width, height, amount) {
-    const fan = ease(amount);
-    const cx = width * .5;
-    const cy = height * .54;
-    const radius = Math.min(width * .27, height * .34);
-    const copies = 28;
-    const halfAngle = Math.PI / copies;
-    const samples = 7;
-
-    context.save();
-    for (let copy = copies - 1; copy >= 0; copy--) {
-      const birth = copy === 0
-        ? 1
-        : ease((fan - (copy - 1) / (copies - 1) * .72) / .28);
-      if (birth <= .001) continue;
-      const rotation = copy / copies * TAU * birth;
-      context.save(); context.globalAlpha *= .18 + .78 * birth;
-      for (let sample = 0; sample < samples; sample++) {
-        const local0 = -halfAngle + sample / samples * 2 * halfAngle;
-        const local1 = -halfAngle + (sample + 1) / samples * 2 * halfAngle;
-        const psi0 = copies * local0 + GEOMETRY_PROFILE_PHASE;
-        const psi1 = copies * local1 + GEOMETRY_PROFILE_PHASE;
-        const radius0 = radius * (1 - landingWall(psi0) / 28);
-        const radius1 = radius * (1 - landingWall(psi1) / 28);
-        const angle0 = rotation + local0;
-        const angle1 = rotation + local1;
-        context.beginPath(); context.moveTo(cx, cy);
-        context.lineTo(cx + radius0 * Math.cos(angle0), cy + radius0 * Math.sin(angle0));
-        context.lineTo(cx + radius1 * Math.cos(angle1), cy + radius1 * Math.sin(angle1));
-        context.closePath();
-        const value = Math.cos((psi0 + psi1) / 2);
-        context.fillStyle = value > 0
-          ? `rgba(255,116,73,${.2 + .17 * value})`
-          : `rgba(77,162,163,${.22 - .2 * value})`;
-        context.fill();
-      }
-      context.beginPath(); context.moveTo(cx, cy);
-      context.lineTo(cx + radius * Math.cos(rotation - halfAngle), cy + radius * Math.sin(rotation - halfAngle));
-      context.strokeStyle = "rgba(241,238,229,.14)"; context.lineWidth = .7; context.stroke();
+      context.fillText(`${orderLabel} · ${tipMotion}`, width * .08 + 92, sheet.cy - sheet.half - 28);
       context.restore();
     }
 
-    if (fan > .9) {
+    const waveLabelOpacity = ease((waveAmount - .12) / .28) * ease(t / .15);
+    if (waveLabelOpacity > .001) {
+      context.save(); context.globalAlpha *= waveLabelOpacity;
+      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
+      context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, width * .84 - 330), sheet.cy - sheet.half - 29);
+      context.restore();
+    }
+  }
+
+  function drawSectorFan(context, sheet, amount) {
+    const fan = ease(amount);
+    const copies = 28;
+    const seamOpacity = 1 - ease((fan - .72) / .28);
+
+    // Copy zero is the unfolded material sheet itself. The remaining copies
+    // all start there with zero opacity and rotate simultaneously into place.
+    drawGeometrySheet(context, sheet, { seamOpacity });
+    for (let copy = copies - 1; copy >= 1; copy--) {
+      const birth = ease(fan / .18);
+      if (birth <= .0001) continue;
+      const targetRotation = copy / copies * TAU;
+      context.save();
+      context.translate(sheet.tip, sheet.cy);
+      context.rotate(targetRotation * fan);
+      context.translate(-sheet.tip, -sheet.cy);
+      drawGeometrySheet(context, sheet, { opacity: birth, seamOpacity });
+      context.restore();
+    }
+
+    const outlineOpacity = ease((fan - .82) / .18);
+    if (outlineOpacity > .001) {
+      const radius = sheet.length;
+      context.save(); context.globalAlpha *= outlineOpacity;
       context.beginPath();
-      for (let index = 0; index <= 1000; index++) {
-        const angle = index / 1000 * TAU;
+      for (let index = 0; index <= 1200; index++) {
+        const angle = index / 1200 * TAU;
         const psi = copies * angle + GEOMETRY_PROFILE_PHASE;
         const localRadius = radius * (1 - landingWall(psi) / 28);
-        const x = cx + localRadius * Math.cos(angle);
-        const y = cy + localRadius * Math.sin(angle);
+        const x = sheet.tip + localRadius * Math.cos(angle);
+        const y = sheet.cy + localRadius * Math.sin(angle);
         if (!index) context.moveTo(x, y); else context.lineTo(x, y);
       }
-      context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
+      context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2.2;
+      context.shadowColor = colors.orange; context.shadowBlur = 6; context.stroke();
+      context.restore();
     }
-    context.restore();
   }
 
   function drawUnfolding(context, width, height, amount) {
     const t = Math.max(0, Math.min(1, amount));
-    const open = ease(t / .5);
-    const transfer = ease((t - .46) / .2);
-    const fan = ease((t - .6) / .4);
-    const meshOpacity = 1 - ease((t - .64) / .11);
-    const cy = height * .54;
+    const open = ease(t / .38);
+    const transfer = ease((t - .32) / .22);
+    const fan = ease((t - .52) / .48);
     const finalRadius = Math.min(width * .27, height * .34);
     const initialTip = width * .16;
     const initialRight = width * .84;
     const tip = lerp(initialTip, width * .5, transfer);
     const length = lerp(initialRight - initialTip, finalRadius, transfer);
     const half = lerp(Math.min(118, height * .23), finalRadius * Math.sin(Math.PI / 28), transfer);
-    const fold = 1 - open;
-    const rimDepth = 10 * (1 - transfer);
+    const initialOpening = Math.atan2(Math.min(118, height * .23), initialRight - initialTip);
+    const sheet = geometrySheetState(width, height, {
+      tip,
+      right: tip + length,
+      half,
+      fold: 1 - open,
+      flatOpening: lerp(initialOpening, Math.PI / 28, transfer),
+      wave: 1,
+    });
 
-    function boundaryScale(angular) {
-      return 1 - landingWall(Math.PI * angular + GEOMETRY_PROFILE_PHASE) / 28;
-    }
-
-    function sheetPoint(fraction, angular, deformed = true) {
-      const radial = fraction * (deformed ? boundaryScale(angular) : 1);
-      const theta = Math.PI * angular;
-      const flatY = radial * half * angular;
-      const coneY = radial * half * Math.sin(theta);
-      const y = lerp(flatY, coneY, fold);
-      return {
-        x: tip + radial * length + fold * radial * rimDepth * Math.cos(theta),
-        y: cy + y,
-      };
-    }
-
-    if (meshOpacity > .001) {
-      context.save(); context.globalAlpha *= meshOpacity;
-      const strips = [];
-      const stripCount = 30;
-      for (let index = 0; index < stripCount; index++) {
-        const a0 = -1 + 2 * index / stripCount;
-        const a1 = -1 + 2 * (index + 1) / stripCount;
-        strips.push({ a0: a0, a1: a1, depth: Math.cos(Math.PI * (a0 + a1) / 2) });
-      }
-      strips.sort((leftStrip, rightStrip) => leftStrip.depth - rightStrip.depth);
-      strips.forEach((strip) => {
-        const p0 = sheetPoint(0, strip.a0);
-        const p1 = sheetPoint(1, strip.a0);
-        const p2 = sheetPoint(1, strip.a1);
-        context.beginPath(); context.moveTo(p0.x, p0.y); context.lineTo(p1.x, p1.y); context.lineTo(p2.x, p2.y); context.closePath();
-        const warmth = (strip.a0 + strip.a1 + 2) / 4;
-        const alpha = .26 + .16 * fold;
-        context.fillStyle = warmth > .5
-          ? `rgba(255,116,73,${alpha})`
-          : `rgba(77,162,163,${alpha})`;
-        context.fill();
-      });
-
-      for (let radialIndex = 0; radialIndex < 8; radialIndex++) {
-        const radial = .45 + radialIndex / 12;
-        context.beginPath();
-        for (let index = 0; index <= 140; index++) {
-          const angular = -1 + 2 * index / 140;
-          const point = sheetPoint(radial, angular);
-          if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-        }
-        context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.25)" : "rgba(77,162,163,.28)";
-        context.lineWidth = 1; context.stroke();
-      }
-
-      for (let index = -3; index <= 3; index++) {
-        const flatAngular = index / 3;
-        const coneAngular = Math.asin(flatAngular) / Math.PI;
-        const angular = lerp(flatAngular, coneAngular, fold);
-        const start = sheetPoint(0, angular);
-        const end = sheetPoint(1, angular);
-        context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
-        context.strokeStyle = index % 2 ? "rgba(77,162,163,.22)" : "rgba(241,238,229,.13)";
-        context.lineWidth = 1; context.stroke();
-      }
-
-      if (fold > .02) {
-        context.beginPath();
-        for (let index = 0; index <= 240; index++) {
-          const point = sheetPoint(1, -1 + 2 * index / 240, false);
-          if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-        }
-        context.strokeStyle = `rgba(77,162,163,${.72 * fold})`;
-        context.setLineDash([4, 5]); context.lineWidth = 1.2; context.stroke(); context.setLineDash([]);
-      }
-
-      context.beginPath();
-      for (let index = 0; index <= 360; index++) {
-        const point = sheetPoint(1, -1 + 2 * index / 360);
-        if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-      }
-      context.strokeStyle = colors.paper; context.lineWidth = 2.4;
-      context.shadowColor = colors.orange; context.shadowBlur = 7;
-      context.stroke(); context.shadowBlur = 0;
-
-      const sideAStart = sheetPoint(0, -1);
-      const sideAEnd = sheetPoint(1, -1);
-      const sideBStart = sheetPoint(0, 1);
-      const sideBEnd = sheetPoint(1, 1);
-      context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
-      context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
-      context.beginPath(); context.moveTo(sideBStart.x, sideBStart.y); context.lineTo(sideBEnd.x, sideBEnd.y);
-      context.strokeStyle = colors.cyan; context.lineWidth = 2.5; context.stroke();
-
-      context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      if (fold > .72) {
-        context.beginPath(); context.moveTo(sideAStart.x, sideAStart.y); context.lineTo(sideAEnd.x, sideAEnd.y);
-        context.strokeStyle = colors.orange; context.setLineDash([4, 5]); context.lineWidth = 2; context.stroke(); context.setLineDash([]);
-        context.fillStyle = colors.orange;
-        context.fillText("CUT THE QUOTIENT SEAM  A = B", sideAEnd.x + 9, sideAEnd.y - 8);
-      } else if (transfer < .8) {
-        context.fillStyle = colors.cyan; context.fillText("PERIODIC SIDE", sideAEnd.x + 8, sideAEnd.y - 8);
-        context.fillText("PERIODIC SIDE", sideBEnd.x + 8, sideBEnd.y + 12);
-      }
-      context.restore();
-    }
-
-    if (fan > .001) drawSectorFan(context, width, height, fan);
-
-    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-    const caption = open < .92
-      ? "cut the seam and open the cone"
-      : transfer < .9
-        ? "the deformed quotient sector in planar coordinates"
-        : "rotate 28 identical sectors into the plane";
-    context.fillText(caption, width * .5, cy + Math.min(118, height * .23) + 47);
+    if (fan > .0001) drawSectorFan(context, sheet, fan);
+    else drawGeometrySheet(context, sheet);
   }
 
   function drawGeometrySequence(context, width, height, progress) {
     const scaled = Math.max(0, Math.min(1, progress)) * 6;
     const segment = Math.min(5, Math.floor(scaled));
     const local = scaled - segment;
-    if (segment === 0) drawNfoldDisk(context, width, height, { selection: ease(local), divisions: 1 });
+    if (segment === 0) drawNfoldDisk(context, width, height, { selection: ease(local), divisions: 1, showCaption: false });
     else if (segment === 1) drawFoldingSector(context, width, height, local);
     else if (segment === 2) drawConeCylinder(context, width, height, local, 0);
     else if (segment === 3) drawConeCylinder(context, width, height, 1, ease(local));
@@ -939,12 +707,40 @@
   const geometryState = { progress: 0, playing: false, frame: null };
   const geometryNames = ["start with N-fold symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-N limit", "bifurcate on the half-cylinder", "return to finite R", "set R = N and lift to the plane"];
   const geometryStates = ["the field is repeated in N sectors", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the perturbed boundary is x = h(ψ)", "the half-cylinder branch determines a branch on finite cones", "at R = N, the N sectors fit exactly in the plane"];
+  const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "cut the seam and rotate 28 copies into place"];
+
+  function drawGeometryNarrative(context, width, height, progress) {
+    const scaled = Math.max(0, Math.min(1, progress)) * 6;
+    const stage = Math.min(5, Math.floor(scaled));
+    const local = scaled - stage;
+    const outgoingOpacity = 1 - ease(local / .45);
+    const incomingOpacity = ease((local - .55) / .45);
+    const targetHalf = Math.min(118, height * .23);
+    [
+      { index: stage, opacity: outgoingOpacity },
+      { index: stage + 1, opacity: incomingOpacity },
+    ].forEach(({ index, opacity }) => {
+      if (opacity <= .001 || index >= geometryNames.length) return;
+      context.save(); context.globalAlpha *= opacity;
+      drawFrameLabel(
+        context,
+        width,
+        `${String(index + 1).padStart(2, "0")} / construction`,
+        geometryNames[index],
+        index === 6 ? "R = N = 28 at the lift" : "the same quotient sector",
+      );
+      context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
+      context.fillText(geometryCaptions[index], width * .5, height * .54 + targetHalf + 47);
+      context.restore();
+    });
+  }
 
   function renderGeometryStory() {
     const { canvas, context, width, height } = canvasMetrics("#storyGeometryCanvas", "#storyGeometryCanvasWrap", 650);
     context.clearRect(0, 0, width, height);
     context.fillStyle = colors.ink; context.fillRect(0, 0, width, height);
     drawGeometrySequence(context, width, height, geometryState.progress);
+    drawGeometryNarrative(context, width, height, geometryState.progress);
     const scaled = Math.max(0, Math.min(1, geometryState.progress)) * 6;
     const segment = Math.min(5, Math.floor(scaled));
     const local = scaled - segment;
@@ -955,7 +751,6 @@
         : local < .01
           ? segment
           : Math.min(6, segment + 1);
-    drawFrameLabel(context, width, `${String(active + 1).padStart(2, "0")} / construction`, geometryNames[active], active === 6 ? "R = N = 28 at the lift" : "the same quotient sector");
     select("#storyGeometryValue").textContent = geometryNames[active];
     select("#storyGeometryState").textContent = geometryStates[active];
     document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === active));
