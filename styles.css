@@ -1177,25 +1177,31 @@ dialog p:not(.eyebrow) {
 }
 
 /* The movable disk over cos(x1), at the end of the introduction's first part. */
-.pompeiu-figure { max-width: 1000px; margin: 48px 0 0 70px; padding: 0; }
+.pompeiu-figure { max-width: 790px; margin: 48px 0 0 70px; padding: 0; }
 .pompeiu-figure figcaption { max-width: 740px; margin-bottom: 22px; }
 .pompeiu-figure figcaption p:last-child { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
-.pompeiu-controls { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-bottom: 0; }
-.pompeiu-choice { flex: 1 1 170px; min-height: 44px; padding: 11px 14px; color: var(--muted); background: none; border: 0; border-right: 1px solid var(--line); font: 400 11px var(--mono); letter-spacing: .05em; cursor: pointer; }
-.pompeiu-choice:last-child { border-right: 0; }
-.pompeiu-choice:hover { color: var(--ink); }
-.pompeiu-choice[aria-pressed="true"] { color: var(--ink); background: rgba(255,116,73,.09); box-shadow: inset 0 2px 0 var(--orange); }
-.pompeiu-choice:focus-visible { outline: 2px solid var(--orange); outline-offset: -3px; }
-.pompeiu-figure canvas { display: block; width: 100%; aspect-ratio: 2.2 / 1; border: 1px solid var(--line); background: var(--paper-2); cursor: grab; touch-action: none; }
+.pompeiu-panel { display: grid; grid-template-columns: minmax(0,1fr) 232px; border: 1px solid var(--line); background: var(--paper-2); }
+.pompeiu-figure canvas { display: block; width: 100%; aspect-ratio: 1 / 1; border-right: 1px solid var(--line); cursor: grab; touch-action: none; }
 .pompeiu-figure canvas:active { cursor: grabbing; }
-.pompeiu-figure canvas:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-.pompeiu-readout { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 15px 16px; color: var(--muted); border: 1px solid var(--line); border-top: 0; font-size: 13px; }
-.pompeiu-readout strong { min-width: 6ch; color: var(--ink); font: 500 16px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
-.pompeiu-meter { position: relative; flex: 1 1 200px; height: 6px; background: rgba(19,33,38,.07); }
+.pompeiu-figure canvas:focus-visible { outline: 2px solid var(--orange); outline-offset: -3px; }
+.pompeiu-side { display: flex; flex-direction: column; min-width: 0; }
+.pompeiu-controls { display: flex; flex-direction: column; }
+.pompeiu-choice { display: grid; gap: 5px; padding: 15px 16px; color: var(--muted); text-align: left; white-space: nowrap; background: none; border: 0; border-bottom: 1px solid var(--line); font: 400 11px var(--mono); letter-spacing: .05em; cursor: pointer; }
+.pompeiu-choice b { color: var(--ink); font: 400 13px var(--mono); font-variant-numeric: tabular-nums; }
+.pompeiu-choice:hover { background: rgba(19,33,38,.03); }
+.pompeiu-choice[aria-pressed="true"] { background: rgba(255,116,73,.09); box-shadow: inset 3px 0 0 var(--orange); }
+.pompeiu-choice:focus-visible { outline: 2px solid var(--orange); outline-offset: -3px; }
+.pompeiu-readout { display: grid; gap: 9px; padding: 16px; color: var(--muted); border-bottom: 1px solid var(--line); font-size: 12px; }
+.pompeiu-readout strong { color: var(--ink); font: 500 19px var(--mono); font-variant-numeric: tabular-nums; }
+.pompeiu-hint { margin: 0; padding: 14px 16px; color: var(--muted); font: 400 11px var(--mono); line-height: 1.7; letter-spacing: .04em; }
+.pompeiu-meter { position: relative; height: 6px; background: rgba(19,33,38,.07); }
 .pompeiu-meter::before { content: ""; position: absolute; left: 50%; top: -4px; bottom: -4px; width: 1px; background: var(--line); }
 .pompeiu-meter i { position: absolute; top: 0; bottom: 0; left: 50%; width: 0; background: var(--teal); }
 @media (max-width: 1000px) { .pompeiu-figure { margin-left: 0; } }
-@media (max-width: 760px) { .pompeiu-figure canvas { aspect-ratio: 1.5 / 1; } }
+@media (max-width: 620px) {
+  .pompeiu-panel { grid-template-columns: minmax(0,1fr); }
+  .pompeiu-figure canvas { border-right: 0; border-bottom: 1px solid var(--line); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

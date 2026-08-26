@@ -114,16 +114,21 @@
             <p class="eyebrow">Move the disk</p>
             <p>The colour is \(\cos(x_1)\), on the same scale the numerical figures use further down. Choose a radius, then drag the disk anywhere in the plane; the number below is its integral over the disk.</p>
           </figcaption>
-          <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
-            <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false">small &middot; r = 1.2</button>
-            <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true">r = 3.8317&hellip; &middot; zero of J<sub>1</sub></button>
-            <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false">large &middot; r = 5.4236&hellip;</button>
-          </div>
-          <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk over the field cosine of x one"></canvas>
-          <div class="pompeiu-readout">
-            <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
-            <strong id="pompeiuValue">0.000</strong>
-            <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
+          <div class="pompeiu-panel">
+            <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk over the field cosine of x one"></canvas>
+            <div class="pompeiu-side">
+              <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
+                <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false"><span>small</span><b>r = 1.2</b></button>
+                <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true"><span>zero of J<sub>1</sub></span><b>r = 3.8317&hellip;</b></button>
+                <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false"><span>large</span><b>r = 5.4236&hellip;</b></button>
+              </div>
+              <div class="pompeiu-readout">
+                <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
+                <strong id="pompeiuValue">0.000</strong>
+                <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
+              </div>
+              <p class="pompeiu-hint">drag the disk, or focus the panel and use the arrow keys</p>
+            </div>
           </div>
         </figure>
 
