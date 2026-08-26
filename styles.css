@@ -1084,6 +1084,90 @@ dialog p:not(.eyebrow) {
   .pompeiu-figure canvas { border-right: 0; border-bottom: 1px solid var(--line); }
 }
 
+/* Physics-first introduction: interval probe, planar probe, and membrane modes. */
+.intro-physics-lead { align-items: stretch !important; }
+.intro-physics-lead .intro-copy { max-width: 760px; font-size: var(--type-body); }
+.intro-inline-display { margin: 24px 0; color: var(--ink); }
+.probe-question { align-self: stretch; padding: 34px 30px; border: 1px solid var(--line); border-top: 2px solid var(--orange); background: rgba(255,255,255,.17); }
+.probe-question > span { display: block; margin-bottom: 28px; color: var(--orange); font: 500 var(--type-label)/1.5 var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.probe-question p { margin: 0; color: var(--muted); font-size: var(--type-body); line-height: 1.72; }
+.probe-question .tex-display { margin: 24px 0; color: var(--ink); overflow-x: auto; }
+
+.line-probe-figure { max-width: 1060px; margin: 62px 0 0 70px; padding: 0; }
+.line-probe-figure figcaption { max-width: 790px; margin-bottom: 24px; }
+.line-probe-figure figcaption h3 { margin: 0 0 13px; color: var(--ink); font: 300 32px/1.08 var(--serif); letter-spacing: -.018em; }
+.line-probe-figure figcaption > p:last-child { margin: 0; color: var(--muted); font-size: var(--type-body); line-height: 1.75; }
+.line-probe-panel { display: grid; grid-template-columns: minmax(0,1fr) 232px; border: 1px solid var(--line); background: var(--paper-2); }
+.line-probe-panel canvas { display: block; width: 100%; aspect-ratio: 16 / 7; border-right: 1px solid var(--line); cursor: grab; touch-action: none; }
+.line-probe-panel canvas:active { cursor: grabbing; }
+.line-probe-panel canvas:focus-visible { outline: 2px solid var(--orange); outline-offset: -3px; }
+.line-probe-side { display: flex; flex-direction: column; min-width: 0; }
+.line-probe-identity { margin: 0; padding: 18px 24px; color: var(--ink); border: 1px solid var(--line); border-top: 0; background: rgba(255,255,255,.12); overflow-x: auto; }
+.line-probe-identity .katex-display { margin: 0; }
+.intro-linear-step { margin-top: 72px; }
+
+.plane-probe-details { max-width: 960px; margin: 52px 0 0 70px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.plane-probe-details > summary { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; color: var(--ink); cursor: pointer; list-style: none; font: 500 var(--type-label)/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.plane-probe-details > summary::-webkit-details-marker { display: none; }
+.plane-probe-details > summary i { color: var(--orange); font-style: normal; font-weight: 400; }
+.plane-probe-details[open] > summary { border-bottom: 1px solid var(--line); }
+.plane-probe-details[open] > summary i { font-size: 0; }
+.plane-probe-details[open] > summary i::after { content: "collapse −"; font-size: var(--type-label); }
+.plane-probe-details .pompeiu-figure { margin: 34px 0 42px; }
+.intro-history { margin-top: 42px; }
+
+.intro-chapter-heading { margin-top: 96px; padding-top: 68px; border-top: 1px solid var(--ink); }
+.intro-chapter-heading > .eyebrow { margin-bottom: 15px; font-size: var(--type-label); }
+.schiffer-intro-system { margin: 30px 0; padding: 26px 22px; color: var(--ink); border-left: 2px solid var(--orange); background: rgba(255,116,73,.035); overflow-x: auto; }
+
+.membrane-figure { display: grid; grid-template-columns: minmax(300px,.72fr) minmax(480px,1.28fr); max-width: 1120px; margin: 52px 0 0 70px; border: 1px solid var(--line); background: var(--paper-2); }
+.chladni-photo-panel { display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--line); }
+.chladni-photo-panel img { display: block; width: 100%; min-height: 320px; flex: 1 1 auto; object-fit: cover; filter: saturate(.78) contrast(.96); }
+.chladni-photo-panel p { margin: 0; padding: 16px 18px; color: var(--muted); border-top: 1px solid var(--line); font-size: var(--type-caption); line-height: 1.65; }
+.chladni-photo-panel a { color: var(--ink); text-decoration-color: var(--orange); text-underline-offset: 3px; }
+.schiffer-mode-panel { min-width: 0; }
+.schiffer-mode-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; min-height: 92px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.schiffer-mode-heading .eyebrow { margin-bottom: 7px; }
+.schiffer-mode-heading h3 { margin: 0; color: var(--ink); font: 300 27px/1.08 var(--serif); letter-spacing: -.015em; }
+.mode-play { flex: 0 0 auto; padding: 8px 11px; color: var(--ink); border: 1px solid var(--line); background: transparent; cursor: pointer; font: 500 var(--type-label)/1 var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.mode-play:hover, .mode-play:focus-visible { color: var(--orange); border-color: var(--orange); outline: 0; }
+.schiffer-mode-panel canvas { display: block; width: 100%; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--line); background: #e8e1cf; }
+.schiffer-mode-controls { display: grid; grid-template-columns: repeat(3,1fr); border-bottom: 1px solid var(--line); }
+.schiffer-mode-controls button { padding: 12px 8px; color: var(--muted); border: 0; border-right: 1px solid var(--line); background: transparent; cursor: pointer; font: 500 var(--type-label)/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+.schiffer-mode-controls button:last-child { border-right: 0; }
+.schiffer-mode-controls button[aria-pressed="true"] { color: var(--ink); background: rgba(255,116,73,.08); box-shadow: inset 0 2px 0 var(--orange); }
+.membrane-model-note { margin: 0; padding: 16px 20px 19px; color: var(--muted); font-size: var(--type-caption); line-height: 1.7; }
+
+.intro-theorem { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 42px; max-width: 1060px; margin: 74px 0 0 70px; padding: 30px 32px; color: var(--ink); border: 1px solid var(--line); border-top: 2px solid var(--orange); background: rgba(255,255,255,.16); }
+.intro-theorem-label { display: flex; flex-direction: column; gap: 7px; color: var(--orange); font: 500 var(--type-label)/1.55 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.intro-theorem-label small { color: var(--muted); font: inherit; }
+.intro-theorem h3 { max-width: 730px; margin: 0 0 17px; font: 300 34px/1.05 var(--serif); letter-spacing: -.018em; }
+.intro-theorem p, .intro-theorem li { color: var(--muted); font-size: var(--type-proof); line-height: 1.78; }
+.intro-theorem p { margin: 0 0 14px; }
+.intro-theorem p:last-child { margin-bottom: 0; }
+.intro-theorem ol { margin: 16px 0 19px; padding-left: 24px; }
+.intro-theorem li { padding-left: 6px; }
+.intro-theorem li + li { margin-top: 8px; }
+
+@media (max-width: 1000px) {
+  .line-probe-figure, .plane-probe-details, .membrane-figure, .intro-theorem { margin-left: 0; }
+  .membrane-figure { grid-template-columns: minmax(260px,.75fr) minmax(420px,1.25fr); }
+}
+@media (max-width: 760px) {
+  .line-probe-panel, .membrane-figure { grid-template-columns: minmax(0,1fr); }
+  .line-probe-panel canvas { border-right: 0; border-bottom: 1px solid var(--line); }
+  .chladni-photo-panel { border-right: 0; border-bottom: 1px solid var(--line); }
+  .chladni-photo-panel img { min-height: 250px; max-height: 430px; }
+  .intro-theorem { grid-template-columns: minmax(0,1fr); gap: 22px; padding: 26px 22px; }
+  .intro-theorem-label { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 480px) {
+  .line-probe-panel canvas { aspect-ratio: 4 / 3; }
+  .probe-question { padding: 27px 22px; }
+  .schiffer-mode-heading { min-height: 0; }
+  .schiffer-mode-heading h3 { font-size: 23px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

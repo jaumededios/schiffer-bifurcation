@@ -48,7 +48,7 @@
         <div class="intro-index">An expository account with numerical figures</div>
         <h1>A counterexample to Schiffer's conjecture</h1>
         <div class="intro-bottom">
-          <p>Schiffer's conjecture asks whether an overdetermined Laplace eigenvalue problem characterizes the disk among smooth bounded planar domains. The disk is locally rigid, whereas the analogous problems on the sphere and flat cylinder admit nontrivial bifurcations. We construct planar counterexamples by studying highly symmetric domains through their cone quotients. Near its boundary, a cone of large radius approaches a half-cylinder. We transfer the cylindrical bifurcation to these cones and recover a planar domain when the real cone parameter reaches an integer.</p>
+          <p>A moving probe records averages of an unknown field; a vibrating membrane has spatial normal modes. A theorem of Williams identifies the probes that lose information with the domains that carry an overdetermined membrane mode. For decades the disk was the only known smooth planar example. We explain how bifurcations on cylinders and cones produce further planar examples.</p>
           <p class="edition-link"><a href="paper/">Read the proof-guided paper edition →</a></p>
         </div>
       </section>
@@ -56,98 +56,185 @@
       <section id="introduction" class="story-intro">
         <div class="story-heading light-story-heading">
           <span class="section-number">I</span>
-          <div><p class="eyebrow">Pompeiu 1929 · Schiffer · Williams</p><h2>Two questions that turned out to be one question.</h2></div>
+          <div><p class="eyebrow">Pompeiu's problem</p><h2>Can a moving probe recover a field from its averages?</h2></div>
         </div>
 
-        <div class="intro-lead">
+        <div class="intro-lead intro-physics-lead">
           <div class="intro-copy">
-            <h3>Pompeiu asked whether a function is determined by its averages.</h3>
-            <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
-            <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{\sigma(\Omega)}f(x)\,dx=0\) for every rigid motion \(\sigma\), is it necessarily true that \(f(x)=0\)?</p>
-            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property: \(f(x)=\cos(\sqrt\lambda\,x_1)\) is a counterexample for a disk of radius \(r\) whenever \(\rho_\star=\sqrt\lambda\,r\) is a zero of the Bessel function \(J_1\). Deciding whether any other domain fails has stayed open ever since; polygons, ellipses other than disks, and convex domains with corners all have the Pompeiu property.</p>
+            <p>Suppose that a physical quantity varies across a sample: its temperature, its local composition, or the roughness of its surface. A measuring probe has a footprint \(\Omega\). When the probe is placed on the sample, it returns the average of the field over that footprint, rather than its value at one point.</p>
+            <p>We may translate and rotate the probe, and take as many readings as we wish. If the unknown field is \(f\) and \(E\) is a rigid motion, the reading in configuration \(E\) is, up to the fixed factor \(|\Omega|^{-1}\),</p>
+            <div class="tex-display intro-inline-display">
+              \[
+              M_\Omega f(E)=\int_{E\Omega}f(x)\,dx.
+              \]
+            </div>
+            <p>Pompeiu asked in 1929 whether the collection of all these readings determines \(f\).</p>
           </div>
-          <div class="equation-system intro-statement" role="img" aria-label="Suppose we know the integral of f over sigma of Omega for every rigid motion sigma. Can we determine f?">
-            <span class="system-label">\(\operatorname{Pompeiu}(\Omega)\)</span>
-            <p class="intro-question">Suppose that we know \(\int_{\sigma(\Omega)}f(x)\,dx\) for every rigid motion \(\sigma\). Can we determine \(f(x)\)?</p>
-            <p>If yes, we say that \(\Omega\) has the Pompeiu property.</p>
-          </div>
+          <aside class="probe-question" aria-label="The Pompeiu problem">
+            <span>Pompeiu's problem</span>
+            <p>For a fixed probe \(\Omega\), does</p>
+            <div class="tex-display">
+              \[
+              \bigl\{M_\Omega f(E): E\text{ a rigid motion}\bigr\}
+              \]
+            </div>
+            <p>determine the field \(f\)?</p>
+          </aside>
         </div>
 
-        <details class="proof-details intro-proof">
-          <summary><span>Why the disk fails: one convolution</span><i>expand +</i></summary>
-          <div class="intro-proof-body">
-            <p>Let \(\Omega\) be a disk of radius \(r\) centred at the origin and let \(t\in\mathbb R^2\). From Pompeiu's property applied to translations by \(t\),</p>
-            <div class="tex-display">
-              \[
-              \int_{\Omega+t}f(x)\,dx
-              =\int_{\mathbb R^2}\mathbf 1_{\Omega}(t-x)f(x)\,dx
-              =(\mathbf 1_{\Omega}*f)(t)=0,
-              \qquad\forall\,t\in\mathbb R^2 .
-              \]
-            </div>
-            <p>Now take the Fourier transform, which turns a convolution into a product. We obtain \(\widehat f(\xi)\,\widehat{\mathbf 1_{\Omega}}(\xi)=0\) for all \(\xi\). Since</p>
-            <div class="tex-display">
-              \[
-              \widehat{\mathbf 1_{\Omega}}(\xi)=2\pi r\,\frac{J_1(r|\xi|)}{|\xi|},
-              \]
-            </div>
-            <p>with \(J_1\) the first Bessel function, it is natural to take</p>
-            <div class="tex-display">
-              \[
-              f(x)=\cos\bigl(\sqrt\lambda\,x_1\bigr),
-              \qquad
-              \lambda=\Bigl(\frac{\rho_\star}{r}\Bigr)^{\!2},
-              \]
-            </div>
-            <p>where \(\rho_\star\) is any positive zero of \(J_1\). Then \(\widehat f(\xi)\), as a distribution, is supported on \(|\xi|=\sqrt\lambda=\rho_\star/r\), which is exactly where \(J_1(r|\xi|)=0\). The product of \(\widehat f\) and \(J_1(r|\xi|)\) vanishes identically, so this shows the failure of the Pompeiu property for the disk. One can also perform the direct two-dimensional integral and see that \(f(x)=\cos(\sqrt\lambda\,x_1)\) integrates to zero on every disk of radius \(r\). <span class="qed">□</span></p>
-            <p class="intro-proof-aside">Brown, Schreiber and Taylor proved, more generally, that this failure is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin. The disk clearly does that, but the question of whether there is another domain with that property remained open.</p>
-          </div>
-        </details>
-
-
-        <figure class="pompeiu-figure" id="pompeiuFigure">
+        <figure class="line-probe-figure" id="lineProbeFigure">
           <figcaption>
-            <p class="eyebrow">Move the disk</p>
-            <p>The colour is \(\cos(x_1)\), on the same scale the numerical figures use further down. Choose a radius, then drag the disk anywhere in the plane; the number below is its integral over the disk.</p>
+            <p class="eyebrow">Begin in one dimension</p>
+            <h3>An interval measures the field underneath it.</h3>
+            <p>The coloured curve is \(f(x)=\cos x\). Move the interval along the line. Take a probe whose length is \(2\pi\). It contains one complete period at every position, so every reading is zero even though the field is not.</p>
           </figcaption>
-          <div class="pompeiu-panel">
-            <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk over the field cosine of x one"></canvas>
-            <div class="pompeiu-side">
-              <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
-                <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false"><span>small</span><b>r = 1.2</b></button>
-                <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true"><span>zero of J<sub>1</sub></span><b>r = 3.8317&hellip;</b></button>
-                <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false"><span>large</span><b>r = 5.4236&hellip;</b></button>
+          <div class="line-probe-panel">
+            <canvas id="lineProbeCanvas" tabindex="0" role="img" aria-label="An interval moving over the field cosine x"></canvas>
+            <div class="line-probe-side">
+              <div class="pompeiu-controls" role="group" aria-label="Choose the interval length">
+                <button type="button" class="pompeiu-choice" data-interval="short" aria-pressed="false"><span>ordinary interval</span><b>L = 2</b></button>
+                <button type="button" class="pompeiu-choice" data-interval="blind" aria-pressed="true"><span>one full period</span><b>\(L=2\pi\)</b></button>
               </div>
               <div class="pompeiu-readout">
-                <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
-                <strong id="pompeiuValue">0.000</strong>
-                <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
+                <span>\(\int_{t-L/2}^{t+L/2}\cos x\,dx\)</span>
+                <strong id="lineProbeValue">0.000</strong>
+                <div class="pompeiu-meter"><i id="lineProbeMeterFill"></i></div>
               </div>
-              <p class="pompeiu-hint">drag the disk, or focus the panel and use the arrow keys</p>
+              <p class="pompeiu-hint">drag the interval, or use the arrow keys</p>
             </div>
+          </div>
+          <div class="line-probe-identity tex-display">
+            \[
+            \int_{t-L/2}^{t+L/2}\cos x\,dx=2\sin(L/2)\cos t.
+            \]
           </div>
         </figure>
 
-        <div class="intro-copy intro-copy-wide">
-          <h3>Schiffer asked a question regarding Neumann eigenfunctions of the Laplacian.</h3>
-          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions (the value of the unknown at the boundary) or Neumann boundary conditions (the normal derivative, or flux, at the boundary). Schiffer, in the 50s, wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
+        <div class="intro-copy intro-copy-wide intro-linear-step">
+          <h3>The recovery question is linear.</h3>
+          <p>If two fields \(f_1\) and \(f_2\) give the same reading in every configuration, their difference \(g=f_1-f_2\) satisfies</p>
           <div class="tex-display">
+            \[
+            \int_{E\Omega}g(x)\,dx=0
+            \qquad\text{for every rigid motion }E.
+            \]
+          </div>
+          <p>Thus the measurements determine every field precisely when the only field invisible to the probe is \(g=0\). A domain \(\Omega\) with this property is said to have the <em>Pompeiu property</em>.</p>
+          <p>A circular probe has an additional symmetry: rotating it leaves its footprint unchanged, so rotations supply no new measurements. At certain radii a disk is completely blind to a nonzero plane wave. This led to the modern form of the problem: are disks the only smooth bounded planar domains without the Pompeiu property?</p>
+        </div>
+
+        <details class="plane-probe-details">
+          <summary><span>Open the planar disk experiment</span><i>expand +</i></summary>
+          <figure class="pompeiu-figure" id="pompeiuFigure">
+            <figcaption>
+              <p class="eyebrow">The same experiment in the plane</p>
+              <p>The colour is \(f(x)=\cos(x_1)\). Choose a radius and drag the disk. At \(r=3.8317\ldots\), the first positive zero of \(J_1\), the integral is zero for every position of the disk.</p>
+            </figcaption>
+            <div class="pompeiu-panel">
+              <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
+              <div class="pompeiu-side">
+                <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
+                  <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false"><span>small</span><b>r = 1.2</b></button>
+                  <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true"><span>zero of J<sub>1</sub></span><b>r = 3.8317&hellip;</b></button>
+                  <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false"><span>large</span><b>r = 5.4236&hellip;</b></button>
+                </div>
+                <div class="pompeiu-readout">
+                  <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
+                  <strong id="pompeiuValue">0.000</strong>
+                  <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
+                </div>
+                <p class="pompeiu-hint">drag the disk, or use the arrow keys</p>
+              </div>
+            </div>
+          </figure>
+        </details>
+
+        <details class="proof-details intro-proof intro-history">
+          <summary><span>The early history of the problem</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Pompeiu claimed that disks and squares have the Pompeiu property. His proof for the disk was incorrect, and his proof for the square required the additional assumption that \(f\) tends to a limit at infinity. Christov later proved the square case without that assumption. In 1944 Chakalov proved that disks fail the property.</p>
+            <p>Many positive cases were subsequently established: polygons, noncircular ellipses, and convex domains with corners all have the Pompeiu property. The question for smooth domains remained open until the counterexamples discussed on this page.</p>
+          </div>
+        </details>
+
+        <details class="proof-details intro-proof">
+          <summary><span>Why a disk misses a plane wave</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>Let \(B_r\) be the disk of radius \(r\). Translation of the probe gives a convolution:</p>
+            <div class="tex-display">
+              \[
+              \int_{B_r+t}f(x)\,dx
+              =(\mathbf 1_{B_r}*f)(t).
+              \]
+            </div>
+            <p>The Fourier transform turns convolution into multiplication, and</p>
+            <div class="tex-display">
+              \[
+              \widehat{\mathbf 1_{B_r}}(\xi)
+              =2\pi r\,\frac{J_1(r|\xi|)}{|\xi|}.
+              \]
+            </div>
+            <p>Take \(f(x)=\cos(\sqrt\lambda\,x_1)\). Its Fourier transform is supported at the two frequencies \(\xi=\pm\sqrt\lambda\,e_1\). If \(\sqrt\lambda\,r=\rho_\star\), where \(J_1(\rho_\star)=0\), then \(\widehat{\mathbf 1_{B_r}}\) vanishes at both frequencies. Therefore</p>
+            <div class="tex-display">
+              \[
+              \int_{B_r+t}\cos(\sqrt\lambda\,x_1)\,dx=0
+              \qquad\text{for every }t\in\mathbb R^2.
+              \]
+            </div>
+            <p>Rotations of the disk give the same domain, so this nonzero field is invisible in every allowed configuration. Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin. <span class="qed">□</span></p>
+          </div>
+        </details>
+
+        <div class="intro-copy intro-copy-wide intro-chapter-heading">
+          <p class="eyebrow">The Schiffer problem</p>
+          <h3>Can a membrane vibrate with constant amplitude along its boundary?</h3>
+          <p>A normal mode of a scalar membrane has the form \(U(x,t)=u(x)\cos(\sqrt\lambda\,t)\), where the spatial profile satisfies \((\Delta+\lambda)u=0\). The Neumann condition \(\partial_\nu u=0\) describes a reflecting boundary. Schiffer asked for domains carrying a nonconstant normal mode whose value is constant along the boundary. After rescaling the mode, the problem is</p>
+          <div class="tex-display schiffer-intro-system">
             \[
             \begin{cases}
             (\Delta+\lambda)u=0 &amp; \text{in }\Omega,\\
             u=1 &amp; \text{on }\partial\Omega,\\
             \partial_\nu u=0 &amp; \text{on }\partial\Omega,
             \end{cases}
-            \qquad
-            \begin{aligned}
-            &amp;\lambda&gt;0,\\
-            &amp;u\ \text{nonconstant.}
-            \end{aligned}
+            \qquad \lambda&gt;0,\quad u\text{ nonconstant.}
+            \tag{S}
             \]
           </div>
-          <p>Since the problem is overdetermined, it is reasonable to expect no solutions. However, disks do have solutions: any radially symmetric Neumann eigenfunction will do. Radial symmetry on a disk makes the boundary value constant, and we can rescale \(u\) to make that constant one.</p>
-          <p>Curiously enough, the radial solutions of \((\Delta+\lambda)u=0\) are given by \(J_0(\sqrt\lambda\,|x|)\), so they satisfy the Neumann condition if \(J_0'(\sqrt\lambda\,r)=0\). And \(J_0'\) is a multiple of \(J_1\), so disks solve the Schiffer problem exactly when \(\sqrt\lambda\,r=\rho_\star\), a zero of \(J_1\). This is the same condition we saw above for the Pompeiu problem. That seemingly innocent coincidence turns out to have a deeper reason: for bounded, simply connected, smooth domains the Pompeiu and Schiffer problems are equivalent. This was proved by Williams in 1976.</p>
+          <p>A domain \(\Omega\) for which (S) has a solution is said to have the <em>Schiffer property</em>. The disk has this property: its radial modes are multiples of \(J_0(\sqrt\lambda\,r)\), and their normal derivative vanishes at the boundary whenever \(J_1(\sqrt\lambda\,r)=0\). Schiffer's conjecture asserted that every smooth bounded planar domain with this property is a disk.</p>
         </div>
+
+        <figure class="membrane-figure" id="schifferModeFigure">
+          <div class="chladni-photo-panel">
+            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along four circular nodal lines on a vibrating round Chladni plate">
+            <p>Sand collects along the stationary nodal circles of a vibrating metal plate. The plate in this photograph is driven at 3.986 kHz. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Photograph: Pieter Kuiper, public domain.</a></p>
+          </div>
+          <div class="schiffer-mode-panel">
+            <div class="schiffer-mode-heading">
+              <div><p class="eyebrow">Radial modes of the disk</p><h3>Every point of the rim moves together.</h3></div>
+              <button type="button" id="schifferModePlay" class="mode-play" aria-pressed="false">pause</button>
+            </div>
+            <canvas id="schifferModeCanvas" role="img" aria-label="Animated radial Neumann eigenmode on a disk"></canvas>
+            <div class="schiffer-mode-controls" role="group" aria-label="Choose a radial mode">
+              <button type="button" data-radial-mode="1" aria-pressed="true">mode 1</button>
+              <button type="button" data-radial-mode="2" aria-pressed="false">mode 2</button>
+              <button type="button" data-radial-mode="3" aria-pressed="false">mode 3</button>
+            </div>
+            <p class="membrane-model-note">The photograph illustrates nodal patterns for a thin elastic plate. The animation evaluates the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
+          </div>
+        </figure>
+
+        <article class="intro-theorem" aria-labelledby="williamsTheoremTitle">
+          <div class="intro-theorem-label"><span>The unexpected connection</span><small>Williams · 1976</small></div>
+          <div>
+            <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
+            <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
+            <ol>
+              <li>there is a nonzero continuous field \(f\) such that \(\int_{E\Omega}f(x)\,dx=0\) for every rigid motion \(E\);</li>
+              <li>there are \(\lambda&gt;0\) and a nonconstant function \(u\) solving the Schiffer problem (S) on \(\Omega\).</li>
+            </ol>
+            <p>Consequently, a smooth noncircular solution of the Schiffer problem also gives a smooth noncircular probe without the Pompeiu property.</p>
+          </div>
+        </article>
 
         <details class="proof-details intro-proof">
           <summary><span>From Schiffer to Pompeiu: one Green identity</span><i>expand +</i></summary>

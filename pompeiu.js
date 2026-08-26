@@ -208,8 +208,369 @@
   });
 
   selectDisk("zero");
+  const disclosure = root.closest("details");
+  if (disclosure) disclosure.addEventListener("toggle", () => {
+    if (disclosure.open) requestAnimationFrame(resize);
+  });
   if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
   window.addEventListener("resize", resize);
   window.addEventListener("load", resize);
   resize();
+})();
+
+/* The one-dimensional version of the same measurement problem. For an
+ * interval of length L centred at t,
+ *     int cos(x) dx = 2 sin(L/2) cos(t).
+ * The full-period interval is therefore blind at every position. */
+(() => {
+  "use strict";
+
+  const root = document.getElementById("lineProbeFigure");
+  if (!root) return;
+  const canvas = root.querySelector("#lineProbeCanvas");
+  const context = canvas && canvas.getContext("2d");
+  const valueOut = root.querySelector("#lineProbeValue");
+  const meterFill = root.querySelector("#lineProbeMeterFill");
+  const buttons = [...root.querySelectorAll("[data-interval]")];
+  if (!context || !valueOut || !meterFill) return;
+
+  const INTERVALS = [
+    { key: "short", length: 2 },
+    { key: "blind", length: 2 * Math.PI },
+  ];
+  const VIEW = 4 * Math.PI;
+  const state = { interval: INTERVALS[1], centre: 0, dragging: false };
+  let width = 0, height = 0, dpr = 1;
+
+  const STOPS = [
+    { t: 0, rgb: [18, 39, 66] },
+    { t: .25, rgb: [42, 116, 125] },
+    { t: .5, rgb: [234, 227, 205] },
+    { t: .75, rgb: [239, 112, 71] },
+    { t: 1, rgb: [166, 43, 73] },
+  ];
+  function ramp(value, alpha = 1) {
+    const t = Math.max(0, Math.min(1, (value + 1.15) / 2.3));
+    let left = STOPS[0], right = STOPS[STOPS.length - 1];
+    for (let i = 1; i < STOPS.length; i++) {
+      if (t <= STOPS[i].t) { left = STOPS[i - 1]; right = STOPS[i]; break; }
+    }
+    const local = (t - left.t) / Math.max(1e-8, right.t - left.t);
+    const rgb = left.rgb.map((c, i) => Math.round(c + (right.rgb[i] - c) * local));
+    return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+  }
+
+  const toPixel = (x) => (x + VIEW) / (2 * VIEW) * width;
+  const toField = (px) => px / width * (2 * VIEW) - VIEW;
+
+  function clampCentre() {
+    const half = state.interval.length / 2;
+    state.centre = Math.max(-VIEW + half, Math.min(VIEW - half, state.centre));
+  }
+
+  function updateReadout() {
+    const value = 2 * Math.sin(state.interval.length / 2) * Math.cos(state.centre);
+    const shown = Math.abs(value) < 5e-4 ? 0 : value;
+    valueOut.textContent = shown.toFixed(3);
+    const fraction = Math.min(1, Math.abs(value) / 2);
+    meterFill.style.width = `${(fraction * 50).toFixed(2)}%`;
+    meterFill.style.left = value >= 0 ? "50%" : `${(50 - fraction * 50).toFixed(2)}%`;
+    meterFill.style.background = Math.abs(value) < 5e-4 ? "var(--teal)" : (value > 0 ? "#a62b49" : "#2a747d");
+    canvas.setAttribute("aria-label", `Interval of length ${state.interval.length.toFixed(3)} centred at ${state.centre.toFixed(2)}; its integral of cosine x is ${shown.toFixed(3)}`);
+  }
+
+  function draw() {
+    if (!width || !height) return;
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.scale(dpr, dpr);
+
+    context.fillStyle = "#e9e3d3";
+    context.fillRect(0, 0, width, height);
+    for (let px = 0; px < width; px += 2) {
+      context.fillStyle = ramp(Math.cos(toField(px + 1)), .78);
+      context.fillRect(px, 0, 2.5, height);
+    }
+
+    const left = toPixel(state.centre - state.interval.length / 2);
+    const right = toPixel(state.centre + state.interval.length / 2);
+    context.fillStyle = "rgba(241,238,229,.70)";
+    context.fillRect(0, 0, left, height);
+    context.fillRect(right, 0, width - right, height);
+
+    const mid = height * .47;
+    const amplitude = Math.min(72, height * .25);
+    context.beginPath();
+    for (let px = 0; px <= width; px += 2) {
+      const y = mid - amplitude * Math.cos(toField(px));
+      if (px === 0) context.moveTo(px, y); else context.lineTo(px, y);
+    }
+    context.strokeStyle = "#132126";
+    context.lineWidth = 2;
+    context.stroke();
+
+    context.strokeStyle = "rgba(19,33,38,.35)";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(0, mid); context.lineTo(width, mid);
+    context.stroke();
+
+    context.strokeStyle = "#ff7449";
+    context.fillStyle = "#ff7449";
+    context.lineWidth = 2.5;
+    [left, right].forEach((x) => {
+      context.beginPath(); context.moveTo(x, 12); context.lineTo(x, height - 25); context.stroke();
+    });
+    context.beginPath();
+    context.moveTo(left, height - 28); context.lineTo(right, height - 28);
+    context.moveTo(left, height - 35); context.lineTo(left, height - 21);
+    context.moveTo(right, height - 35); context.lineTo(right, height - 21);
+    context.stroke();
+    context.font = '500 11px "DM Mono", ui-monospace, monospace';
+    context.textAlign = "center";
+    context.fillText(state.interval.key === "blind" ? "L = 2π" : "L = 2", (left + right) / 2, height - 8);
+
+    context.fillStyle = "rgba(19,33,38,.55)";
+    for (let k = -3; k <= 3; k++) {
+      const x = toPixel(k * Math.PI);
+      const label = k === 0 ? "0" : (k === 1 ? "π" : k === -1 ? "−π" : `${k}π`);
+      context.fillText(label, x, mid + 17);
+    }
+    updateReadout();
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    width = rect.width;
+    height = rect.height;
+    canvas.width = Math.max(120, Math.round(width * dpr));
+    canvas.height = Math.max(100, Math.round(height * dpr));
+    draw();
+  }
+
+  function pointerTo(event) {
+    const rect = canvas.getBoundingClientRect();
+    state.centre = toField((event.clientX - rect.left) / rect.width * width);
+    clampCentre();
+    draw();
+  }
+
+  function selectInterval(key) {
+    const next = INTERVALS.find((entry) => entry.key === key);
+    if (!next) return;
+    state.interval = next;
+    clampCentre();
+    buttons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.interval === key)));
+    draw();
+  }
+
+  canvas.addEventListener("pointerdown", (event) => {
+    state.dragging = true;
+    if (canvas.setPointerCapture) canvas.setPointerCapture(event.pointerId);
+    pointerTo(event);
+    event.preventDefault();
+  });
+  canvas.addEventListener("pointermove", (event) => { if (state.dragging) pointerTo(event); });
+  const release = (event) => {
+    state.dragging = false;
+    if (canvas.hasPointerCapture && canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+  };
+  canvas.addEventListener("pointerup", release);
+  canvas.addEventListener("pointercancel", release);
+  canvas.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    const direction = event.key === "ArrowLeft" ? -1 : 1;
+    state.centre += direction * (event.shiftKey ? .75 : .2);
+    clampCentre();
+    draw();
+    event.preventDefault();
+  });
+  buttons.forEach((button) => button.addEventListener("click", () => selectInterval(button.dataset.interval)));
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+  window.addEventListener("resize", resize);
+  window.addEventListener("load", resize);
+  selectInterval("blind");
+  resize();
+})();
+
+/* A live plot of the first three radial Neumann modes of the unit disk. The
+ * frequencies are the first three positive zeros of J_1. Drawing concentric
+ * annuli keeps the animation inexpensive while evaluating the actual J_0
+ * profile in the browser. */
+(() => {
+  "use strict";
+
+  const root = document.getElementById("schifferModeFigure");
+  if (!root) return;
+  const canvas = root.querySelector("#schifferModeCanvas");
+  const context = canvas && canvas.getContext("2d");
+  const playButton = root.querySelector("#schifferModePlay");
+  const modeButtons = [...root.querySelectorAll("[data-radial-mode]")];
+  if (!context || !playButton) return;
+
+  const MODES = [
+    { n: 1, rho: 3.8317059702, nodes: [2.4048255577] },
+    { n: 2, rho: 7.0155866698, nodes: [2.4048255577, 5.5200781103] },
+    { n: 3, rho: 10.1734681351, nodes: [2.4048255577, 5.5200781103, 8.6537279129] },
+  ];
+  const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const state = { mode: MODES[0], running: !reducedMotion, visible: true, phase: 0, previous: 0 };
+  let width = 0, height = 0, dpr = 1, frame = 0;
+
+  function besselJ0(x) {
+    const quarter = x * x / 4;
+    let term = 1, sum = 1;
+    for (let m = 1; m < 42; m++) {
+      term *= -quarter / (m * m);
+      sum += term;
+      if (Math.abs(term) < 1e-13) break;
+    }
+    return sum;
+  }
+
+  const STOPS = [
+    { t: 0, rgb: [18, 39, 66] },
+    { t: .25, rgb: [42, 116, 125] },
+    { t: .5, rgb: [234, 227, 205] },
+    { t: .75, rgb: [239, 112, 71] },
+    { t: 1, rgb: [166, 43, 73] },
+  ];
+  function ramp(value) {
+    const t = Math.max(0, Math.min(1, (value + 1.05) / 2.1));
+    let left = STOPS[0], right = STOPS[STOPS.length - 1];
+    for (let i = 1; i < STOPS.length; i++) {
+      if (t <= STOPS[i].t) { left = STOPS[i - 1]; right = STOPS[i]; break; }
+    }
+    const local = (t - left.t) / Math.max(1e-8, right.t - left.t);
+    const rgb = left.rgb.map((c, i) => Math.round(c + (right.rgb[i] - c) * local));
+    return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+  }
+
+  function draw() {
+    if (!width || !height) return;
+    const temporal = Math.cos(state.phase);
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.scale(dpr, dpr);
+    context.fillStyle = "#e8e1cf";
+    context.fillRect(0, 0, width, height);
+
+    const cx = width * .285;
+    const cy = height * .49;
+    const radius = Math.min(height * .37, width * .225);
+    const rings = 150;
+    for (let i = rings; i >= 1; i--) {
+      const radial = i / rings;
+      context.beginPath();
+      context.arc(cx, cy, radius * radial + .8, 0, Math.PI * 2);
+      context.fillStyle = ramp(besselJ0(state.mode.rho * radial) * temporal);
+      context.fill();
+    }
+    context.strokeStyle = "#132126";
+    context.lineWidth = 2;
+    context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.stroke();
+    context.strokeStyle = "rgba(241,238,229,.82)";
+    context.lineWidth = 1.2;
+    state.mode.nodes.forEach((zero) => {
+      context.beginPath(); context.arc(cx, cy, radius * zero / state.mode.rho, 0, Math.PI * 2); context.stroke();
+    });
+
+    const graphLeft = width * .57;
+    const graphRight = width * .95;
+    const graphMid = height * .50;
+    const graphAmplitude = height * .29;
+    context.strokeStyle = "rgba(19,33,38,.28)";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(graphLeft, graphMid); context.lineTo(graphRight, graphMid);
+    context.moveTo(graphLeft, height * .16); context.lineTo(graphLeft, height * .84);
+    context.stroke();
+
+    context.beginPath();
+    for (let i = 0; i <= 180; i++) {
+      const radial = i / 180;
+      const x = graphLeft + (graphRight - graphLeft) * radial;
+      const y = graphMid - graphAmplitude * besselJ0(state.mode.rho * radial) * temporal;
+      if (i === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    }
+    context.strokeStyle = "#ff7449";
+    context.lineWidth = 2.4;
+    context.stroke();
+
+    const rimValue = besselJ0(state.mode.rho) * temporal;
+    const rimY = graphMid - graphAmplitude * rimValue;
+    context.setLineDash([4, 4]);
+    context.strokeStyle = "rgba(19,33,38,.45)";
+    context.beginPath(); context.moveTo(graphRight, graphMid); context.lineTo(graphRight, rimY); context.stroke();
+    context.setLineDash([]);
+    context.fillStyle = "#132126";
+    context.beginPath(); context.arc(graphRight, rimY, 3.2, 0, Math.PI * 2); context.fill();
+
+    context.fillStyle = "rgba(19,33,38,.62)";
+    context.font = '500 11px "DM Mono", ui-monospace, monospace';
+    context.textAlign = "left";
+    context.fillText("centre", graphLeft, height * .91);
+    context.textAlign = "right";
+    context.fillText("rim", graphRight, height * .91);
+    context.textAlign = "left";
+    context.fillText(`ρ${state.mode.n} = ${state.mode.rho.toFixed(4)}…`, graphLeft, height * .11);
+    context.fillStyle = "#ff7449";
+    context.fillText("radial profile at this instant", graphLeft, height * .96);
+    canvas.setAttribute("aria-label", `Animated radial Neumann mode ${state.mode.n} on the disk, with frequency parameter ${state.mode.rho.toFixed(4)}`);
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    width = rect.width;
+    height = rect.height;
+    dpr = Math.min(1.75, window.devicePixelRatio || 1);
+    canvas.width = Math.max(240, Math.round(width * dpr));
+    canvas.height = Math.max(150, Math.round(height * dpr));
+    draw();
+  }
+
+  function syncPlayButton() {
+    playButton.textContent = state.running ? "pause" : "play";
+    playButton.setAttribute("aria-label", state.running ? "Pause radial mode animation" : "Play radial mode animation");
+    playButton.setAttribute("aria-pressed", String(!state.running));
+  }
+
+  function animate(now) {
+    if (!state.previous) state.previous = now;
+    const elapsed = Math.min(80, now - state.previous);
+    state.previous = now;
+    if (state.running && state.visible) {
+      state.phase = (state.phase + elapsed * Math.PI / 2000) % (2 * Math.PI);
+      draw();
+    }
+    frame = requestAnimationFrame(animate);
+  }
+
+  playButton.addEventListener("click", () => {
+    state.running = !state.running;
+    state.previous = performance.now();
+    syncPlayButton();
+    draw();
+  });
+  modeButtons.forEach((button) => button.addEventListener("click", () => {
+    const mode = MODES.find((entry) => entry.n === Number(button.dataset.radialMode));
+    if (!mode) return;
+    state.mode = mode;
+    state.phase = 0;
+    modeButtons.forEach((entry) => entry.setAttribute("aria-pressed", String(entry === button)));
+    draw();
+  }));
+  if (window.IntersectionObserver) {
+    new IntersectionObserver((entries) => { state.visible = entries[0].isIntersecting; }, { rootMargin: "120px" }).observe(root);
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+  window.addEventListener("resize", resize);
+  window.addEventListener("load", resize);
+  syncPlayButton();
+  resize();
+  frame = requestAnimationFrame(animate);
+  window.addEventListener("pagehide", () => cancelAnimationFrame(frame), { once: true });
 })();
