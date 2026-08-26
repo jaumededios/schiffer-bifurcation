@@ -1132,6 +1132,10 @@ dialog p:not(.eyebrow) {
 .intro-proof-body p { margin: 0 0 16px; }
 .intro-proof-body .tex-display { margin: 22px 0; color: var(--ink); }
 .intro-proof-aside { margin-top: 24px; padding-left: 17px; border-left: 1px solid var(--line); }
+.intro-proof-body .fn-ref a { color: var(--orange); text-decoration: none; }
+.intro-proof-body .fn-ref a:hover, .intro-proof-body .fn-ref a:focus-visible { text-decoration: underline; }
+.intro-footnote { scroll-margin-top: 96px; }
+.intro-footnote > sup { color: var(--orange); margin-right: 4px; }
 
 .intro-shapes { margin: 72px 0 0 70px; max-width: 1000px; padding: 0; }
 .intro-shapes figcaption { max-width: 780px; }
