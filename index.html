@@ -107,8 +107,8 @@
         </details>
 
         <div class="intro-copy intro-copy-wide">
-          <h3>Schiffer asked whether the disk is the only domain with a stationary boundary eigenfunction.</h3>
-          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions — the value of the unknown at the boundary — or Neumann boundary conditions — the normal derivative, or flux, at the boundary. Schiffer, in the 50s, wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
+          <h3>Schiffer asked a question regarding Neumann eigenfunctions of the Laplacian.</h3>
+          <p>In elliptic PDE the traditional theory imposes either Dirichlet boundary conditions (the value of the unknown at the boundary) or Neumann boundary conditions (the normal derivative, or flux, at the boundary). Schiffer, in the 50s, wondered what happens if we impose both, that is, if we consider an <em>overdetermined</em> problem. He considered the problem below, which S. T. Yau later listed as Problem 80 in his 1982 collection of open problems in geometry.</p>
           <div class="tex-display">
             \[
             \begin{cases}
@@ -130,14 +130,14 @@
         <details class="proof-details intro-proof">
           <summary><span>From Schiffer to Pompeiu: one Green identity</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>This is the easy direction, and it needs no assumption on the topology. Let \((u,\lambda)\) solve the Schiffer system on \(\Omega\), and let \(f\) be <em>any</em> solution of \(\Delta f+\lambda f=0\) on the whole plane — the plane wave \(f(x)=\cos(\sqrt\lambda\,x_1)\) will do. Fix a rigid motion \(\sigma\) and write \(\Omega_\sigma=\sigma(\Omega)\), \(u_\sigma=u\circ\sigma^{-1}\), which solves the same system on \(\Omega_\sigma\). Green's second identity reads</p>
+            <p>Let \((u,\lambda)\) solve the Schiffer system on \(\Omega\), and let \(f\) be <em>any</em> solution of \(\Delta f+\lambda f=0\) on the whole plane (the plane wave \(f(x)=\cos(\sqrt\lambda\,x_1)\) will do). Fix a rigid motion \(\sigma\) and write \(\Omega_\sigma=\sigma(\Omega)\), \(u_\sigma=u\circ\sigma^{-1}\), which solves the same system on \(\Omega_\sigma\). Green's second identity reads</p>
             <div class="tex-display">
               \[
               \int_{\Omega_\sigma}\bigl(u_\sigma\Delta f-f\Delta u_\sigma\bigr)
               =\int_{\partial\Omega_\sigma}\bigl(u_\sigma\,\partial_\nu f-f\,\partial_\nu u_\sigma\bigr).
               \]
             </div>
-            <p>The left-hand side vanishes, because both functions solve the same Helmholtz equation and the two terms become \(-\lambda u_\sigma f\) and \(-\lambda f u_\sigma\). On the right-hand side the boundary conditions \(u_\sigma=1\) and \(\partial_\nu u_\sigma=0\) collapse the integrand to \(\partial_\nu f\). Hence</p>
+            <p>The left-hand side vanishes since \(\Delta f=-\lambda f\) and \(\Delta u_\sigma=-\lambda u_\sigma\) (because the Laplacian respects rigid motions). On the right-hand side the boundary conditions \(u_\sigma=1\) and \(\partial_\nu u_\sigma=0\) collapse the integrand to \(\partial_\nu f\). Hence</p>
             <div class="tex-display">
               \[
               0=\int_{\partial\Omega_\sigma}\partial_\nu f
@@ -170,7 +170,7 @@
 
         <div class="intro-copy intro-copy-wide">
           <h3>A Schiffer domain is a critical point of a Neumann eigenvalue.</h3>
-          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) — which is the Schiffer system above. Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
+          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) (which is the Schiffer system above). Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
         </div>
 
         <details class="proof-details intro-proof">
