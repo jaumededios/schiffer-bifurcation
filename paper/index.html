@@ -169,8 +169,54 @@
 
 
         <div class="intro-copy intro-copy-wide">
+          <h3>What happens if we look for \(\Omega\) close to a ball.</h3>
+          <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction. Then, if we impose that \((u+\delta u,\ \Omega+\delta\Omega\,\nu)\) also solves Schiffer, at the linear level we read:</p>
+          <div class="tex-display">
+            \[
+            \begin{cases}
+            (\Delta+\lambda)(u+\delta u)=0,\\[2pt]
+            u|_{\partial\Omega}+\delta\Omega\,\partial_\nu u|_{\partial\Omega}+\delta u|_{\partial\Omega}+\text{l.o.}=1,\\[2pt]
+            \partial_\nu u|_{\partial\Omega}+\partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u+\text{l.o.}=0,
+            \end{cases}
+            \quad\Longrightarrow\quad
+            \begin{cases}
+            (\Delta+\lambda)\delta u=0,\\[2pt]
+            \delta u|_{\partial\Omega}=0,\\[2pt]
+            \partial_\nu^2u|_{\partial\Omega}\,\delta\Omega+\partial_\nu\delta u=0,
+            \end{cases}
+            \]
+          </div>
+        </div>
+
+        <div class="intro-lead">
+          <div class="intro-copy">
+            <p>where in the second system we neglect lower order terms and just look at the linear ones. The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
+            <p>This approach has been used in overdetermined problems. Unfortunately, the only planar Schiffer examples we know are balls, and there Siegel proved that there is no agreement of Neumann and Dirichlet eigenvalues, blocking the route described above.</p>
+          </div>
+          <div class="equation-system intro-statement" role="img" aria-label="A Schiffer example can be perturbed when lambda is also a Dirichlet eigenvalue">
+            <span class="system-label">Perturbation</span>
+            <p class="intro-question">Suppose a Schiffer example \((u,\Omega)\), so in particular \(u\) is a Neumann eigenfunction of the Laplacian with eigenvalue \(\lambda\). We can perturb that solution if \(\lambda\) is also a Dirichlet eigenvalue.</p>
+            <p>In that case its eigenfunction \(\delta u\) is the corresponding perturbation of \(u\), and \(\Omega\) is perturbed by \(\partial_\nu\delta u/\lambda\).</p>
+          </div>
+        </div>
+
+        <details class="proof-details intro-proof">
+          <summary><span>The small computation: \(\partial_\nu^2u=-\lambda\) on the boundary</span><i>expand +</i></summary>
+          <div class="intro-proof-body">
+            <p>At a boundary point, split the Laplacian into its normal, mean-curvature and tangential parts,</p>
+            <div class="tex-display">
+              \[
+              \Delta u=\partial_\nu^2u+H\,\partial_\nu u+\Delta_{\partial\Omega}u .
+              \]
+            </div>
+            <p>The Neumann condition \(\partial_\nu u=0\) kills the second term, and \(u\equiv1\) on \(\partial\Omega\) kills the third. Hence \(\partial_\nu^2u=\Delta u=-\lambda u=-\lambda\) there, and the third linearized equation reads \(-\lambda\,\delta\Omega+\partial_\nu\delta u=0\), that is, \(\delta\Omega=\partial_\nu\delta u/\lambda\). <span class="qed">□</span></p>
+            <p class="intro-proof-aside">Section 02 runs the same linearization in angular modes and takes it through to the nonlinear rigidity of the disk, where the coincidence to be excluded is \(J_1(\rho)=0\) together with \(J_\ell(\rho)=0\), \(\rho=\sqrt\lambda\,r\). Siegel's theorem says two Bessel functions of distinct integer order share no positive zero, and the remaining mode \(\ell=1\) is only a translation.</p>
+          </div>
+        </details>
+
+        <div class="intro-copy intro-copy-wide">
           <h3>A Schiffer domain is a critical point of a Neumann eigenvalue.</h3>
-          <p>Nothing so far explains why the disk should be the answer to either question. The reason is that the Schiffer condition is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) (which is the Schiffer system above). Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
+          <p>There is a second way to read the same boundary condition, which shows it is not an accident of the equations: it is exactly a criticality condition. Fix a smooth bounded \(\Omega\) with connected boundary, a simple Neumann eigenvalue \(\mu&gt;0\), and its eigenfunction \(u\) normalized by \(\int_\Omega u^2=1\). Deform \(\Omega\) while keeping its area fixed. Then \(\mu\) is stationary under every such deformation precisely when \(u\) is constant on \(\partial\Omega\) (which is the Schiffer system above). Schiffer domains are the critical points of a Neumann eigenvalue under a volume constraint, and Schiffer's question asks whether the disk is the only one.</p>
         </div>
 
         <details class="proof-details intro-proof">
@@ -195,29 +241,8 @@
         </details>
 
         <div class="intro-copy intro-copy-wide">
-          <p>Reading the condition this way also says what must happen for one Schiffer domain to deform into another, and this is where Dirichlet eigenvalues enter. Suppose \(\Omega_t\) is a smooth family of Schiffer domains through \(\Omega\), with normal velocity \(f\), and let \(w\) be the shape derivative of \(u_t\). Differentiating the three conditions of the Schiffer system gives, in each angular mode \(\ell\ge1\),</p>
-          <div class="tex-display">
-            \[
-            \begin{aligned}
-            -\Delta w_\ell&amp;=\lambda w_\ell &amp;&amp;\text{in }\Omega,\\
-            w_\ell&amp;=0,\qquad \partial_\nu w_\ell=\lambda f_\ell &amp;&amp;\text{on }\partial\Omega .
-            \end{aligned}
-            \]
-          </div>
-          <p>If the boundary really moves in mode \(\ell\), then \(f_\ell\not\equiv0\), so \(w_\ell\not\equiv0\); and the first two lines say that \(w_\ell\) is then a <em>Dirichlet</em> eigenfunction of \(-\Delta\) at the very same \(\lambda\). So a single number \(\lambda\) has to be at once a Neumann eigenvalue whose eigenfunction is constant on the boundary, and a Dirichlet eigenvalue in a nonradial mode. Two spectra with no reason to meet are forced to meet.</p>
-          <p>On the disk that coincidence is \(J_1(\rho)=0\) together with \(J_\ell(\rho)=0\), where \(\rho=\sqrt\lambda\,r\); the Bourget–Siegel theorem says two Bessel functions of distinct integer order share no positive zero, and the remaining mode \(\ell=1\) is only translation. That is the rigidity of the disk, and section 02 carries it out in full.</p>
-          <p>Everything after that is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer \(\ell\) is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
+          <p>Everything after this is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer order is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
         </div>
-
-        <details class="proof-details intro-proof">
-          <summary><span>Where the Dirichlet eigenfunction comes from</span><i>expand +</i></summary>
-          <div class="intro-proof-body">
-            <p>Differentiate each condition of the Schiffer system along the family. From \(u_t=1\) on \(\partial\Omega_t\) the shape derivative satisfies \(w=-f\,\partial_\nu u\) on \(\partial\Omega\), and \(\partial_\nu u=0\), so \(w=0\) there.</p>
-            <p>From \(\partial_\nu u_t=0\) on \(\partial\Omega_t\) one gets \(\partial_\nu w+f\,\partial_{\nu\nu}u-\nabla_{\partial\Omega}u\cdot\nabla_{\partial\Omega}f=0\). The last term drops because \(u\) is constant on the boundary. For the middle one, split the Laplacian at the boundary as \(\Delta u=\partial_{\nu\nu}u+H\,\partial_\nu u+\Delta_{\partial\Omega}u\); the second and third terms vanish, so \(\partial_{\nu\nu}u=\Delta u=-\lambda u=-\lambda\). Hence \(\partial_\nu w=\lambda f\).</p>
-            <p>Separating into angular modes gives the system above. Section 02 states this as Proposition 2.1 and takes it through to the nonlinear rigidity of the disk. <span class="qed">□</span></p>
-          </div>
-        </details>
-
         <figure class="intro-shapes">
           <figcaption>
             <p class="eyebrow">What a counterexample looks like</p>
