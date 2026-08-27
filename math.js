@@ -5,6 +5,7 @@
     throwOnError: false,
     strict: "warn",
   };
+  const serifEdition = document.body.classList.contains("tufte-site");
 
   // At subscript size the italic nu of the normal direction is hard to tell
   // apart from a latin v. Setting it in the bold face keeps the shape legible
@@ -24,12 +25,16 @@
       element.textContent = source;
       return;
     }
-    window.katex.render(emphasizeNu(source), element, {
+    const serif = options.serif ?? (serifEdition || Boolean(options.displayMode));
+    const preparedSource = serif
+      ? emphasizeNu(source)
+      : `\\mathsf{${emphasizeNu(source)}}`;
+    window.katex.render(preparedSource, element, {
       ...sharedOptions,
       displayMode: Boolean(options.displayMode),
     });
     element.querySelectorAll(".katex").forEach((node) => {
-      node.classList.add(options.serif ? "katex-inline-serif" : "katex-inline-sans");
+      node.classList.add(serif ? "katex-inline-serif" : "katex-inline-sans");
     });
   };
 
@@ -55,10 +60,13 @@
   window.renderMathInElement(document.body, {
     ...sharedOptions,
     delimiters: [{ left: "\\(", right: "\\)", display: false }],
-    preProcess: (source) => "\\mathsf{" + emphasizeNu(source) + "}",
+    preProcess: serifEdition
+      ? emphasizeNu
+      : (source) => "\\mathsf{" + emphasizeNu(source) + "}",
   });
   document.querySelectorAll(".katex").forEach((node) => {
-    if (!node.classList.contains("katex-inline-serif")) node.classList.add("katex-inline-sans");
+    if (node.classList.contains("katex-inline-serif")) return;
+    node.classList.add(serifEdition ? "katex-inline-serif" : "katex-inline-sans");
   });
 
   // Display equations retain the traditional theorem/proof math face. Both

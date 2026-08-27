@@ -9,23 +9,25 @@
   const svg = root.querySelector("#shapeVariationSvg");
   const reference = root.querySelector("#shapeVariationReference");
   const current = root.querySelector("#shapeVariationCurrent");
+  const arrowAnchors = root.querySelector("#shapeVariationArrowAnchors");
   const arrows = root.querySelector("#shapeVariationArrows");
   const displacement = root.querySelector("#shapeVariationDisplacement");
   const point = root.querySelector("#shapeVariationPoint");
   const movedPoint = root.querySelector("#shapeVariationMovedPoint");
+  const pointLabelBox = root.querySelector("#shapeVariationPointLabelBox");
   const pointLabel = root.querySelector("#shapeVariationPointLabel");
-  const domainSubscript = root.querySelector("#shapeVariationDomainSubscript");
+  const domainLabel = root.querySelector("#shapeVariationDomainLabel");
   const slider = root.querySelector("#shapeVariationSlider");
   const output = root.querySelector("#shapeVariationValue");
-  if (!svg || !reference || !current || !arrows || !displacement || !point ||
-      !movedPoint || !pointLabel || !domainSubscript || !slider || !output) return;
+  if (!svg || !reference || !current || !arrowAnchors || !arrows || !displacement || !point ||
+      !movedPoint || !pointLabelBox || !pointLabel || !domainLabel || !slider || !output) return;
 
   const NS = "http://www.w3.org/2000/svg";
   const CX = 310;
   const CY = 195;
   const RADIUS = 121;
   const DISPLACEMENT = 28;
-  const ARROW_SCALE = 28;
+  const ARROW_SCALE = 50;
 
   // A smooth, deliberately asymmetric profile. It is fixed throughout the
   // interaction; the slider changes only the signed deformation parameter.
@@ -53,9 +55,14 @@
   for (let i = 0; i < 12; i++) {
     const theta = 2 * Math.PI * i / 12;
     const velocity = profile(theta);
-    if (Math.abs(velocity) < .14) continue;
+    if (Math.abs(velocity) < .30) continue;
     const start = boundaryPoint(theta, 0);
     const endRadius = RADIUS + ARROW_SCALE * velocity;
+    const anchor = document.createElementNS(NS, "circle");
+    anchor.setAttribute("cx", start.x.toFixed(2));
+    anchor.setAttribute("cy", start.y.toFixed(2));
+    anchor.setAttribute("r", "2.7");
+    arrowAnchors.appendChild(anchor);
     const line = document.createElementNS(NS, "line");
     line.setAttribute("x1", start.x.toFixed(2));
     line.setAttribute("y1", start.y.toFixed(2));
@@ -87,10 +94,11 @@
     setLine(displacement, base, moved);
     setCircle(point, base);
     setCircle(movedPoint, moved);
-    pointLabel.setAttribute("x", (moved.x + 10).toFixed(2));
-    pointLabel.setAttribute("y", (moved.y - 9).toFixed(2));
-    pointLabel.textContent = tau === 0 ? "p₀" : "pₜ";
-    domainSubscript.textContent = tau === 0 ? "0" : "t";
+    pointLabelBox.setAttribute("x", (moved.x + 8).toFixed(2));
+    pointLabelBox.setAttribute("y", (moved.y - 23).toFixed(2));
+    window.SchifferMath?.render(pointLabel, tau === 0 ? "p_0" : "p_t", { serif: true });
+    window.SchifferMath?.render(domainLabel, tau === 0 ? "\\Omega_0" : "\\Omega_t", { serif: true });
+    reference.style.opacity = tau === 0 ? ".24" : ".88";
 
     const source = tau === 0 ? "t=0" : `t=${tau > 0 ? "+" : ""}${tau.toFixed(2)}\\varepsilon`;
     window.SchifferMath?.render(output, source);

@@ -294,7 +294,7 @@
             <label for="williams-technical-note" class="margin-toggle" aria-label="Show the technical note">&#8853;</label>
             <input type="checkbox" id="williams-technical-note" class="margin-toggle">
             <aside class="marginnote intro-footnote" id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</aside>
-            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
+            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by a nonzero function \(f\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
             <div class="tex-display">
               \[
@@ -321,17 +321,16 @@
           <div class="shape-variation-interactive">
             <div class="shape-variation-stage">
               <svg id="shapeVariationSvg" viewBox="0 0 620 390" role="img" aria-label="A reference domain, a moving normally perturbed boundary, and visible arrows for the normal velocity">
-                <defs><marker id="shapeVariationArrow" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
+                <defs><marker id="shapeVariationArrow" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.5" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z"/></marker></defs>
                 <path id="shapeVariationCurrent" class="variation-deformed-domain"/>
                 <path id="shapeVariationReference" class="variation-original-boundary"/>
+                <g id="shapeVariationArrowAnchors" class="variation-arrow-anchors"></g>
                 <g id="shapeVariationArrows" class="variation-normal-field" marker-end="url(#shapeVariationArrow)"></g>
                 <line id="shapeVariationDisplacement" class="variation-distance"/>
                 <circle id="shapeVariationPoint" class="variation-point original" r="3.5"/>
                 <circle id="shapeVariationMovedPoint" class="variation-point moved" r="4"/>
-                <text class="variation-domain-label" x="310" y="202" text-anchor="middle">&#937;<tspan id="shapeVariationDomainSubscript" baseline-shift="sub" font-size="13">0</tspan></text>
-                <text class="variation-svg-label" x="24" y="30">dashed: &#8706;&#937;</text>
-                <text class="variation-svg-label accent" x="24" y="50">orange: &#8706;&#937;<tspan baseline-shift="sub" font-size="8">t</tspan></text>
-                <text id="shapeVariationPointLabel" class="variation-sign-label" text-anchor="start">p</text>
+                <foreignObject x="270" y="171" width="80" height="48"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationDomainLabel" class="variation-domain-math">\(\Omega_0\)</div></foreignObject>
+                <foreignObject id="shapeVariationPointLabelBox" x="446" y="174" width="54" height="32"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationPointLabel" class="variation-point-math">\(p_0\)</div></foreignObject>
               </svg>
               <div class="variation-stage-caption"><i aria-hidden="true"></i><span>the arrows show the velocity \(f\nu\) at \(t=0\)</span></div>
             </div>
