@@ -260,24 +260,6 @@
   const state = { length: 2 * Math.PI, centre: 0, dragging: false };
   let width = 0, height = 0, dpr = 1;
 
-  const STOPS = [
-    { t: 0, rgb: [18, 39, 66] },
-    { t: .25, rgb: [42, 116, 125] },
-    { t: .5, rgb: [234, 227, 205] },
-    { t: .75, rgb: [239, 112, 71] },
-    { t: 1, rgb: [166, 43, 73] },
-  ];
-  function ramp(value, alpha = 1) {
-    const t = Math.max(0, Math.min(1, (value + 1.15) / 2.3));
-    let left = STOPS[0], right = STOPS[STOPS.length - 1];
-    for (let i = 1; i < STOPS.length; i++) {
-      if (t <= STOPS[i].t) { left = STOPS[i - 1]; right = STOPS[i]; break; }
-    }
-    const local = (t - left.t) / Math.max(1e-8, right.t - left.t);
-    const rgb = left.rgb.map((c, i) => Math.round(c + (right.rgb[i] - c) * local));
-    return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
-  }
-
   const toPixel = (x) => (x + VIEW) / (2 * VIEW) * width;
   const toField = (px) => px / width * (2 * VIEW) - VIEW;
 
@@ -313,46 +295,54 @@
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.scale(dpr, dpr);
 
-    context.fillStyle = "#e9e3d3";
+    context.fillStyle = "#f1eee5";
     context.fillRect(0, 0, width, height);
-    for (let px = 0; px < width; px += 2) {
-      context.fillStyle = ramp(Math.cos(toField(px + 1)), .78);
-      context.fillRect(px, 0, 2.5, height);
-    }
 
     const left = toPixel(state.centre - state.length / 2);
     const right = toPixel(state.centre + state.length / 2);
-    context.fillStyle = "rgba(241,238,229,.70)";
-    context.fillRect(0, 0, left, height);
-    context.fillRect(right, 0, width - right, height);
-
     const mid = height * .47;
-    const amplitude = Math.min(72, height * .25);
+    const amplitude = Math.min(112, height * .30);
+    const curveY = (px) => mid - amplitude * Math.cos(toField(px));
+
+    // Conventional axes and light guide lines for the graph y = cos(x).
+    context.strokeStyle = "rgba(19,33,38,.12)";
+    context.lineWidth = 1;
+    [-1, 1].forEach((value) => {
+      const y = mid - value * amplitude;
+      context.beginPath(); context.moveTo(0, y); context.lineTo(width, y); context.stroke();
+    });
+    context.strokeStyle = "rgba(19,33,38,.34)";
+    context.beginPath(); context.moveTo(0, mid); context.lineTo(width, mid); context.stroke();
+    const zeroX = toPixel(0);
+    context.beginPath(); context.moveTo(zeroX, 18); context.lineTo(zeroX, height - 50); context.stroke();
+
+    // Shade only the signed area over the selected interval. Positive and
+    // negative pieces use the two sides of the site's diverging palette.
+    for (let px = Math.max(0, left); px < Math.min(width, right); px += 2) {
+      const value = Math.cos(toField(px + 1));
+      const y = mid - amplitude * value;
+      context.fillStyle = value >= 0 ? "rgba(255,116,73,.22)" : "rgba(42,116,125,.20)";
+      context.fillRect(px, Math.min(mid, y), 2.5, Math.abs(mid - y));
+    }
+
+    // Draw the graph itself after the area so its geometry remains crisp.
     context.beginPath();
     for (let px = 0; px <= width; px += 2) {
-      const y = mid - amplitude * Math.cos(toField(px));
+      const y = curveY(px);
       if (px === 0) context.moveTo(px, y); else context.lineTo(px, y);
     }
     context.strokeStyle = "#132126";
     context.lineWidth = 2;
     context.stroke();
 
-    context.strokeStyle = "rgba(19,33,38,.35)";
-    context.lineWidth = 1;
-    context.beginPath();
-    context.moveTo(0, mid); context.lineTo(width, mid);
-    context.stroke();
-
     context.strokeStyle = "#ff7449";
     context.fillStyle = "#ff7449";
     context.lineWidth = 2.5;
-    [left, right].forEach((x) => {
-      context.beginPath(); context.moveTo(x, 12); context.lineTo(x, height - 25); context.stroke();
-    });
+    const intervalY = height - 29;
     context.beginPath();
-    context.moveTo(left, height - 28); context.lineTo(right, height - 28);
-    context.moveTo(left, height - 35); context.lineTo(left, height - 21);
-    context.moveTo(right, height - 35); context.lineTo(right, height - 21);
+    context.moveTo(left, intervalY); context.lineTo(right, intervalY);
+    context.moveTo(left, intervalY - 7); context.lineTo(left, intervalY + 7);
+    context.moveTo(right, intervalY - 7); context.lineTo(right, intervalY + 7);
     context.stroke();
     context.font = '500 11px "KaTeX_Main", serif';
     context.textAlign = "center";
@@ -365,8 +355,15 @@
     for (let k = -3; k <= 3; k++) {
       const x = toPixel(k * Math.PI);
       const label = k === 0 ? "0" : (k === 1 ? "π" : k === -1 ? "−π" : `${k}π`);
+      context.beginPath(); context.moveTo(x, mid - 4); context.lineTo(x, mid + 4); context.strokeStyle = "rgba(19,33,38,.32)"; context.lineWidth = 1; context.stroke();
       context.fillText(label, x, mid + 17);
     }
+    context.textAlign = "left";
+    context.fillText("1", 8, mid - amplitude - 7);
+    context.fillText("−1", 8, mid + amplitude + 14);
+    context.textAlign = "right";
+    context.fillStyle = "rgba(19,33,38,.72)";
+    context.fillText("f(x) = cos x", width - 12, 22);
     updateReadout();
   }
 
