@@ -165,13 +165,22 @@
 
     const sphereFront = [];
     const sphereBack = [];
+    const sphereRadius = 111;
+    const equatorMinorRadius = 35;
+    const projectedPoleRadius = Math.sqrt(sphereRadius ** 2 - equatorMinorRadius ** 2);
     for (let index = 0; index <= 96; index++) {
       const theta = -Math.PI / 2 + Math.PI * index / 96;
-      const envelope = Math.cos(theta);
-      const displacement = 38 * branchAmount * envelope * (.67 + .33 * Math.cos(8 * theta));
-      const x = 260 + 111 * Math.sin(theta);
-      sphereFront.push({ x, y: 143 + displacement });
-      sphereBack.push({ x, y: 143 - displacement });
+      const equatorEnvelope = Math.cos(theta);
+      // The equator is an ellipse in this tilted orthographic projection.
+      // A branch perturbation changes the latitude beta(phi), rather than
+      // scaling that ellipse to a horizontal diameter.  cos(8 theta) gives
+      // four waves on each projected half and hence eight around the sphere.
+      const latitude = .21 * branchAmount * Math.cos(8 * theta);
+      const commonLatitudeShift = -projectedPoleRadius * Math.sin(latitude);
+      const projectedEquatorDepth = equatorMinorRadius * Math.cos(latitude) * equatorEnvelope;
+      const x = 260 + sphereRadius * Math.cos(latitude) * Math.sin(theta);
+      sphereFront.push({ x, y: 143 + projectedEquatorDepth + commonLatitudeShift });
+      sphereBack.push({ x, y: 143 - projectedEquatorDepth + commonLatitudeShift });
     }
     const frontPath = worldPath(sphereFront);
     sphereDomainFill.setAttribute("d", `${frontPath}A111 111 0 0 0 149 143Z`);
