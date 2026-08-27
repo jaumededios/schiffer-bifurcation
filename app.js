@@ -922,7 +922,7 @@ function stopPlayback() {
   if (state.playFrame) cancelAnimationFrame(state.playFrame);
   state.playFrame = null;
   $("#playIcon").textContent = "▶";
-  $("#playLabel").textContent = "Animate the branch";
+  $("#playLabel").textContent = "Animate";
 }
 
 function togglePlayback() {
@@ -1528,7 +1528,7 @@ function stopConePlayback() {
   if (coneState.playFrame) cancelAnimationFrame(coneState.playFrame);
   coneState.playFrame = null;
   $("#conePlayIcon").textContent = "▶";
-  $("#conePlayLabel").textContent = coneState.progress > .999 ? "Repeat the continuation" : "Animate the continuation";
+  $("#conePlayLabel").textContent = coneState.progress > .999 ? "Repeat" : "Animate";
 }
 
 function toggleConePlayback() {
@@ -2311,7 +2311,7 @@ function stopModesPlayback() {
   if (modesState.playFrame) cancelAnimationFrame(modesState.playFrame);
   modesState.playFrame = null;
   $("#modesPlayIcon").textContent = "▶";
-  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Repeat crossing → integral order" : "Animate crossing → integral order";
+  $("#modesPlayLabel").textContent = modesState.progress > .999 ? "Repeat" : "Animate";
 }
 
 function toggleModesPlayback() {
@@ -2996,8 +2996,8 @@ if (debyeData) {
     debyeState.playFrame = null;
     $("#debyePlayIcon").textContent = "▶";
     setMath("#debyePlayLabel", debyeState.radius > debyeData.rMax - .01
-      ? "\\text{Repeat }r_0:26\\to30"
-      : "\\text{Animate }r_0:26\\to30");
+      ? "\\text{Repeat}"
+      : "\\text{Animate}");
   }
 
   function toggleDebyePlayback() {

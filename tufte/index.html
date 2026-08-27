@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260827.9">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.16">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.17">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -126,7 +126,7 @@
                 </div>
                 <p>Hence \(I_{2\pi}\) fails the one-dimensional Pompeiu property: the nonzero function \(\cos x\) belongs to the kernel for every translation. The panel below plots this identity as \(t\) and \(L\) vary.</p>
               </figcaption>
-              <div class="measurement-panel line-probe-panel">
+              <div class="measurement-panel line-probe-panel side-figure">
                 <canvas class="measurement-canvas" id="lineProbeCanvas" tabindex="0" role="img" aria-label="Graph of cosine x with a movable interval"></canvas>
                 <div class="measurement-side line-probe-side">
                   <div class="measurement-size-control">
@@ -147,7 +147,7 @@
             <div class="intro-copy disk-proof-flow">
               <label for="pompeiu-model-note" class="margin-toggle" aria-label="Show the interactive disk probe">&#8853;</label>
               <input type="checkbox" id="pompeiu-model-note" class="margin-toggle">
-              <figure class="marginnote pompeiu-margin-figure" id="pompeiuFigure" aria-label="Interactive disk probe for the function cosine of x one">
+              <figure class="marginnote side-figure pompeiu-margin-figure" id="pompeiuFigure" aria-label="Interactive disk probe for the function cosine of x one">
                 <div class="measurement-panel pompeiu-panel">
                   <canvas class="measurement-canvas" id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
                   <div class="measurement-side pompeiu-side">
@@ -362,20 +362,13 @@
               </svg>
               <div class="variation-stage-caption"><i aria-hidden="true"></i><span>the arrows show the velocity \(f\nu\) at \(t=0\)</span></div>
             </section>
-            <aside class="shape-variation-controls">
-              <span class="variation-equation-label">First-order normal graph</span>
-              <div class="tex-display variation-equation">\[p_t=p+t\,f(p)\nu(p)+O(t^2).\]</div>
+            <aside class="shape-variation-controls paper-demo-controls">
               <div class="variation-control-label"><label for="shapeVariationSlider">deformation parameter</label><output id="shapeVariationValue" for="shapeVariationSlider">\(t=0\)</output></div>
               <div class="variation-slider-track">
                 <input id="shapeVariationSlider" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Move the signed deformation parameter t from minus epsilon to plus epsilon">
                 <i aria-hidden="true"></i>
               </div>
               <div class="variation-slider-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
-              <div class="variation-legend">
-                <span><i class="reference" aria-hidden="true"></i>reference boundary \(\partial\Omega\)</span>
-                <span><i class="current" aria-hidden="true"></i>current boundary \(\partial\Omega_t\)</span>
-              </div>
-              <p>At \(t=0\), the two boundaries coincide. The arrows remain visible because they represent the derivative of the family at that instant.</p>
             </aside>
           <figcaption>The slider displays \(t/\varepsilon\in[-1,1]\) for one fixed smooth velocity \(f=\delta\Omega\). Positive values follow \(f\nu\); negative values reverse the motion. The diagram records the first-order normal variation used in the linearized problem below.</figcaption>
         </figure>
@@ -481,7 +474,7 @@
         <div class="intro-copy intro-copy-wide construction-flow">
           <label for="construction-gallery-note" class="margin-toggle" aria-label="Show the shape comparison">&#8853;</label>
           <input type="checkbox" id="construction-gallery-note" class="margin-toggle">
-        <figure class="marginnote margin-gallery intro-shapes" aria-label="Four examples with periodically fluted boundaries">
+        <figure class="marginnote side-figure margin-gallery intro-shapes" aria-label="Four examples with periodically fluted boundaries">
           <div class="intro-shapes-row">
             <div class="intro-shapes-examples">
               <div class="intro-shape intro-shape-result intro-shape-computer">
@@ -512,7 +505,7 @@
               </div>
               <div class="intro-shapes-objects">
             <div class="intro-shape intro-shape-object">
-              <div class="intro-shape-media intro-shape-coin">
+              <div class="intro-shape-media intro-shape-coin" data-gallery-crop="coin" data-focal-x="right" data-focal-y="lower">
                 <img src="../assets/scalloped-objects.png" width="1200" height="654" loading="lazy" decoding="async" alt="A Hong Kong two-dollar coin with twelve scallops around its boundary">
               </div>
               <svg viewBox="0 0 180 180" role="img" aria-label="A twelve-lobed scalloped outline, the shape of a Hong Kong two dollar coin">
@@ -522,7 +515,7 @@
               <small>A twelve-scalloped circulating coin, first issued in 1975.</small>
             </div>
             <div class="intro-shape intro-shape-object">
-              <div class="intro-shape-media intro-shape-biscuit">
+              <div class="intro-shape-media intro-shape-biscuit" data-gallery-crop="biscuit" data-focal-x="left">
                 <img src="../assets/scalloped-objects.png" width="1200" height="654" loading="lazy" decoding="async" alt="A round biscuit with a regularly fluted boundary">
               </div>
               <svg viewBox="0 0 180 180" role="img" aria-label="A circular outline with a finely fluted rim, the shape of a scalloped biscuit">
@@ -552,7 +545,7 @@
         </div>
         <div class="world-cards margin-figure-sequence">
           <article class="margin-figure-row">
-            <aside class="world-visual margin-figure" aria-label="Interactive cylinder branch figure">
+            <aside class="world-visual margin-figure side-figure" aria-label="Interactive cylinder branch figure">
             <div class="world-sketch realistic-world" role="img" aria-label="A compact domain on a three-dimensional flat cylinder whose two boundary loops are controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
@@ -609,7 +602,7 @@
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article class="margin-figure-row">
-            <aside class="world-visual margin-figure" aria-label="Interactive spherical branch figure">
+            <aside class="world-visual margin-figure side-figure" aria-label="Interactive spherical branch figure">
             <div class="world-sketch realistic-world" role="img" aria-label="A contractible spherical cap contained in the northern hemisphere whose eight-fold boundary is controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
@@ -663,20 +656,20 @@
         </header>
         <div class="geometry-lead"><h3>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h3><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
         <div class="geometry-laboratory interactive-plate figure-band">
-          <aside class="geometry-controls">
-            <div class="control-heading control-heading-reset"><button id="storyGeometryResetButton" type="button">Reset</button></div>
+          <aside class="geometry-controls paper-demo-controls">
+            <div class="control-heading control-heading-reset" hidden aria-hidden="true"><button id="storyGeometryResetButton" type="button" hidden aria-hidden="true">Reset</button></div>
             <div class="geometry-stages" aria-label="Seven stages of the quotient construction">
-              <button type="button" data-story-stage="0"><span>01</span><strong>Start with \(N\)-fold symmetry</strong><small>the field is repeated in \(N\) sectors</small></button>
-              <button type="button" data-story-stage="0.166667"><span>02</span><strong>Choose one fundamental sector</strong><small>rescale its angular coordinate</small></button>
-              <button type="button" data-story-stage="0.333333"><span>03</span><strong>Identify the radial sides</strong><small>the quotient is a cone</small></button>
-              <button type="button" data-story-stage="0.5"><span>04</span><strong>Take the large-\(N\) limit</strong><small>a fixed collar tends to a half-cylinder</small></button>
-              <button type="button" data-story-stage="0.666667"><span>05</span><strong>Bifurcate on the half-cylinder</strong><small>the boundary is \(x=h(\psi)\)</small></button>
-              <button type="button" data-story-stage="0.833333"><span>06</span><strong>Return to finite \(R\)</strong><small>obtain a deformed cone</small></button>
-              <button type="button" data-story-stage="1"><span>07</span><strong>Set \(R=N\) and lift to the plane</strong><small>the \(N\) sectors fit exactly</small></button>
+              <button type="button" data-story-stage="0"><span>01</span><strong>\(N\)-fold symmetry</strong></button>
+              <button type="button" data-story-stage="0.166667"><span>02</span><strong>Choose a sector</strong></button>
+              <button type="button" data-story-stage="0.333333"><span>03</span><strong>Identify sides</strong></button>
+              <button type="button" data-story-stage="0.5"><span>04</span><strong>Large-\(N\) limit</strong></button>
+              <button type="button" data-story-stage="0.666667"><span>05</span><strong>Bifurcate</strong></button>
+              <button type="button" data-story-stage="0.833333"><span>06</span><strong>Finite \(R\)</strong></button>
+              <button type="button" data-story-stage="1"><span>07</span><strong>Lift to the plane</strong></button>
             </div>
-            <p id="storyGeometryState" class="geometry-stage-note">The same angular profile repeats \(N\) times.</p>
+            <p id="storyGeometryState" class="geometry-stage-note" hidden aria-hidden="true">The same angular profile repeats \(N\) times.</p>
             <div class="geometry-scrub"><div class="control-label"><label for="storyGeometryRange">construction</label><output id="storyGeometryValue">stage 1</output></div><input id="storyGeometryRange" type="range" min="0" max="1" value="0" step="0.001"></div>
-            <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Animate the quotient construction</span></button>
+            <button id="storyGeometryPlayButton" class="play-button" type="button"><span id="storyGeometryPlayIcon">▶</span><span id="storyGeometryPlayLabel">Animate</span></button>
           </aside>
           <section class="geometry-canvas-panel" aria-label="Animated construction from an N-fold planar domain to its cone quotient, the half-cylinder limit, a deformed cone, and the planar lift at integer order">
             <div id="storyGeometryCanvasWrap" class="geometry-canvas-wrap">
@@ -904,10 +897,9 @@
         </div>
 
         <div class="laboratory interactive-plate figure-band">
-          <aside class="controls" aria-label="Simulation controls">
-            <div class="control-heading">
-              <span>Parameters</span>
-              <button id="resetButton" type="button">Reset</button>
+          <aside class="controls paper-demo-controls" aria-label="Simulation controls">
+            <div class="control-heading" hidden aria-hidden="true">
+              <button id="resetButton" type="button" hidden aria-hidden="true">Reset</button>
             </div>
 
             <div class="control-block primary-control">
@@ -917,7 +909,6 @@
               </div>
               <input id="lambdaRange" type="range" min="2" max="3" value="2.40" step="0.01">
               <div class="range-scale"><span>2</span><span>2.5</span><span>3</span></div>
-              <p>This parameter determines the oscillatory normal frequency and the decay rate of each angular mode.</p>
             </div>
 
             <div class="control-block primary-control">
@@ -927,20 +918,18 @@
               </div>
               <input id="sRange" type="range" min="-0.85" max="0.85" value="0" step="0.005">
               <div class="range-scale"><span>−0.85</span><span>0</span><span>+0.85</span></div>
-              <p>The amplitude normalization is <span class="formula">\(h_1=s\)</span>. The numerical solve also determines <span class="formula">\(h_2\)</span> and <span class="formula">\(h_3\)</span> in the boundary graph. At <span class="formula">\(s=0\)</span>, the domain is the exact rectangular half-cylinder.</p>
             </div>
 
-            <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Animate the branch</span></button>
+            <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Animate</span></button>
 
             <details class="secondary-controls">
-              <summary>Additional parameters <span>+</span></summary>
+              <summary>Options <span>+</span></summary>
               <div class="control-block compact">
                 <div class="control-label">
                   <label for="phaseRange">angular phase \(\phi\)</label>
                   <output id="phaseValue" for="phaseRange">\(0\)</output>
                 </div>
                 <input id="phaseRange" type="range" min="0" max="6.283185" value="0" step="0.01">
-                <p>Rotates cosine continuously into sine around the cylinder.</p>
               </div>
               <div class="control-block compact">
                 <div class="control-label">
@@ -1079,9 +1068,8 @@
         </div>
 
         <div class="collar-field-laboratory interactive-plate figure-band" aria-label="Two-dimensional cylinder and cone mode comparison">
-          <aside class="collar-field-controls">
+          <aside class="collar-field-controls paper-demo-controls">
             <div class="control-heading">
-              <span>01 / choose one mode</span>
               <button id="collarFieldResetButton" type="button">Reset</button>
             </div>
 
@@ -1089,14 +1077,13 @@
               <div class="control-label"><label for="collarNRange">fold symmetry \(N\)</label><output id="collarNValue">28</output></div>
               <input id="collarNRange" type="range" min="26" max="30" value="28" step="1">
               <div class="range-scale"><span>26</span><span>28</span><span>30</span></div>
-              <p>The planar field has angular order <span class="formula">\(kN\)</span>. We stay in the same <span class="formula">\(28\pm2\)</span> large-radius window as the radial comparison below.</p>
             </div>
 
             <div class="collar-field-control-block">
               <div class="control-label"><label for="collarKRange">wave parameter \(k\)</label><output id="collarKValue">1</output></div>
               <input id="collarKRange" type="range" min="0" max="3" value="1" step="1">
               <div class="range-scale"><span>0</span><span>1</span><span>2</span><span>3</span></div>
-              <p id="collarRegimeCopy">Neumann mode: <span class="formula">\(\partial_r u=0\)</span> at <span class="formula">\(r=N\)</span>.</p>
+              <p id="collarRegimeCopy" hidden aria-hidden="true">Neumann mode: <span class="formula">\(\partial_r u=0\)</span> at <span class="formula">\(r=N\)</span>.</p>
             </div>
 
             <div class="collar-field-control-block">
@@ -1107,14 +1094,14 @@
               </div>
             </div>
 
-            <div class="collar-field-readout">
+            <div class="collar-field-readout" hidden aria-hidden="true">
               <div><span>cone order</span><strong id="collarAngularOrder">28</strong></div>
               <div><span>displayed depths</span><strong>5 / 13</strong></div>
               <div><span>\(k=1\) turning depth</span><strong id="collarTurningValue">10.65</strong></div>
               <div><span>spectral parameter</span><strong id="collarLambdaValue">\(\lambda_N=2.6042\)</strong></div>
             </div>
 
-            <figure class="collar-field-locator">
+            <figure class="collar-field-locator" hidden aria-hidden="true">
               <header><span>complete planar field</span><strong id="collarDiskTitle">angular order 28</strong></header>
               <div class="collar-field-locator-canvas"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with the two displayed sectors outlined"></canvas></div>
               <figcaption><span><i class="collar-local-key"></i>5-unit collar</span><span><i class="collar-wide-key"></i>13-unit view</span></figcaption>
@@ -1176,22 +1163,20 @@
         </div>
 
         <div class="debye-laboratory interactive-plate figure-band">
-          <aside class="debye-controls" aria-label="Large-radius Bessel comparison controls">
-            <div class="control-heading">
-              <span>Vary the boundary radius</span>
-              <button id="debyeResetButton" type="button">Reset</button>
+          <aside class="debye-controls paper-demo-controls" aria-label="Large-radius Bessel comparison controls">
+            <div class="control-heading" hidden aria-hidden="true">
+              <button id="debyeResetButton" type="button" hidden aria-hidden="true">Reset</button>
             </div>
 
             <div class="debye-control-block">
               <div class="control-label"><label for="debyeOrderRange">boundary radius \(r_0\)</label><output id="debyeOrderValue">28</output></div>
               <input id="debyeOrderRange" type="range" min="26" max="30" value="28" step="0.01">
               <div class="range-scale"><span>\(r_0=26\)</span><span>\(r_0=28\)</span><span>\(r_0=30\)</span></div>
-              <p>For each \(r_0\), the radial scale is chosen from the same branch of zeros of \(J_{r_0}'\). Thus the \(k=1\) Bessel profile remains Neumann at the rim while \(\lambda_{r_0}=(\rho_{r_0}/r_0)^2\) varies.</p>
             </div>
 
-            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Animate \(r_0:26\to30\)</span></button>
+            <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Animate</span></button>
 
-            <div class="debye-status">
+            <div class="debye-status" hidden aria-hidden="true">
               <div><span>spectral parameter</span><strong id="debyeLambdaValue">\(\lambda_R=2.60416\)</strong></div>
               <div><span>Neumann condition</span><strong id="debyePhaseValue">\(J_R'(\rho_R)=0\)</strong></div>
               <div><span>radial scale</span><strong id="debyeBetaValue">\(\rho_R=45.18473\)</strong></div>
@@ -1321,10 +1306,10 @@
           </article>
         </div>
         <div class="phase-story-lab interactive-plate figure-band">
-          <aside>
-            <div class="control-heading"><span>Illustrative branch · \(N=28\)</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
+          <aside class="paper-demo-controls">
+            <div class="control-heading"><button id="phaseStoryResetButton" type="button">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
-            <div class="phase-story-readout"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
+            <div class="phase-story-readout" hidden aria-hidden="true"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
           </aside>
           <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic variation from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
         </div>
@@ -1402,7 +1387,7 @@
             <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
           </div>
         </details>
-        <div class="abundance-laboratory figure-band">
+        <div class="abundance-laboratory reading-figure">
           <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
             <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through \(N=200\)</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
             <div class="abundance-readout abundance-readout-inline">
@@ -1481,13 +1466,12 @@
         </div>
 
         <div class="laboratory cone-laboratory interactive-plate figure-band">
-          <aside class="controls" aria-label="Cone simulation controls">
-            <div class="control-heading">
-              <span>Branch controls</span>
-              <button id="coneResetButton" type="button">Reset</button>
+          <aside class="controls paper-demo-controls" aria-label="Cone simulation controls">
+            <div class="control-heading" hidden aria-hidden="true">
+              <button id="coneResetButton" type="button" hidden aria-hidden="true">Reset</button>
             </div>
 
-            <div class="crossing-card" aria-label="Numerically selected cone crossing">
+            <div class="crossing-card" aria-label="Numerically selected cone crossing" hidden aria-hidden="true">
               <div><span>initial real order</span><strong>28.026397</strong></div>
               <div><span>integral order</span><strong>28</strong></div>
               <p>Smallest crossing below 100 with <span class="formula">\(1&lt;\lambda&lt;4\)</span> and fractional gap below 0.1.</p>
@@ -1500,7 +1484,7 @@
               </div>
               <input id="coneProgressRange" type="range" min="0" max="1" value="0" step="0.002">
               <div class="range-scale"><span>crossing \(R_*\)</span><span>integer \(N\)</span></div>
-              <p>This control interpolates the computed collocation solutions. Along the branch, the boundary amplitude changes to <span class="formula" id="coneSInline">\(s=0\)</span> while the computed value of \(R\) decreases.</p>
+              <p hidden aria-hidden="true">This control interpolates the computed collocation solutions. Along the branch, the boundary amplitude changes to <span class="formula" id="coneSInline">\(s=0\)</span> while the computed value of \(R\) decreases.</p>
             </div>
 
             <div class="control-block primary-control">
@@ -1510,12 +1494,11 @@
               </div>
               <input id="coneZoomRange" type="range" min="0" max="1" value="0.08" step="0.005">
               <div class="range-scale"><span>5-unit collar</span><span>cone point</span></div>
-              <p>The initial 3D view shows the boundary collar, where the cone is approximately cylindrical. Increasing the displayed depth extends the view toward the cone point.</p>
             </div>
 
-            <button id="conePlayButton" class="play-button" type="button"><span id="conePlayIcon">▶</span><span id="conePlayLabel">Animate the continuation</span></button>
+            <button id="conePlayButton" class="play-button" type="button"><span id="conePlayIcon">▶</span><span id="conePlayLabel">Animate</span></button>
 
-            <div class="solver-readout cone-readout">
+            <div class="solver-readout cone-readout" hidden aria-hidden="true">
               <div><span>real cone order \(R\)</span><strong id="coneRValue">28.026397</strong></div>
               <div><span>spectral parameter \(\lambda=\rho^2/R^2\)</span><strong id="coneLambdaValue">3.317011</strong></div>
               <div><span>unfolded seam gap</span><strong id="coneGapValue">0.339°</strong></div>
@@ -1589,24 +1572,22 @@
         </div>
 
         <div class="modes-laboratory interactive-plate figure-band">
-          <aside class="modes-controls light-controls" aria-label="Nested angular zoom controls">
-            <div class="control-heading">
-              <span>Nested zoom controls</span>
-              <button id="modesResetButton" type="button">Reset</button>
+          <aside class="modes-controls light-controls paper-demo-controls" aria-label="Nested angular zoom controls">
+            <div class="control-heading" hidden aria-hidden="true">
+              <button id="modesResetButton" type="button" hidden aria-hidden="true">Reset</button>
             </div>
 
             <div class="modes-control-block">
               <div class="control-label"><label for="modesTransferRange">cone branch</label><output id="modesTransferValue">62%</output></div>
               <input id="modesTransferRange" type="range" min="0" max="1" value="0.62" step="0.002">
               <div class="range-scale"><span>\(R_*\) / open seam</span><span>\(N=28\) / closed</span></div>
-              <div class="parameter-pair">
+              <div class="parameter-pair" hidden aria-hidden="true">
                 <div><span>real order \(R\)</span><strong id="modesOrderValue">28.016…</strong></div>
                 <div><span>boundary amplitude \(s\)</span><strong id="modesAmplitudeValue">0.2228</strong></div>
               </div>
-              <p>These values are interpolated from the computed nonlinear branch. The boundary amplitude increases while the real order \(R\) decreases to \(28\).</p>
             </div>
 
-            <div class="modes-control-block">
+            <div class="modes-control-block" hidden aria-hidden="true">
               <div class="control-label"><span>one-wavelength crop</span><output id="modesCropValue">centered on seam</output></div>
               <div class="fixed-zoom-pair">
                 <div><span>angular position</span><strong>seam · \(0^\circ\)</strong></div>
@@ -1615,7 +1596,7 @@
               <p>The crop spans one full angular wavelength and five radial units. These scales are fixed so the mismatch is always visible in the large flat zoom.</p>
             </div>
 
-            <div class="modes-control-block phase-control-block">
+            <div class="modes-control-block phase-control-block" hidden aria-hidden="true">
               <div class="control-label"><span>\(R\)-problem \(\longrightarrow\) cylinder phase</span><output id="modesPhaseValue">\(\Delta\xi=0.543^\circ\)</output></div>
               <div class="problem-map" aria-label="The Bessel radial problem becomes a sine-cosine problem on a flat collar">
                 <div><span>cone · regular at the cone point</span><strong>\(B_R=J_R\)</strong></div>
@@ -1629,12 +1610,11 @@
               <div class="range-scale"><span>\(R_*\) · pure sine</span><span>\(N=28\) · \(\Delta\xi_N\)</span></div>
               <div class="phase-law"><span>\(\xi'(R)=-\arccos(R/\rho)\)</span><span>\(\Delta\xi(s)\sim R(s)-R_*\sim s^2\)</span></div>
               <div class="phase-agreement"><span>exact boundary Cauchy phase</span><strong id="modesExactPhaseValue">\(\delta=0.543^\circ\)</strong></div>
-              <p>The trace below the heatmap compares the exact regular Bessel profile with its Debye sine/cosine wave. The exact zero at <span class="formula">\(R_*\)</span> anchors the phase; changing <span class="formula">\(R\)</span> moves it by the explicit formula above.</p>
             </div>
 
-            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Animate crossing → integral order</span></button>
+            <button id="modesPlayButton" class="play-button modes-play-button" type="button"><span id="modesPlayIcon">▶</span><span id="modesPlayLabel">Animate</span></button>
 
-            <div class="modes-status">
+            <div class="modes-status" hidden aria-hidden="true">
               <div><span>28-copy seam</span><strong id="modesGapValue">0.20°</strong></div>
               <div><span>one angular wavelength</span><strong id="modesWavelengthValue">6.283 units</strong></div>
               <div><span>local curvature</span><strong id="modesCurvatureValue">\(1/28.016\)</strong></div>
@@ -1726,10 +1706,10 @@
     <script defer src="../cone-data.js"></script>
     <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260827.11"></script>
-    <script defer src="../story.js?v=20260827.9"></script>
-    <script defer src="../abundance.js?v=20260827.8"></script>
+    <script defer src="../app.js?v=20260827.12"></script>
+    <script defer src="../story.js?v=20260827.10"></script>
+    <script defer src="../abundance.js?v=20260827.9"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>
-    <script defer src="layout-contract.js?v=20260827.13"></script>
+    <script defer src="layout-contract.js?v=20260827.14"></script>
   </body>
 </html>

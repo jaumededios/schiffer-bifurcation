@@ -6,7 +6,7 @@
   const rounded = (value) => Math.round(value * 10) / 10;
   const marginSelector = "body.tufte-site main .marginnote";
   const disclosureSelector = "body.tufte-site main details:not(.secondary-controls)";
-  const roleSelector = ".paper-copy, .math-statement, .lean-statement, .small-multiples, .figure-band, .margin-figure-sequence, .data-table";
+  const roleSelector = ".paper-copy, .math-statement, .lean-statement, .small-multiples, .figure-band, .reading-figure, .margin-figure-sequence, .data-table";
 
   function runLayoutContract() {
     const errors = [];
@@ -19,6 +19,7 @@
     const gutter = parseFloat(rootStyle.getPropertyValue("--measure-gutter")) / 100;
     const figure = parseFloat(rootStyle.getPropertyValue("--measure-figure")) / 100;
     const readingInFigure = parseFloat(rootStyle.getPropertyValue("--measure-reading-in-figure")) / 100;
+    const mobileNote = parseFloat(rootStyle.getPropertyValue("--measure-mobile-note")) / 100;
     const typeProof = parseFloat(rootStyle.getPropertyValue("--type-proof")) * parseFloat(rootStyle.fontSize);
     const typeCaption = parseFloat(rootStyle.getPropertyValue("--type-caption")) * parseFloat(rootStyle.fontSize);
     const typeLabel = parseFloat(rootStyle.getPropertyValue("--type-label")) * parseFloat(rootStyle.fontSize);
@@ -40,6 +41,31 @@
           errors.push(`${label} ${index + 1} uses ${rounded(actual)}px instead of ${rounded(expected)}px`);
         }
       });
+    };
+
+    const visible = (element) => Boolean(
+      element
+      && element.getClientRects().length
+      && getComputedStyle(element).display !== "none"
+      && getComputedStyle(element).visibility !== "hidden"
+    );
+
+    const canonicalSideWidth = () => {
+      if (narrow) return null;
+      const source = Array.from(document.querySelectorAll(
+        "body.tufte-site main .historical-margin, body.tufte-site main .chladni-photo-panel"
+      )).find(visible);
+      return source ? source.getBoundingClientRect().width : null;
+    };
+
+    const checkCanvasAspect = (canvas) => {
+      const box = canvas.getBoundingClientRect();
+      if (!box.width || !box.height || !canvas.width || !canvas.height) return;
+      const cssRatio = box.width / box.height;
+      const bitmapRatio = canvas.width / canvas.height;
+      if (Math.abs(cssRatio / bitmapRatio - 1) > .01) {
+        errors.push(`${canvas.id || "unnamed canvas"} has mismatched CSS and bitmap aspect ratios`);
+      }
     };
 
     if (document.documentElement.scrollWidth > window.innerWidth + 1) {
@@ -193,6 +219,34 @@
       }
     });
 
+    const sideWidth = canonicalSideWidth();
+    document.querySelectorAll("body.tufte-site main .side-figure").forEach((figureElement, index) => {
+      if (!visible(figureElement)) return;
+      const style = getComputedStyle(figureElement);
+      if ([style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth]
+        .some((value) => parseFloat(value) > 0)) {
+        errors.push(`side figure ${index + 1} regained card rules`);
+      }
+      const box = figureElement.getBoundingClientRect();
+      if (narrow) {
+        const expectedWidth = sectionMeasure(figureElement, Number.isFinite(mobileNote) ? mobileNote : .95);
+        if (Math.abs(box.width - expectedWidth) > 2) {
+          errors.push(`side figure ${index + 1} is outside the mobile aside measure`);
+        }
+        return;
+      }
+      if (sideWidth && Math.abs(box.width - sideWidth) > 2) {
+        errors.push(`side figure ${index + 1} is ${rounded(box.width)}px wide, not the canonical ${rounded(sideWidth)}px`);
+      }
+      if (figureElement.matches(".measurement-figure > .side-figure, .margin-figure-row > .side-figure")) {
+        const sectionBox = figureElement.closest("main > section")?.getBoundingClientRect();
+        if (!sectionBox) return;
+        const marginStart = sectionBox.left + sectionBox.width * (reading + gutter);
+        if (box.left < marginStart - 2) errors.push(`side figure ${index + 1} intrudes before the margin column`);
+        if (box.right > sectionBox.right + 1) errors.push(`side figure ${index + 1} leaves the page frame`);
+      }
+    });
+
     document.querySelectorAll(disclosureSelector).forEach((details, index) => {
       const summary = details.querySelector(":scope > summary");
       if (!summary) {
@@ -301,7 +355,15 @@
       if (multiple.classList.contains("figure-band")) errors.push(`small multiple ${index + 1} also claims the figure role`);
     });
 
-    document.querySelectorAll("body.tufte-site main :is(.figure-band, .small-multiples, .interactive-plate)").forEach((element, index) => {
+    document.querySelectorAll("body.tufte-site main .reading-figure").forEach((visual, index) => {
+      if (!visible(visual)) return;
+      const box = visual.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(visual, narrow ? 1 : reading);
+      if (Math.abs(box.width - expectedWidth) > 2) errors.push(`reading figure ${index + 1} is outside the reading measure`);
+      if (!visual.querySelector("canvas, svg, img, picture, video")) errors.push(`reading figure ${index + 1} contains no visual`);
+    });
+
+    document.querySelectorAll("body.tufte-site main :is(.figure-band, .small-multiples, .interactive-plate, .reading-figure)").forEach((element, index) => {
       if (!element.getClientRects().length) return;
       const style = getComputedStyle(element);
       if ([style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth]
@@ -384,14 +446,14 @@
         const copy = document.querySelector(".construction-flow");
         const copyBox = copy?.getBoundingClientRect();
         const sectionBox = gallery.closest("main > section").getBoundingClientRect();
-        const expectedGalleryWidth = sectionBox.width * margin;
+        const expectedGalleryWidth = sideWidth || sectionBox.width * reading * .5;
         const expectedCopyWidth = sectionBox.width * reading;
         const expectedGap = sectionBox.width * gutter;
         if (copyBox && Math.abs(copyBox.width - expectedCopyWidth) > 2) {
           errors.push("construction prose no longer keeps the reading measure");
         }
         if (Math.abs(galleryBox.width - expectedGalleryWidth) > 2) {
-          errors.push("comparison gallery does not occupy the canonical margin measure");
+          errors.push("comparison gallery does not use the canonical aside measure");
         }
         if (copyBox && galleryBox.left < copyBox.right + expectedGap - 2) {
           errors.push("comparison gallery intrudes into the construction prose measure");
@@ -411,7 +473,7 @@
     });
 
     document.querySelectorAll(`body.tufte-site main :is(${roleSelector})`).forEach((element, index) => {
-      const roles = ["paper-copy", "math-statement", "lean-statement", "small-multiples", "figure-band", "margin-figure-sequence", "data-table"]
+      const roles = ["paper-copy", "math-statement", "lean-statement", "small-multiples", "figure-band", "reading-figure", "margin-figure-sequence", "data-table"]
         .filter((role) => element.classList.contains(role));
       if (roles.length > 1) errors.push(`editorial role ${index + 1} is ambiguous: ${roles.join(" + ")}`);
     });
@@ -425,6 +487,31 @@
     checkType("body.tufte-site main :is(.solver-readout, .modes-status, .phase-story-readout, .collar-field-readout, .debye-status, .abundance-readout) strong, body.tufte-site main .measurement-value-line strong", typeControlValue, "readout value");
     checkType("body.tufte-site main .lean-statement > summary small", typeLabel, "Lean disclosure label");
     checkType("body.tufte-site main .lean-statement :is(summary code, pre code)", typeCode, "Lean source");
+
+    const forbiddenControlChrome = ":is(.variation-equation, .variation-equation-label, .variation-legend, .geometry-stage-note, .solver-readout, .crossing-card, .parameter-pair, .fixed-zoom-pair, .problem-map, .phase-law, .phase-agreement, .collar-field-readout, .collar-field-locator, .debye-status, .phase-story-readout, .modes-status)";
+    document.querySelectorAll("body.tufte-site main .paper-demo-controls").forEach((controls, index) => {
+      if (!visible(controls)) return;
+      const controlStyle = getComputedStyle(controls);
+      if ([controlStyle.borderTopWidth, controlStyle.borderRightWidth, controlStyle.borderBottomWidth, controlStyle.borderLeftWidth]
+        .some((value) => parseFloat(value) > 0)) {
+        errors.push(`paper control rail ${index + 1} has card rules`);
+      }
+      const visibleForbidden = Array.from(controls.querySelectorAll(forbiddenControlChrome)).filter(visible);
+      if (visibleForbidden.length) {
+        errors.push(`paper control rail ${index + 1} exposes dashboard chrome: ${visibleForbidden[0].className}`);
+      }
+      const visibleHeadings = Array.from(controls.querySelectorAll(":scope .control-heading > span")).filter(visible);
+      if (visibleHeadings.length) errors.push(`paper control rail ${index + 1} has a redundant panel heading`);
+      const visibleParagraphs = Array.from(controls.querySelectorAll(":scope p:not([hidden])")).filter(visible);
+      if (visibleParagraphs.length) errors.push(`paper control rail ${index + 1} keeps explanatory prose in the rail`);
+      const directActions = Array.from(controls.querySelectorAll(":scope button:not([hidden])")).filter((button) => {
+        if (!visible(button)) return false;
+        return !button.closest(".geometry-stages") && !button.closest(".collar-trig-switch");
+      });
+      if (directActions.length > 1) errors.push(`paper control rail ${index + 1} has ${directActions.length} visible actions`);
+      const manipulators = Array.from(controls.querySelectorAll("input, button:not([hidden]), summary")).filter(visible);
+      if (!manipulators.length) errors.push(`paper control rail ${index + 1} has no visible manipulator`);
+    });
 
     document.querySelectorAll(".interactive-plate").forEach((plate, index) => {
       if (getComputedStyle(plate).display === "none" || !plate.getClientRects().length) return;
@@ -484,15 +571,7 @@
         }
       });
 
-      visual.querySelectorAll("canvas").forEach((canvas) => {
-        const box = canvas.getBoundingClientRect();
-        if (!box.width || !box.height || !canvas.width || !canvas.height) return;
-        const cssRatio = box.width / box.height;
-        const bitmapRatio = canvas.width / canvas.height;
-        if (Math.abs(cssRatio / bitmapRatio - 1) > .01) {
-          errors.push(`${canvas.id || "unnamed canvas"} has mismatched CSS and bitmap aspect ratios`);
-        }
-      });
+      visual.querySelectorAll("canvas").forEach(checkCanvasAspect);
 
       visual.querySelectorAll(":scope > :is(.canvas-wrap, .geometry-canvas-wrap, .modes-canvas-wrap, .phase-story-canvas-wrap, .debye-canvas-wrap, .abundance-canvas-wrap), :scope > article > .collar-field-canvas-wrap").forEach((wrap) => {
         const box = wrap.getBoundingClientRect();
@@ -501,6 +580,19 @@
         }
       });
     });
+
+    document.querySelectorAll("body.tufte-site main :is(.reading-figure, .phase-family) canvas").forEach(checkCanvasAspect);
+
+    const phaseFamilyWrap = document.querySelector("#phaseFamilyCanvasWrap");
+    if (visible(phaseFamilyWrap)) {
+      const height = phaseFamilyWrap.getBoundingClientRect().height;
+      if (!narrow && (height < 190 || height > 280)) {
+        errors.push(`phase-family plot height ${rounded(height)}px is not the compact desktop measure`);
+      }
+      if (narrow && (height < 220 || height > 360)) {
+        errors.push(`phase-family plot height ${rounded(height)}px is not the compact stacked measure`);
+      }
+    }
 
     const result = {
       ok: errors.length === 0,
@@ -511,10 +603,13 @@
       paperCopies: document.querySelectorAll("body.tufte-site main .paper-copy").length,
       smallMultiples: document.querySelectorAll("body.tufte-site main .small-multiples").length,
       figureBands: document.querySelectorAll("body.tufte-site main .figure-band").length,
+      readingFigures: document.querySelectorAll("body.tufte-site main .reading-figure").length,
+      sideFigures: document.querySelectorAll("body.tufte-site main .side-figure").length,
       marginFigureSequences: document.querySelectorAll("body.tufte-site main .margin-figure-sequence").length,
       dataTables: document.querySelectorAll("body.tufte-site main .data-table").length,
       leanStatements: document.querySelectorAll("body.tufte-site main .lean-statement").length,
       plates: document.querySelectorAll(".interactive-plate").length,
+      paperControlRails: document.querySelectorAll("body.tufte-site main .paper-demo-controls").length,
       errors,
     };
     window.__TUFTE_LAYOUT_CHECK__ = result;

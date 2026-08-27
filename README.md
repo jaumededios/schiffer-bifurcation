@@ -32,8 +32,14 @@ The Tufte edition keeps content semantics separate from page geometry:
 - `.paper-copy` is continuous exposition or derivation at reading measure;
 - `.small-multiples` is reserved for comparisons whose juxtaposition carries
   information, while `.figure-band` is reserved for actual wide visuals;
-- margin galleries use the same 55% reading measure, 5% gutter, and 40%
-  margin column as ordinary marginalia, so they never narrow the prose;
+- `.reading-figure` is a plot or figure intentionally constrained to the
+  reading measure rather than the full visual measure;
+- `.side-figure` marks a true visual aside. It uses the same rendered width as
+  the native Historical note and Chladni aside, roughly half the reading
+  measure, and is centered/aligned inside the available margin instead of
+  filling the whole 40% rail;
+- margin galleries are `.side-figure` marginalia when they are true asides, so
+  they never narrow the prose and never default to the full margin width;
 - `.margin-figure-sequence` contains `.margin-figure-row` articles with one
   direct `.margin-figure`: the layout layer keeps prose on the reading measure,
   puts the figure wholly in the margin, removes card rules, and stacks the same
@@ -42,6 +48,10 @@ The Tufte edition keeps content semantics separate from page geometry:
   children; on desktop the visual stays on the 55% reading measure, controls
   occupy the 40% margin, and the 5% gutter supplies the separation. The same
   structure stacks visual-first on narrow screens.
+- `.paper-demo-controls` is the compact grammar for those apparatus rails:
+  directly manipulable variables, optional current values, and at most one
+  concise action/reset; diagnostic readouts and explanatory prose belong in the
+  caption or surrounding text instead.
 - `.optional-digression` is a disclosure summary grammar with the small label
   `Optional digression` followed by the actual title.
 - `.data-table` presents compact tabular evidence at reading measure.

@@ -319,7 +319,7 @@
       state.playing = false;
       if (elements.playButton) elements.playButton.setAttribute("aria-pressed", "false");
       if (elements.playIcon) elements.playIcon.textContent = "▶";
-      if (elements.playLabel) elements.playLabel.textContent = "Play the search";
+      if (elements.playLabel) elements.playLabel.textContent = "Play";
       if (elements.plotState) elements.plotState.setAttribute("aria-live", "polite");
     }
 
@@ -332,15 +332,15 @@
       );
       if (elements.playIcon) elements.playIcon.textContent = state.playing ? "Ⅱ" : "▶";
       if (elements.playLabel) {
-        elements.playLabel.textContent = state.playing ? "Pause the search" : "Play the search";
+        elements.playLabel.textContent = state.playing ? "Pause" : "Play";
       }
     }
 
     function setCanvasSize() {
       const wrapRect = elements.canvasWrap.getBoundingClientRect();
       const canvasRect = elements.canvas.getBoundingClientRect();
-      const width = Math.max(280, Math.round(wrapRect.width || canvasRect.width || 900));
-      const height = Math.max(300, Math.round(wrapRect.height || canvasRect.height || 520));
+      const width = Math.max(1, Math.round(wrapRect.width || canvasRect.width || 900));
+      const height = Math.max(1, Math.round(wrapRect.height || canvasRect.height || 520));
       const ratio = Math.min(global.devicePixelRatio || 1, 2);
       const pixelWidth = Math.round(width * ratio);
       const pixelHeight = Math.round(height * ratio);
