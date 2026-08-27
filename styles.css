@@ -63,6 +63,7 @@ a { color: inherit; }
 .intro h1 { margin: 70px 0 58px; max-width: 1120px; font: 300 clamp(68px, 8.6vw, 128px)/.86 var(--serif); letter-spacing: -.052em; }
 .intro-bottom { display: block; }
 .intro-bottom p { max-width: 900px; margin: 0 0 0 auto; color: var(--muted); font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72; }
+.intro-bottom p + p { margin-top: 18px; }
 .intro-bottom p > span { color: var(--ink); font-family: var(--mono); font-size: .86em; }
 .intro-bottom p > .katex { font-size: .92em; }
 .intro-bottom .edition-link { margin-top: 18px; font: 11px/1.5 var(--mono) !important; letter-spacing: .06em; text-transform: uppercase; }
