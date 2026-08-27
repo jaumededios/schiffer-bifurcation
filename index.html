@@ -1289,7 +1289,7 @@
           <div class="equations" role="group" aria-label="Fixed collar coordinates">
             <span>\(x=r-r_0\)</span>
             <span>\(r_0-5\le r\le r_0\)</span>
-            <small>\(\lambda=2.4\) fixed</small>
+            <small>\(J_{r_0}'(\rho_{r_0})=0\)</small>
           </div>
         </header>
 
@@ -1389,6 +1389,9 @@
             <p>Thus changing \(r_0\) translates the local wave by the explicit phase rate \(d\xi/dr_0=\Phi(\sqrt\lambda)\). For the higher channels, the nonoscillatory Debye formula gives</p>
             <div class="tex-display important-equation">\[\frac{J_{kr_0}(\sqrt\lambda(r_0+x))}{J_{kr_0}(\sqrt\lambda r_0)}\longrightarrow e^{\sqrt{k^2-\lambda}\,x},\qquad k\ge2.\]</div>
             <p>The last limit is the exponential regime of the same expansion, <a href="https://dlmf.nist.gov/10.19.E3" target="_blank" rel="noreferrer">DLMF (10.19.3) ↗</a>, applied with order \(kr_0\) and argument-to-order ratio \(\sqrt\lambda/k&lt;1\).</p>
+            <p>In the figures below we choose a Neumann-normalized slice of this family. Let \(\rho_R\) be the fourth positive zero of \(J_R'\), put \(q_R=\rho_R/R\), and set \(\lambda_R=q_R^2\). This branch has \(2.50&lt;\lambda_R&lt;2.72\) throughout the displayed interval \(26\le R\le30\). Then</p>
+            <div class="tex-display important-equation">\[B_R(x)=\frac{J_R(q_R(R+x))}{J_R(\rho_R)},\qquad B_R(0)=1,\qquad B_R'(0)=0.\]</div>
+            <p>Thus every displayed \(k=1\) profile is an actual Neumann eigenmode. Its cylinder comparison is \(C_R(x)=\cos(\sqrt{\lambda_R-1}\,x)\), with the same value and derivative at the boundary.</p>
           </div>
         </div>
 
@@ -1410,7 +1413,7 @@
               <div class="control-label"><label for="collarKRange">wave parameter \(k\)</label><output id="collarKValue">1</output></div>
               <input id="collarKRange" type="range" min="1" max="3" value="1" step="1">
               <div class="range-scale"><span>1</span><span>2</span><span>3</span></div>
-              <p id="collarRegimeCopy">The <span class="formula">\(k=1\)</span> channel is oscillatory in the normal direction.</p>
+              <p id="collarRegimeCopy">Neumann mode: <span class="formula">\(\partial_r u=0\)</span> at <span class="formula">\(r=N\)</span>.</p>
             </div>
 
             <div class="collar-field-control-block">
@@ -1424,7 +1427,7 @@
             <div class="collar-field-readout">
               <div><span>cone order</span><strong id="collarAngularOrder">28</strong></div>
               <div><span>collar depth</span><strong>5</strong></div>
-              <div><span>spectral parameter</span><strong>\(\lambda=2.4\)</strong></div>
+              <div><span>spectral parameter</span><strong id="collarLambdaValue">\(\lambda_N=2.6042\)</strong></div>
             </div>
           </aside>
 
@@ -1480,15 +1483,15 @@
               <div class="control-label"><label for="debyeOrderRange">boundary radius \(r_0\)</label><output id="debyeOrderValue">28</output></div>
               <input id="debyeOrderRange" type="range" min="26" max="30" value="28" step="0.01">
               <div class="range-scale"><span>\(r_0=26\)</span><span>\(r_0=28\)</span><span>\(r_0=30\)</span></div>
-              <p>The value of \(\lambda\) is fixed. As \(r_0\) increases, the coefficients on a fixed boundary collar converge to those of the cylinder equation, while the \(k=1\) phase changes at the rate given above.</p>
+              <p>For each \(r_0\), the radial scale is chosen from the same branch of zeros of \(J_{r_0}'\). Thus the \(k=1\) Bessel profile remains Neumann at the rim while \(\lambda_{r_0}=(\rho_{r_0}/r_0)^2\) varies.</p>
             </div>
 
             <button id="debyePlayButton" class="play-button" type="button"><span id="debyePlayIcon">▶</span><span id="debyePlayLabel">Animate \(r_0:26\to30\)</span></button>
 
             <div class="debye-status">
-              <div><span>fixed spectral parameter</span><strong id="debyeLambdaValue">\(\lambda=2.4\)</strong></div>
-              <div><span>phase advance from \(r_0=28\)</span><strong id="debyePhaseValue">—</strong></div>
-              <div><span>wave translations</span><strong id="debyeBetaValue">—</strong></div>
+              <div><span>spectral parameter</span><strong id="debyeLambdaValue">\(\lambda_R=2.60416\)</strong></div>
+              <div><span>Neumann condition</span><strong id="debyePhaseValue">\(J_R'(\rho_R)=0\)</strong></div>
+              <div><span>radial scale</span><strong id="debyeBetaValue">\(\rho_R=45.18473\)</strong></div>
               <div><span>rates \(\alpha_2,\alpha_3\)</span><strong id="debyeDecayValue">—</strong></div>
             </div>
           </aside>
@@ -1509,8 +1512,8 @@
         </div>
 
         <div class="debye-conclusion two-column-conclusion">
-          <article><span>Cauchy-matched oscillatory profiles</span><strong>The cylinder comparison has an \(r_0\)-dependent phase.</strong><p>A fixed cosine would impose \(f(0)=1\) and \(f'(0)=0\). The \(k=1\) Bessel profile has boundary Cauchy data that depend on \(r_0\). The corresponding cylinder profile is the unique combination \(A\cos(\omega x)+B\sin(\omega x)\) with the same Cauchy data, so its phase also depends on \(r_0\).</p></article>
-          <article><span>The three radial regimes</span><strong>One oscillatory mode and two exponential modes.</strong><p>The \(k=1\) panel compares the complete phase-matched oscillatory profiles. The \(k=2,3\) panels use a linear vertical scale, on which convergence to \(e^{\alpha_kx}\) appears as convergence of the exponential profiles.</p></article>
+          <article><span>Neumann oscillatory profiles</span><strong>Both \(k=1\) curves satisfy the boundary condition.</strong><p>The Bessel profile is rescaled by choosing \(q_RR=\rho_R\), where \(J_R'(\rho_R)=0\), and is normalized to equal one at the rim. Its cylinder comparison is therefore the cosine with the same Neumann Cauchy data: \(C_R(0)=1\) and \(C_R'(0)=0\).</p></article>
+          <article><span>The three radial regimes</span><strong>One oscillatory mode and two exponential modes.</strong><p>The \(k=1\) panel compares the Neumann Bessel profile with \(\cos(\sqrt{\lambda_R-1}\,x)\). The \(k=2,3\) panels use the same \(\lambda_R\) and a linear vertical scale, on which the Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\).</p></article>
         </div>
       </section>
 
@@ -1658,9 +1661,9 @@
       <p>The radial trace gives a numerical comparison of the exact Bessel profile with its local Debye approximation. Writing <span class="formula">\(r=R+x\)</span>, the <span class="formula">\(k=1\)</span> Bessel equation converges on bounded collars to <span class="formula">\(C''+(\lambda-1)C=0\)</span>. The Debye approximation refines this to <span class="formula">\(J_R(\sqrt\lambda(R+x))\approx A_R(x)\cos(\omega x+\xi(R))\)</span>, where <span class="formula">\(\xi(R)=\sqrt{\rho^2-R^2}-R\arccos(R/\rho)-\pi/4\)</span> and therefore <span class="formula">\(\xi'(R)=-\arccos(R/\rho)\)</span>. The graph fixes the Debye phase at the exact zero <span class="formula">\(R_*\)</span> and also reports the phase extracted from the exact boundary Cauchy data. Their agreement provides a numerical check of the approximation.</p>
       <hr>
       <p class="eyebrow">Debye approximations</p>
-      <p>The radial comparison is separate from the nonlinear branch. It fixes <span class="formula">\(\lambda=2.4\)</span>, varies the boundary radius over <span class="formula">\(26\le r_0\le30\)</span>, and evaluates exact samples of <span class="formula">\(J_{kr_0}(\sqrt\lambda\,r)\)</span> on <span class="formula">\(r\in[r_0-5,r_0]\)</span>. The browser interpolates precomputed SciPy values in <span class="formula">\(r_0\)</span> and <span class="formula">\(r\)</span>.</p>
+      <p>The radial comparison is separate from the nonlinear branch. For each real <span class="formula">\(26\le R\le30\)</span>, it continues the fourth positive zero <span class="formula">\(\rho_R\)</span> of <span class="formula">\(J_R'\)</span>, puts <span class="formula">\(q_R=\rho_R/R\)</span>, and evaluates exact samples of <span class="formula">\(J_{kR}(q_Rr)\)</span> on <span class="formula">\(r\in[R-5,R]\)</span>. The browser interpolates the precomputed SciPy values in <span class="formula">\(R\)</span> and <span class="formula">\(r\)</span>.</p>
       <p>The four-panel comparison displays one separated eigenfunction at a time. Its cone collar uses those same exact samples, while its whole-disk panel uses additional exact SciPy profiles at the integer orders <span class="formula">\(N=26,\ldots,30\)</span>. The heat maps, coordinate transformations, sine/cosine selection, and crop geometry are all evaluated in the browser.</p>
-      <p>For <span class="formula">\(k=1\)</span>, both curves are normalized by the oscillatory Cauchy amplitude, and the cylinder curve is the unique sine/cosine combination with the exact Bessel value and derivative at the boundary. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are normalized at the boundary and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
+      <p>For <span class="formula">\(k=1\)</span>, the Bessel trace is normalized by its boundary value and satisfies <span class="formula">\(B_R(0)=1\)</span>, <span class="formula">\(B_R'(0)=0\)</span>; the cylinder curve is <span class="formula">\(\cos(\sqrt{\lambda_R-1}\,x)\)</span> with the same Neumann data. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are normalized at the boundary and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda_R}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
       <p class="eyebrow">Geometric construction and phase variation</p>
       <p>The seven-stage disk–cone figure describes the quotient and limiting operations geometrically. PDE data enter in the final boundary, reconstructed from the stored coefficients at the computed endpoint <span class="formula">\(R=N=28\)</span>. In the order/phase graph, cyan solid curves interpolate the continuation records, and orange solid curves show the quadratic approximation determined by <span class="formula">\(R''(0)\)</span>.</p>

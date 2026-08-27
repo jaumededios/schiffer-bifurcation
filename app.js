@@ -2299,9 +2299,10 @@ window.addEventListener("resize", () => {
 updateModesComparison();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Large-radius Bessel dictionary. This is an exact separated-mode experiment
-// at fixed lambda, not the fixed-rho nonlinear continuation above. Exact
-// Bessel samples are precomputed for 26 <= r0 <= 30 and interpolated here.
+// Large-radius Bessel dictionary. This is an exact separated-mode experiment,
+// not the fixed-rho nonlinear continuation above.  The spectral scale q_R is
+// chosen so J_R'(q_R R)=0 along one real-order Neumann root branch. Exact
+// Bessel samples are precomputed for 26 <= R <= 30 and interpolated here.
 
 const debyeData = window.DEBYE_WIDE_DATA;
 if (debyeData) {
@@ -2310,7 +2311,6 @@ if (debyeData) {
     playing: false,
     playFrame: null,
   };
-  const debyeOmega = Math.sqrt(debyeData.lambda - 1);
 
   function debyeRadiusIndices(radius) {
     const scaled = (radius - debyeData.rMin) / debyeData.rStep;
@@ -2330,6 +2330,14 @@ if (debyeData) {
   function debyeInterpolateColumn(values, radius) {
     const { lower, upper, amount } = debyeRadiusIndices(radius);
     return interpolateNumber(values[lower], values[upper], amount);
+  }
+
+  function debyeLambdaAt(radius) {
+    return debyeInterpolateColumn(debyeData.lambdaValues, radius);
+  }
+
+  function debyeRhoAt(radius) {
+    return debyeInterpolateColumn(debyeData.rhoValues, radius);
   }
 
   // Four-scale 2D dictionary: controls, flat cylinder, one magnified planar
@@ -2353,11 +2361,9 @@ if (debyeData) {
 
   function collarCylinderRadial(x) {
     const mode = collarFieldState.mode;
-    if (mode >= 2) return Math.exp(Math.sqrt(mode * mode - debyeData.lambda) * x);
-    const rimValue = debyeInterpolateColumn(debyeData.rimValue1, collarFieldState.fold);
-    const rimDerivative = debyeInterpolateColumn(debyeData.rimDerivative1, collarFieldState.fold);
-    return rimValue * Math.cos(debyeOmega * x)
-      + rimDerivative / debyeOmega * Math.sin(debyeOmega * x);
+    const lambda = debyeLambdaAt(collarFieldState.fold);
+    if (mode >= 2) return Math.exp(Math.sqrt(mode * mode - lambda) * x);
+    return Math.cos(Math.sqrt(lambda - 1) * x);
   }
 
   function collarGlobalRadial(q) {
@@ -2620,16 +2626,20 @@ if (debyeData) {
   function updateCollarFieldReadouts() {
     const { fold, mode, trig } = collarFieldState;
     const angularOrder = fold * mode;
+    const lambda = debyeLambdaAt(fold);
     $("#collarNValue").textContent = String(fold);
     $("#collarKValue").textContent = String(mode);
     $("#collarTrigValue").textContent = trig;
     $("#collarAngularOrder").textContent = String(angularOrder);
     setMath("#collarCylinderTitle", `u_${mode}^{\\mathrm{cyl}}\\;${trig}(${mode === 1 ? "\\theta" : `${mode}\\theta`})`, { serif: true });
-    setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
+    setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}(q_Nr)\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
     setMath("#collarDiskTitle", `\\text{angular order }${angularOrder}`, { serif: true });
-    $("#collarRegimeCopy").textContent = mode === 1
-      ? "The selected channel is oscillatory in the normal direction."
-      : "The selected channel is evanescent in the normal direction.";
+    setMath("#collarLambdaValue", `\\lambda_N=${lambda.toFixed(4)}`);
+    if (mode === 1) {
+      setMath("#collarRegimeCopy", "\\text{Neumann mode: }\\partial_r u=0\\text{ at }r=N.", { serif: true });
+    } else {
+      $("#collarRegimeCopy").textContent = "The selected channel is evanescent in the normal direction.";
+    }
     document.querySelectorAll("[data-collar-trig]").forEach((button) => {
       const active = button.dataset.collarTrig === trig;
       button.classList.toggle("active", active);
@@ -2681,22 +2691,22 @@ if (debyeData) {
   function debyeSeries(mode) {
     const exact = [];
     const limiting = [];
-    const alpha = mode >= 2 ? Math.sqrt(mode * mode - debyeData.lambda) : 0;
-    const rimValue = debyeInterpolateColumn(debyeData.rimValue1, debyeState.radius);
-    const rimDerivative = debyeInterpolateColumn(debyeData.rimDerivative1, debyeState.radius);
+    const lambda = debyeLambdaAt(debyeState.radius);
+    const omega = Math.sqrt(lambda - 1);
+    const alpha = mode >= 2 ? Math.sqrt(mode * mode - lambda) : 0;
     let maxMismatch = 0;
     const samples = 420;
     for (let index = 0; index < samples; index++) {
       const x = -debyeData.depth + index / (samples - 1) * debyeData.depth;
       const bessel = debyeInterpolateRows(debyeData.profiles[String(mode)], debyeState.radius, x);
       const cylinder = mode === 1
-        ? rimValue * Math.cos(debyeOmega * x) + rimDerivative / debyeOmega * Math.sin(debyeOmega * x)
+        ? Math.cos(omega * x)
         : Math.exp(alpha * x);
       exact.push({ x, value: bessel });
       limiting.push({ x, value: cylinder });
       maxMismatch = Math.max(maxMismatch, Math.abs(bessel - cylinder));
     }
-    return { mode, exact, limiting, alpha, maxMismatch };
+    return { mode, exact, limiting, omega, alpha, maxMismatch };
   }
 
   function debyeCanvasMetrics() {
@@ -2804,7 +2814,7 @@ if (debyeData) {
         left: panel.left + 14, top: panel.top + 25, color: formulaColor,
       });
       setCanvasFormula("#debyeCanvasWrap", `debyeRateFormula${series.mode}`, series.mode === 1
-        ? `\\omega=${debyeOmega.toFixed(4)}`
+        ? `\\omega_R=${series.omega.toFixed(4)},\\quad C'(0)=0`
         : `\\alpha_${series.mode}=${series.alpha.toFixed(4)},\\quad e^{\\alpha_${series.mode}x}`, {
         left: panel.left + 14, top: panel.top + 39, color: formulaColor,
       });
@@ -2841,20 +2851,20 @@ if (debyeData) {
     const seriesList = [1, 2, 3].map((mode) => debyeSeries(mode));
     seriesList.forEach((series, index) => debyeDrawPanel(context, panels[index], series));
     updateDebyeCanvasFormulas(panels, seriesList);
-    const phaseAdvance = debyeData.phaseRate * (debyeState.radius - debyeData.rReference);
-    canvas.setAttribute("aria-label", `At boundary radius ${debyeState.radius.toFixed(2)}, exact regular Bessel modes are compared on a linear scale with their phase-matched cylinder limits between r zero minus five and r zero. Relative to radius 28, the phase has changed by ${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns.`);
+    canvas.setAttribute("aria-label", `At boundary radius ${debyeState.radius.toFixed(2)}, exact regular Bessel modes are compared on a linear scale with their cylinder limits between r zero minus five and r zero. The k equals one Bessel and cylinder profiles both satisfy the Neumann condition at the rim.`);
   }
 
   function updateDebyeReadouts() {
-    const phaseAdvance = debyeData.phaseRate * (debyeState.radius - debyeData.rReference);
-    const alpha2 = Math.sqrt(4 - debyeData.lambda);
-    const alpha3 = Math.sqrt(9 - debyeData.lambda);
+    const lambda = debyeLambdaAt(debyeState.radius);
+    const rho = debyeRhoAt(debyeState.radius);
+    const alpha2 = Math.sqrt(4 - lambda);
+    const alpha3 = Math.sqrt(9 - lambda);
     $("#debyeOrderValue").textContent = debyeState.radius.toFixed(2);
-    setMath("#debyeLambdaValue", `\\lambda=${debyeData.lambda.toFixed(1)}`);
-    setMath("#debyePhaseValue", `\\Delta\\xi=${phaseAdvance.toFixed(3)}\\,\\mathrm{rad}`);
-    $("#debyeBetaValue").textContent = `${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns`;
+    setMath("#debyeLambdaValue", `\\lambda_R=${lambda.toFixed(5)}`);
+    setMath("#debyePhaseValue", "J_R'(\\rho_R)=0");
+    setMath("#debyeBetaValue", `\\rho_R=${rho.toFixed(5)}`);
     $("#debyeDecayValue").textContent = `${alpha2.toFixed(4)}, ${alpha3.toFixed(4)}`;
-    $("#debyePlotState").textContent = "exact Bessel samples · cylinder data matched at the boundary";
+    $("#debyePlotState").textContent = "exact Bessel samples · Neumann data matched at the boundary";
   }
 
   function updateDebyeComparison() {

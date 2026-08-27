@@ -1,10 +1,12 @@
 """Build exact large-radius Bessel profiles for the browser Debye laboratory.
 
-The laboratory keeps lambda fixed and moves the cone rim near the running
-example, from r0=26 to r0=30.
-This is deliberately separate from the nonlinear N=28 continuation, which
-keeps rho fixed and only moves R by 0.026.  Each profile is sampled on the
-fixed physical collar [r0 - 5, r0].
+For each real rim radius R between 26 and 30, continue the fourth positive
+zero rho_R of J_R'.  The spectral scale q_R=rho_R/R therefore makes the k=1
+profile J_R(q_R r) a genuine Neumann eigenfunction at r=R.  Each profile is
+sampled on the fixed physical collar [R - 5, R].
+
+This family is deliberately separate from the nonlinear N=28 continuation,
+which keeps rho fixed and moves R by only 0.026.
 """
 
 import json
@@ -12,16 +14,16 @@ import math
 from pathlib import Path
 
 import numpy as np
-from scipy import special
+from scipy import optimize, special
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATH = ROOT / "debye-data.js"
-LAMBDA = 2.4
 R_MIN = 26
 R_MAX = 30
 R_REFERENCE = 28
 R_STEP = 0.05
+NEUMANN_ROOT_INDEX = 4
 DEPTH = 5.0
 X_SAMPLES = 101
 GLOBAL_Q_SAMPLES = 181
@@ -29,7 +31,7 @@ GLOBAL_Q_SAMPLES = 181
 
 def rounded(value):
     if isinstance(value, float):
-        return float(f"{value:.10g}")
+        return float(f"{value:.12g}")
     if isinstance(value, list):
         return [rounded(item) for item in value]
     if isinstance(value, dict):
@@ -37,33 +39,57 @@ def rounded(value):
     return value
 
 
+def continue_neumann_roots(radii):
+    """Continue one simple zero of J_order' through the real-order interval."""
+    roots = []
+    previous_order = float(radii[0])
+    previous_root = float(
+        special.jnp_zeros(int(round(previous_order)), NEUMANN_ROOT_INDEX)[-1]
+    )
+    for index, order in enumerate(radii):
+        order = float(order)
+        if index:
+            predictor = previous_root * order / previous_order
+            previous_root = float(
+                optimize.newton(
+                    lambda argument: special.jvp(order, argument, 1),
+                    predictor,
+                    fprime=lambda argument: special.jvp(order, argument, 2),
+                    tol=1e-13,
+                    maxiter=40,
+                )
+            )
+        residual = abs(special.jvp(order, previous_root, 1))
+        if not math.isfinite(previous_root) or residual > 1e-11:
+            raise RuntimeError(
+                f"failed to continue J_{{{order}}}' zero: "
+                f"rho={previous_root}, residual={residual}"
+            )
+        roots.append(previous_root)
+        previous_order = order
+    return np.asarray(roots)
+
+
 def main():
     radii = np.arange(R_MIN, R_MAX + R_STEP / 2, R_STEP, dtype=float)
+    rho_values = continue_neumann_roots(radii)
+    q_values = rho_values / radii
+    lambda_values = q_values ** 2
     x_grid = np.linspace(-DEPTH, 0.0, X_SAMPLES)
     q_grid = np.linspace(0.0, 1.0, GLOBAL_Q_SAMPLES)
-    root_lambda = math.sqrt(LAMBDA)
-    omega = math.sqrt(LAMBDA - 1.0)
     profiles = {"1": [], "2": [], "3": []}
-    rim_value = []
-    rim_derivative = []
 
-    for radius in radii:
-        argument = root_lambda * (radius + x_grid)
+    for radius, rho, spectral_scale in zip(radii, rho_values, q_values):
+        argument = spectral_scale * (radius + x_grid)
         for mode in (1, 2, 3):
             order = mode * radius
             values = special.jv(order, argument)
-            value_at_rim = special.jv(order, root_lambda * radius)
-            derivative_at_rim = root_lambda * special.jvp(
-                order, root_lambda * radius, 1
-            )
+            value_at_rim = special.jv(order, rho)
 
             if mode == 1:
-                # Normalize the oscillatory channel by its cylinder Cauchy
-                # amplitude.  This stays regular as the rim crosses a zero.
-                amplitude = math.hypot(value_at_rim, derivative_at_rim / omega)
-                normalized = values / amplitude
-                rim_value.append(value_at_rim / amplitude)
-                rim_derivative.append(derivative_at_rim / amplitude)
+                # The choice J_R'(rho_R)=0 makes this a Neumann profile.
+                # Value normalization then gives f(0)=1 and f'(0)=0 exactly.
+                normalized = values / value_at_rim
             else:
                 # The evanescent channels are positive in this regime.  Rim
                 # normalization makes the limiting exponential equal to one
@@ -79,18 +105,15 @@ def main():
     # sector in the global picture agrees with its magnification.
     global_profiles = {}
     for fold_order in range(R_MIN, R_MAX + 1):
+        row = int(round((fold_order - R_MIN) / R_STEP))
+        spectral_scale = q_values[row]
+        rho = rho_values[row]
         fold_profiles = {}
-        rim_argument = root_lambda * fold_order
         for mode in (1, 2, 3):
             order = mode * fold_order
-            values = special.jv(order, root_lambda * fold_order * q_grid)
-            value_at_rim = special.jv(order, rim_argument)
-            derivative_at_rim = root_lambda * special.jvp(order, rim_argument, 1)
-            if mode == 1:
-                amplitude = math.hypot(value_at_rim, derivative_at_rim / omega)
-            else:
-                amplitude = value_at_rim
-            normalized = values / amplitude
+            values = special.jv(order, spectral_scale * fold_order * q_grid)
+            value_at_rim = special.jv(order, rho)
+            normalized = values / value_at_rim
             if not np.all(np.isfinite(normalized)):
                 raise RuntimeError(
                     f"non-finite global mode {mode} profile at N={fold_order}"
@@ -98,23 +121,21 @@ def main():
             fold_profiles[str(mode)] = normalized.tolist()
         global_profiles[str(fold_order)] = fold_profiles
 
-    phase_rate = math.sqrt(LAMBDA - 1.0) - math.acos(LAMBDA ** -0.5)
     payload = {
-        "source": "SciPy evaluation of J_(k r0)(sqrt(lambda) r) on a fixed rim collar and whole integer-order disk",
-        "lambda": LAMBDA,
+        "source": "SciPy evaluation of J_(kR)(q_R r), with q_R R the fourth positive zero of J_R', on a fixed rim collar and whole integer-order disk",
         "rMin": R_MIN,
         "rMax": R_MAX,
         "rReference": R_REFERENCE,
         "rStep": R_STEP,
+        "neumannRootIndex": NEUMANN_ROOT_INDEX,
         "depth": DEPTH,
         "xGrid": x_grid.tolist(),
         "qGrid": q_grid.tolist(),
         "radii": radii.tolist(),
-        "phaseRate": phase_rate,
+        "rhoValues": rho_values.tolist(),
+        "lambdaValues": lambda_values.tolist(),
         "profiles": profiles,
         "globalProfiles": global_profiles,
-        "rimValue1": rim_value,
-        "rimDerivative1": rim_derivative,
     }
     OUTPUT_PATH.write_text(
         "window.DEBYE_WIDE_DATA="
