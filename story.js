@@ -119,18 +119,23 @@
     }
   }
 
-  // The two model geometries in Section 3 move slowly from the symmetric
-  // solution (s = 0) into the displayed nonradial branch.  The animation only
-  // runs while the section is visible, and reduced-motion users see one fixed
-  // nonzero member of the family.
+  // The two model geometries in Section 3 have independent, manually operated
+  // branch parameters.  They show the leading geometry of the local branches;
+  // the slider endpoints are labelled ±epsilon rather than assigned a false
+  // absolute normalization.
   const worldSection = select("#borrow-flexibility");
   const cylinderDomainBack = select(".cylinder-domain-back");
   const cylinderDomainFront = select(".cylinder-domain-front");
   const cylinderBoundaryBack = select(".cylinder-boundary-back");
   const cylinderBoundaryFront = select(".cylinder-boundary-front");
+  const cylinderBranchRange = select("#cylinderBranchRange");
+  const cylinderBranchValue = select("#cylinderBranchValue");
   const sphereDomainFill = select(".sphere-domain-fill");
   const sphereBoundaryBack = select(".sphere-boundary-back");
   const sphereBoundaryFront = select(".sphere-boundary-front");
+  const sphereDomainLabel = select(".world-domain-label.dark-label");
+  const sphereBranchRange = select("#sphereBranchRange");
+  const sphereBranchValue = select("#sphereBranchValue");
 
   function worldPath(points, close = false) {
     const path = points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join("");
@@ -149,11 +154,9 @@
     return points;
   }
 
-  function renderWorldBifurcations(branchAmount) {
+  function renderCylinderBifurcation(branchAmount) {
     if (!cylinderDomainBack || !cylinderDomainFront || !cylinderBoundaryBack
-        || !cylinderBoundaryFront || !sphereDomainFill || !sphereBoundaryBack
-        || !sphereBoundaryFront) return;
-
+        || !cylinderBoundaryFront) return;
     const leftFront = cylinderBoundaryHalf(165, -Math.PI / 2, Math.PI / 2, branchAmount);
     const rightFront = cylinderBoundaryHalf(355, -Math.PI / 2, Math.PI / 2, branchAmount);
     const leftBack = cylinderBoundaryHalf(165, Math.PI / 2, 3 * Math.PI / 2, branchAmount);
@@ -162,20 +165,30 @@
     cylinderDomainBack.setAttribute("d", worldPath([...leftBack, ...[...rightBack].reverse()], true));
     cylinderBoundaryFront.setAttribute("d", `${worldPath(leftFront)}${worldPath(rightFront)}`);
     cylinderBoundaryBack.setAttribute("d", `${worldPath(leftBack)}${worldPath(rightBack)}`);
+  }
 
+  function renderSphereBifurcation(branchAmount) {
+    if (!sphereDomainFill || !sphereBoundaryBack || !sphereBoundaryFront) return;
     const sphereFront = [];
     const sphereBack = [];
     const sphereRadius = 111;
-    const equatorMinorRadius = 35;
+    // The paper bifurcates from cos(theta) > a_* with a_* about 0.477.
+    // We view the north-pole cap obliquely but from within it, so its projected
+    // image is a closed domain inside the sphere rather than a band cut along
+    // the equator.  The angular amplitude is deliberately enlarged for sight.
+    const crossingHeight = .477;
+    const baseLatitude = Math.asin(crossingHeight);
+    const displayedAngularAmplitude = .095;
+    const equatorMinorRadius = 85;
     const projectedPoleRadius = Math.sqrt(sphereRadius ** 2 - equatorMinorRadius ** 2);
     for (let index = 0; index <= 96; index++) {
       const theta = -Math.PI / 2 + Math.PI * index / 96;
       const equatorEnvelope = Math.cos(theta);
-      // The equator is an ellipse in this tilted orthographic projection.
-      // A branch perturbation changes the latitude beta(phi), rather than
-      // scaling that ellipse to a horizontal diameter.  cos(8 theta) gives
-      // four waves on each projected half and hence eight around the sphere.
-      const latitude = .21 * branchAmount * Math.cos(8 * theta);
+      // cos(8 theta) gives four waves on each projected half, hence eight on
+      // the complete boundary.  Even at the displayed endpoints the latitude
+      // remains positive, so the domain stays strictly in the half-sphere.
+      const latitude = baseLatitude
+        - displayedAngularAmplitude * branchAmount * Math.cos(8 * theta);
       const commonLatitudeShift = -projectedPoleRadius * Math.sin(latitude);
       const projectedEquatorDepth = equatorMinorRadius * Math.cos(latitude) * equatorEnvelope;
       const x = 260 + sphereRadius * Math.cos(latitude) * Math.sin(theta);
@@ -183,51 +196,38 @@
       sphereBack.push({ x, y: 143 - projectedEquatorDepth + commonLatitudeShift });
     }
     const frontPath = worldPath(sphereFront);
-    sphereDomainFill.setAttribute("d", `${frontPath}A111 111 0 0 0 149 143Z`);
+    sphereDomainFill.setAttribute("d", worldPath([...sphereFront, ...[...sphereBack].reverse()], true));
     sphereBoundaryFront.setAttribute("d", frontPath);
     sphereBoundaryBack.setAttribute("d", worldPath(sphereBack));
+    if (sphereDomainLabel) {
+      sphereDomainLabel.setAttribute("x", "260");
+      sphereDomainLabel.setAttribute("y", "107");
+    }
+  }
+
+  function renderBranchValue(output, amount) {
+    if (!output) return;
+    const source = Math.abs(amount) < .005
+      ? "s=0"
+      : `s=${amount > 0 ? "+" : ""}${amount.toFixed(2)}\\varepsilon`;
+    setMath(output, source);
+  }
+
+  function bindWorldBranch(range, output, render) {
+    if (!range) return;
+    const update = () => {
+      const amount = Number(range.value);
+      fillRange(range);
+      renderBranchValue(output, amount);
+      render(amount);
+    };
+    range.addEventListener("input", update);
+    update();
   }
 
   if (worldSection) {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let worldAnimationFrame = null;
-    let worldAnimationElapsed = 0;
-    let worldAnimationPrevious = null;
-    let worldSectionVisible = false;
-    let worldLastRender = 0;
-
-    const stopWorldAnimation = () => {
-      if (worldAnimationFrame) cancelAnimationFrame(worldAnimationFrame);
-      worldAnimationFrame = null;
-      worldAnimationPrevious = null;
-    };
-    const worldAnimationTick = (now) => {
-      if (!worldSectionVisible || document.hidden) { stopWorldAnimation(); return; }
-      if (worldAnimationPrevious !== null) worldAnimationElapsed += Math.min(80, now - worldAnimationPrevious);
-      worldAnimationPrevious = now;
-      if (now - worldLastRender >= 32) {
-        const branchAmount = .5 - .5 * Math.cos(TAU * (worldAnimationElapsed % 18000) / 18000);
-        renderWorldBifurcations(branchAmount);
-        worldLastRender = now;
-      }
-      worldAnimationFrame = requestAnimationFrame(worldAnimationTick);
-    };
-    const syncWorldAnimation = () => {
-      if (reducedMotion) { stopWorldAnimation(); renderWorldBifurcations(.72); return; }
-      if (worldSectionVisible && !document.hidden && !worldAnimationFrame) {
-        worldAnimationFrame = requestAnimationFrame(worldAnimationTick);
-      } else if ((!worldSectionVisible || document.hidden) && worldAnimationFrame) {
-        stopWorldAnimation();
-      }
-    };
-
-    renderWorldBifurcations(reducedMotion ? .72 : 0);
-    const worldObserver = new IntersectionObserver((entries) => {
-      worldSectionVisible = entries.some((entry) => entry.isIntersecting);
-      syncWorldAnimation();
-    }, { threshold: .05 });
-    worldObserver.observe(worldSection);
-    document.addEventListener("visibilitychange", syncWorldAnimation);
+    bindWorldBranch(cylinderBranchRange, cylinderBranchValue, renderCylinderBifurcation);
+    bindWorldBranch(sphereBranchRange, sphereBranchValue, renderSphereBifurcation);
   }
 
   function fillRange(input) {

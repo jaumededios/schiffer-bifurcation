@@ -488,10 +488,11 @@
           <span class="section-number">03</span>
           <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the spectral coincidence excluded on the disk.</h2></div>
         </header>
-        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The figures below vary the branch parameter <span class="formula">\(s\)</span> slowly, beginning at the symmetric domain <span class="formula">\(s=0\)</span>.</p></div>
+        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The sliders below move along the two branches, with the symmetric domain at <span class="formula">\(s=0\)</span>.</p></div>
         <div class="world-cards">
           <article>
-            <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated compact domain on a three-dimensional flat cylinder whose two boundary loops vary with the bifurcation parameter s">
+            <div class="world-visual">
+            <div class="world-sketch realistic-world" role="img" aria-label="A compact domain on a three-dimensional flat cylinder whose two boundary loops are controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
                   <linearGradient id="cylinderSurface" x1="0" y1="0" x2="0" y2="1">
@@ -527,6 +528,12 @@
                 <text x="260" y="286" text-anchor="middle">a compact domain on ℝ × S¹ · both orange curves belong to ∂Ω</text>
               </svg>
             </div>
+            <div class="world-branch-control">
+              <div><label for="cylinderBranchRange">branch parameter \(s\)</label><output id="cylinderBranchValue" for="cylinderBranchRange">\(s=0\)</output></div>
+              <input id="cylinderBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Cylinder bifurcation parameter from minus epsilon to plus epsilon">
+              <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
+            </div>
+            </div>
             <span>flat cylinder</span><h3>A radial Neumann mode and a nonradial Dirichlet mode have the same eigenvalue.</h3>
             <p>On the half-cylinder \(x\le0\), separation of variables gives, for every \(\lambda&gt;1\),</p>
             <div class="world-mode-pair tex-display">
@@ -541,7 +548,8 @@
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article>
-            <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated contractible domain on a shaded sphere whose eight-fold boundary varies with the bifurcation parameter s">
+            <div class="world-visual">
+            <div class="world-sketch realistic-world" role="img" aria-label="A contractible spherical cap contained in the northern hemisphere whose eight-fold boundary is controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
                   <radialGradient id="sphereSurface" cx="34%" cy="24%"><stop stop-color="#f7f4e9"/><stop offset=".34" stop-color="#bdd8ce"/><stop offset=".68" stop-color="#4f8583"/><stop offset="1" stop-color="#183039"/></radialGradient>
@@ -554,7 +562,7 @@
                 <g filter="url(#sphereShadow)">
                   <circle cx="260" cy="143" r="111" fill="url(#sphereSurface)" stroke="#132126" stroke-width="2"/>
                   <g clip-path="url(#sphereClip)" fill="none" stroke="#132126" stroke-opacity=".22">
-                    <ellipse cx="260" cy="143" rx="111" ry="35"/><ellipse cx="260" cy="143" rx="56" ry="111"/>
+                    <ellipse class="sphere-equator-reference" cx="260" cy="143" rx="111" ry="85"/><ellipse cx="260" cy="143" rx="56" ry="111"/>
                     <path d="M260 32C205 66 205 220 260 254M260 32C315 66 315 220 260 254M149 143C184 105 336 105 371 143M149 143C184 181 336 181 371 143"/>
                   </g>
                   <g class="sphere-boundary-legacy" hidden aria-hidden="true">
@@ -571,10 +579,16 @@
                   <circle cx="260" cy="143" r="111" fill="none" stroke="#132126" stroke-width="2"/>
                 </g>
                 <text class="world-domain-label dark-label" x="260" y="82" text-anchor="middle">Ω</text>
-                <text x="260" y="286" text-anchor="middle">eight-fold boundary mode · solid front, dashed back</text>
+                <text x="260" y="286" text-anchor="middle">orange: ∂Ω (solid/dashed) · teal: equator</text>
               </svg>
             </div>
-            <span>hemisphere</span><h3>A spherical cap bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández find a transverse intersection of a zonal Neumann branch and a nonzonal Dirichlet branch. This intersection produces smooth contractible Schiffer domains on the hemisphere.</p>
+            <div class="world-branch-control">
+              <div><label for="sphereBranchRange">branch parameter \(s\)</label><output id="sphereBranchValue" for="sphereBranchRange">\(s=0\)</output></div>
+              <input id="sphereBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Spherical bifurcation parameter from minus epsilon to plus epsilon">
+              <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
+            </div>
+            </div>
+            <span>half-sphere</span><h3>A geodesic disk bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández bifurcate from the north-pole disk <span class="formula">\(\cos\theta&gt;a_*\)</span>, where <span class="formula">\(a_*\approx0.477\)</span>. Its boundary lies strictly north of the equator. The slider displays the expansion <span class="formula">\(\theta(\phi;s)=\arccos(a_*)+s b_*\cos(8\phi)+o(s)\)</span>; the amplitude is enlarged so that the eight-fold term is visible.</p>
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
