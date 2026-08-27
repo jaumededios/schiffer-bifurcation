@@ -1,8 +1,6 @@
 (() => {
   "use strict";
 
-  if (typeof window.renderMathInElement !== "function") return;
-
   const sharedOptions = {
     throwOnError: false,
     strict: "warn",
@@ -13,6 +11,31 @@
   // wherever it appears; nothing else on the page is bold mathematics.
   // The braces matter: a bare \boldsymbol is rejected as a subscript.
   const emphasizeNu = (source) => source.replace(/\\nu(?![a-zA-Z])/g, "{\\boldsymbol{\\nu}}");
+
+  // Interactive figures update their readouts after the initial auto-render
+  // pass.  Give every script the same KaTeX entry point so a mathematical
+  // expression is never replaced by an unparsed monospaced string.
+  const render = (elementOrSelector, source, options = {}) => {
+    const element = typeof elementOrSelector === "string"
+      ? document.querySelector(elementOrSelector)
+      : elementOrSelector;
+    if (!element) return;
+    if (typeof window.katex?.render !== "function") {
+      element.textContent = source;
+      return;
+    }
+    window.katex.render(emphasizeNu(source), element, {
+      ...sharedOptions,
+      displayMode: Boolean(options.displayMode),
+    });
+    element.querySelectorAll(".katex").forEach((node) => {
+      node.classList.add(options.serif ? "katex-inline-serif" : "katex-inline-sans");
+    });
+  };
+
+  window.SchifferMath = Object.freeze({ render });
+
+  if (typeof window.renderMathInElement !== "function") return;
 
   // Headings use the site's editorial serif face, so render their inline math
   // in the corresponding mathematical serif before handling running text.

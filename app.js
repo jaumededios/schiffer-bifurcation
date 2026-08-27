@@ -1,5 +1,29 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 const $ = (selector) => document.querySelector(selector);
+const setMath = (elementOrSelector, source, options) => window.SchifferMath?.render(elementOrSelector, source, options);
+function setCanvasFormula(wrapSelector, id, source, position = {}) {
+  const wrap = $(wrapSelector);
+  if (!wrap) return null;
+  let label = document.getElementById(id);
+  if (!label) {
+    label = document.createElement("span");
+    label.id = id;
+    label.className = "canvas-tex-label";
+    label.setAttribute("aria-hidden", "true");
+    wrap.appendChild(label);
+  }
+  if (label.dataset.tex !== source) {
+    label.dataset.tex = source;
+    setMath(label, source, { serif: true });
+  }
+  ["left", "right", "top", "bottom"].forEach((property) => {
+    label.style[property] = position[property] === undefined ? "" : `${position[property]}px`;
+  });
+  label.style.textAlign = position.textAlign || "left";
+  label.style.color = position.color || "";
+  label.style.transform = position.transform || "";
+  return label;
+}
 
 const state = {
   lambda: 2.4,
@@ -592,7 +616,9 @@ function setView(view) {
   });
   $("#fieldCanvas").hidden = view !== "flat";
   $("#threeWrap").hidden = view !== "cylinder";
-  $("#axisDescription").textContent = view === "cylinder" ? "cylindrical surface (x, cos θ, sin θ)" : "unwrapped coordinates (x, θ)";
+  setMath("#axisDescription", view === "cylinder"
+    ? "\\text{cylindrical surface }(x,\\cos\\theta,\\sin\\theta)"
+    : "\\text{unwrapped coordinates }(x,\\theta)");
   renderActiveView();
 }
 
@@ -723,16 +749,6 @@ function renderHeatmap() {
   context.stroke();
   context.restore();
 
-  context.save();
-  context.fillStyle = "rgba(241,238,229,.55)";
-  context.font = "11px DM Mono, monospace";
-  context.textBaseline = "top";
-  context.fillText("θ = +π", 10, 9);
-  context.fillText("θ = 0", 10, height / 2 + 8);
-  context.fillText("θ = −π", 10, height - 19);
-  context.fillStyle = "rgba(241,238,229,.38)";
-  context.fillText("s = 0 boundary", zeroX + 7, 10);
-  context.restore();
 }
 
 function svgElement(name, attributes = {}, parent) {
@@ -767,7 +783,9 @@ function drawBoundaryDiagram() {
   const label = svgElement("text", { x: 24, y: 186, fill: "rgba(241,238,229,.42)", "font-family": "DM Mono", "font-size": "8" }, svg);
   const h2 = solvedParameters.wallCoefficients?.[2] || 0;
   const h3 = solvedParameters.wallCoefficients?.[3] || 0;
-  label.textContent = state.s === 0 ? "Γ₀ · flat boundary" : `Γs · h₂ ${h2.toFixed(3)} · h₃ ${h3.toFixed(3)}`;
+  setMath(label, state.s === 0
+    ? "\\Gamma_0\\quad\\text{flat boundary}"
+    : `\\Gamma_s\\qquad h_2=${h2.toFixed(3)}\\qquad h_3=${h3.toFixed(3)}`);
   svg.setAttribute("aria-label", state.s === 0
     ? "Flat cylinder boundary"
     : `Computed boundary with first mode ${state.s.toFixed(3)}, second mode ${h2.toFixed(4)}, and third mode ${h3.toFixed(4)}. The dashed curve is the first-mode approximation.`);
@@ -786,7 +804,7 @@ function renderModeBars() {
     const row = document.createElement("div");
     row.className = "mode-bar";
     const label = document.createElement("span");
-    label.textContent = k === 0 ? "k 0 · base" : (k === 1 ? "k 1 · crit" : `k ${k}`);
+    setMath(label, k === 0 ? "k=0\\;\\text{(base)}" : (k === 1 ? "k=1\\;\\text{(critical)}" : `k=${k}`));
     const track = document.createElement("div");
     track.className = "mode-bar-track";
     const fill = document.createElement("div");
@@ -808,15 +826,15 @@ function setRangeFill(input) {
 function updateReadouts() {
   $("#lambdaValue").textContent = state.lambda.toFixed(2);
   $("#sValue").textContent = `${state.s >= 0 ? "+" : ""}${state.s.toFixed(3)}`;
-  $("#phaseValue").textContent = `${(state.phase / Math.PI).toFixed(2)}π`;
-  $("#modeValue").textContent = `k ≤ ${state.maxMode}`;
+  setMath("#phaseValue", `${(state.phase / Math.PI).toFixed(2)}\\pi`);
+  setMath("#modeValue", `k\\le ${state.maxMode}`);
   $("#interiorValue").textContent = "0 · analytic";
   $("#wallMode2Value").textContent = state.solution.parameters.wallCoefficients[2].toExponential(2);
   $("#wallMode3Value").textContent = state.solution.parameters.wallCoefficients[3].toExponential(2);
   $("#dirichletValue").textContent = state.solution.dirichletL2.toExponential(2);
   $("#neumannValue").textContent = state.solution.neumannL2.toExponential(2);
   $("#decayValue").textContent = (1 / Math.sqrt(4 - state.lambda)).toFixed(2);
-  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder · s = 0" : `boundary and field solve · s = ${state.s.toFixed(3)}`;
+  $("#domainState").textContent = Math.abs(state.s) < .0025 ? "trivial cylinder at the branch origin" : "boundary and field solved simultaneously";
 }
 
 function solveAndRender() {
@@ -1072,15 +1090,6 @@ function renderConeSlice() {
   context.stroke();
   context.restore();
 
-  context.save();
-  context.fillStyle = "rgba(241,238,229,.56)";
-  context.font = "11px DM Mono, monospace";
-  context.fillText("ψ = +π", 10, 17);
-  context.fillText("ψ = 0", 10, height / 2 + 4);
-  context.fillText("ψ = −π", 10, height - 12);
-  context.fillStyle = "rgba(241,238,229,.4)";
-  context.fillText(`curvature scale 1/R = ${(1 / solution.R).toFixed(4)}`, 10, 34);
-  context.restore();
 }
 
 function unfoldedCoordinates(angle, solution) {
@@ -1121,7 +1130,7 @@ function drawUnfoldedSeamInset(context, width, solution, gap) {
     context.stroke();
   });
   context.fillStyle = gap < 1e-8 ? "#4da2a3" : "rgba(241,238,229,.7)";
-  context.fillText(gap < 1e-8 ? "CLOSED · R = N" : `×${magnification} · actual ${(gap * 180 / Math.PI).toFixed(3)}°`, left + 11, top + 34);
+  context.fillText(gap < 1e-8 ? "SEAM CLOSED" : `×${magnification} · actual gap ${(gap * 180 / Math.PI).toFixed(3)}°`, left + 11, top + 34);
   context.restore();
 }
 
@@ -1385,15 +1394,15 @@ function updateConeReadouts() {
   const solution = coneState.solution;
   const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
   $("#coneProgressValue").textContent = `${Math.round(coneState.progress * 100)}%`;
-  $("#coneSInline").textContent = `s = ${solution.s.toFixed(4)}`;
+  setMath("#coneSInline", `s=${solution.s.toFixed(4)}`);
   $("#coneRValue").textContent = solution.R.toFixed(6);
   $("#coneLambdaValue").textContent = solution.lambda.toFixed(6);
   $("#coneGapValue").textContent = gapDegrees < 5e-5 ? "0° · closed" : `${gapDegrees.toFixed(3)}°`;
   $("#coneDirichletValue").textContent = solution.dirichlet_rms === 0 ? "0 · exact base" : solution.dirichlet_rms.toExponential(2);
   $("#coneNeumannValue").textContent = solution.neumann_rms === 0 ? "0 · exact base" : solution.neumann_rms.toExponential(2);
   $("#coneDomainState").textContent = coneState.progress > .999
-    ? "R = N = 28 · planar lift defined"
-    : (coneState.progress < .001 ? "nonintegral crossing · angular gap present" : `computed branch · R = ${solution.R.toFixed(5)}`);
+    ? "integral order reached · planar lift defined"
+    : (coneState.progress < .001 ? "nonintegral crossing · angular gap present" : "computed cone branch");
   const depthUnits = 5 + Math.pow(coneState.depth, 1.35) * (solution.R - 5);
   $("#coneZoomValue").textContent = coneState.depth < .16 ? "boundary" : (coneState.depth > .94 ? "cone point" : `${depthUnits.toFixed(1)} units`);
 }
@@ -1403,16 +1412,16 @@ function updateConeAxis() {
   const center = $("#coneAxisDescription");
   const right = $("#coneAxisRight");
   if (coneState.view === "slice") {
-    left.textContent = "x = −5";
-    center.textContent = "one quotient period ψ ∈ [−π, π]";
-    right.textContent = "boundary x = 0";
+    setMath(left, "x=-5");
+    setMath(center, "\\psi\\in[-\\pi,\\pi]");
+    setMath(right, "x=0\\;\\text{(boundary)}");
   } else if (coneState.view === "cone") {
     left.textContent = coneState.depth < .16 ? "boundary collar" : "toward the cone point";
     center.textContent = "metric cone surface · drag / zoom";
     right.textContent = "boundary";
   } else {
     left.textContent = "28 copies";
-    center.textContent = "each sector angle = 2π/R";
+    setMath(center, "\\text{sector angle}=2\\pi/R");
     right.textContent = coneState.progress > .999 ? "seam closed" : "seam magnified ×50";
   }
 }
@@ -1652,7 +1661,7 @@ function drawAngularStrip(context, rect) {
   context.save();
   context.fillStyle = "rgba(241,238,229,.78)";
   context.font = "10px DM Mono, monospace";
-  context.fillText(`SHARED ANGULAR FACTOR · cos(${modesState.k === 1 ? "ψ" : `${modesState.k}ψ`})`, rect.left, rect.top - 12);
+  context.fillText("SHARED ANGULAR FACTOR", rect.left, rect.top - 12);
   context.fillStyle = MODES_COLORS.faint;
   context.font = "10px DM Mono, monospace";
   context.fillText("−π", rect.left, rect.top + rect.height + 17);
@@ -1744,7 +1753,7 @@ function renderModesComparison() {
     context.fillStyle = MODES_COLORS.orange;
     context.font = "10px DM Mono, monospace";
     context.textAlign = "right";
-    context.fillText("J_R*(ρ*) = 0", coneRect.left + coneRect.width - 8, coneRect.top + 15);
+    context.fillText("COMMON-ZERO NORMALIZATION", coneRect.left + coneRect.width - 8, coneRect.top + 15);
     context.restore();
   }
 
@@ -1910,11 +1919,8 @@ function modesDrawGlobal(context, rect, solution, fieldValue) {
   context.fillStyle = "rgba(241,238,229,.82)";
   context.font = "10px DM Mono, monospace";
   context.fillText("WHOLE 28-COPY ASSEMBLY", rect.left + 10, rect.top + 16);
-  context.fillStyle = MODES_COLORS.faint;
-  context.font = "10px DM Mono, monospace";
-  context.fillText(`R = ${solution.R.toFixed(6)} · s = ${solution.s.toFixed(4)}`, rect.left + 10, rect.top + 31);
   context.fillStyle = MODES_COLORS.cyan;
-  context.fillText("1 λθ", cropPoints[1].x + 5, cropPoints[1].y - 5);
+  context.fillText("ONE WAVELENGTH", cropPoints[1].x + 5, cropPoints[1].y - 5);
   context.restore();
   return { plot, cropPoints, gap };
 }
@@ -2020,16 +2026,12 @@ function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
 
   context.font = "10px DM Mono, monospace";
   context.fillStyle = "rgba(241,238,229,.75)";
-  context.fillText(compact ? "LOCAL k=1" : "LOCAL k=1 · ORDER ↔ PHASE", rect.left + 8, rect.top + 14);
+  context.fillText(compact ? "LOCAL MODE" : "LOCAL OSCILLATORY MODE", rect.left + 8, rect.top + 14);
   context.textAlign = "right";
   context.fillStyle = MODES_COLORS.cyan;
-  context.fillText(compact ? "J_R" : "BESSEL", rect.left + rect.width - (compact ? 78 : 116), rect.top + 14);
+  context.fillText("BESSEL", rect.left + rect.width - (compact ? 78 : 116), rect.top + 14);
   context.fillStyle = MODES_COLORS.orange;
   context.fillText(compact ? "SIN/COS" : "DEBYE SIN/COS", rect.left + rect.width - 8, rect.top + 14);
-  context.fillStyle = MODES_COLORS.faint;
-  context.fillText(`Δξ = ${comparison.phaseDegrees.toFixed(3)}° · exact δ = ${comparison.exactPhaseDegrees.toFixed(3)}°`, rect.left + rect.width - 8, rect.top + rect.height - 5);
-  context.textAlign = "left";
-  context.fillText(`x = −${depth.toFixed(0)}`, plot.left, rect.top + rect.height - 5);
   context.restore();
 }
 
@@ -2100,16 +2102,6 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
   context.fillStyle = "rgba(241,238,229,.83)";
   context.font = "10px DM Mono, monospace";
   context.fillText(options.title, rect.left + (compact ? 8 : 12), rect.top + (compact ? 15 : 17));
-  if (!compact) {
-    context.fillStyle = MODES_COLORS.faint;
-    context.font = "10px DM Mono, monospace";
-    context.textAlign = "right";
-    context.fillText(options.detail, rect.left + rect.width - 12, rect.top + 17);
-    context.textAlign = "left";
-    context.fillText(`x = −${options.depth.toFixed(1)}`, plot.left, plot.top + plot.height + 13);
-    context.textAlign = "right";
-    context.fillText("boundary x = 0", plot.left + plot.width, plot.top + plot.height + 13);
-  }
   context.restore();
   const comparisonRect = {
     left: plot.left,
@@ -2118,7 +2110,39 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
     height: compact ? 87 : 94,
   };
   modesDrawRadialComparison(context, comparisonRect, solution, options.depth, options.comparison);
+  plot.comparisonRect = comparisonRect;
   return plot;
+}
+
+function updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, comparison, containsSeam) {
+  const formulaColor = "rgba(241,238,229,.52)";
+  setCanvasFormula("#modesCanvasWrap", "modesGlobalFormula", `R=${solution.R.toFixed(6)},\\quad s=${solution.s.toFixed(4)}`, {
+    left: globalRect.left + 10, top: globalRect.top + 20, color: formulaColor,
+  });
+  setCanvasFormula("#modesCanvasWrap", "modesPatchFormula", containsSeam
+    ? `\\Delta\\xi=${comparison.phaseDegrees.toFixed(2)}^{\\circ}`
+    : "\\psi\\in[-\\pi,\\pi]", {
+    left: patchRect.left + patchRect.width - 12,
+    top: patchRect.top + 8,
+    transform: "translateX(-100%)",
+    color: formulaColor,
+  });
+  setCanvasFormula("#modesCanvasWrap", "modesPatchLeftFormula", `x=-${modesState.depth.toFixed(1)}`, {
+    left: patchPlot.left, top: patchPlot.top + patchPlot.height + 5, color: formulaColor,
+  });
+  setCanvasFormula("#modesCanvasWrap", "modesPatchRightFormula", "x=0", {
+    left: patchPlot.left + patchPlot.width, top: patchPlot.top + patchPlot.height + 5,
+    transform: "translateX(-100%)", color: formulaColor,
+  });
+  const comparisonRect = patchPlot.comparisonRect;
+  if (comparisonRect) {
+    setCanvasFormula("#modesCanvasWrap", "modesRadialFormula", `\\Delta\\xi=${comparison.phaseDegrees.toFixed(3)}^{\\circ},\\quad\\delta=${comparison.exactPhaseDegrees.toFixed(3)}^{\\circ}`, {
+      left: comparisonRect.left + comparisonRect.width,
+      top: comparisonRect.top + comparisonRect.height - 14,
+      transform: "translateX(-100%)",
+      color: formulaColor,
+    });
+  }
 }
 
 function modesCropContainsSeam(solution) {
@@ -2159,6 +2183,7 @@ function renderModesNestedZoom() {
     accent: MODES_COLORS.cyan,
     comparison,
   });
+  updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, comparison, containsSeam);
 
   if (!compact) {
     context.save();
@@ -2189,20 +2214,20 @@ function updateModesReadouts() {
   $("#modesAmplitudeValue").textContent = solution.s.toFixed(4);
   $("#modesCropValue").textContent = modesState.crop < .012 ? "centered on seam" : `${cropDegrees.toFixed(0)}° from seam`;
   $("#modesDepthValue").textContent = `${modesState.depth.toFixed(modesState.depth % 1 ? 2 : 0)} units`;
-  $("#modesPhaseValue").textContent = `Δξ = ${comparison.phaseDegrees.toFixed(3)}°`;
-  $("#modesExactPhaseValue").textContent = `δ = ${comparison.exactPhaseDegrees.toFixed(3)}°`;
+  setMath("#modesPhaseValue", `\\Delta\\xi=${comparison.phaseDegrees.toFixed(3)}^{\\circ}`);
+  setMath("#modesExactPhaseValue", `\\delta=${comparison.exactPhaseDegrees.toFixed(3)}^{\\circ}`);
   $("#modesPhaseFill").style.width = `${phasePercent}%`;
   $("#modesPhaseMarker").style.left = `${phasePercent}%`;
   $("#modesPhaseTrack").setAttribute("aria-label", `The Debye cylinder phase shift is ${comparison.phaseDegrees.toFixed(2)} degrees, from zero degrees at the crossing to ${comparison.landingPhaseDegrees.toFixed(2)} degrees at N equals 28.`);
   $("#modesGapValue").textContent = gapDegrees < 5e-5 ? "0° · closed" : `${gapDegrees.toFixed(3)}°`;
   $("#modesWavelengthValue").textContent = `${TWO_PI.toFixed(3)} units`;
-  $("#modesCurvatureValue").textContent = `1 / ${solution.R.toFixed(3)}`;
+  setMath("#modesCurvatureValue", `1/${solution.R.toFixed(3)}`);
   if (gapDegrees < 5e-5) {
-    $("#modesPlotState").textContent = "R = N = 28 · 28 sectors fit exactly";
+    $("#modesPlotState").textContent = "integral order · 28 sectors fit exactly";
   } else if (modesCropContainsSeam(solution)) {
-    $("#modesPlotState").textContent = `R = ${solution.R.toFixed(6)} · seam inside main zoom`;
+    $("#modesPlotState").textContent = "nonintegral order · seam inside main zoom";
   } else {
-    $("#modesPlotState").textContent = `R = ${solution.R.toFixed(6)} · seam tracked below`;
+    $("#modesPlotState").textContent = "nonintegral order · seam tracked below";
   }
 }
 
@@ -2399,11 +2424,6 @@ if (debyeData) {
     context.moveTo(width - .7, 0);
     context.lineTo(width - .7, height);
     context.stroke();
-    context.fillStyle = "rgba(241,238,229,.56)";
-    context.font = "10px DM Mono, monospace";
-    context.fillText("θ = π", 9, 16);
-    context.fillText("θ = 0", 9, height / 2 - 7);
-    context.fillText("θ = −π", 9, height - 10);
     context.restore();
     canvas.setAttribute(
       "aria-label",
@@ -2471,7 +2491,7 @@ if (debyeData) {
     context.fillStyle = "rgba(241,238,229,.56)";
     context.font = "10px DM Mono, monospace";
     context.fillText("one sector", 10, 17);
-    context.fillText(`opening 2π / ${fold}`, 10, 32);
+    context.fillText("one angular period", 10, 32);
     context.restore();
     canvas.setAttribute(
       "aria-label",
@@ -2598,18 +2618,16 @@ if (debyeData) {
   function updateCollarFieldReadouts() {
     const { fold, mode, trig } = collarFieldState;
     const angularOrder = fold * mode;
-    const cylinderFactor = mode === 1 ? `${trig}(θ)` : `${trig}(${mode}θ)`;
-    const coneFactor = mode === 1 ? `${trig}(ψ)` : `${trig}(${mode}ψ)`;
     $("#collarNValue").textContent = String(fold);
     $("#collarKValue").textContent = String(mode);
     $("#collarTrigValue").textContent = trig;
     $("#collarAngularOrder").textContent = String(angularOrder);
-    $("#collarCylinderTitle").textContent = `u${mode} cyl · ${cylinderFactor}`;
-    $("#collarConeTitle").textContent = `u${mode} cone · J${angularOrder} · ${coneFactor}`;
-    $("#collarDiskTitle").textContent = `angular order ${angularOrder}`;
+    setMath("#collarCylinderTitle", `u_${mode}^{\\mathrm{cyl}}\\;${trig}(${mode === 1 ? "\\theta" : `${mode}\\theta`})`, { serif: true });
+    setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
+    setMath("#collarDiskTitle", `\\text{angular order }${angularOrder}`, { serif: true });
     $("#collarRegimeCopy").textContent = mode === 1
-      ? "The k = 1 channel is oscillatory in the normal direction."
-      : `The k = ${mode} channel is evanescent, with rate √(${mode ** 2} − 2.4).`;
+      ? "The selected channel is oscillatory in the normal direction."
+      : "The selected channel is evanescent in the normal direction.";
     document.querySelectorAll("[data-collar-trig]").forEach((button) => {
       const active = button.dataset.collarTrig === trig;
       button.classList.toggle("active", active);
@@ -2713,9 +2731,6 @@ if (debyeData) {
       context.lineTo(x, plot.top + plot.height);
       context.stroke();
     });
-    context.fillText("r₀ − 5", plot.left, plot.top + plot.height + 15);
-    context.textAlign = "right";
-    context.fillText("r₀", plot.left + plot.width, plot.top + plot.height + 15);
     context.restore();
   }
 
@@ -2762,16 +2777,7 @@ if (debyeData) {
     context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
     context.fillStyle = "rgba(241,238,229,.86)";
     context.font = "11px DM Mono, monospace";
-    context.fillText(isWave ? "k = 1 · OSCILLATORY" : `k = ${series.mode} · EVANESCENT`, rect.left + 14, rect.top + 20);
-    context.fillStyle = MODES_COLORS.faint;
-    context.font = "10px DM Mono, monospace";
-    context.fillText(isWave
-      ? `ω = ${debyeOmega.toFixed(4)} · same boundary Cauchy data`
-      : `α${series.mode} = ${series.alpha.toFixed(4)} · exp(α${series.mode}x)`, rect.left + 14, rect.top + 38);
-    context.fillText("ordinary linear scale", rect.left + 14, rect.top + 54);
-    context.textAlign = "right";
-    context.fillStyle = MODES_COLORS.orange;
-    context.fillText(`‖B−C‖∞ = ${series.maxMismatch.toExponential(1)}`, rect.left + rect.width - 14, rect.top + 54);
+    context.fillText(isWave ? "OSCILLATORY MODE" : "EVANESCENT MODE", rect.left + 14, rect.top + 20);
     context.restore();
 
     debyeDrawGrid(context, plot, yTicks, yMap);
@@ -2782,6 +2788,36 @@ if (debyeData) {
     debyeDrawCurve(context, series.exact, xMap, yMap, MODES_COLORS.cyan, 2.45);
     debyeDrawCurve(context, series.limiting, xMap, yMap, MODES_COLORS.orange, 1.75);
     context.restore();
+  }
+
+  function updateDebyeCanvasFormulas(panels, seriesList) {
+    const formulaColor = "rgba(241,238,229,.55)";
+    seriesList.forEach((series, index) => {
+      const panel = panels[index];
+      const plotLeft = panel.left + 14;
+      const plotTop = panel.top + 77;
+      const plotWidth = panel.width - 28;
+      const plotHeight = panel.height - 119;
+      setCanvasFormula("#debyeCanvasWrap", `debyeModeFormula${series.mode}`, `k=${series.mode}`, {
+        left: panel.left + 14, top: panel.top + 25, color: formulaColor,
+      });
+      setCanvasFormula("#debyeCanvasWrap", `debyeRateFormula${series.mode}`, series.mode === 1
+        ? `\\omega=${debyeOmega.toFixed(4)}`
+        : `\\alpha_${series.mode}=${series.alpha.toFixed(4)},\\quad e^{\\alpha_${series.mode}x}`, {
+        left: panel.left + 14, top: panel.top + 39, color: formulaColor,
+      });
+      setCanvasFormula("#debyeCanvasWrap", `debyeErrorFormula${series.mode}`, `\\lVert B-C\\rVert_\\infty=${series.maxMismatch.toExponential(1)}`, {
+        left: panel.left + panel.width - 14, top: panel.top + 54,
+        transform: "translateX(-100%)", color: MODES_COLORS.orange,
+      });
+      setCanvasFormula("#debyeCanvasWrap", `debyeLeftFormula${series.mode}`, "r_0-5", {
+        left: plotLeft, top: plotTop + plotHeight + 5, color: formulaColor,
+      });
+      setCanvasFormula("#debyeCanvasWrap", `debyeRightFormula${series.mode}`, "r_0", {
+        left: plotLeft + plotWidth, top: plotTop + plotHeight + 5,
+        transform: "translateX(-100%)", color: formulaColor,
+      });
+    });
   }
 
   function renderDebyeComparison() {
@@ -2800,7 +2836,9 @@ if (debyeData) {
       const panelWidth = (width - gap * 4) / 3;
       for (let index = 0; index < 3; index++) panels.push({ left: gap + index * (panelWidth + gap), top: 18, width: panelWidth, height: height - 36 });
     }
-    [1, 2, 3].forEach((mode, index) => debyeDrawPanel(context, panels[index], debyeSeries(mode)));
+    const seriesList = [1, 2, 3].map((mode) => debyeSeries(mode));
+    seriesList.forEach((series, index) => debyeDrawPanel(context, panels[index], series));
+    updateDebyeCanvasFormulas(panels, seriesList);
     const phaseAdvance = debyeData.phaseRate * (debyeState.radius - debyeData.rReference);
     canvas.setAttribute("aria-label", `At boundary radius ${debyeState.radius.toFixed(2)}, exact regular Bessel modes are compared on a linear scale with their phase-matched cylinder limits between r zero minus five and r zero. Relative to radius 28, the phase has changed by ${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns.`);
   }
@@ -2810,11 +2848,11 @@ if (debyeData) {
     const alpha2 = Math.sqrt(4 - debyeData.lambda);
     const alpha3 = Math.sqrt(9 - debyeData.lambda);
     $("#debyeOrderValue").textContent = debyeState.radius.toFixed(2);
-    $("#debyeLambdaValue").textContent = `λ = ${debyeData.lambda.toFixed(1)}`;
-    $("#debyePhaseValue").textContent = `Δξ = ${phaseAdvance.toFixed(3)} rad`;
+    setMath("#debyeLambdaValue", `\\lambda=${debyeData.lambda.toFixed(1)}`);
+    setMath("#debyePhaseValue", `\\Delta\\xi=${phaseAdvance.toFixed(3)}\\,\\mathrm{rad}`);
     $("#debyeBetaValue").textContent = `${(phaseAdvance / (2 * Math.PI)).toFixed(3)} turns`;
     $("#debyeDecayValue").textContent = `${alpha2.toFixed(4)}, ${alpha3.toFixed(4)}`;
-    $("#debyePlotState").textContent = `r₀ = ${debyeState.radius.toFixed(2)} · exact Bessel samples · cylinder data matched at the boundary`;
+    $("#debyePlotState").textContent = "exact Bessel samples · cylinder data matched at the boundary";
   }
 
   function updateDebyeComparison() {
@@ -2827,7 +2865,9 @@ if (debyeData) {
     if (debyeState.playFrame) cancelAnimationFrame(debyeState.playFrame);
     debyeState.playFrame = null;
     $("#debyePlayIcon").textContent = "▶";
-    $("#debyePlayLabel").textContent = debyeState.radius > debyeData.rMax - .01 ? "Repeat r₀: 26 → 30" : "Animate r₀: 26 → 30";
+    setMath("#debyePlayLabel", debyeState.radius > debyeData.rMax - .01
+      ? "\\text{Repeat }r_0:26\\to30"
+      : "\\text{Animate }r_0:26\\to30");
   }
 
   function toggleDebyePlayback() {

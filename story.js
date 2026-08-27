@@ -5,6 +5,31 @@
   if (!data) return;
   const crossingData = window.SCHIFFER_ABUNDANCE_DATA;
   const select = (selector) => document.querySelector(selector);
+  const setMath = (elementOrSelector, source, options) => window.SchifferMath?.render(elementOrSelector, source, options);
+  const setFormula = (element, source, options) => {
+    if (!element || element.dataset.tex === source) return;
+    element.dataset.tex = source;
+    setMath(element, source, options);
+  };
+  const setCanvasFormula = (wrapSelector, id, source, position = {}) => {
+    const wrap = select(wrapSelector);
+    if (!wrap) return null;
+    let label = document.getElementById(id);
+    if (!label) {
+      label = document.createElement("span");
+      label.id = id;
+      label.className = "canvas-tex-label";
+      label.setAttribute("aria-hidden", "true");
+      wrap.appendChild(label);
+    }
+    setFormula(label, source, { serif: true });
+    ["left", "right", "top", "bottom"].forEach((property) => {
+      label.style[property] = position[property] === undefined ? "" : `${position[property]}px`;
+    });
+    label.style.color = position.color || "";
+    label.style.transform = position.transform || "";
+    return label;
+  };
   const siteToc = select(".site-toc");
   siteToc?.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => { siteToc.open = false; });
@@ -577,29 +602,6 @@
     });
     drawGeometrySheet(context, sheet);
 
-    const orderOpacity = ease(t / .12);
-    if (orderOpacity > .001) {
-      context.save(); context.globalAlpha *= orderOpacity;
-      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace";
-      const orderLabel = t > .965 ? "R → ∞" : `R ≈ ${Math.round(sheet.order)}`;
-      const tipMotion = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
-      context.textAlign = width < 620 ? "left" : "center";
-      context.fillText(`${orderLabel} · ${tipMotion}`, width < 620 ? 24 : width * .08 + 92, sheet.cy - sheet.half - (width < 620 ? 50 : 28));
-      context.restore();
-    }
-
-    const waveLabelOpacity = ease((waveAmount - .12) / .28) * ease(t / .15);
-    if (waveLabelOpacity > .001) {
-      context.save(); context.globalAlpha *= waveLabelOpacity;
-      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      if (width < 620) {
-        context.fillText("x = h(ψ)", 24, sheet.cy - sheet.half - 30);
-        context.fillText("≈ s cos(ψ − φ) + higher modes", 24, sheet.cy - sheet.half - 14);
-      } else {
-        context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, width * .84 - 330), sheet.cy - sheet.half - 29);
-      }
-      context.restore();
-    }
   }
 
   function drawSectorFan(context, sheet, amount) {
@@ -723,7 +725,7 @@
     context.shadowColor = colors.orange; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
     context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace";
     context.fillText("x = −5", plot.left, plot.top + plot.height + 19);
-    context.textAlign = "right"; context.fillText("boundary x = h(ψ)", plot.left + plot.width, plot.top + plot.height + 19);
+    context.textAlign = "right"; context.fillText("moving boundary", plot.left + plot.width, plot.top + plot.height + 19);
     context.restore();
   }
 
@@ -749,13 +751,13 @@
     context.strokeStyle = colors.paper; context.lineWidth = 2; context.shadowColor = colors.orange; context.shadowBlur = 6; context.stroke();
     context.shadowBlur = 0;
     context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-    context.fillText("actual continued N = 28 boundary coefficients", cx, cy + radius + 30);
+    context.fillText("continued boundary coefficients at integral order", cx, cy + radius + 30);
     context.restore();
   }
 
   const geometryState = { progress: 0, playing: false, frame: null };
-  const geometryNames = ["start with N-fold symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-N limit", "bifurcate on the half-cylinder", "return to finite R", "set R = N and lift to the plane"];
-  const geometryStates = ["the field is repeated in N sectors", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the perturbed boundary is x = h(ψ)", "the half-cylinder branch determines a branch on finite cones", "at R = N, the N sectors fit exactly in the plane"];
+  const geometryNames = ["start with rotational symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-order limit", "bifurcate on the half-cylinder", "return to finite order", "lift the integral-order cone to the plane"];
+  const geometryStates = ["the field is repeated around the disk", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the rim follows the bifurcating boundary graph", "the half-cylinder branch determines a branch on finite cones", "the sectors fit exactly in the plane"];
   const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "adjacent copies open in order; each boundary profile stays on its sector"];
 
   function drawGeometryNarrative(context, width, height, progress) {
@@ -776,12 +778,64 @@
         width,
         `${String(index + 1).padStart(2, "0")} / construction`,
         geometryNames[index],
-        index === 6 ? "R = N = 28 at the lift" : "the same quotient sector",
+        index === 6 ? "" : "the same quotient sector",
       );
       context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
       drawCenteredCaption(context, geometryCaptions[index], width * .5, height * .54 + targetHalf + 47, width - 48);
       context.restore();
     });
+  }
+
+  function renderGeometryMath(width, height, progress) {
+    const order = select("#storyGeometryOrderFormula");
+    const orderExpression = order?.querySelector(".geometry-math-expression");
+    const orderNote = order?.querySelector("small");
+    const wall = select("#storyGeometryWallFormula");
+    const lift = select("#storyGeometryLiftFormula");
+    if (!order || !orderExpression || !orderNote || !wall || !lift) return;
+
+    order.style.opacity = "0";
+    wall.style.opacity = "0";
+    lift.style.opacity = "0";
+
+    const scaled = Math.max(0, Math.min(1, progress)) * 6;
+    const segment = Math.min(5, Math.floor(scaled));
+    const local = scaled - segment;
+    let cylinderAmount = null;
+    let waveAmount = 0;
+    let returning = false;
+    if (segment === 2) cylinderAmount = local;
+    if (segment === 3) { cylinderAmount = 1; waveAmount = ease(local); }
+    if (segment === 4) { cylinderAmount = 1 - ease(local); waveAmount = 1; returning = true; }
+
+    if (cylinderAmount !== null) {
+      const t = ease(cylinderAmount);
+      const tip = lerp(width * .16, -width * 2.6, t);
+      const surfaceLeft = Math.max(-width * .12, tip);
+      const sheetOrder = 28 * (width * .84 - tip) / (width * .68);
+      const half = Math.min(118, height * .23);
+      const orderOpacity = ease(t / .12);
+      const orderX = width < 620 ? 24 : width * .08 + 92;
+      const orderY = height * .54 - half - (width < 620 ? 62 : 41);
+      setFormula(orderExpression, t > .965 ? "R\\to\\infty" : `R\\approx ${Math.round(sheetOrder)}`, { serif: true });
+      orderNote.textContent = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
+      order.style.left = `${orderX}px`;
+      order.style.top = `${orderY}px`;
+      order.style.opacity = String(orderOpacity);
+
+      const wallOpacity = ease((waveAmount - .12) / .28) * ease(t / .15);
+      const wallX = width < 620 ? 24 : Math.max(surfaceLeft + 100, width * .84 - 330);
+      const wallY = height * .54 - half - (width < 620 ? 37 : 42);
+      setFormula(wall, "x=h_s(\\psi)=s\\cos(\\psi-\\phi)+O(s^2)", { serif: true });
+      wall.style.left = `${wallX}px`;
+      wall.style.top = `${wallY}px`;
+      wall.style.opacity = String(wallOpacity);
+    }
+
+    if (segment === 5) {
+      setFormula(lift, "R=N=28", { serif: true });
+      lift.style.opacity = String(ease((local - .55) / .45));
+    }
   }
 
   function renderGeometryStory() {
@@ -790,6 +844,7 @@
     context.fillStyle = colors.ink; context.fillRect(0, 0, width, height);
     drawGeometrySequence(context, width, height, geometryState.progress);
     drawGeometryNarrative(context, width, height, geometryState.progress);
+    renderGeometryMath(width, height, geometryState.progress);
     const scaled = Math.max(0, Math.min(1, geometryState.progress)) * 6;
     const segment = Math.min(5, Math.floor(scaled));
     const local = scaled - segment;
@@ -1063,7 +1118,7 @@
         context.font = "10px DM Mono, monospace";
         context.textAlign = "center";
         context.textBaseline = "bottom";
-        context.fillText("R* = 28.026397", point.x, point.y - 11);
+        context.fillText("REFERENCE CROSSING", point.x, point.y - 11);
       }
     });
 
@@ -1071,7 +1126,7 @@
     context.font = "10px DM Mono, monospace";
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillText("s = 0 · COMMON-ZERO CROSSINGS", plot.left + 8, zeroY - 29);
+    context.fillText("COMMON-ZERO CROSSINGS AT THE BRANCH ORIGIN", plot.left + 8, zeroY - 29);
     context.fillStyle = colors.faint;
     context.fillText(compact
       ? "quadratic jets bend toward smaller R"
@@ -1096,14 +1151,14 @@
       context.textBaseline = "top";
       context.fillStyle = colors.paper;
       context.font = "10px DM Mono, monospace";
-      context.fillText(`R* = ${point.row.R.toFixed(6)}`, boxX + 10, boxY + 10);
+      context.fillText(`order ${point.row.R.toFixed(6)}`, boxX + 10, boxY + 10);
       context.fillStyle = colors.faint;
       context.font = "10px DM Mono, monospace";
-      context.fillText(`λ* = ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
-      context.fillText(`quadratic drop at |s|=1: ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
+      context.fillText(`spectral ratio ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
+      context.fillText(`unit-amplitude quadratic drop ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
       if (point.row.reference) {
         context.fillStyle = colors.orange;
-        context.fillText("running example · separate λ-window", boxX + 10, boxY + 62);
+        context.fillText("running example · separate spectral window", boxX + 10, boxY + 62);
       }
     }
     context.restore();
@@ -1143,7 +1198,7 @@
     context.beginPath(); context.arc(xMap(currentS), yMap(current), 5, 0, TAU);
     context.fillStyle = colors.orange; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.5; context.stroke();
     context.fillStyle = colors.paper; context.font = "11px DM Mono, monospace"; context.fillText(options.title, rect.left + 14, rect.top + 21);
-    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.fillText(options.subtitle, rect.left + 14, rect.top + 39);
+    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace";
     context.textAlign = "right"; context.fillText(options.maximumLabel, plot.left + plot.width, plot.top + 10);
     context.fillText("0", plot.left - 8, plot.top + plot.height); context.restore();
   }
@@ -1173,6 +1228,12 @@
     const maximumPhase = Math.max(...phaseActual.map((point) => point.value)) * 1.08;
     drawPhasePanel(context, rects[0], { title: "ORDER DROP", subtitle: "R* − R(s)", actual: dropActual, quadratic: dropQuadratic, maximum: maximumDrop, maximumLabel: maximumDrop.toFixed(4), valueAt: (record) => data.RStar - record.R });
     drawPhasePanel(context, rects[1], { title: "LOCAL PHASE GAIN", subtitle: "ξ(R(s)) − ξ(R*)", actual: phaseActual, quadratic: phaseQuadratic, maximum: maximumPhase, maximumLabel: `${maximumPhase.toFixed(3)}°`, valueAt: (record) => (xi(record.R) - baseXi) * 180 / Math.PI });
+    setCanvasFormula("#phaseStoryCanvasWrap", "phaseStoryOrderFormula", "R_*-R(s)", {
+      left: rects[0].left + 14, top: rects[0].top + 27, color: colors.faint,
+    });
+    setCanvasFormula("#phaseStoryCanvasWrap", "phaseStoryXiFormula", "\\xi(R(s))-\\xi(R_*)", {
+      left: rects[1].left + 14, top: rects[1].top + 27, color: colors.faint,
+    });
     const current = branchAt(phaseStoryState.progress);
     const phaseDegrees = (xi(current.R) - baseXi) * 180 / Math.PI;
     canvas.setAttribute("aria-label", `At branch amplitude ${current.s.toFixed(4)}, the continued order has decreased to ${current.R.toFixed(6)} and the Debye collar phase has increased by ${phaseDegrees.toFixed(4)} degrees. Cyan solid curves use stored continuation records; orange solid curves are their base quadratic laws.`);
@@ -1181,10 +1242,10 @@
   function updatePhaseStory() {
     const current = branchAt(phaseStoryState.progress);
     const phaseDegrees = (xi(current.R) - xi(data.RStar)) * 180 / Math.PI;
-    select("#phaseStorySValue").textContent = `s = ${current.s.toFixed(4)}`;
+    setMath("#phaseStorySValue", `s=${current.s.toFixed(4)}`);
     select("#phaseStoryRValue").textContent = current.R.toFixed(6);
-    select("#phaseStoryPhaseValue").textContent = `${phaseDegrees.toFixed(4)}°`;
-    select("#phaseStoryState").textContent = phaseStoryState.progress < .002 ? "quadratic variation from the crossing" : (phaseStoryState.progress > .998 ? "R = N reached" : `R has decreased by ${(data.RStar - current.R).toFixed(5)}`);
+    setMath("#phaseStoryPhaseValue", `${phaseDegrees.toFixed(4)}^{\\circ}`);
+    select("#phaseStoryState").textContent = phaseStoryState.progress < .002 ? "quadratic variation from the crossing" : (phaseStoryState.progress > .998 ? "integral order reached" : `order decreased by ${(data.RStar - current.R).toFixed(5)}`);
     renderPhaseStory();
   }
 

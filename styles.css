@@ -178,6 +178,16 @@ a { color: inherit; }
 .geometry-toolbar > span:last-child { margin-left: auto; color: rgba(241,238,229,.35); font: 11px var(--mono); text-transform: uppercase; }
 .geometry-canvas-wrap { min-height: 0; position: relative; }
 #storyGeometryCanvas { display: block; width: 100%; height: 100%; }
+.geometry-math-layer { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.geometry-math-label { position: absolute; color: var(--orange); opacity: 0; transition: opacity .12s linear; white-space: nowrap; }
+.geometry-math-label .katex { font-size: 14px !important; }
+.canvas-tex-label { position: absolute; z-index: 3; color: rgba(241,238,229,.55); line-height: 1; white-space: nowrap; pointer-events: none; }
+.canvas-tex-label .katex { font-size: 11px !important; }
+.geometry-order-formula { display: flex; align-items: baseline; gap: 9px; transform: translateX(-50%); }
+.geometry-order-formula small { color: var(--orange); font: 10px/1.2 var(--sans); letter-spacing: .01em; }
+.geometry-wall-formula .katex { font-size: 13px !important; }
+.geometry-lift-formula { top: 17px; right: 24px; color: rgba(241,238,229,.48); }
+.geometry-lift-formula .katex { font-size: 12px !important; }
 .proof-strategy-lead { max-width: 1020px; margin: 0 0 50px 55px; padding: 0 0 0 24px; border-left: 2px solid var(--orange); }
 .proof-strategy-lead h3 { margin: 0 0 19px; font: 300 35px/1.05 var(--serif); letter-spacing: -.018em; }
 .proof-strategy-lead p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.82; }
@@ -263,7 +273,7 @@ h2 { margin: 0; font: 300 clamp(44px, 5vw, 75px)/.93 var(--serif); letter-spacin
 .control-label { display: flex; align-items: center; justify-content: space-between; font: 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .control-label output { color: var(--orange); font-size: 15px; }
 .control-block p { margin: 15px 0 0; color: rgba(241,238,229,.46); font-size: 11px; line-height: 1.6; }
-.formula { color: inherit; font-family: var(--mono); font-size: .92em; }
+.formula { color: inherit; font-family: inherit; font-size: .92em; }
 input[type="range"] { --value: 50%; width: 100%; height: 2px; margin: 22px 0 0; appearance: none; background: linear-gradient(to right, var(--orange) var(--value), rgba(241,238,229,.22) var(--value)); outline: none; }
 input[type="range"]::-webkit-slider-thumb { width: 15px; height: 15px; appearance: none; border: 3px solid var(--orange); border-radius: 50%; background: var(--paper); cursor: grab; }
 input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px solid var(--orange); border-radius: 50%; background: var(--paper); cursor: grab; }
@@ -913,6 +923,14 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .abundance-examples-table th, .abundance-examples-table td { min-width: 0; padding: 14px 12px; border-bottom: 0; text-align: left; }
   .abundance-examples-table [data-label]::before { content: attr(data-label); display: block; margin-bottom: 7px; color: var(--muted); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
   footer { grid-template-columns: 1fr; gap: 18px; }
+}
+
+@media (max-width: 620px) {
+  .geometry-order-formula { transform: none; }
+  .geometry-math-label .katex { font-size: 12px !important; }
+  .geometry-wall-formula .katex { font-size: 11px !important; }
+  .geometry-order-formula small { font-size: 9px; }
+  .geometry-lift-formula { top: 17px; right: 18px; }
 }
 
 /* Readable typographic scale.

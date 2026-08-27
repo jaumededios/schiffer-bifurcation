@@ -120,7 +120,7 @@
     context.strokeStyle = "rgba(19,33,38,.32)";
     context.fillStyle = "rgba(19,33,38,.5)";
     context.lineWidth = Math.max(1, dpr);
-    context.font = `${10.5 * dpr}px "DM Mono", ui-monospace, monospace`;
+    context.font = `${10.5 * dpr}px "KaTeX_Main", serif`;
     context.textAlign = "center";
     for (let k = -TICKS; k <= TICKS; k++) {
       const px = toCanvas(k * Math.PI);
@@ -326,9 +326,9 @@
     context.moveTo(left, height - 35); context.lineTo(left, height - 21);
     context.moveTo(right, height - 35); context.lineTo(right, height - 21);
     context.stroke();
-    context.font = '500 11px "DM Mono", ui-monospace, monospace';
+    context.font = '500 11px "KaTeX_Main", serif';
     context.textAlign = "center";
-    context.fillText(state.interval.key === "blind" ? "L = 2π" : "L = 2", (left + right) / 2, height - 8);
+    context.fillText(state.interval.key === "blind" ? "blind interval" : "comparison interval", (left + right) / 2, height - 8);
 
     context.fillStyle = "rgba(19,33,38,.55)";
     for (let k = -3; k <= 3; k++) {
@@ -519,7 +519,7 @@
     context.textAlign = "right";
     context.fillText("rim", graphRight, height * .91);
     context.textAlign = "left";
-    context.fillText(`ρ${state.mode.n} = ${state.mode.rho.toFixed(4)}…`, graphLeft, height * .11);
+    context.fillText("selected radial profile", graphLeft, height * .11);
     context.fillStyle = "#ff7449";
     context.fillText("radial profile at this instant", graphLeft, height * .96);
     canvas.setAttribute("aria-label", `Animated radial Neumann mode ${state.mode.n} on the disk, with frequency parameter ${state.mode.rho.toFixed(4)}`);

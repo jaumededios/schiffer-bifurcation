@@ -38,6 +38,10 @@
     return document.getElementById(id);
   }
 
+  function setMath(element, source) {
+    global.SchifferMath?.render(element, source);
+  }
+
   function collectElements() {
     const elements = {};
     Object.keys(IDS).forEach(function collect(key) {
@@ -429,14 +433,14 @@
       context.font = "10px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "top";
-      context.fillText("FRACTIONAL PART  R − FLOOR(R)", 0, 0);
+      context.fillText("FRACTIONAL PART", 0, 0);
       context.restore();
 
       context.fillStyle = COLORS.muted;
       context.font = "10px 'DM Mono', monospace";
       context.textAlign = "center";
       context.textBaseline = "bottom";
-      context.fillText("LOGARITHMIC CROSSING ORDER R  ·  N = ⌊R⌋", (plot.left + plot.right) / 2, state.height - 8);
+      context.fillText("CROSSING ORDER · LOGARITHMIC SCALE", (plot.left + plot.right) / 2, state.height - 8);
 
       context.fillStyle = "rgba(255,116,73,0.70)";
       context.font = "10px 'DM Mono', monospace";
@@ -458,7 +462,7 @@
       context.arc(startX, y, 2.2, 0, Math.PI * 2);
       context.fill();
       context.fillStyle = COLORS.muted;
-      context.fillText("COMPUTED λ ∈ [2,3]", startX + 8, y);
+      context.fillText("COMPUTED CROSSINGS", startX + 8, y);
 
       const secondX = compact ? startX : startX + 164;
       const secondY = compact ? y + 17 : y;
@@ -469,7 +473,7 @@
       context.fillRect(-3, -3, 6, 6);
       context.restore();
       context.fillStyle = COLORS.muted;
-      context.fillText("N=28 REFERENCE", secondX + 9, secondY);
+      context.fillText("REFERENCE EXAMPLE", secondX + 9, secondY);
     }
 
     function drawSearchPoints(plot) {
@@ -524,7 +528,7 @@
         context.font = "10px 'DM Mono', monospace";
         context.textAlign = "left";
         context.textBaseline = "middle";
-        context.fillText("N=28 · Δ=0.026397", labelX, labelY);
+        context.fillText("REFERENCE EXAMPLE", labelX, labelY);
       }
     }
 
@@ -544,10 +548,10 @@
       if (state.hoverKind === "reference") {
         const reference = model.reference;
         return [
-          "N=28 RUNNING EXAMPLE · SEPARATE REAL CROSSING",
-          "R = " + reference.R.toFixed(9) + "   R − FLOOR(R) = " + reference.fractionalPart.toFixed(9),
-          "ρ = " + reference.rho.toFixed(9) + "   λ = " + reference.lambda.toFixed(6),
-          "J₁ zero 16 · order-R zero 6 · λ lies above [2,3]",
+          "RUNNING EXAMPLE · SEPARATE REAL CROSSING",
+          "order " + reference.R.toFixed(9) + "   fractional part " + reference.fractionalPart.toFixed(9),
+          "common zero " + reference.rho.toFixed(9) + "   spectral value " + reference.lambda.toFixed(6),
+          "first-order zero 16 · real-order zero 6 · outside the displayed window",
         ];
       }
       if (state.hoverKind === "search" && state.hoverIndex >= 0) {
@@ -557,10 +561,10 @@
         const lambda = Math.pow(rho / radius, 2);
         return [
           "EXHAUSTIVE SEARCH CROSSING",
-          "R = " + radius.toFixed(9) + "   R − FLOOR(R) = " + model.fractional[index].toFixed(9),
-          "ρ = " + rho.toFixed(9) + "   λ = " + lambda.toFixed(6),
-          "J₁ zero n=" + model.columns.n[index]
-            + " · λ-window root " + model.columns.localIndex[index],
+          "order " + radius.toFixed(9) + "   fractional part " + model.fractional[index].toFixed(9),
+          "common zero " + rho.toFixed(9) + "   spectral value " + lambda.toFixed(6),
+          "first-order zero " + model.columns.n[index]
+            + " · window root " + model.columns.localIndex[index],
         ];
       }
       return null;
@@ -644,7 +648,7 @@
       const nearHundredth = count ? model.prefixNearHundredth[count - 1] : 0;
       const nearThousandth = count ? model.prefixNearThousandth[count - 1] : 0;
 
-      if (elements.cutoffValue) elements.cutoffValue.textContent = "N ≤ " + state.cutoff;
+      if (elements.cutoffValue) setMath(elements.cutoffValue, `N\\le ${state.cutoff}`);
       if (elements.countValue) elements.countValue.textContent = formatInteger(count);
       if (elements.bestValue) elements.bestValue.textContent = formatGap(bestGap, false);
       if (elements.plotState) {
