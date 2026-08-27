@@ -2417,6 +2417,10 @@ if (debyeData) {
   // places a long half-cylinder beside the disk at the same geometric scale.
   const collarFieldState = { fold: 28, mode: 1, trig: "cos" };
   const COLLAR_BACKGROUND = SCHIFFER_VISUAL_THEME.backgroundRgb;
+  const COLLAR_ZOOM_ACCENT = getComputedStyle(document.documentElement).getPropertyValue("--teal").trim() || "#4da2a3";
+  const COLLAR_ZOOM_FILL = SCHIFFER_VISUAL_THEME.paperEdition
+    ? "rgba(40,123,123,.16)"
+    : "rgba(77,162,163,.18)";
 
   function collarAngularValue(psi) {
     if (collarFieldState.mode === 0) return 1;
@@ -2542,14 +2546,23 @@ if (debyeData) {
       return colorFor(collarCylinderRadial(x) * collarAngularValue(psi));
     });
     const context = raster.context;
+    const cropWidth = raster.width * debyeData.depth / depth;
     context.save();
+    context.fillStyle = COLLAR_ZOOM_FILL;
+    context.fillRect(raster.width - cropWidth, 0, cropWidth, raster.height);
     context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
     context.lineWidth = 1;
     context.strokeRect(.5, .5, raster.width - 1, raster.height - 1);
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.background;
+    context.lineWidth = 5;
+    context.strokeRect(raster.width - cropWidth + 2.5, 2.5, cropWidth - 5, raster.height - 5);
+    context.strokeStyle = COLLAR_ZOOM_ACCENT;
+    context.lineWidth = 2.8;
+    context.strokeRect(raster.width - cropWidth + 2.5, 2.5, cropWidth - 5, raster.height - 5);
     context.restore();
     canvas.setAttribute(
       "aria-label",
-      `Cylinder mode k ${collarFieldState.mode} on x from minus ${depth} to zero; its circumference is drawn at the same scale as one wavelength on the ${fold}-fold disk.`
+      `Cylinder mode k ${collarFieldState.mode} on x from minus ${depth} to zero; its circumference is drawn at the same scale as one wavelength on the ${fold}-fold disk, and its five-unit rim collar is outlined.`
     );
   }
 
@@ -2723,10 +2736,13 @@ if (debyeData) {
     context.arc(plot.cx, plot.cy, plot.radius, 0, TWO_PI);
     context.stroke();
     collarTraceDiskCrop(context, plot);
-    context.fillStyle = "rgba(114,201,198,.08)";
+    context.fillStyle = COLLAR_ZOOM_FILL;
     context.fill();
-    context.strokeStyle = "#72c9c6";
-    context.lineWidth = 2.4;
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.background;
+    context.lineWidth = 5.5;
+    context.stroke();
+    context.strokeStyle = COLLAR_ZOOM_ACCENT;
+    context.lineWidth = 3.2;
     context.stroke();
     if (!SCHIFFER_VISUAL_THEME.paperEdition) {
       context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
@@ -2737,7 +2753,7 @@ if (debyeData) {
     renderCollarZoomConnectors(plot);
     canvas.setAttribute(
       "aria-label",
-      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; a cyan sector and two guide lines identify the collar enlarged in the preceding panel.`
+      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; an outlined sector identifies the collar enlarged in the adjacent panel.`
     );
   }
 

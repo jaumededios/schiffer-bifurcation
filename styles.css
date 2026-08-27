@@ -598,8 +598,8 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .collar-field-readout div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-light); }
 .collar-field-readout span { color: rgba(241,238,229,.38); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .055em; }
 .collar-field-readout strong { color: rgba(241,238,229,.8); font: 11px var(--mono); text-align: right; }
-.collar-field-visual { min-width: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: stretch; }
-.collar-field-panel { min-width: 0; display: grid; grid-template-rows: 65px minmax(300px,1fr) 38px; border-bottom: 1px solid var(--line-light); }
+.collar-field-visual { min-width: 0; display: grid; grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr); align-items: stretch; }
+.collar-field-panel { min-width: 0; display: grid; grid-template-rows: 65px minmax(300px,1fr); border-bottom: 1px solid var(--line-light); }
 .collar-field-panel:nth-child(even) { border-left: 1px solid var(--line-light); }
 .collar-field-panel:nth-child(n+3) { border-top: 1px solid var(--line-light); }
 .collar-field-panel > header { min-width: 0; padding: 15px 17px; border-bottom: 1px solid var(--line-light); }
@@ -944,7 +944,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .formula-display p, .cone-formula-display p { grid-template-columns: 1fr; gap: 3px; }
   .collar-field-laboratory { grid-template-columns: 1fr; }
   .collar-field-controls { border-right: 0; }
-  .collar-field-panel { grid-template-rows: 65px 320px 38px; }
+  .collar-field-panel { grid-template-rows: 65px 320px; }
   .collar-field-caption { padding: 20px; }
   .angular-quotient-note { min-width: 0; grid-template-columns: minmax(0,1fr); gap: 18px; padding: 25px 20px; }
   .angular-quotient-note > * { min-width: 0; }
@@ -982,7 +982,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .collar-field-visual { grid-template-columns: minmax(0,1fr); }
   .collar-field-panel:nth-child(even) { border-left: 0; }
   .collar-field-panel + .collar-field-panel { border-top: 1px solid var(--line-light); }
-  .collar-field-panel { grid-template-rows: 65px 320px 38px; }
+  .collar-field-panel { grid-template-rows: 65px 320px; }
 }
 
 @media (max-width: 620px) {

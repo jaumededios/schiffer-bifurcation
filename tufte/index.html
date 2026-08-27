@@ -18,8 +18,8 @@
     <script defer src="../lean-statements.js?v=20260827.5"></script>
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
-    <link rel="stylesheet" href="../styles.css?v=20260827.10">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.18">
+    <link rel="stylesheet" href="../styles.css?v=20260827.11">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.19">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -1115,28 +1115,24 @@
           </aside>
 
           <section class="collar-field-visual">
-            <article class="collar-field-panel">
-              <header><span>02 / cylinder</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
-              <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a flat cylinder collar"></canvas></div>
-              <footer><span>\(x=-5\)</span><span>same coordinates</span><span>\(x=0\)</span></footer>
+            <article class="collar-field-panel collar-global-panel">
+              <header><span>02 / complete disk</span><strong id="collarDiskTitle">angular order 28</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with its magnified sector outlined"></canvas></div>
             </article>
 
             <article class="collar-field-panel">
-              <header><span>03 / one planar sector</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
+              <header><span>03 / magnified planar collar</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
               <div class="collar-field-canvas-wrap"><canvas id="collarConeCanvas" role="img" aria-label="Selected Bessel mode on a magnified collar of one planar sector"></canvas></div>
-              <footer><span>\(r=N-5\)</span><span>magnified wedge</span><span>\(r=N\)</span></footer>
             </article>
 
             <article class="collar-field-panel collar-half-cylinder-panel">
-              <header><span>05 / half-cylinder at disk scale</span><strong id="collarHalfCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <header><span>04 / half-cylinder at disk scale</span><strong id="collarHalfCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
               <div class="collar-field-canvas-cell"><div class="collar-field-canvas-wrap collar-half-cylinder-wrap"><canvas id="collarHalfCylinderCanvas" role="img" aria-label="A long thin half-cylinder drawn at the same geometric scale as the complete disk"></canvas></div></div>
-              <footer><span>\(x=-2N\)</span><span>one circumference</span><span>\(x=0\)</span></footer>
             </article>
 
-            <article class="collar-field-panel collar-global-panel">
-              <header><span>04 / complete planar field</span><strong id="collarDiskTitle">angular order 28</strong></header>
-              <div class="collar-field-canvas-wrap"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with its magnified sector outlined"></canvas></div>
-              <footer><span>whole disk</span><span class="collar-crop-key"><i></i>panel 03</span></footer>
+            <article class="collar-field-panel">
+              <header><span>05 / magnified cylinder collar</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a flat cylinder collar"></canvas></div>
             </article>
 
             <svg id="collarZoomConnectors" class="collar-zoom-connectors" aria-hidden="true" focusable="false">
@@ -1144,7 +1140,7 @@
               <line id="collarZoomConnectorBottom"></line>
             </svg>
 
-            <p class="collar-field-caption">Panels 02 and 03 use the same coordinates and colour scale; the cyan frame in Panel 04 marks the enlarged sector. Panel 05 draws the half-cylinder at the geometric scale of Panel 04, so its vertical wavelengths have the same displayed length as the wavelengths along the disk boundary.</p>
+            <p class="collar-field-caption">Left: the disk and half-cylinder at one geometric scale. Their outlined five-unit collars are magnified on the right, where the same local coordinates and colour scale are used.</p>
           </section>
         </div>
 
@@ -1714,7 +1710,7 @@
     <script defer src="../cone-data.js"></script>
     <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260827.12"></script>
+    <script defer src="../app.js?v=20260827.13"></script>
     <script defer src="../story.js?v=20260827.9"></script>
     <script defer src="../abundance.js?v=20260827.8"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>

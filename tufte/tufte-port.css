@@ -1248,7 +1248,7 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
 .collar-field-readout strong { color: var(--ink); }
 .collar-field-visual {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
   align-items: start;
 }
 .collar-field-canvas-wrap {
@@ -1272,7 +1272,7 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
 .collar-field-laboratory .collar-field-visual > .collar-field-panel {
   margin: 0;
   padding: 0;
-  grid-template-rows: 48px clamp(220px, 22vw, 310px) 28px;
+  grid-template-rows: 48px clamp(220px, 22vw, 310px);
   border: 0;
 }
 .collar-field-panel:nth-child(even) { border-left: 1px solid var(--line); }
@@ -1935,7 +1935,7 @@ body > footer {
   body.tufte-site main .geometry-canvas-panel {
     grid-template-rows: clamp(300px, 88vw, 520px);
   }
-  .collar-field-visual { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .collar-field-visual { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
 }
 
 @media (max-width: 1000px) {
@@ -2065,8 +2065,8 @@ body > footer {
   .interactive-plate > aside { border-top: 0; border-left: 0; }
   .phase-story-lab > aside,
   .debye-controls { margin: 0; padding: 1.4rem 0 0; }
-  .collar-field-visual { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .collar-field-laboratory .collar-field-visual > .collar-field-panel { grid-template-rows: 48px clamp(210px, 36vw, 290px) 28px; }
+  .collar-field-visual { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
+  .collar-field-laboratory .collar-field-visual > .collar-field-panel { grid-template-rows: 48px clamp(210px, 36vw, 290px); }
   .collar-field-panel:nth-child(even) { border-left: 1px solid var(--line); }
   .collar-field-caption { padding-right: 0; }
   .canvas-toolbar { justify-content: flex-end; overflow: hidden; }
@@ -2106,7 +2106,7 @@ body > footer {
 @media (max-width: 620px) {
   .collar-field-visual { grid-template-columns: minmax(0, 1fr); }
   .collar-field-laboratory .collar-field-visual > .collar-field-panel {
-    grid-template-rows: 48px clamp(230px, 78vw, 320px) 28px;
+    grid-template-rows: 48px clamp(230px, 78vw, 320px);
   }
   .collar-field-panel:nth-child(even) { border-left: 0; }
   .collar-field-panel + .collar-field-panel { border-top: 0 !important; }
