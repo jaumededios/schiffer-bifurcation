@@ -322,6 +322,9 @@ body.tufte-site h3 {
 
 .intro-copy { color: var(--ink); }
 .intro-copy h3 { max-width: none; }
+.siegel-theorem { width: 100%; }
+.siegel-theorem h4 { font-size: 1.2rem; font-style: italic; font-weight: 400; }
+.siegel-theorem p { font-size: 1.05rem; }
 .intro-chapter-heading { margin-top: 6rem; padding-top: 3rem; }
 
 .story-intro .intro-lead,

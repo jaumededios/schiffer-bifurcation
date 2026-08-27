@@ -1056,6 +1056,11 @@ dialog p:not(.eyebrow) {
 .intro-copy p { margin: 0 0 17px; }
 .intro-copy p:last-child { margin-bottom: 0; }
 .intro-copy a { color: var(--orange); text-underline-offset: 3px; }
+.siegel-theorem { margin: 25px 0 22px; padding: 21px 0 20px; color: var(--ink); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.siegel-theorem h4 { margin: 0 0 13px; color: var(--ink); font: 500 18px/1.35 var(--serif); }
+.siegel-theorem p { margin: 0; color: var(--muted); font-size: var(--type-proof); line-height: 1.72; }
+.siegel-theorem .tex-display { margin: 16px 0 0; padding-left: 18px; color: var(--ink); border-left: 2px solid var(--orange); overflow-x: auto; }
+.siegel-theorem .katex-display { margin: 0; text-align: left; }
 .intro-copy-wide { max-width: var(--layout-prose); margin: 60px 0 0 70px; }
 .story-intro .intro-statement { min-height: 0; padding: 44px 34px 28px; }
 .story-intro .intro-statement .intro-question { margin: 0; color: var(--ink); font-size: 17px; line-height: 1.62; }

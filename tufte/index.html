@@ -368,7 +368,18 @@
 
         <div class="intro-copy intro-copy-wide linearized-criterion-flow">
             <p>The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
-            <p>This approach has been used in overdetermined problems. Unfortunately, the only planar Schiffer examples we know are balls, and there Siegel proved that there is no agreement of Neumann and Dirichlet eigenvalues, blocking the route described above.</p>
+            <p>For the unit disk, this criterion reduces to a statement about zeros of Bessel functions.</p>
+            <article class="siegel-theorem" aria-labelledby="siegelTheoremTitle">
+              <h4 id="siegelTheoremTitle">Theorem (Bourget's hypothesis; Siegel, 1929).</h4>
+              <p>If \(m\) and \(n\) are distinct nonnegative integers, then \(J_m\) and \(J_n\) have no common positive zero. Equivalently,</p>
+              <div class="tex-display">
+                \[
+                \rho&gt;0,\qquad J_m(\rho)=J_n(\rho)=0
+                \quad\Longrightarrow\quad m=n.
+                \]
+              </div>
+            </article>
+            <p>Indeed, a radial Schiffer mode on the disk has \(J_1(\rho)=0\), while a Dirichlet variation in angular mode \(\ell\) would require \(J_\ell(\rho)=0\) at the same \(\rho\). Siegel's theorem excludes every \(\ell\ge2\). The remaining mode \(\ell=1\) is the derivative of the radial solution under translation, so it does not produce a new domain. Thus the disk has no genuine nonradial direction for this linearized construction.</p>
           <article class="math-statement math-statement-criterion" aria-labelledby="linearizedCriterionTitle">
             <header class="math-statement-header"><span>Criterion</span><small>linearized perturbation</small></header>
             <div class="math-statement-body">
@@ -1666,6 +1677,7 @@
           <li id="ref-colbrook"><span>[12]</span><p>M. J. Colbrook and G. Stepaniants, <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer"><em>A computer-assisted counterexample to the planar Pompeiu and Schiffer conjectures</em></a>, arXiv:2608.01579 (2026).</p></li>
           <li id="ref-cao-dedios"><span>[13]</span><p>G. Cao-Labora and J. de Dios Pont, <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer"><em>Counterexamples to Schiffer's Conjecture</em></a>, arXiv:2608.05114 (2026). The construction expounded here.</p></li>
           <li><span>[14]</span><p>F. W. J. Olver et al., editors, <a href="https://dlmf.nist.gov/10" target="_blank" rel="noreferrer"><em>NIST Digital Library of Mathematical Functions, Chapter 10: Bessel Functions</em></a>.</p></li>
+          <li><span>[15]</span><p>C. L. Siegel, <em>Über einige Anwendungen diophantischer Approximationen</em>, <em>Abhandlungen der Preußischen Akademie der Wissenschaften, Physikalisch-Mathematische Klasse</em>, no. 1 (1929), 1–70. Bourget's hypothesis is a special case of Siegel's theorem on Bessel functions.</p></li>
         </ol>
       </section>
     </main>
