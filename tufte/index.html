@@ -14,8 +14,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
     <script defer src="../math.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
-    <link rel="stylesheet" href="../styles.css?v=20260827.5">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.5">
+    <link rel="stylesheet" href="../styles.css?v=20260827.6">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.6">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -88,8 +88,8 @@
 
           <label for="pompeiu-history-note" class="margin-toggle" aria-label="Show the historical note">&#8853;</label>
           <input type="checkbox" id="pompeiu-history-note" class="margin-toggle">
-          <aside class="marginnote tufte-margin historical-margin" data-margin-aside>
-            <strong class="tufte-margin-title">Historical note</strong>
+          <aside class="marginnote historical-margin">
+            <strong>Historical note</strong>
             <p>Pompeiu claimed that disks and squares have the Pompeiu property. His disk proof was incorrect, while the square proof assumed that \(f\) tends to a limit at infinity. Christov later proved the square case without this assumption; Chakalov established the disk counterexample in 1944.</p>
             <p>Brown, Schreiber and Taylor proved that noncircular ellipses, polygonal regions, and compact convex sets with a corner have the property <a class="history-citation" href="#ref-bst">[5]</a>. The connected smooth-domain question remained open until the two planar counterexamples proved in 2026 <a class="history-citation" href="#ref-colbrook">[12]</a>, <a class="history-citation" href="#ref-cao-dedios">[13]</a>.</p>
           </aside>
@@ -142,7 +142,7 @@
             <div class="intro-copy disk-proof-flow">
               <label for="pompeiu-model-note" class="margin-toggle" aria-label="Show the interactive disk probe">&#8853;</label>
               <input type="checkbox" id="pompeiu-model-note" class="margin-toggle">
-              <figure class="marginnote tufte-margin pompeiu-margin-figure" data-margin-aside id="pompeiuFigure" aria-label="Interactive disk probe for the function cosine of x one">
+              <figure class="marginnote pompeiu-margin-figure" id="pompeiuFigure" aria-label="Interactive disk probe for the function cosine of x one">
                 <div class="measurement-panel pompeiu-panel">
                   <canvas class="measurement-canvas" id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
                   <div class="measurement-side pompeiu-side">
@@ -180,7 +180,7 @@
               <div class="disk-sidequest-proof">
                 <label for="bst-proof-note" class="margin-toggle" aria-label="Show the Brown, Schreiber and Taylor note">&#8853;</label>
                 <input type="checkbox" id="bst-proof-note" class="margin-toggle">
-                <aside class="marginnote tufte-margin" data-margin-aside>Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin.</aside>
+                <aside class="marginnote">Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin.</aside>
                 <h4>Proof.</h4>
                 <p>Translation of the disk gives a convolution:</p>
                 <div class="tex-display">
@@ -212,7 +212,7 @@
         <div class="intro-copy intro-copy-wide intro-chapter-heading">
           <label for="chladni-photo-note" class="margin-toggle" aria-label="Show the Chladni plate photograph">&#8853;</label>
           <input type="checkbox" id="chladni-photo-note" class="margin-toggle">
-          <figure class="marginnote tufte-margin chladni-photo-panel" data-margin-aside>
+          <figure class="marginnote chladni-photo-panel">
             <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along circular nodal lines separating four radial nodal domains on a vibrating round Chladni plate">
             <figcaption>Chladni plate with circular nodes. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Pieter Kuiper, public domain.</a></figcaption>
           </figure>
@@ -293,7 +293,7 @@
           <div class="intro-proof-body">
             <label for="williams-technical-note" class="margin-toggle" aria-label="Show the technical note">&#8853;</label>
             <input type="checkbox" id="williams-technical-note" class="margin-toggle">
-            <aside class="marginnote tufte-margin intro-footnote" data-margin-aside id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</aside>
+            <aside class="marginnote intro-footnote" id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</aside>
             <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
             <div class="tex-display">
@@ -421,7 +421,7 @@
           <div class="intro-proof-body">
             <label for="criticality-converse-note" class="margin-toggle" aria-label="Show the converse note">&#8853;</label>
             <input type="checkbox" id="criticality-converse-note" class="margin-toggle">
-            <aside class="marginnote tufte-margin" data-margin-aside>The converse needs one more step. Criticality under the area constraint gives the Lagrange condition \(|\nabla u|^2-\mu u^2=\text{const}\) on \(\partial\Omega\), which looks weaker; Fall and Weth show that any nontrivial solution of it has \(u^2\) constant on the boundary, so on a connected boundary \(u\) itself is constant. Simplicity of \(\mu\) is not a technicality here. The ball in \(\mathbb R^n\) maximizes the first nonzero Neumann eigenvalue at fixed volume, so it is certainly critical, yet that eigenvalue has multiplicity \(n\) and none of its eigenfunctions is constant on the sphere.</aside>
+            <aside class="marginnote">The converse needs one more step. Criticality under the area constraint gives the Lagrange condition \(|\nabla u|^2-\mu u^2=\text{const}\) on \(\partial\Omega\), which looks weaker; Fall and Weth show that any nontrivial solution of it has \(u^2\) constant on the boundary, so on a connected boundary \(u\) itself is constant. Simplicity of \(\mu\) is not a technicality here. The ball in \(\mathbb R^n\) maximizes the first nonzero Neumann eigenvalue at fixed volume, so it is certainly critical, yet that eigenvalue has multiplicity \(n\) and none of its eigenfunctions is constant on the sphere.</aside>
             <p>Deform with normal velocity \(f=V\cdot\nu\) on \(\partial\Omega\). The Hadamard formula for a simple Neumann eigenvalue is</p>
             <div class="tex-display">
               \[
@@ -443,7 +443,7 @@
           <p>Everything after this is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer order is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
           <label for="construction-gallery-note" class="margin-toggle" aria-label="Show the comparison plate">&#8853;</label>
           <input type="checkbox" id="construction-gallery-note" class="margin-toggle">
-        <figure class="marginnote tufte-margin margin-gallery intro-shapes" data-margin-aside>
+        <figure class="marginnote margin-gallery intro-shapes">
           <figcaption>
             <p class="eyebrow">Comparison plate</p>
             <h3>Four periodically fluted boundaries.</h3>
@@ -514,7 +514,7 @@
           <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the spectral coincidence excluded on the disk.</h2></div>
         </header>
         <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The figures below vary the branch parameter <span class="formula">\(s\)</span> slowly, beginning at the symmetric domain <span class="formula">\(s=0\)</span>.</p></div>
-        <div class="world-cards">
+        <div class="world-cards figure-band">
           <article>
             <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated compact domain on a three-dimensional flat cylinder whose two boundary loops vary with the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
@@ -603,7 +603,7 @@
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
-        <div class="borrow-conclusion">
+        <div class="borrow-conclusion figure-band">
           <span>The common mechanism</span>
           <p>The flexibility comes from a precise coincidence of special functions. Separation of variables produces a radial or zonal family satisfying the Neumann condition and a nonradial family satisfying the Dirichlet condition. A bifurcation becomes possible when the two families have the same eigenvalue: trigonometric waves on the cylinder, associated Legendre functions on the sphere, and, later, Bessel functions on the cone. The disk is rigid precisely because the corresponding Bessel coincidence is forbidden.</p>
         </div>
@@ -615,7 +615,7 @@
           <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
         <div class="geometry-lead"><h3>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h3><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
-        <div class="geometry-laboratory interactive-plate">
+        <div class="geometry-laboratory interactive-plate figure-band">
           <aside class="geometry-controls">
             <div class="control-heading"><span>Planar quotient and large-\(N\) limit</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
             <div class="geometry-stages" aria-label="Seven stages of the quotient construction">
@@ -675,7 +675,7 @@
           <p>In this subsection we will show that the cylinder solution can be perturbed independently of the eigenvalue <span class="formula">\(\lambda\in[2,3]\)</span>: the same interval in the bifurcation parameter <span class="formula">\(s\)</span> works for every <span class="formula">\(\lambda\)</span> in this range.</p>
         </div>
 
-        <div class="cylinder-spectral-seed">
+        <div class="cylinder-spectral-seed figure-band">
           <div class="cylinder-seed-copy">
             <p class="eyebrow">5.1.1 · separation of variables</p>
             <h3>The kernel of the linearized problem is explicit.</h3>
@@ -734,7 +734,7 @@
           </div>
         </div>
 
-        <article class="math-statement math-statement-wide cylinder-theorem">
+        <article class="math-statement cylinder-theorem">
           <header class="math-statement-header"><span>Theorem</span><small>5.1 · uniform half-cylinder branch</small></header>
           <div class="math-statement-body theorem-statement">
             <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
@@ -857,7 +857,7 @@
           <p>The applet below computes a finite Fourier approximation to the family in Theorem 5.1. For each <span class="formula">\((\lambda,s)\in[2,3]\times[-0.85,0.85]\)</span>, it solves simultaneously for the boundary graph and the Helmholtz field. The flat and three-dimensional panels display the same numerical solution in two coordinate systems.</p>
         </div>
 
-        <div class="laboratory interactive-plate">
+        <div class="laboratory interactive-plate figure-band">
           <aside class="controls" aria-label="Simulation controls">
             <div class="control-heading">
               <span>Parameters</span>
@@ -941,7 +941,7 @@
           </section>
         </div>
 
-        <div class="readout-strip" hidden aria-hidden="true">
+        <div class="readout-strip figure-band" hidden aria-hidden="true">
           <div class="readout-copy">
             <p class="eyebrow">Finite-dimensional solve</p>
             <h3>The boundary and the eigenfunction are solved simultaneously.</h3>
@@ -983,7 +983,7 @@
           </div>
         </div>
 
-        <div class="laboratory cone-laboratory interactive-plate">
+        <div class="laboratory cone-laboratory interactive-plate figure-band">
           <aside class="controls" aria-label="Cone simulation controls">
             <div class="control-heading">
               <span>Branch controls</span>
@@ -1091,7 +1091,7 @@
           <p>The one-wavelength crop is centered at the cut, so the discrepancy caused by nonintegral \(R\) is visible in the enlarged panel. The radial trace isolates the non-evanescent mode, while the higher angular corrections have exponential radial profiles. Regularity at the cone point selects one Bessel profile, and the Debye approximation gives its dependence on \(R\) through the local phase.</p>
         </div>
 
-        <div class="modes-laboratory interactive-plate">
+        <div class="modes-laboratory interactive-plate figure-band">
           <aside class="modes-controls light-controls" aria-label="Nested angular zoom controls">
             <div class="control-heading">
               <span>Nested zoom controls</span>
@@ -1160,7 +1160,7 @@
           </section>
         </div>
 
-        <div class="collar-limit-argument paper-copy">
+        <div class="collar-limit-argument paper-copy figure-band">
           <span>The equation represented in the figure</span>
           <div>
             <h3>The separated cone equation converges to the separated cylinder equation.</h3>
@@ -1218,7 +1218,7 @@
           <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
           <p>One caveat about the laboratory below. It runs on the crossing \(R_*=28.026397\ldots\), whose spectral ratio is \(\lambda_*=3.317011\ldots\), and that value lies <em>outside</em> the window \(2\le\lambda_*\le3\) assumed in Corollary 5.3 and in Theorems 5.1 and 5.2. It is shown because it is the crossing whose branch was continued numerically all the way to an integer. The proof runs instead on the crossings inside the window, which subsection 5.5 supplies; the formulas of this subsection are exact at either value.</p>
         </div>
-        <article class="math-statement math-statement-wide uniform-drop-theorem">
+        <article class="math-statement uniform-drop-theorem">
           <header class="math-statement-header"><span>Corollary</span><small>5.3 · uniform decrease of \(R\)</small></header>
           <div class="math-statement-body">
             <p>There are constants \(R_{\mathrm{drop}},s_*,\eta_*&gt;0\), independent of the crossing, such that every real-order crossing with</p>
@@ -1239,7 +1239,7 @@
             <p>The number \(\eta_*\) may be small, but it is independent of \(R_*\) for all sufficiently large crossings. This is the estimate needed to reach an integer value of \(R\).</p>
           </div>
         </article>
-        <div class="phase-derivation-grid">
+        <div class="phase-derivation-grid figure-band">
           <article>
             <span>01 / compute the variation of \(R\)</span>
             <h3>The second harmonic determines the sign.</h3>
@@ -1262,7 +1262,7 @@
             <p>Because both factors on the right are negative, \(\Delta\xi(s)>0\): the cone radius decreases while the local cylinder phase advances. There is a linear relation between phase and \(R-R_*\), and a quadratic relation between either of them and \(s\).</p>
           </article>
         </div>
-        <div class="motion-split" aria-label="Linear boundary motion versus quadratic radius motion">
+        <div class="motion-split figure-band" aria-label="Linear boundary motion versus quadratic radius motion">
           <article>
             <span>the visible boundary wave · order \(s\)</span>
             <div class="tex-display">\[r_{\partial}(\psi;s)=R(s)-s\cos\psi+O(s^2).\]</div>
@@ -1274,7 +1274,7 @@
             <p>The cosine has zero average. Consequently, the first nonzero variation of the cone parameter \(R\) is the negative quadratic term computed above.</p>
           </article>
         </div>
-        <div class="phase-story-lab interactive-plate">
+        <div class="phase-story-lab interactive-plate figure-band">
           <aside>
             <div class="control-heading"><span>Computed branch reaching \(N=28\)</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
@@ -1282,7 +1282,7 @@
           </aside>
           <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic variation from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
         </div>
-        <section class="phase-family" aria-labelledby="phaseFamilyTitle">
+        <section class="phase-family figure-band" aria-labelledby="phaseFamilyTitle">
           <header>
             <span>What the calculation predicts across real order</span>
             <div>
@@ -1313,7 +1313,7 @@
           </div>
         </header>
 
-        <section class="real-order-bridge" aria-labelledby="realOrderTheoremTitle">
+        <section class="real-order-bridge figure-band" aria-labelledby="realOrderTheoremTitle">
           <header>
             <span>Before taking the large-radius limit</span>
             <div>
@@ -1321,7 +1321,7 @@
               <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
             </div>
           </header>
-          <article class="math-statement math-statement-wide real-order-theorem">
+          <article class="math-statement real-order-theorem">
             <header class="math-statement-header"><span>Theorem</span><small>5.2 · uniform cone bifurcation</small></header>
             <div class="math-statement-body">
               <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
@@ -1351,7 +1351,7 @@
           <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). At a crossing the boundary radius and the Bessel order are the same number: there \(\lambda=\rho^2/R^2\), and the boundary sits at \(\sqrt\lambda\,r_0=\rho\), so \(r_0=\rho/\sqrt\lambda=R\). That is why one letter serves for both. After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
         </div>
 
-        <div class="debye-formula-grid latex-formula-grid" aria-label="Cylinder and cone eigenfunction dictionaries">
+        <div class="debye-formula-grid latex-formula-grid figure-band" aria-label="Cylinder and cone eigenfunction dictionaries">
           <article>
             <span>01 / half-cylinder · \(x\le0\)</span>
             <h3>The separated cylinder basis</h3>
@@ -1396,7 +1396,7 @@
           </article>
         </div>
 
-        <div class="basis-limit-derivation paper-copy">
+        <div class="basis-limit-derivation paper-copy figure-band">
           <span>The limit on a fixed collar</span>
           <div>
             <p>Put \(q=\sqrt\lambda\), \(\omega=\sqrt{\lambda-1}\), and \(\Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1})\). Debye's oscillatory large-order expansion, <a href="https://dlmf.nist.gov/10.19.E6" target="_blank" rel="noreferrer">DLMF (10.19.6) ↗</a>, gives</p>
@@ -1415,7 +1415,7 @@
           </div>
         </div>
 
-        <div class="collar-field-laboratory" aria-label="Two-dimensional cylinder and cone mode comparison">
+        <div class="collar-field-laboratory figure-band" aria-label="Two-dimensional cylinder and cone mode comparison">
           <aside class="collar-field-controls">
             <div class="control-heading">
               <span>01 / choose one mode</span>
@@ -1477,7 +1477,7 @@
           <p class="collar-field-caption">Panels 02 and 03 use the same coordinates and colour scale; the cyan frame in Panel 04 marks the enlarged sector.</p>
         </div>
 
-        <div class="angular-quotient-note paper-copy">
+        <div class="angular-quotient-note paper-copy figure-band">
           <span>What happens to sine and cosine?</span>
           <div>
             <p>Let <span class="formula">\(\vartheta\)</span> be the planar polar angle. On one <span class="formula">\(N\)</span>-fold sector, the rescaled quotient coordinate is <span class="formula">\(\psi=N\vartheta\in S^1\)</span>. Consequently</p>
@@ -1492,7 +1492,7 @@
           </div>
         </div>
 
-        <div class="debye-laboratory interactive-plate">
+        <div class="debye-laboratory interactive-plate figure-band">
           <aside class="debye-controls" aria-label="Large-radius Bessel comparison controls">
             <div class="control-heading">
               <span>Vary the boundary radius</span>
@@ -1531,7 +1531,7 @@
           </section>
         </div>
 
-        <div class="debye-conclusion two-column-conclusion">
+        <div class="debye-conclusion two-column-conclusion figure-band">
           <article><span>Neumann oscillatory profiles</span><strong>Both \(k=1\) curves satisfy the boundary condition.</strong><p>The Bessel profile is rescaled by choosing \(q_RR=\rho_R\), where \(J_R'(\rho_R)=0\), and is normalized to equal one at the rim. Its cylinder comparison is therefore the cosine with the same Neumann Cauchy data: \(C_R(0)=1\) and \(C_R'(0)=0\).</p></article>
           <article><span>The three radial regimes</span><strong>One oscillatory mode and two exponential modes.</strong><p>The \(k=1\) panel compares the Neumann Bessel profile with \(\cos(\sqrt{\lambda_R-1}\,x)\). The \(k=2,3\) panels use the same \(\lambda_R\) and a linear vertical scale, on which the Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\).</p></article>
         </div>
@@ -1546,7 +1546,7 @@
           <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
           <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
         </div>
-        <article class="math-statement math-statement-wide near-integer-theorem">
+        <article class="math-statement near-integer-theorem">
           <header class="math-statement-header"><span>Theorem</span><small>5.5 · near-integer crossings</small></header>
           <div class="math-statement-body">
             <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
@@ -1595,7 +1595,7 @@
             <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
           </div>
         </details>
-        <div class="abundance-laboratory">
+        <div class="abundance-laboratory figure-band">
           <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
             <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through \(N=200\)</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
             <div class="abundance-readout abundance-readout-inline">
@@ -1607,7 +1607,7 @@
             <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=200\)</span></div>
           </section>
         </div>
-        <div class="abundance-conclusion">
+        <div class="abundance-conclusion figure-band">
           <span>Reaching integer order</span>
           <h3>The decrease in \(R\) exceeds the initial gap \(R_*-N\).</h3>
           <div>
@@ -1621,7 +1621,7 @@
             <p>By continuity, there is some \(0&lt;s_N&lt;s_*\) such that \(R(s_N)=N\). At this nonzero parameter, the cone lifts to a noncircular \(N\)-fold planar Schiffer domain. The finite set of plotted points illustrates the arithmetic argument; Theorem 5.5 makes the initial gap smaller than the uniform decrease supplied by Subsection 5.3.</p>
           </div>
         </div>
-        <section class="abundance-examples" aria-labelledby="abundanceExamplesTitle">
+        <section class="abundance-examples figure-band" aria-labelledby="abundanceExamplesTitle">
           <header>
             <span>Five examples from the full search</span>
             <h3 id="abundanceExamplesTitle">Five particularly close examples.</h3>
@@ -1700,6 +1700,6 @@
     <script defer src="../story.js"></script>
     <script defer src="../abundance.js"></script>
     <script defer src="../pompeiu.js"></script>
-    <script defer src="layout-contract.js?v=20260827.5"></script>
+    <script defer src="layout-contract.js?v=20260827.6"></script>
   </body>
 </html>

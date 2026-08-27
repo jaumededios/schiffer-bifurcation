@@ -15,6 +15,27 @@ Let `Ω⊂ℝ²` be a smooth bounded domain and suppose a nonconstant eigenfunct
 
 The paper edition uses the relevance, findability, understandability, and usability principles summarized by [GaZmagik/iso-24495](https://github.com/GaZmagik/iso-24495). That repository is an unofficial interpretation of the ISO plain-language standards, so the site makes no ISO-conformance claim.
 
+### Tufte layout language
+
+The Tufte edition keeps content semantics separate from page geometry:
+
+- every article-level `details` element is a reading-measure disclosure by
+  default; only apparatus-local `.secondary-controls` opt out;
+- Tufte's native `label.margin-toggle + input.margin-toggle + .marginnote`
+  pattern is the complete margin-note API;
+- `.math-statement` articles provide one grammar for definitions, problems,
+  conjectures, propositions, lemmas, corollaries, and theorems;
+- `.interactive-plate` means an apparatus with direct `section` and `aside`
+  children; the stylesheet chooses their desktop and mobile placement.
+- `.figure-band` groups a full-width visual, small multiple, or derivation;
+  individual figure names never enter the page-measure selectors.
+
+The widths for these components live only in the measure tokens at the top of
+`tufte/tufte-port.css`; their instances need no per-item width classes or
+layout-test attributes. With `?layout-check=1`, `tufte/layout-contract.js`
+discovers the structures from their semantics and checks the contracts
+automatically.
+
 ## Narrative structure
 
 The website is ordered as one argument rather than a gallery of simulations:
