@@ -1,0 +1,929 @@
+/*
+ * Tufte port
+ *
+ * The upstream tufte-css stylesheet is loaded before the application's
+ * component styles.  This layer restores its page geometry after those
+ * components have been styled: a 55% reading measure, a 40% margin, and
+ * full-width figures for simulations and small multiples.
+ */
+
+:root {
+  --ink: #111111;
+  --ink-2: #26241f;
+  --paper: #fffff8;
+  --paper-2: #f7f4e9;
+  --paper-3: #ece8dc;
+  --muted: #666158;
+  --line: rgba(17, 17, 17, 0.2);
+  --line-light: rgba(255, 255, 248, 0.2);
+  --orange: #a00000;
+  --red: #a00000;
+  --teal: #287b7b;
+  --serif: "et-book", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  --sans: "et-book", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  --mono: "DM Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --type-body: 1.4rem;
+  --type-proof: 1.2rem;
+  --type-caption: 1.1rem;
+  --type-control: .78rem;
+  --type-label: .78rem;
+  --type-math: 1.18rem;
+  --layout-max: 1400px;
+  --layout-gutter: 0px;
+  --layout-indent: 0px;
+  --layout-prose: 55%;
+  --tufte-text: 55%;
+  --tufte-margin: 40%;
+  --tufte-gap: 5%;
+}
+
+html { font-size: 15px; }
+
+body.tufte-site {
+  box-sizing: content-box;
+  width: 87.5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 12.5%;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--serif);
+  counter-reset: sidenote-counter;
+}
+
+body.tufte-site::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: var(--paper);
+}
+
+.noise { display: none; }
+
+body.tufte-site a { text-decoration-thickness: .05em; text-underline-offset: .12em; }
+body.tufte-site a:hover { color: var(--orange); }
+
+/* A quiet folio replaces the application-like navigation bar. */
+.topbar {
+  min-height: 0;
+  height: auto;
+  display: grid;
+  grid-template-columns: var(--tufte-text) minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.25rem 0 .85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  gap: .65rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  font-variant: small-caps;
+  letter-spacing: .04em;
+}
+
+.brand svg { width: 1.35rem; height: 1.35rem; }
+.brand svg .accent { stroke: var(--orange); }
+.status { color: var(--muted); font-size: .68rem; letter-spacing: .06em; }
+.status a { color: var(--ink); border: 0; text-decoration: underline; }
+.method-button {
+  padding: 0;
+  color: var(--muted);
+  border: 0;
+  font-size: .68rem;
+  letter-spacing: .06em;
+}
+.method-button:hover { color: var(--orange); }
+
+/* Contents live in the margin beside the title, where a Tufte page expects
+   navigation and commentary.  It remains collapsible so it never becomes a
+   competing left rail. */
+.site-toc {
+  position: absolute;
+  z-index: 40;
+  top: 7rem;
+  right: max(6.25vw, calc((100vw - 1400px) / 2));
+  bottom: auto;
+  left: auto;
+  width: min(25rem, 31vw);
+  overflow: visible;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.site-toc summary {
+  position: static;
+  min-height: 0;
+  padding: .3rem 0 .55rem;
+  color: var(--muted);
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 1rem !important;
+  font-variant: small-caps;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+.site-toc summary i { color: var(--orange); font-family: var(--mono); font-size: .65rem; }
+.site-toc nav { border: 0; }
+.site-toc a,
+.site-toc a.toc-subsection {
+  min-height: 0;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  padding: .38rem 0;
+  color: var(--muted);
+  background: transparent;
+  border-bottom: 1px solid rgba(17,17,17,.09);
+  font-family: var(--serif);
+  font-size: .86rem !important;
+  line-height: 1.25;
+}
+.site-toc a:hover, .site-toc a:focus-visible { color: var(--ink); background: transparent; }
+.site-toc a b { color: var(--ink); font-family: et-book-roman-old-style, var(--serif); }
+
+main { width: 100%; }
+
+:is(
+  .intro,
+  .story-intro,
+  .borrow-flexibility,
+  .geometric-escape,
+  .experiment,
+  .modes-experiment,
+  .phase-story,
+  .debye-experiment,
+  .abundance-experiment,
+  .site-references
+) {
+  width: 100%;
+  padding: 5rem 0 6rem;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+:is(.borrow-flexibility, .geometric-escape, .experiment, .modes-experiment, .phase-story, .debye-experiment, .abundance-experiment, .site-references) {
+  border-top: 1px solid var(--line);
+}
+
+/* Canonical Tufte type scale and text measure. */
+.intro { padding-top: 5rem; }
+.intro-index {
+  width: var(--tufte-text);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.intro h1 {
+  width: var(--tufte-text);
+  max-width: none;
+  margin: 4rem 0 1.5rem;
+  font: 400 3.2rem/1 var(--serif);
+  letter-spacing: -.02em;
+}
+
+.intro-bottom { width: var(--tufte-text); }
+.intro-bottom p { width: 100%; max-width: none; margin: 1.4rem 0; }
+
+body.tufte-site main p:not(.eyebrow) {
+  font-family: var(--serif);
+  font-size: 1.4rem !important;
+  line-height: 2rem;
+}
+
+body.tufte-site main :is(
+  figcaption,
+  .formula-note,
+  .measurement-hint,
+  .membrane-model-note,
+  .intro-shape small,
+  .world-cards article > p,
+  .proof-argument p,
+  .intro-proof-body p,
+  .disk-sidequest-proof p,
+  .disk-sidequest-history p,
+  .phase-family-note,
+  .abundance-provenance
+) {
+  font-size: 1.1rem !important;
+  line-height: 1.55;
+}
+
+body.tufte-site h2 {
+  margin: 2.1rem 0 1.4rem;
+  font: italic 400 2.2rem/1 var(--serif);
+  letter-spacing: 0;
+}
+
+body.tufte-site h3 {
+  margin: 2rem 0 1.4rem;
+  font: italic 400 1.7rem/1.05 var(--serif);
+  letter-spacing: 0;
+}
+
+.story-heading,
+.experiment-header {
+  width: var(--tufte-text);
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  margin: 0;
+  padding: 0 0 2rem;
+}
+
+.experiment-header > div:first-child { display: contents; }
+.story-heading h2, .experiment-header h2 { max-width: none; margin-top: 0; }
+.section-number {
+  width: auto;
+  height: auto;
+  display: block;
+  padding-top: .18rem;
+  color: var(--muted);
+  border: 0;
+  border-radius: 0;
+  font: 400 1rem/1 et-book-roman-old-style, var(--serif);
+  opacity: 1;
+}
+
+.eyebrow {
+  margin: 0 0 .65rem;
+  color: var(--ink);
+  font: 400 1rem/1.1 var(--serif);
+  font-variant: small-caps;
+  letter-spacing: .06em;
+  text-transform: lowercase;
+}
+
+.equations {
+  grid-column: 2;
+  justify-content: flex-start;
+  margin: .2rem 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+/* Main measure: the mathematical narrative remains narrow enough to read.
+   Labels, provenance, and theorem metadata occupy the adjacent margin. */
+:is(
+  .intro-copy,
+  .intro-copy-wide,
+  .borrow-lead,
+  .geometry-lead,
+  .proof-strategy-lead,
+  .half-cylinder-introduction,
+  .experiment-story-lead,
+  .cone-lead,
+  .modes-lead,
+  .phase-story-lead,
+  .debye-lead,
+  .abundance-lead,
+  .proof-strategy-subheading
+) {
+  width: var(--tufte-text);
+  max-width: none;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.intro-copy { color: var(--ink); }
+.intro-copy h3 { max-width: none; }
+.intro-chapter-heading { margin-top: 6rem; padding-top: 3rem; }
+
+.story-intro .intro-lead,
+.modes-lead,
+.abundance-lead {
+  width: 90%;
+  display: grid;
+  grid-template-columns: 55% 40%;
+  gap: 5%;
+  align-items: start;
+  margin-left: 0;
+}
+
+.story-intro .intro-lead > .intro-copy,
+.modes-lead > :first-child,
+.abundance-lead > :first-child { width: 100%; }
+
+.equation-system,
+.intro-statement {
+  min-height: 0;
+  padding: .8rem 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.probe-question {
+  min-height: 0;
+  padding: .55rem 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.probe-question > span { color: var(--orange); font-variant: small-caps; }
+.probe-question p { margin: .6rem 0 0; font-size: 1.1rem !important; line-height: 1.4 !important; }
+label.margin-toggle { color: var(--orange); }
+
+/* Full-width figures are the visual spine of the article. */
+figure.fullwidth,
+:is(
+  .world-cards,
+  .borrow-conclusion,
+  .geometry-laboratory,
+  .cylinder-spectral-seed,
+  .cylinder-theorem,
+  .cylinder-jet-proof,
+  .laboratory,
+  .readout-strip,
+  .modes-laboratory,
+  .collar-limit-argument,
+  .phase-derivation-grid,
+  .motion-split,
+  .phase-story-lab,
+  .phase-family,
+  .real-order-bridge,
+  .debye-formula-grid,
+  .basis-limit-derivation,
+  .collar-field-laboratory,
+  .angular-quotient-note,
+  .debye-laboratory,
+  .debye-conclusion,
+  .near-integer-theorem,
+  .abundance-laboratory,
+  .abundance-conclusion,
+  .abundance-examples
+) {
+  width: 90%;
+  max-width: 90%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
+
+.measurement-figure {
+  display: grid;
+  grid-template-columns: 55% 40%;
+  column-gap: 5%;
+  align-items: start;
+}
+.measurement-caption { grid-column: 1; grid-row: 1; width: 100%; max-width: none; margin: 0; }
+.measurement-caption > p:last-child { font-size: 1.1rem !important; line-height: 1.55; }
+.measurement-panel {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--ink);
+}
+.measurement-caption,
+.measurement-panel { min-width: 0; }
+.measurement-canvas {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-top: 0;
+}
+.line-probe-panel .measurement-canvas { aspect-ratio: 4 / 3; }
+.pompeiu-panel .measurement-canvas { aspect-ratio: 1 / 1; }
+.measurement-side { min-height: 0; }
+.measurement-size-control { padding: .85rem 0; }
+.measurement-size-control input[type="range"] { margin-top: .9rem; }
+.measurement-presets { margin-top: .75rem; }
+.measurement-readout { margin-top: 0; padding: .85rem 0; }
+.measurement-hint { min-height: 0; padding: .75rem 0 0; font-family: var(--serif); font-style: italic; }
+.disk-sidequest figure.fullwidth { width: 100%; max-width: 100%; }
+
+.intro-shapes {
+  display: grid;
+  grid-template-columns: 55% 40%;
+  gap: 2rem 5%;
+  align-items: start;
+}
+.intro-shapes figcaption {
+  grid-column: 1;
+  grid-row: 1;
+  float: none;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.intro-shapes-row { display: contents; }
+.intro-shapes-examples {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: 1rem;
+}
+.intro-shapes-aside {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  padding: .8rem 0 0;
+  border-top: 1px solid var(--ink);
+}
+.intro-shapes-aside-copy { margin: 0 0 .9rem; text-align: left; }
+.intro-shapes-aside-copy :is(.eyebrow, p:last-child) { display: none; }
+.intro-shapes-aside-copy h4 {
+  margin: 0;
+  font: italic 400 1.1rem/1.25 var(--serif);
+}
+.intro-shapes-objects { max-width: none; gap: .9rem; }
+.intro-shape-object .intro-shape-media {
+  width: 100%;
+  margin-bottom: .4rem;
+}
+.intro-shape-kicker,
+.intro-shape small { display: none; }
+.intro-shape b {
+  font: italic 400 1rem/1.25 var(--serif);
+}
+.intro-shape-object { text-align: left; }
+.intro-shapes-credit {
+  grid-column: 1;
+  margin-top: 0;
+  padding-top: .7rem;
+  font-size: .9rem !important;
+}
+
+.shape-variation-figure figcaption {
+  float: none;
+  width: 40%;
+  max-width: none;
+  margin: 0 5% 0 auto;
+}
+
+.membrane-figure {
+  clear: both;
+  display: grid;
+  grid-template-columns: 55% 40%;
+  gap: 5%;
+  align-items: start;
+  background: transparent;
+  border: 0;
+}
+.chladni-photo-panel {
+  grid-column: 2;
+  grid-row: 1;
+  border: 0;
+  border-top: 1px solid var(--ink);
+}
+.chladni-photo-panel img { max-height: none; border: 1px solid var(--line); border-top: 0; }
+.chladni-photo-panel > p { padding: .75rem 0 0; }
+.schiffer-mode-panel {
+  grid-column: 1;
+  grid-row: 1;
+  border-top: 1px solid var(--ink);
+}
+.schiffer-mode-heading { min-height: 0; padding: .85rem 0; border: 0; }
+.schiffer-mode-heading h3 { margin-bottom: 0; }
+.schiffer-mode-panel canvas { border: 1px solid var(--line); }
+.schiffer-mode-controls { border-right: 1px solid var(--line); border-left: 1px solid var(--line); }
+.membrane-model-note { padding: .75rem 0 0; }
+.chladni-photo-panel > p,
+.membrane-model-note { font-style: italic; }
+
+/* Tufte's small-multiple logic replaces dashboard cards. */
+.world-cards {
+  display: block;
+  border-right: 0;
+  border-left: 0;
+}
+.world-cards article {
+  display: grid;
+  grid-template-columns: 55% 40%;
+  column-gap: 5%;
+  align-items: start;
+  min-height: 0;
+  padding: 3rem 0;
+  background: transparent;
+  border-right: 0;
+  border-bottom: 1px solid var(--line);
+}
+.world-cards article + article { padding-right: 0; padding-left: 0; }
+.world-cards article > :not(.world-sketch) { grid-column: 1; }
+.world-cards .world-sketch {
+  grid-column: 2;
+  grid-row: 1 / span 8;
+  height: auto;
+  aspect-ratio: 1.5 / 1;
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.world-cards .world-sketch text:not(.world-domain-label) { display: none; }
+.world-cards article > span { margin-top: 0; }
+.world-cards h3 { font-style: normal; }
+.borrow-conclusion { grid-template-columns: 27.5% 55%; gap: 5%; padding: 2rem 0; border-right: 0; border-left: 0; }
+
+/* Theorem statements use the main measure; their names and provenance become
+   true marginal information instead of boxed dashboard labels. */
+:is(.intro-theorem, .cylinder-theorem, .uniform-drop-theorem, .near-integer-theorem) {
+  width: 90%;
+  max-width: 90%;
+  grid-template-columns: 55% 40%;
+  gap: 5%;
+  margin-left: 0;
+  padding: 2rem 0;
+  background: transparent;
+  border-right: 0;
+  border-left: 0;
+}
+
+.intro-theorem > :first-child,
+.cylinder-theorem > :first-child,
+.uniform-drop-theorem > :first-child,
+.near-integer-theorem > :first-child { grid-column: 2; grid-row: 1; }
+.intro-theorem > :last-child,
+.cylinder-theorem > :last-child,
+.uniform-drop-theorem > :last-child,
+.near-integer-theorem > :last-child { grid-column: 1; grid-row: 1; }
+
+:is(.intro-theorem-label, .theorem-label, .uniform-drop-label) {
+  padding-top: .25rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-variant: small-caps;
+  letter-spacing: .04em;
+}
+
+.intro-theorem p, .intro-theorem li, .theorem-statement p { color: var(--ink); font-size: 1.2rem !important; line-height: 1.65; }
+
+.disk-sidequest {
+  width: 90%;
+  max-width: 90%;
+  margin: 4rem 0;
+  border-color: var(--line);
+}
+.disk-sidequest > summary { width: 55%; padding: 1rem 0; font-family: var(--serif); }
+.disk-sidequest > summary span { font-size: 1.35rem; font-style: italic; }
+.disk-sidequest > summary small { font-size: .8rem; font-style: normal; font-variant: small-caps; }
+.disk-sidequest-body { padding: 2rem 0; }
+.disk-sidequest .intro-copy { width: 55%; }
+.disk-sidequest-proof, .disk-sidequest-history { width: 55%; max-width: none; }
+.intro-proof-aside {
+  float: right;
+  clear: right;
+  width: 50%;
+  margin: .3rem -60% 0 0;
+  padding: .5rem 0 0;
+  border-top: 1px solid var(--line);
+  border-left: 0;
+  font-size: 1.1rem !important;
+  line-height: 1.4 !important;
+}
+
+.intro-proof { width: 90%; max-width: 90%; margin-left: 0; }
+.intro-proof-body, .proof-argument { width: 55%; max-width: 55%; margin-left: 0; }
+.proof-details { width: 90%; border-color: var(--line); }
+.proof-details > summary { width: 55%; font-family: var(--serif); font-variant: small-caps; text-transform: none; }
+
+/* The laboratories are full-width figures. Controls take approximately the
+   margin share and the numerical image receives the remaining data-ink. */
+:is(.geometry-laboratory, .laboratory, .modes-laboratory, .phase-story-lab, .debye-laboratory) {
+  grid-template-columns: 27.5% minmax(0, 1fr);
+  margin-top: 3rem;
+}
+
+:is(.geometry-controls, .controls, .modes-controls, .phase-story-lab > aside, .debye-controls) {
+  padding: 1.6rem;
+}
+
+:is(.geometry-laboratory, .laboratory, .modes-laboratory, .phase-story-lab, .debye-laboratory, .abundance-laboratory) {
+  border-color: var(--line);
+}
+
+/* Explanatory prose already precedes these laboratories. Inside the figure,
+   keep only what is needed to operate it. */
+:is(.controls .control-block, .modes-controls .modes-control-block, .debye-controls .debye-control-block, .collar-field-controls .collar-field-control-block) > p {
+  display: none;
+}
+
+.laboratory { min-height: 610px; }
+.canvas-panel { grid-template-rows: 48px minmax(500px, 1fr) 30px; }
+.canvas-toolbar { padding-right: 1rem; padding-left: 1rem; }
+.three-help { font-size: .67rem; }
+.geometry-toolbar > span:last-child,
+.geometry-stages button small { display: none; }
+.geometry-stages button { grid-template-rows: auto; }
+
+/* A one-parameter plot belongs in the text column, with its live numerical
+   readout acting as the margin note. */
+.phase-story-lab,
+.debye-laboratory {
+  grid-template-columns: 55% 40%;
+  gap: 5%;
+  min-height: 0;
+  border: 0;
+}
+.debye-laboratory { background: transparent !important; }
+.phase-story-lab > aside,
+.debye-controls {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--ink);
+}
+.debye-controls { color: var(--ink); background: var(--paper) !important; }
+.debye-controls :is(label, span, strong, p) { color: var(--ink) !important; }
+.debye-controls input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(17,17,17,.14)); }
+.debye-controls .debye-status span { color: var(--muted) !important; }
+.phase-story-plot,
+.debye-plot-panel {
+  grid-column: 1;
+  grid-row: 1;
+  border: 1px solid var(--line-light);
+}
+.phase-story-plot { min-height: 0; grid-template-rows: 48px 420px 30px; }
+.debye-plot-panel { min-height: 0; grid-template-rows: 52px 570px 30px; }
+.phase-story-control, .debye-control-block { padding: 1.25rem 0; }
+.phase-story-readout { margin-top: 1rem; }
+
+/* The collar comparison is a genuine small multiple. A shallow control rail
+   sits above the three equal images instead of becoming a fourth visual pane. */
+.collar-field-laboratory {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 0;
+  background: transparent;
+}
+.collar-field-controls {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr .8fr 1fr;
+  gap: 1.25rem;
+  align-items: end;
+  padding: 0 0 1.25rem;
+  color: var(--ink);
+  background: var(--paper) !important;
+  border: 0;
+  border-top: 1px solid var(--ink);
+}
+.collar-field-controls .control-heading { align-self: stretch; padding-top: 1rem; }
+.collar-field-control-block { align-self: stretch; padding: 1rem 0 0; border-bottom: 0; }
+.collar-field-controls :is(label, span, strong) { color: var(--ink); }
+.collar-field-controls input[type="range"] { background: linear-gradient(90deg, var(--orange), rgba(17,17,17,.14)); }
+.collar-field-readout { margin-top: 0; padding-top: 1rem; }
+.collar-field-readout div { padding: .3rem 0; border-color: var(--line); }
+.collar-field-readout span { color: var(--muted); }
+.collar-field-readout strong { color: var(--ink); }
+.collar-field-panel { grid-template-rows: 52px 390px 30px; border: 1px solid var(--line-light); }
+.collar-field-panel + .collar-field-panel { border-left: 0; }
+.collar-field-caption {
+  grid-column: 1 / -1;
+  padding: 1rem 45% 0 0;
+  color: var(--muted) !important;
+  background: var(--paper) !important;
+  border: 0;
+  font-family: var(--serif);
+  font-style: italic;
+}
+.collar-zoom-connectors { display: none; }
+
+/* The global/local cone view needs width, not a tall dashboard rail. Its three
+   control groups form a compact apparatus above the full-width figure. */
+.modes-laboratory {
+  grid-template-columns: 1fr;
+  min-height: 0;
+  border: 0;
+}
+.modes-controls {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0 1.5rem;
+  padding: 0 0 1.5rem;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--ink);
+}
+.modes-controls > .control-heading { grid-column: 1 / 13; padding-top: 1rem; }
+.modes-controls > .modes-control-block:nth-of-type(2) { grid-column: 1 / 4; }
+.modes-controls > .modes-control-block:nth-of-type(3) { grid-column: 4 / 7; }
+.modes-controls > .phase-control-block { grid-column: 7 / 13; }
+.modes-controls > .play-button { grid-column: 1 / 4; align-self: end; }
+.modes-controls > .modes-status { grid-column: 4 / 13; align-self: end; }
+.modes-control-block { min-width: 0; padding: 1.15rem 0; }
+.modes-control-block .problem-map { grid-template-columns: 1fr auto 1fr; }
+.modes-controls :is(.problem-map, .phase-law) { display: none; }
+.modes-controls .phase-track { margin-top: 1.25rem; }
+.modes-plot-panel { min-height: 0; grid-template-rows: 52px 760px 30px; }
+
+:is(.geometry-canvas-panel, .canvas-panel, .modes-plot-panel, .phase-story-plot, .debye-plot-panel, .abundance-plot-panel) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.control-heading > span,
+.control-label,
+.play-button,
+.geometry-stages button strong,
+.geometry-stages button small,
+.measurement-size-control label,
+.measurement-range-scale,
+.measurement-presets button {
+  font-family: var(--mono);
+  font-size: .72rem !important;
+}
+
+.cylinder-spectral-seed,
+.real-order-bridge,
+.basis-limit-derivation,
+.angular-quotient-note,
+.near-integer-theorem,
+.abundance-conclusion,
+.abundance-examples {
+  background: transparent;
+}
+
+.cylinder-seed-copy,
+.cylinder-kernel-bridge,
+.cylinder-journal-note,
+.real-order-bridge > header,
+.real-order-theorem,
+.basis-limit-derivation,
+.angular-quotient-note,
+.near-integer-theorem,
+.abundance-conclusion,
+.abundance-examples > header {
+  grid-template-columns: 27.5% 55%;
+  gap: 5%;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.proof-strategy-lead { padding-left: 0; border-left: 0; }
+.proof-strategy-subheading { grid-template-columns: 27.5% 1fr; gap: 5%; }
+.phase-story .story-heading { margin-left: 0; }
+
+/* References are bibliography, not a card list. */
+.site-references h2 { width: 55%; margin-top: 0; font-size: 2.2rem; font-style: italic; }
+.site-references ol { width: 90%; max-width: 90%; }
+.site-references li { grid-template-columns: 2.2rem 52.8%; }
+.site-references li p { font-size: 1.1rem !important; line-height: 1.5; }
+
+body > footer {
+  width: 100%;
+  min-height: 0;
+  grid-template-columns: 55% 1fr auto;
+  gap: 1rem;
+  padding: 2rem 0 3rem;
+  color: var(--muted);
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  font-family: var(--serif);
+  font-size: .85rem;
+  font-variant: small-caps;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+.tex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+
+@media (max-width: 1000px) {
+  .status { display: none; }
+  .topbar { grid-template-columns: 1fr auto; }
+  .site-toc { position: relative; top: auto; right: auto; width: 100%; margin: 1rem 0 0; }
+  .site-toc summary { padding: .55rem 0; }
+  .story-intro .intro-lead { grid-template-columns: 1fr; }
+  .story-intro .intro-lead > * { width: 100%; }
+  :is(.geometry-laboratory, .laboratory) { grid-template-columns: 32% minmax(0, 1fr); }
+  .modes-controls { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .modes-controls > .control-heading { grid-column: 1 / 7; }
+  .modes-controls > .modes-control-block:nth-of-type(2) { grid-column: 1 / 4; }
+  .modes-controls > .modes-control-block:nth-of-type(3) { grid-column: 4 / 7; }
+  .modes-controls > .phase-control-block { grid-column: 1 / 7; }
+  .modes-controls > .play-button { grid-column: 1 / 4; }
+  .modes-controls > .modes-status { grid-column: 4 / 7; }
+  .phase-story-lab, .debye-laboratory { grid-template-columns: 1fr; }
+  .phase-story-lab > aside, .debye-controls { grid-column: 1; grid-row: 1; margin-bottom: 1.5rem; }
+  .phase-story-plot, .debye-plot-panel { grid-column: 1; grid-row: 2; }
+  .collar-field-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .collar-field-controls .control-heading { grid-column: 1 / -1; }
+  .collar-field-laboratory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .collar-field-panel:last-of-type { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  body.tufte-site {
+    width: 84%;
+    margin: 0;
+    padding-right: 8%;
+    padding-left: 8%;
+  }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; }
+  .brand span { max-width: 15rem; }
+  .brand svg { display: none; }
+
+  :is(
+    .intro,
+    .story-intro,
+    .borrow-flexibility,
+    .geometric-escape,
+    .experiment,
+    .modes-experiment,
+    .phase-story,
+    .debye-experiment,
+    .abundance-experiment,
+    .site-references
+  ) { padding: 3.5rem 0 4.5rem; }
+
+  .intro-index, .intro h1, .intro-bottom,
+  .story-heading, .experiment-header,
+  :is(.intro-copy, .intro-copy-wide, .borrow-lead, .geometry-lead, .proof-strategy-lead, .half-cylinder-introduction, .experiment-story-lead, .cone-lead, .modes-lead, .phase-story-lead, .debye-lead, .abundance-lead, .proof-strategy-subheading),
+  .disk-sidequest > summary, .disk-sidequest .intro-copy,
+  .disk-sidequest-proof, .disk-sidequest-history,
+  .intro-proof-body, .proof-argument,
+  .proof-details > summary {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .intro h1 { margin-top: 3rem; font-size: 3rem; }
+  .intro-index { font-size: 1.45rem; }
+  body.tufte-site main p:not(.eyebrow) { font-size: 1.25rem !important; line-height: 1.75rem; }
+
+  figure.fullwidth,
+  :is(.world-cards, .borrow-conclusion, .geometry-laboratory, .cylinder-spectral-seed, .cylinder-theorem, .cylinder-jet-proof, .laboratory, .readout-strip, .modes-laboratory, .collar-limit-argument, .phase-derivation-grid, .motion-split, .phase-story-lab, .phase-family, .real-order-bridge, .debye-formula-grid, .basis-limit-derivation, .collar-field-laboratory, .angular-quotient-note, .debye-laboratory, .debye-conclusion, .near-integer-theorem, .abundance-laboratory, .abundance-conclusion, .abundance-examples, .disk-sidequest, .intro-proof, .proof-details, .intro-theorem, .uniform-drop-theorem) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .measurement-figure { grid-template-columns: minmax(0, 1fr); }
+  .measurement-caption { grid-column: 1; grid-row: 1; margin-bottom: 1.5rem; }
+  .measurement-panel { grid-column: 1; grid-row: 2; }
+  .intro-shapes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .intro-shapes figcaption, .shape-variation-figure figcaption { width: 100%; margin: 0; }
+  .intro-shapes figcaption { grid-column: 1; grid-row: 1; }
+  .intro-shapes-aside { grid-column: 1; grid-row: 2; }
+  .intro-shapes-objects { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+  .intro-shape-object + .intro-shape-object { margin-top: 0; }
+  .intro-shapes-examples { grid-column: 1; grid-row: 3; margin-top: 0; }
+  .intro-shapes-credit { grid-column: 1; grid-row: 4; }
+  .membrane-figure { grid-template-columns: 1fr; }
+  .schiffer-mode-panel { grid-column: 1; grid-row: 1; }
+  .chladni-photo-panel { grid-column: 1; grid-row: 2; margin-top: 2rem; }
+
+  :is(.intro-theorem, .cylinder-theorem, .uniform-drop-theorem, .near-integer-theorem) { grid-template-columns: 1fr; }
+  .intro-theorem > :first-child,
+  .cylinder-theorem > :first-child,
+  .uniform-drop-theorem > :first-child,
+  .near-integer-theorem > :first-child { grid-column: 1; grid-row: 1; margin-bottom: 1rem; }
+  .intro-theorem > :last-child,
+  .cylinder-theorem > :last-child,
+  .uniform-drop-theorem > :last-child,
+  .near-integer-theorem > :last-child { grid-column: 1; grid-row: 2; }
+
+  .intro-proof-aside { float: none; width: 100%; margin: 1.5rem 0 0; }
+  :is(.geometry-laboratory, .laboratory, .modes-laboratory, .phase-story-lab, .debye-laboratory) { grid-template-columns: 1fr; }
+  .modes-controls { grid-template-columns: 1fr; }
+  .modes-controls > .control-heading,
+  .modes-controls > .modes-control-block:nth-of-type(2),
+  .modes-controls > .modes-control-block:nth-of-type(3),
+  .modes-controls > .phase-control-block,
+  .modes-controls > .play-button,
+  .modes-controls > .modes-status { grid-column: 1; }
+  .collar-field-laboratory, .collar-field-controls { grid-template-columns: 1fr; }
+  .collar-field-controls .control-heading, .collar-field-panel:last-of-type { grid-column: 1; }
+  .collar-field-panel + .collar-field-panel { border-top: 0; border-left: 1px solid var(--line-light); }
+  .collar-field-caption { padding-right: 0; }
+  .canvas-toolbar { justify-content: flex-end; overflow: hidden; }
+  .canvas-toolbar > div:first-child { display: none; }
+  .axis-footer { justify-content: center; overflow: hidden; }
+  .axis-footer > :first-child,
+  .axis-footer > :last-child { display: none; }
+  .world-cards { grid-template-columns: 1fr; }
+  .world-cards article, .world-cards article + article { display: block; padding: 2rem 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .world-cards .world-sketch { width: 100%; margin-bottom: 1.5rem; }
+  .borrow-conclusion { grid-template-columns: 1fr; }
+  .cylinder-seed-copy, .cylinder-kernel-bridge, .cylinder-journal-note, .real-order-bridge > header, .real-order-theorem, .basis-limit-derivation, .angular-quotient-note, .near-integer-theorem, .abundance-conclusion, .abundance-examples > header { grid-template-columns: 1fr; }
+  .site-references ol { width: 100%; max-width: 100%; }
+  .site-references li { grid-template-columns: 2rem minmax(0, 1fr); }
+  body > footer { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
