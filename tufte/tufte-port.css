@@ -1270,6 +1270,8 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
   background: transparent !important;
 }
 .collar-field-laboratory .collar-field-visual > .collar-field-panel {
+  margin: 0;
+  padding: 0;
   grid-template-rows: 48px clamp(220px, 22vw, 310px) 28px;
   border: 0;
 }
