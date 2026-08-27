@@ -1125,11 +1125,13 @@ dialog p:not(.eyebrow) {
 /* Physics-first introduction: interval probe, planar probe, and membrane modes. */
 .intro-physics-lead { align-items: stretch !important; }
 .intro-physics-lead .intro-copy { max-width: 760px; font-size: var(--type-body); }
+.intro-pompeiu-copy { font-size: var(--type-body); }
 .intro-inline-display { margin: 24px 0; color: var(--ink); }
 .probe-question { align-self: stretch; padding: 34px 30px; border: 1px solid var(--line); border-top: 2px solid var(--orange); background: rgba(255,255,255,.17); }
 .probe-question > span { display: block; margin-bottom: 28px; color: var(--orange); font: 500 var(--type-label)/1.5 var(--mono); text-transform: uppercase; letter-spacing: .1em; }
 .probe-question p { margin: 0; color: var(--muted); font-size: var(--type-body); line-height: 1.72; }
 .probe-question .tex-display { margin: 24px 0; color: var(--ink); overflow-x: auto; }
+.probe-question-inline { max-width: 650px; margin: 36px 0; }
 
 .line-probe-figure { max-width: 1060px; margin: 62px 0 0 70px; padding: 0; }
 .line-probe-figure figcaption { max-width: 790px; margin-bottom: 24px; }

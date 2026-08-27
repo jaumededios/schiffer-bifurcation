@@ -60,41 +60,33 @@
           <div><p class="eyebrow">Pompeiu's problem</p><h2>Which probe shapes retain enough information to recover the field?</h2></div>
         </div>
 
-        <div class="intro-lead intro-physics-lead">
-          <div class="intro-copy">
-            <p>Suppose that you are designing a probe to measure a physical quantity that varies across a sample: its temperature, its local composition, or the roughness of its surface. One choice in the design is the probe's footprint \(\Omega\), the region over which it takes a reading. Physical limitations prevent the instrument from measuring the field at a single point, so it returns an average over this footprint. You want to choose \(\Omega\) so that these averaged measurements retain as much information as possible.</p>
-            <p>Once the footprint has been chosen, suppose that you may translate and rotate the probe and take as many readings as you wish. If the unknown field is \(f\) and \(E\) is a rigid motion, write \(E(\Omega)\) for the transformed footprint. We model the reading in configuration \(E\) by</p>
-            <div class="tex-display intro-inline-display">
-              \[
-              M_\Omega f(E)=\int_{E(\Omega)}f(x)\,dx.
-              \]
-            </div>
-            <p>Pompeiu asked in 1929 whether the collection of all these readings determines \(f\), or equivalently whether the chosen footprint can distinguish every pair of fields.</p>
-          </div>
-          <aside class="probe-question" aria-label="The Pompeiu problem">
-            <span>Pompeiu's problem</span>
-            <p>For a fixed bounded set \(\Omega\), does</p>
-            <div class="tex-display">
-              \[
-              \bigl\{M_\Omega f(E): E\text{ a rigid motion}\bigr\}
-              \]
-            </div>
-            <p>determine the function \(f\)?</p>
-          </aside>
-        </div>
-
-        <div class="intro-copy intro-copy-wide intro-linear-step">
-          <h3>The Pompeiu property is the injectivity of \(M_\Omega\).</h3>
-          <p>The map \(f\mapsto M_\Omega f\) is linear. If two functions \(f_1\) and \(f_2\) give the same reading in every configuration, then their difference \(g=f_1-f_2\) satisfies</p>
-          <div class="tex-display">
+        <div class="intro-copy intro-copy-wide intro-pompeiu-copy">
+          <p>Suppose that you are designing a probe to measure a physical quantity that varies across a sample: its temperature, its local composition, or the roughness of its surface. One choice in the design is the probe's footprint \(\Omega\), the region over which it takes a reading. Physical limitations prevent the instrument from measuring the field at a single point, so it returns an average over this footprint. You want to choose \(\Omega\) so that these averaged measurements retain as much information as possible.</p>
+          <p>Once the footprint has been chosen, suppose that you may translate and rotate the probe and take as many readings as you wish. If the unknown field is \(f\) and \(E\) is a rigid motion, write \(E(\Omega)\) for the transformed footprint. We model the reading in configuration \(E\) by</p>
+          <div class="tex-display intro-inline-display">
             \[
-            \int_{E(\Omega)}g(x)\,dx=0
-            \qquad\text{for every rigid motion }E.
+            M_\Omega f(E)=\int_{E(\Omega)}f(x)\,dx.
             \]
           </div>
-          <p>We therefore say that \(\Omega\) has the <em>Pompeiu property</em> when \(\ker M_\Omega=\{0\}\). The recovery problem asks which bounded planar sets have this property.</p>
-          <p>Chakalov showed in 1944 that disks do not have the Pompeiu property. A disk has an evident loss of information: rotating it does not change the set, so rotations supply no measurements beyond those already obtained by translation. The Pompeiu conjecture asks whether, among connected smooth planar domains, disks are the only domains without the Pompeiu property.</p>
-          <p>Connectedness matters here. Any finite disjoint union of congruent disks also fails the Pompeiu property, since the same nonzero function has integral zero over every moved copy of each disk. We therefore look for connected smooth counterexamples.</p>
+          <p>Pompeiu asked in 1929 whether the collection of all these readings determines the unknown field. Mathematically, this asks whether the map \(f\mapsto M_\Omega f\) is injective.</p>
+          <p>We say that a bounded set \(\Omega\) has the <em>Pompeiu property</em> if this map is injective. Since \(M_\Omega\) is linear, this is equivalent to saying that its kernel is trivial. In other words, for every function \(f\),</p>
+          <div class="tex-display">
+            \[
+            \int_{E(\Omega)}f(x)\,dx=0
+            \quad\text{for every rigid motion }E
+            \qquad\Longrightarrow\qquad
+            f=0.
+            \]
+          </div>
+          <p>Can a bounded set fail to have the Pompeiu property? Pompeiu conjectured that every bounded set has it.</p>
+
+          <aside class="probe-question probe-question-inline" aria-label="The Pompeiu problem">
+            <span>Pompeiu's problem</span>
+            <p>Does every bounded planar set have the Pompeiu property?</p>
+          </aside>
+
+          <p>Chakalov showed in 1944 that the answer is no: every disk fails to have the Pompeiu property. Rotational symmetry makes the loss of information plausible, since rotating a disk produces no new footprint. The optional digression below gives an explicit nonzero function in the kernel.</p>
+          <p>Finite disjoint unions of congruent disks give further examples. A function whose integral vanishes over every moved disk also has integral zero over every moved copy of such a union. We shall therefore consider connected smooth bounded domains. The modern Pompeiu conjecture asserts that, in this class, only disks fail to have the Pompeiu property.</p>
         </div>
 
         <details class="disk-sidequest">
