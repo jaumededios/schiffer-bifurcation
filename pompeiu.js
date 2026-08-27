@@ -17,7 +17,6 @@
   const meterFill = root.querySelector("#pompeiuMeterFill");
   const radiusInput = root.querySelector("#pompeiuRadius");
   const radiusOut = root.querySelector("#pompeiuRadiusValue");
-  const buttons = [...root.querySelectorAll("[data-disk-radius]")];
   const context = canvas && canvas.getContext("2d");
   if (!context || !valueOut || !meterFill || !radiusInput || !radiusOut) return;
 
@@ -79,10 +78,6 @@
     const isZero = Math.abs(state.radius - FIRST_ZERO) < 1e-7;
     window.SchifferMath?.render(radiusOut,
       isZero ? "r=\\rho_1=3.8317\\ldots" : `r=${state.radius.toFixed(2)}`);
-    buttons.forEach((button) => {
-      const radius = Number(button.dataset.diskRadius);
-      button.setAttribute("aria-pressed", String(Math.abs(radius - state.radius) < 1e-7));
-    });
     updateSliderTrack(radiusInput);
   }
 
@@ -193,6 +188,7 @@
 
   function setRadius(radius) {
     if (!Number.isFinite(radius)) return;
+    if (Math.abs(radius - FIRST_ZERO) <= .08) radius = FIRST_ZERO;
     state.radius = Math.max(Number(radiusInput.min), Math.min(Number(radiusInput.max), radius));
     radiusInput.value = String(state.radius);
     clampCentre();
@@ -238,9 +234,6 @@
   });
 
   radiusInput.addEventListener("input", () => setRadius(Number(radiusInput.value)));
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => setRadius(Number(button.dataset.diskRadius)));
-  });
 
   setRadius(FIRST_ZERO);
   const disclosure = root.closest("details");
@@ -268,7 +261,6 @@
   const meterFill = root.querySelector("#lineProbeMeterFill");
   const lengthInput = root.querySelector("#lineProbeLength");
   const lengthOut = root.querySelector("#lineProbeLengthValue");
-  const buttons = [...root.querySelectorAll("[data-interval-length]")];
   if (!context || !valueOut || !meterFill || !lengthInput || !lengthOut) return;
 
   const VIEW = 4 * Math.PI;
@@ -312,10 +304,6 @@
     const atTwoPi = Math.abs(state.length - 2 * Math.PI) < 1e-7;
     const source = atTwoPi ? "L=2\\pi" : `L=${state.length.toFixed(2)}`;
     window.SchifferMath?.render(lengthOut, source);
-    buttons.forEach((button) => {
-      const length = Number(button.dataset.intervalLength);
-      button.setAttribute("aria-pressed", String(Math.abs(length - state.length) < 1e-7));
-    });
     updateSliderTrack(lengthInput);
   }
 
@@ -413,6 +401,7 @@
 
   function setLength(length) {
     if (!Number.isFinite(length)) return;
+    if (Math.abs(length - 2 * Math.PI) <= .15) length = 2 * Math.PI;
     state.length = Math.max(Number(lengthInput.min), Math.min(Number(lengthInput.max), length));
     lengthInput.value = String(state.length);
     clampCentre();
@@ -442,9 +431,6 @@
     event.preventDefault();
   });
   lengthInput.addEventListener("input", () => setLength(Number(lengthInput.value)));
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => setLength(Number(button.dataset.intervalLength)));
-  });
   const disclosure = root.closest("details");
   if (disclosure) disclosure.addEventListener("toggle", () => {
     if (disclosure.open) requestAnimationFrame(resize);

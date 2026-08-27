@@ -111,12 +111,11 @@
                 <div class="measurement-side line-probe-side">
                   <div class="measurement-size-control">
                     <label for="lineProbeLength"><span>Interval length</span><output id="lineProbeLengthValue" for="lineProbeLength">\(L=2\pi\)</output></label>
-                    <input id="lineProbeLength" type="range" min="0.5" max="12.5" step="0.01" value="6.2831853072" aria-label="Dilate the interval by changing its length">
-                    <div class="measurement-range-scale"><span>\(0.5\)</span><span>\(12.5\)</span></div>
-                    <div class="measurement-presets" role="group" aria-label="Notable interval lengths">
-                      <button type="button" data-interval-length="2" aria-pressed="false">\(L=2\)</button>
-                      <button type="button" data-interval-length="6.2831853072" aria-pressed="true">\(L=2\pi\)</button>
+                    <div class="measurement-slider">
+                      <input id="lineProbeLength" type="range" min="0.5" max="12.5" step="0.01" value="6.2831853072" aria-label="Dilate the interval by changing its length">
+                      <i class="measurement-slider-mark" aria-hidden="true"></i>
                     </div>
+                    <div class="measurement-range-scale"><span>\(0.5\)</span><span class="measurement-range-mark">\(2\pi\)</span><span>\(12.5\)</span></div>
                   </div>
                   <div class="measurement-readout pompeiu-readout">
                     <span>\(\int_{t-L/2}^{t+L/2}\cos x\,dx\)</span>
@@ -149,12 +148,11 @@
               <div class="measurement-side pompeiu-side">
                 <div class="measurement-size-control">
                   <label for="pompeiuRadius"><span>Disk radius</span><output id="pompeiuRadiusValue" for="pompeiuRadius">\(r=3.8317\ldots\)</output></label>
-                  <input id="pompeiuRadius" type="range" min="0.5" max="6.8" step="0.01" value="3.8317059702" aria-label="Dilate the disk by changing its radius">
-                  <div class="measurement-range-scale"><span>\(0.5\)</span><span>\(6.8\)</span></div>
-                  <div class="measurement-presets" role="group" aria-label="Notable disk radii">
-                    <button type="button" data-disk-radius="1.2" aria-pressed="false">\(r=1.2\)</button>
-                    <button type="button" data-disk-radius="3.8317059702" aria-pressed="true">\(r=\rho_1\)</button>
+                  <div class="measurement-slider">
+                    <input id="pompeiuRadius" type="range" min="0.5" max="6.8" step="0.01" value="3.8317059702" aria-label="Dilate the disk by changing its radius">
+                    <i class="measurement-slider-mark" aria-hidden="true"></i>
                   </div>
+                  <div class="measurement-range-scale"><span>\(0.5\)</span><span class="measurement-range-mark">\(\rho_1\)</span><span>\(6.8\)</span></div>
                 </div>
                 <div class="measurement-readout pompeiu-readout">
                   <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
