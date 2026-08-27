@@ -1162,6 +1162,7 @@ dialog p:not(.eyebrow) {
 .disk-sidequest-proof .tex-display { margin: 22px 0; color: var(--ink); overflow-x: auto; }
 .disk-sidequest-history { margin-top: 42px; }
 .disk-sidequest-history p:last-child { margin-bottom: 0; }
+.history-citation { color: var(--ink); text-decoration-color: var(--orange); text-underline-offset: 3px; }
 
 .intro-chapter-heading { margin-top: 96px; padding-top: 68px; border-top: 1px solid var(--ink); }
 .intro-chapter-heading > .eyebrow { margin-bottom: 15px; font-size: var(--type-label); }
