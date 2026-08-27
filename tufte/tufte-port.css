@@ -513,10 +513,12 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
 .chladni-photo-panel img {
   width: 100%;
   height: auto;
+  aspect-ratio: 6 / 5;
   min-height: 0;
   max-height: none;
   flex: none;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: 0 47%;
   border: 1px solid var(--line);
   border-top: 0;
 }
