@@ -61,11 +61,11 @@
 
         <div class="intro-lead intro-physics-lead">
           <div class="intro-copy">
-            <p>Suppose that a physical quantity varies across a sample: its temperature, its local composition, or the roughness of its surface. A measuring probe has a footprint \(\Omega\). When the probe is placed on the sample, it returns the average of the field over that footprint, rather than its value at one point.</p>
-            <p>We may translate and rotate the probe, and take as many readings as we wish. If the unknown field is \(f\) and \(E\) is a rigid motion, the reading in configuration \(E\) is, up to the fixed factor \(|\Omega|^{-1}\),</p>
+            <p>Suppose that a physical quantity varies across a sample: its temperature, its local composition, or the roughness of its surface. A measuring probe has a footprint \(\Omega\). When the probe is placed on the sample, it returns a single reading obtained from the field over that footprint, rather than its value at one point.</p>
+            <p>We may translate and rotate the probe, and take as many readings as we wish. If the unknown field is \(f\) and \(E\) is a rigid motion, write \(E(\Omega)\) for the transformed footprint. We model the reading in configuration \(E\) by</p>
             <div class="tex-display intro-inline-display">
               \[
-              M_\Omega f(E)=\int_{E\Omega}f(x)\,dx.
+              M_\Omega f(E)=\int_{E(\Omega)}f(x)\,dx.
               \]
             </div>
             <p>Pompeiu asked in 1929 whether the collection of all these readings determines \(f\).</p>
@@ -88,7 +88,7 @@
           <p>The map \(f\mapsto M_\Omega f\) is linear. If two fields \(f_1\) and \(f_2\) give the same reading in every configuration, then their difference \(g=f_1-f_2\) satisfies</p>
           <div class="tex-display">
             \[
-            \int_{E\Omega}g(x)\,dx=0
+            \int_{E(\Omega)}g(x)\,dx=0
             \qquad\text{for every rigid motion }E.
             \]
           </div>
@@ -137,7 +137,7 @@
                 f(x)=\cos\!\left(\frac{\rho_\star}{r}x_1\right)
                 \]
               </div>
-              <p>is nonzero and satisfies \(\int_{E B_r}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
+              <p>is nonzero and satisfies \(\int_{E(B_r)}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
             </div>
           <figure class="pompeiu-figure" id="pompeiuFigure">
             <figcaption>
@@ -241,7 +241,7 @@
             <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
             <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
             <ol>
-              <li>there is a nonzero continuous field \(f\) such that \(\int_{E\Omega}f(x)\,dx=0\) for every rigid motion \(E\);</li>
+              <li>there is a nonzero continuous field \(f\) such that \(\int_{E(\Omega)}f(x)\,dx=0\) for every rigid motion \(E\);</li>
               <li>there are \(\lambda&gt;0\) and a nonconstant function \(u\) solving the Schiffer problem (S) on \(\Omega\).</li>
             </ol>
             <p>Consequently, a smooth noncircular solution of the Schiffer problem also gives a smooth noncircular probe without the Pompeiu property.</p>
