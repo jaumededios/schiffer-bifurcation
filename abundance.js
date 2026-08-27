@@ -16,14 +16,24 @@
     examplesBody: "abundanceExamplesBody",
   };
 
-  const COLORS = {
+  const visualTheme = global.SCHIFFER_VISUAL_THEME || {
     background: "#101b20",
-    backgroundTop: "#17282e",
+    backgroundAlt: "#17282e",
     ink: "#f1eee5",
     muted: "rgba(241,238,229,0.46)",
     faint: "rgba(241,238,229,0.12)",
-    grid: "rgba(241,238,229,0.10)",
-    point: "rgba(241,238,229,0.48)",
+    line: "rgba(241,238,229,0.10)",
+    lineStrong: "rgba(241,238,229,0.28)",
+    labelFont: "11px 'DM Mono', monospace",
+  };
+  const COLORS = {
+    background: visualTheme.background,
+    backgroundTop: visualTheme.backgroundAlt,
+    ink: visualTheme.ink,
+    muted: visualTheme.muted,
+    faint: visualTheme.faint,
+    grid: visualTheme.line,
+    point: visualTheme.muted,
     teal: "#4da2a3",
     orange: "#ff7449",
     red: "#d83a55",
@@ -393,13 +403,13 @@
 
     function drawAxes(plot) {
       context.lineWidth = 1;
-      context.font = "10px 'DM Mono', monospace";
+      context.font = visualTheme.labelFont;
       context.textBaseline = "middle";
       context.textAlign = "right";
 
       [0, 0.25, 0.5, 0.75, 1].forEach(function yTick(value) {
         const y = plot.bottom - value * plot.height;
-        context.strokeStyle = value === 0 ? "rgba(241,238,229,0.28)" : COLORS.grid;
+        context.strokeStyle = value === 0 ? visualTheme.lineStrong : COLORS.grid;
         context.beginPath();
         context.moveTo(plot.left, y + 0.5);
         context.lineTo(plot.right, y + 0.5);
@@ -426,34 +436,38 @@
         context.fillText(formatInteger(value), x, plot.bottom + 10);
       });
 
-      context.save();
-      context.translate(15, (plot.top + plot.bottom) / 2);
-      context.rotate(-Math.PI / 2);
-      context.fillStyle = COLORS.muted;
-      context.font = "10px 'DM Mono', monospace";
-      context.textAlign = "center";
-      context.textBaseline = "top";
-      context.fillText("FRACTIONAL PART", 0, 0);
-      context.restore();
+      if (!plot.compact) {
+        context.save();
+        context.translate(15, (plot.top + plot.bottom) / 2);
+        context.rotate(-Math.PI / 2);
+        context.fillStyle = COLORS.muted;
+        context.font = visualTheme.labelFont;
+        context.textAlign = "center";
+        context.textBaseline = "top";
+        context.fillText("FRACTIONAL PART", 0, 0);
+        context.restore();
+      }
 
       context.fillStyle = COLORS.muted;
-      context.font = "10px 'DM Mono', monospace";
+      context.font = visualTheme.labelFont;
       context.textAlign = "center";
       context.textBaseline = "bottom";
       context.fillText("CROSSING ORDER · LOGARITHMIC SCALE", (plot.left + plot.right) / 2, state.height - 8);
 
-      context.fillStyle = "rgba(255,116,73,0.70)";
-      context.font = "10px 'DM Mono', monospace";
-      context.textAlign = "left";
-      context.textBaseline = "bottom";
-      context.fillText("WITHIN 0.1 ABOVE AN INTEGER", plot.left + 7, plot.bottom - 7);
+      if (!plot.compact) {
+        context.fillStyle = "rgba(255,116,73,0.70)";
+        context.font = visualTheme.labelFont;
+        context.textAlign = "left";
+        context.textBaseline = "bottom";
+        context.fillText("WITHIN 0.1 ABOVE AN INTEGER", plot.left + 7, plot.bottom - 7);
+      }
     }
 
     function drawLegend(plot) {
       const compact = plot.compact;
       const startX = compact ? plot.left : plot.right - 320;
       const y = 25;
-      context.font = "10px 'DM Mono', monospace";
+      context.font = visualTheme.labelFont;
       context.textBaseline = "middle";
       context.textAlign = "left";
 
@@ -525,7 +539,7 @@
         context.lineTo(labelX - 5, labelY + 5);
         context.stroke();
         context.fillStyle = COLORS.orange;
-        context.font = "10px 'DM Mono', monospace";
+        context.font = visualTheme.labelFont;
         context.textAlign = "left";
         context.textBaseline = "middle";
         context.fillText("REFERENCE EXAMPLE", labelX, labelY);
@@ -585,7 +599,7 @@
         );
       }
 
-      context.font = "10px 'DM Mono', monospace";
+      context.font = visualTheme.labelFont;
       const textWidth = lines.reduce(function widest(maximum, line) {
         return Math.max(maximum, context.measureText(line).width);
       }, 0);
@@ -607,8 +621,8 @@
       lines.forEach(function line(text, index) {
         context.fillStyle = index === 0
           ? (state.hoverKind === "reference" ? COLORS.orange : COLORS.teal)
-          : "rgba(241,238,229,0.76)";
-        context.font = "10px 'DM Mono', monospace";
+          : COLORS.ink;
+        context.font = visualTheme.labelFont;
         context.textAlign = "left";
         context.textBaseline = "top";
         context.fillText(text, x + 12, y + 10 + index * 15, boxWidth - 24);

@@ -49,37 +49,55 @@
   });
   const TAU = Math.PI * 2;
   const GEOMETRY_PROFILE_PHASE = -Math.PI / 2;
+  const visualTheme = window.SCHIFFER_VISUAL_THEME || {
+    paperEdition: false,
+    background: "#101b20",
+    backgroundAlt: "#17303a",
+    ink: "#f1eee5",
+    line: "rgba(241,238,229,.12)",
+    lineStrong: "rgba(241,238,229,.34)",
+    muted: "rgba(241,238,229,.42)",
+    panel: "rgba(12,22,27,.65)",
+    tooltip: "rgba(10,19,23,.96)",
+    labelFont: "11px DM Mono, monospace",
+    titleFont: "italic 400 25px Georgia, serif",
+    serifFamily: "Georgia, serif",
+  };
   const colors = {
-    ink: "#101b20",
-    paper: "#f1eee5",
+    ink: visualTheme.background,
+    paper: visualTheme.ink,
     orange: "#ff7449",
     cyan: "#4da2a3",
-    grid: "rgba(241,238,229,.12)",
-    faint: "rgba(241,238,229,.42)",
+    grid: visualTheme.line,
+    faint: visualTheme.muted,
+    panel: visualTheme.panel,
+    tooltip: visualTheme.tooltip,
   };
 
-  // The older laboratories remain grouped together in the source file. Put the
-  // live DOM in the same order as the visual argument so keyboard and screen-
-  // Reader navigation follows the numbered section order.
-  const main = select("main");
-  [
-    ".intro",
-    "#introduction",
-    ".paper-reading-guide",
-    "#borrow-flexibility",
-    "#geometric-escape",
-    "#experiment",
-    "#debye-experiment",
-    "#phase-story",
-    "#cone-experiment",
-    "#modes-experiment",
-    "#abundance-experiment",
-    ".paper-references",
-    "#references",
-  ].forEach((selector) => {
-    const section = select(selector);
-    if (main && section) main.appendChild(section);
-  });
+  // The Tufte edition is authored in reading order, so source, focus and
+  // visual navigation agree without a runtime layout mutation. The original
+  // visual edition retains its legacy section normalization for compatibility.
+  if (!document.body.classList.contains("tufte-site")) {
+    const main = select("main");
+    [
+      ".intro",
+      "#introduction",
+      ".paper-reading-guide",
+      "#borrow-flexibility",
+      "#geometric-escape",
+      "#experiment",
+      "#debye-experiment",
+      "#phase-story",
+      "#cone-experiment",
+      "#modes-experiment",
+      "#abundance-experiment",
+      ".paper-references",
+      "#references",
+    ].forEach((selector) => {
+      const section = select(selector);
+      if (main && section) main.appendChild(section);
+    });
+  }
 
   // Subsection 5.1 follows the usual mathematical order: theorem, numerical
   // illustration, and then the derivation of the linear and quadratic terms.
@@ -262,19 +280,19 @@
     context.textAlign = "left";
     context.textBaseline = "alphabetic";
     context.fillStyle = colors.orange;
-    context.font = "10px DM Mono, monospace";
+    context.font = visualTheme.labelFont;
     context.fillText(eyebrow.toUpperCase(), 24, 26);
     context.fillStyle = colors.paper;
     let titleSize = width < 520 ? 19 : 25;
-    context.font = `300 ${titleSize}px Newsreader, serif`;
+    context.font = `italic 400 ${titleSize}px ${visualTheme.serifFamily}`;
     while (titleSize > 15 && context.measureText(title).width > width - 48) {
       titleSize -= 1;
-      context.font = `300 ${titleSize}px Newsreader, serif`;
+      context.font = `italic 400 ${titleSize}px ${visualTheme.serifFamily}`;
     }
     context.fillText(title, 24, 54);
     if (width >= 520) {
       context.fillStyle = colors.faint;
-      context.font = "10px DM Mono, monospace";
+      context.font = visualTheme.labelFont;
       context.textAlign = "right";
       context.fillText(detail, width - 24, 27);
     }
@@ -322,7 +340,7 @@
     context.fill();
     context.strokeStyle = colors.orange; context.lineWidth = 1.5; context.stroke();
     context.fillStyle = colors.paper;
-    context.font = "10px DM Mono, monospace";
+    context.font = visualTheme.labelFont;
     context.fillText("one quotient sector", cx + radius * .62, cy - 22);
     context.fillStyle = colors.faint;
     context.fillText("one sector determines all 28 copies", cx - radius, cy + radius + 31);
@@ -357,7 +375,7 @@
     context.strokeStyle = colors.cyan; context.setLineDash([4, 5]);
     context.beginPath(); context.moveTo(collarLeft, cy - rimHalf); context.lineTo(collarLeft, cy + rimHalf); context.stroke();
     context.setLineDash([]);
-    context.fillStyle = colors.paper; context.font = "10px DM Mono, monospace";
+    context.fillStyle = colors.paper; context.font = visualTheme.labelFont;
     context.fillText("cone point", left - 7, cy + 20);
     context.fillText("five-unit collar", collarLeft + 7, cy - rimHalf - 13);
     context.fillStyle = colors.faint;
@@ -444,7 +462,7 @@
     }
     context.closePath(); context.strokeStyle = colors.paper; context.lineWidth = 2; context.stroke();
     if (options.showCaption !== false) {
-      context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
+      context.fillStyle = colors.faint; context.font = visualTheme.labelFont; context.textAlign = "center";
       context.fillText("the same angular profile repeats N times", cx, cy + radius + 34);
     }
     context.restore();
@@ -538,7 +556,7 @@
       const start = geometrySheetPoint(sheet, sheet.radialStart, angular);
       const end = geometrySheetPoint(sheet, 1, angular);
       context.beginPath(); context.moveTo(start.x, start.y); context.lineTo(end.x, end.y);
-      context.strokeStyle = index % 2 ? "rgba(241,238,229,.13)" : "rgba(77,162,163,.28)";
+      context.strokeStyle = index % 2 ? colors.grid : "rgba(77,162,163,.28)";
       context.lineWidth = .8; context.stroke();
     }
 
@@ -549,7 +567,7 @@
         const point = geometrySheetPoint(sheet, radial, -1 + 2 * index / 160);
         if (!index) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
       }
-      context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.28)" : "rgba(241,238,229,.17)";
+      context.strokeStyle = radialIndex % 2 ? "rgba(255,116,73,.28)" : colors.grid;
       context.lineWidth = radialIndex === 7 ? 1.25 : .8; context.stroke();
     }
 
@@ -732,7 +750,7 @@
     drawFrameLabel(context, width, "03 / local solve", "The boundary collar is approximately cylindrical", "five radial units · one angular wavelength");
     const plot = { left: width * .12, top: height * .22, width: width * .76, height: height * .6 };
     roundedPanel(context, plot.left, plot.top, plot.width, plot.height);
-    context.fillStyle = "#17303a"; context.fill();
+    context.fillStyle = visualTheme.backgroundAlt; context.fill();
     const bands = 90;
     for (let index = 0; index < bands; index++) {
       const y = plot.top + index / bands * plot.height;
@@ -756,7 +774,7 @@
     }
     context.strokeStyle = colors.paper; context.lineWidth = 2.3;
     context.shadowColor = colors.orange; context.shadowBlur = 7; context.stroke(); context.shadowBlur = 0;
-    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace";
+    context.fillStyle = colors.faint; context.font = visualTheme.labelFont;
     context.fillText("x = −5", plot.left, plot.top + plot.height + 19);
     context.textAlign = "right"; context.fillText("moving boundary", plot.left + plot.width, plot.top + plot.height + 19);
     context.restore();
@@ -783,7 +801,7 @@
     context.closePath(); context.fillStyle = gradient; context.fill();
     context.strokeStyle = colors.paper; context.lineWidth = 2; context.shadowColor = colors.orange; context.shadowBlur = 6; context.stroke();
     context.shadowBlur = 0;
-    context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
+    context.fillStyle = colors.orange; context.font = visualTheme.labelFont; context.textAlign = "center";
     context.fillText("continued boundary coefficients at integral order", cx, cy + radius + 30);
     context.restore();
   }
@@ -813,7 +831,7 @@
         geometryNames[index],
         index === 6 ? "" : "the same quotient sector",
       );
-      context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
+      context.fillStyle = colors.faint; context.font = visualTheme.labelFont; context.textAlign = "center";
       drawCenteredCaption(context, geometryCaptions[index], width * .5, height * .54 + targetHalf + 47, width - 48);
       context.restore();
     });
@@ -1034,7 +1052,7 @@
     context.fillRect(0, 0, width, height);
     if (!rows.length) {
       context.fillStyle = colors.faint;
-      context.font = "11px DM Mono, monospace";
+      context.font = visualTheme.labelFont;
       context.fillText("crossing data unavailable", 24, 34);
       return;
     }
@@ -1052,7 +1070,7 @@
     const zeroY = yMap(0);
 
     context.save();
-    context.strokeStyle = "rgba(241,238,229,.075)";
+    context.strokeStyle = colors.grid;
     context.lineWidth = 1;
     for (let integer = phaseFamilyRMin; integer <= phaseFamilyRMax; integer += 1) {
       const x = xMap(integer);
@@ -1068,22 +1086,22 @@
       context.stroke();
     });
 
-    context.strokeStyle = "rgba(241,238,229,.52)";
+    context.strokeStyle = visualTheme.lineStrong;
     context.lineWidth = 1.5;
     context.beginPath();
     context.moveTo(plot.left, zeroY);
     context.lineTo(plot.left + plot.width, zeroY);
     context.stroke();
 
-    const labelEvery = compact ? 2 : 1;
-    context.fillStyle = "rgba(241,238,229,.42)";
-    context.font = "10px DM Mono, monospace";
+    const labelEvery = compact ? 4 : 1;
+    context.fillStyle = colors.faint;
+    context.font = visualTheme.labelFont;
     context.textAlign = "center";
     context.textBaseline = "top";
     for (let integer = phaseFamilyRMin; integer <= phaseFamilyRMax; integer += 1) {
       const x = xMap(integer);
       const tick = integer % 5 === 0 ? 8 : 5;
-      context.strokeStyle = integer % 5 === 0 ? colors.paper : "rgba(241,238,229,.6)";
+      context.strokeStyle = integer % 5 === 0 ? colors.paper : visualTheme.muted;
       context.beginPath();
       context.moveTo(x, zeroY - tick);
       context.lineTo(x, zeroY + tick);
@@ -1101,7 +1119,7 @@
     context.rotate(-Math.PI / 2);
     context.textAlign = "center";
     context.fillStyle = colors.orange;
-    context.font = "10px DM Mono, monospace";
+    context.font = visualTheme.labelFont;
     context.fillText("BRANCH PARAMETER  s", 0, 0);
     context.restore();
 
@@ -1146,27 +1164,25 @@
       context.lineWidth = active ? 1.8 : (row.reference ? 1.5 : 1);
       context.stroke();
 
-      if (row.reference) {
+      if (row.reference && !compact) {
         context.fillStyle = colors.paper;
-        context.font = "10px DM Mono, monospace";
+        context.font = visualTheme.labelFont;
         context.textAlign = "center";
         context.textBaseline = "bottom";
         context.fillText("REFERENCE CROSSING", point.x, point.y - 11);
       }
     });
 
-    context.fillStyle = colors.orange;
-    context.font = "10px DM Mono, monospace";
-    context.textAlign = "left";
-    context.textBaseline = "top";
-    context.fillText("COMMON-ZERO CROSSINGS AT THE BRANCH ORIGIN", plot.left + 8, zeroY - 29);
-    context.fillStyle = colors.faint;
-    context.fillText(compact
-      ? "quadratic jets bend toward smaller R"
-      : "each quadratic jet opens toward decreasing R", plot.left + 8, plot.top + 10);
-    context.fillText(compact
-      ? "rings: two-jet reaches an integer"
-      : "white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
+    if (!compact) {
+      context.fillStyle = colors.orange;
+      context.font = visualTheme.labelFont;
+      context.textAlign = "left";
+      context.textBaseline = "top";
+      context.fillText("COMMON-ZERO CROSSINGS AT THE BRANCH ORIGIN", plot.left + 8, zeroY - 29);
+      context.fillStyle = colors.faint;
+      context.fillText("each quadratic jet opens toward decreasing R", plot.left + 8, plot.top + 10);
+      context.fillText("white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
+    }
 
     if (phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
       const point = pointGeometry[phaseFamilyState.hoverIndex];
@@ -1176,17 +1192,17 @@
       const boxY = point.y > plot.top + plot.height / 2
         ? point.y - boxHeight - 15
         : point.y + 15;
-      context.fillStyle = "rgba(10,19,23,.96)";
+      context.fillStyle = colors.tooltip;
       context.fillRect(boxX, boxY, boxWidth, boxHeight);
       context.strokeStyle = "rgba(255,116,73,.7)";
       context.strokeRect(boxX + .5, boxY + .5, boxWidth - 1, boxHeight - 1);
       context.textAlign = "left";
       context.textBaseline = "top";
       context.fillStyle = colors.paper;
-      context.font = "10px DM Mono, monospace";
+      context.font = visualTheme.labelFont;
       context.fillText(`order ${point.row.R.toFixed(6)}`, boxX + 10, boxY + 10);
       context.fillStyle = colors.faint;
-      context.font = "10px DM Mono, monospace";
+      context.font = visualTheme.labelFont;
       context.fillText(`spectral ratio ${point.row.lambda.toFixed(4)}`, boxX + 10, boxY + 28);
       context.fillText(`unit-amplitude quadratic drop ${(point.row.gamma / 2).toFixed(4)}`, boxX + 10, boxY + 45);
       if (point.row.reference) {
@@ -1203,8 +1219,11 @@
 
   function drawPhasePanel(context, rect, options) {
     context.save();
-    context.fillStyle = "rgba(12,22,27,.65)"; roundedPanel(context, rect.left, rect.top, rect.width, rect.height); context.fill();
-    context.strokeStyle = "rgba(241,238,229,.15)"; context.stroke();
+    context.fillStyle = colors.panel; roundedPanel(context, rect.left, rect.top, rect.width, rect.height); context.fill();
+    if (!visualTheme.paperEdition) {
+      context.strokeStyle = colors.grid;
+      context.stroke();
+    }
     const plot = { left: rect.left + 36, top: rect.top + 55, width: rect.width - 54, height: rect.height - 88 };
     context.strokeStyle = colors.grid; context.lineWidth = 1; context.setLineDash([3, 6]);
     for (let index = 0; index <= 4; index++) {
@@ -1230,8 +1249,8 @@
     const currentS = phaseStoryState.progress * data.landingS;
     context.beginPath(); context.arc(xMap(currentS), yMap(current), 5, 0, TAU);
     context.fillStyle = colors.orange; context.fill(); context.strokeStyle = colors.paper; context.lineWidth = 1.5; context.stroke();
-    context.fillStyle = colors.paper; context.font = "11px DM Mono, monospace"; context.fillText(options.title, rect.left + 14, rect.top + 21);
-    context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace";
+    context.fillStyle = colors.paper; context.font = visualTheme.labelFont; context.fillText(options.title, rect.left + 14, rect.top + 21);
+    context.fillStyle = colors.faint; context.font = visualTheme.labelFont;
     context.textAlign = "right"; context.fillText(options.maximumLabel, plot.left + plot.width, plot.top + 10);
     context.fillText("0", plot.left - 8, plot.top + plot.height); context.restore();
   }

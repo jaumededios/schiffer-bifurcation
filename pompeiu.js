@@ -253,7 +253,7 @@
     context.strokeStyle = "rgba(19,33,38,.32)";
     context.fillStyle = "rgba(19,33,38,.5)";
     context.lineWidth = Math.max(1, dpr);
-    context.font = `${10.5 * dpr}px "KaTeX_Main", serif`;
+    context.font = `${(window.SCHIFFER_VISUAL_THEME?.labelPixels || 11) * dpr}px "KaTeX_Main", serif`;
     context.textAlign = "center";
     const tickLimit = Math.floor(width / (2 * scale * Math.PI));
     for (let k = -tickLimit; k <= tickLimit; k++) {
@@ -451,7 +451,7 @@
     context.moveTo(left, intervalY - 7); context.lineTo(left, intervalY + 7);
     context.moveTo(right, intervalY - 7); context.lineTo(right, intervalY + 7);
     context.stroke();
-    context.font = '500 11px "KaTeX_Main", serif';
+    context.font = `500 ${window.SCHIFFER_VISUAL_THEME?.labelPixels || 11}px "KaTeX_Main", serif`;
     context.textAlign = "center";
     const lengthLabel = Math.abs(state.length - 2 * Math.PI) < 1e-7
       ? "L = 2π"
@@ -549,6 +549,7 @@
   const playButton = root.querySelector("#schifferModePlay");
   const modeButtons = [...root.querySelectorAll("[data-radial-mode]")];
   if (!context || !playButton) return;
+  const visualTheme = window.SCHIFFER_VISUAL_THEME || { background: "#e8e1cf" };
 
   const MODES = [
     { n: 1, rho: 3.8317059702, nodes: [2.4048255577] },
@@ -594,7 +595,7 @@
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.scale(dpr, dpr);
-    context.fillStyle = "#e8e1cf";
+    context.fillStyle = visualTheme.background;
     context.fillRect(0, 0, width, height);
 
     const cx = width * .285;
@@ -649,15 +650,11 @@
     context.beginPath(); context.arc(graphRight, rimY, 3.2, 0, Math.PI * 2); context.fill();
 
     context.fillStyle = "rgba(19,33,38,.62)";
-    context.font = '500 11px "DM Mono", ui-monospace, monospace';
+    context.font = window.SCHIFFER_VISUAL_THEME?.labelFont || '500 11px "DM Mono", ui-monospace, monospace';
     context.textAlign = "left";
     context.fillText("centre", graphLeft, height * .91);
     context.textAlign = "right";
     context.fillText("rim", graphRight, height * .91);
-    context.textAlign = "left";
-    context.fillText("selected radial profile", graphLeft, height * .11);
-    context.fillStyle = "#ff7449";
-    context.fillText("radial profile at this instant", graphLeft, height * .96);
     canvas.setAttribute("aria-label", `Animated radial Neumann mode ${state.mode.n} on the disk, with frequency parameter ${state.mode.rho.toFixed(4)}`);
   }
 

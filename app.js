@@ -1,6 +1,64 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 const $ = (selector) => document.querySelector(selector);
 const setMath = (elementOrSelector, source, options) => window.SchifferMath?.render(elementOrSelector, source, options);
+
+/* Every renderer reads the same visual theme.  The content markup selects the
+   edition once, on <body>; individual applets do not choose their own panel
+   colour, border colour, or annotation contrast. */
+const SCHIFFER_VISUAL_THEME = (() => {
+  const paperEdition = document.body.classList.contains("tufte-site");
+  const rootStyle = getComputedStyle(document.documentElement);
+  const rootSize = parseFloat(rootStyle.fontSize) || 16;
+  const tokenPixels = (name, fallback) => {
+    const value = parseFloat(rootStyle.getPropertyValue(name));
+    return Number.isFinite(value) ? value * rootSize : fallback;
+  };
+  const monoFamily = rootStyle.getPropertyValue("--mono").trim() || "DM Mono, monospace";
+  const serifFamily = rootStyle.getPropertyValue("--serif").trim() || "Georgia, serif";
+  const typography = {
+    labelFont: `${tokenPixels("--type-label", 11)}px ${monoFamily}`,
+    captionFont: `${tokenPixels("--type-caption", 16)}px ${serifFamily}`,
+    titleFont: `italic 400 ${tokenPixels("--type-subsection", 25)}px ${serifFamily}`,
+    labelPixels: tokenPixels("--type-label", 11),
+    serifFamily,
+  };
+  const theme = paperEdition ? {
+    paperEdition: true,
+    background: "#fffff8",
+    backgroundAlt: "#f4f1e8",
+    backgroundRgb: [255, 255, 248],
+    backgroundAltRgb: [244, 241, 232],
+    ink: "#111111",
+    inkHex: 0x111111,
+    backgroundHex: 0xfffff8,
+    line: "rgba(17,17,17,.14)",
+    lineStrong: "rgba(17,17,17,.34)",
+    muted: "rgba(17,17,17,.55)",
+    faint: "rgba(17,17,17,.34)",
+    panel: "rgba(255,255,248,0)",
+    tooltip: "rgba(255,255,248,.96)",
+    ...typography,
+  } : {
+    paperEdition: false,
+    background: "#101b20",
+    backgroundAlt: "#17282e",
+    backgroundRgb: [12, 22, 27],
+    backgroundAltRgb: [15, 27, 32],
+    ink: "#fff4dc",
+    inkHex: 0xfff4dc,
+    backgroundHex: 0x101b20,
+    line: "rgba(241,238,229,.12)",
+    lineStrong: "rgba(241,238,229,.28)",
+    muted: "rgba(241,238,229,.55)",
+    faint: "rgba(241,238,229,.34)",
+    panel: "rgba(12,22,27,.65)",
+    tooltip: "rgba(10,19,23,.96)",
+    ...typography,
+  };
+  window.SCHIFFER_VISUAL_THEME = Object.freeze(theme);
+  return window.SCHIFFER_VISUAL_THEME;
+})();
+
 function setCanvasFormula(wrapSelector, id, source, position = {}) {
   const wrap = $(wrapSelector);
   if (!wrap) return null;
@@ -483,8 +541,8 @@ function threeLine(THREE, points, color, opacity = 1) {
 function resizeThreeRenderer() {
   if (!threeState.renderer || !threeState.camera) return;
   const wrap = $("#threeWrap");
-  const width = Math.max(320, wrap.clientWidth || 900);
-  const height = Math.max(320, wrap.clientHeight || 580);
+  const width = Math.max(1, wrap.clientWidth || 900);
+  const height = Math.max(1, wrap.clientHeight || 580);
   threeState.renderer.setSize(width, height, false);
   threeState.camera.aspect = width / height;
   const portraitFit = Math.max(1, THREE_CAMERA_FIT_ASPECT / threeState.camera.aspect);
@@ -538,7 +596,7 @@ function setupThreeRenderer() {
   const THREE = threeState.library;
   const wrap = $("#threeWrap");
   threeState.scene = new THREE.Scene();
-  threeState.scene.background = new THREE.Color(0x101b20);
+  threeState.scene.background = new THREE.Color(SCHIFFER_VISUAL_THEME.backgroundHex);
   threeState.camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
   threeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
   threeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -570,10 +628,10 @@ function updateThreeMesh() {
   geometry.computeVertexNormals();
   const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
   threeState.group.add(new THREE.Mesh(geometry, material));
-  data.latitudeLoops.forEach((points) => threeState.group.add(threeLine(THREE, points, 0xf1eee5, .16)));
-  data.longitudeLines.forEach((points) => threeState.group.add(threeLine(THREE, points, 0xf1eee5, .12)));
+  data.latitudeLoops.forEach((points) => threeState.group.add(threeLine(THREE, points, SCHIFFER_VISUAL_THEME.inkHex, .16)));
+  data.longitudeLines.forEach((points) => threeState.group.add(threeLine(THREE, points, SCHIFFER_VISUAL_THEME.inkHex, .12)));
   threeState.group.add(threeLine(THREE, data.referenceRim, 0x7f9293, .48));
-  const rim = threeLine(THREE, data.rim, 0xfff4dc, 1);
+  const rim = threeLine(THREE, data.rim, SCHIFFER_VISUAL_THEME.inkHex, 1);
   rim.material.linewidth = 2;
   threeState.group.add(rim);
   $("#threeLoading").hidden = true;
@@ -690,10 +748,11 @@ function drawContours(context, width, height, solution) {
 function renderHeatmap() {
   const canvas = $("#fieldCanvas");
   const wrap = $("#canvasWrap");
-  const displayWidth = Math.max(420, wrap.clientWidth || 900);
-  const displayHeight = Math.max(420, wrap.clientHeight || 580);
-  const width = Math.min(820, Math.round(displayWidth * .88));
-  const height = Math.min(570, Math.round(displayHeight * .88));
+  const displayWidth = Math.max(1, wrap.clientWidth || 900);
+  const displayHeight = Math.max(1, wrap.clientHeight || 580);
+  const backingScale = Math.min(1, 820 / displayWidth, 570 / displayHeight);
+  const width = Math.max(1, Math.round(displayWidth * backingScale));
+  const height = Math.max(1, Math.round(displayHeight * backingScale));
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext("2d");
@@ -707,9 +766,9 @@ function renderHeatmap() {
       const index = (y * width + xPixel) * 4;
       if (x > wall) {
         const stripe = ((xPixel + y) % 18) < 1 ? 2 : 0;
-        image.data[index] = 12 + stripe;
-        image.data[index + 1] = 22 + stripe;
-        image.data[index + 2] = 27 + stripe;
+        image.data[index] = SCHIFFER_VISUAL_THEME.backgroundRgb[0] - stripe;
+        image.data[index + 1] = SCHIFFER_VISUAL_THEME.backgroundRgb[1] - stripe;
+        image.data[index + 2] = SCHIFFER_VISUAL_THEME.backgroundRgb[2] - stripe;
         image.data[index + 3] = 255;
         continue;
       }
@@ -725,7 +784,7 @@ function renderHeatmap() {
   drawContours(context, width, height, state.solution);
 
   context.save();
-  context.strokeStyle = "rgba(241,238,229,.15)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.setLineDash([4, 6]);
   const [zeroX] = canvasCoordinates(0, 0, width, height);
@@ -744,7 +803,7 @@ function renderHeatmap() {
     const point = canvasCoordinates(boundary(theta, state.solution.parameters), theta, width, height);
     if (i === 0) context.moveTo(point[0], point[1]); else context.lineTo(point[0], point[1]);
   }
-  context.strokeStyle = "#fff4dc";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
   context.shadowColor = "rgba(255,116,73,.85)";
   context.shadowBlur = 8;
   context.lineWidth = 2.5;
@@ -763,13 +822,13 @@ function svgElement(name, attributes = {}, parent) {
 function drawBoundaryDiagram() {
   const svg = $("#boundaryDiagram");
   svg.replaceChildren();
-  svgElement("rect", { x: 18, y: 15, width: 214, height: 158, fill: "none", stroke: "rgba(241,238,229,.08)" }, svg);
+  svgElement("rect", { x: 18, y: 15, width: 214, height: 158, fill: "none", stroke: SCHIFFER_VISUAL_THEME.line }, svg);
   for (let i = 0; i <= 4; i++) {
     const y = 15 + i * 158 / 4;
-    svgElement("line", { x1: 18, y1: y, x2: 232, y2: y, stroke: "rgba(241,238,229,.09)" }, svg);
+    svgElement("line", { x1: 18, y1: y, x2: 232, y2: y, stroke: SCHIFFER_VISUAL_THEME.line }, svg);
   }
   const centerX = 144;
-  svgElement("line", { x1: centerX, y1: 15, x2: centerX, y2: 173, stroke: "rgba(241,238,229,.32)", "stroke-dasharray": "3 5" }, svg);
+  svgElement("line", { x1: centerX, y1: 15, x2: centerX, y2: 173, stroke: SCHIFFER_VISUAL_THEME.lineStrong, "stroke-dasharray": "3 5" }, svg);
   const solvedParameters = state.solution?.parameters || state;
   const criticalPoints = [];
   const points = [];
@@ -782,7 +841,7 @@ function drawBoundaryDiagram() {
   svgElement("path", { d: criticalData, fill: "none", stroke: "rgba(77,162,163,.58)", "stroke-width": "1.2", "stroke-dasharray": "4 4" }, svg);
   const data = `M ${points.map((point) => point.map((value) => value.toFixed(2)).join(" ")).join(" L ")}`;
   svgElement("path", { d: data, fill: "none", stroke: "#ff7449", "stroke-width": "3" }, svg);
-  const label = svgElement("text", { x: 24, y: 186, fill: "rgba(241,238,229,.42)", "font-family": "DM Mono", "font-size": "8" }, svg);
+  const label = svgElement("text", { x: 24, y: 186, fill: SCHIFFER_VISUAL_THEME.muted, "font-family": "DM Mono", "font-size": "8" }, svg);
   const h2 = solvedParameters.wallCoefficients?.[2] || 0;
   const h3 = solvedParameters.wallCoefficients?.[3] || 0;
   setMath(label, state.s === 0
@@ -1048,9 +1107,9 @@ function renderConeSlice() {
       const pixel = (row * width + column) * 4;
       if (x > wall) {
         const stripe = ((column + row) % 18) < 1 ? 2 : 0;
-        image.data[pixel] = 12 + stripe;
-        image.data[pixel + 1] = 22 + stripe;
-        image.data[pixel + 2] = 27 + stripe;
+        image.data[pixel] = SCHIFFER_VISUAL_THEME.backgroundRgb[0] - stripe;
+        image.data[pixel + 1] = SCHIFFER_VISUAL_THEME.backgroundRgb[1] - stripe;
+        image.data[pixel + 2] = SCHIFFER_VISUAL_THEME.backgroundRgb[2] - stripe;
         image.data[pixel + 3] = 255;
       } else {
         const color = coneColorFor(coneFieldValue(solution.R + x, psi, solution));
@@ -1065,7 +1124,7 @@ function renderConeSlice() {
 
   const xToPixel = (x) => (x - xMin) / (xMax - xMin) * width;
   context.save();
-  context.strokeStyle = "rgba(241,238,229,.15)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.setLineDash([4, 6]);
   [-4, -3, -2, -1, 0].forEach((x) => {
@@ -1085,7 +1144,7 @@ function renderConeSlice() {
     const y = index / 260 * height;
     if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
   }
-  context.strokeStyle = "#fff4dc";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
   context.shadowColor = "rgba(255,116,73,.9)";
   context.shadowBlur = 9;
   context.lineWidth = 2.5;
@@ -1111,13 +1170,13 @@ function drawUnfoldedSeamInset(context, width, solution, gap) {
   const left = width - boxWidth - 15;
   const top = 15;
   context.save();
-  context.fillStyle = "rgba(12,22,27,.88)";
-  context.strokeStyle = "rgba(241,238,229,.18)";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.tooltip;
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.fillRect(left, top, boxWidth, boxHeight);
   context.strokeRect(left, top, boxWidth, boxHeight);
-  context.fillStyle = "rgba(241,238,229,.55)";
-  context.font = "10px DM Mono, monospace";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText("SEAM MAGNIFIER", left + 11, top + 16);
   const centerX = left + boxWidth / 2;
   const centerY = top + boxHeight - 12;
@@ -1131,7 +1190,7 @@ function drawUnfoldedSeamInset(context, width, solution, gap) {
     context.lineTo(centerX + 90 * Math.sin(angle), centerY - 90 * Math.cos(angle));
     context.stroke();
   });
-  context.fillStyle = gap < 1e-8 ? "#4da2a3" : "rgba(241,238,229,.7)";
+  context.fillStyle = gap < 1e-8 ? "#4da2a3" : SCHIFFER_VISUAL_THEME.ink;
   context.fillText(gap < 1e-8 ? "SEAM CLOSED" : `×${magnification} · actual gap ${(gap * 180 / Math.PI).toFixed(3)}°`, left + 11, top + 34);
   context.restore();
 }
@@ -1154,17 +1213,17 @@ function renderConeUnfolded() {
       const pixel = (row * width + column) * 4;
       const coordinates = unfoldedCoordinates(Math.atan2(dy, dx), solution);
       if (!coordinates || radiusRatio > 1.025) {
-        image.data[pixel] = 12;
-        image.data[pixel + 1] = 22;
-        image.data[pixel + 2] = 27;
+        image.data[pixel] = SCHIFFER_VISUAL_THEME.backgroundRgb[0];
+        image.data[pixel + 1] = SCHIFFER_VISUAL_THEME.backgroundRgb[1];
+        image.data[pixel + 2] = SCHIFFER_VISUAL_THEME.backgroundRgb[2];
         image.data[pixel + 3] = 255;
         continue;
       }
       const wallRatio = 1 - coneBoundaryGraph(coordinates.psi, solution) / solution.R;
       if (radiusRatio > wallRatio) {
-        image.data[pixel] = 15;
-        image.data[pixel + 1] = 27;
-        image.data[pixel + 2] = 32;
+        image.data[pixel] = SCHIFFER_VISUAL_THEME.backgroundAltRgb[0];
+        image.data[pixel + 1] = SCHIFFER_VISUAL_THEME.backgroundAltRgb[1];
+        image.data[pixel + 2] = SCHIFFER_VISUAL_THEME.backgroundAltRgb[2];
         image.data[pixel + 3] = 255;
         continue;
       }
@@ -1178,7 +1237,7 @@ function renderConeUnfolded() {
   context.putImageData(image, 0, 0);
 
   context.save();
-  context.strokeStyle = "rgba(241,238,229,.13)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = .7;
   for (let copy = 0; copy <= coneNumerics.targetN; copy++) {
     const angle = gap / 2 + copy * TWO_PI / solution.R;
@@ -1209,7 +1268,7 @@ function renderConeUnfolded() {
     const y = centerY - radius * Math.sin(angle);
     if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
   }
-  context.strokeStyle = "#fff4dc";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
   context.shadowColor = "rgba(255,116,73,.75)";
   context.shadowBlur = 6;
   context.lineWidth = 1.5;
@@ -1287,8 +1346,8 @@ function buildConeMeshData(solution, depth, radialSegments = 96, angularSegments
 function resizeConeThreeRenderer() {
   if (!coneThreeState.renderer || !coneThreeState.camera) return;
   const wrap = $("#coneThreeWrap");
-  const width = Math.max(320, wrap.clientWidth || 900);
-  const height = Math.max(320, wrap.clientHeight || 620);
+  const width = Math.max(1, wrap.clientWidth || 900);
+  const height = Math.max(1, wrap.clientHeight || 620);
   coneThreeState.renderer.setSize(width, height, false);
   coneThreeState.camera.aspect = width / height;
   coneThreeState.camera.updateProjectionMatrix();
@@ -1332,7 +1391,7 @@ function setupConeThreeRenderer() {
   const THREE = threeState.library;
   const wrap = $("#coneThreeWrap");
   coneThreeState.scene = new THREE.Scene();
-  coneThreeState.scene.background = new THREE.Color(0x101b20);
+  coneThreeState.scene.background = new THREE.Color(SCHIFFER_VISUAL_THEME.backgroundHex);
   coneThreeState.camera = new THREE.PerspectiveCamera(38, 1, .1, 120);
   coneThreeState.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
   coneThreeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -1370,10 +1429,10 @@ function updateConeThreeMesh() {
   geometry.computeVertexNormals();
   const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
   coneThreeState.group.add(new THREE.Mesh(geometry, material));
-  data.rings.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, 0xf1eee5, .15)));
-  data.generators.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, 0xf1eee5, .10)));
+  data.rings.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, SCHIFFER_VISUAL_THEME.inkHex, .15)));
+  data.generators.forEach((points) => coneThreeState.group.add(threeLine(THREE, points, SCHIFFER_VISUAL_THEME.inkHex, .10)));
   coneThreeState.group.add(threeLine(THREE, data.referenceRim, 0x7f9293, .45));
-  coneThreeState.group.add(threeLine(THREE, data.rim, 0xfff4dc, 1));
+  coneThreeState.group.add(threeLine(THREE, data.rim, SCHIFFER_VISUAL_THEME.inkHex, 1));
   updateConeCamera(coneState.depth);
   $("#coneThreeLoading").hidden = true;
   renderConeThreeFrame();
@@ -1548,18 +1607,18 @@ const modesState = {
 const MODES_COLORS = {
   cyan: "#4da2a3",
   orange: "#ff7449",
-  white: "#fff4dc",
-  gray: "rgba(241,238,229,.34)",
-  grid: "rgba(241,238,229,.105)",
-  text: "rgba(241,238,229,.58)",
-  faint: "rgba(241,238,229,.34)",
+  white: SCHIFFER_VISUAL_THEME.ink,
+  gray: SCHIFFER_VISUAL_THEME.faint,
+  grid: SCHIFFER_VISUAL_THEME.line,
+  text: SCHIFFER_VISUAL_THEME.muted,
+  faint: SCHIFFER_VISUAL_THEME.faint,
 };
 
 function modesCanvasMetrics() {
   const canvas = $("#modesCanvas");
   const wrap = $("#modesCanvasWrap");
-  const width = Math.max(320, wrap.clientWidth || 900);
-  const height = Math.max(500, wrap.clientHeight || 620);
+  const width = Math.max(1, wrap.clientWidth || 900);
+  const height = Math.max(1, wrap.clientHeight || 620);
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * ratio);
   canvas.height = Math.round(height * ratio);
@@ -1588,7 +1647,7 @@ function drawModesPanelGrid(context, rect) {
     context.stroke();
   });
   context.setLineDash([]);
-  context.strokeStyle = "rgba(241,238,229,.26)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.lineStrong;
   context.beginPath();
   const zeroY = rect.top + rect.height / 2;
   context.moveTo(rect.left, zeroY);
@@ -1618,15 +1677,15 @@ function drawModesSeries(context, rect, values, color, width = 1.5, dash = []) {
 function drawModesPanelLabel(context, rect, title, equation, detail) {
   const compact = rect.width < 480;
   context.save();
-  context.fillStyle = "rgba(241,238,229,.83)";
-  context.font = "10px DM Mono, monospace";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText(title.toUpperCase(), rect.left, rect.top - 33);
   context.fillStyle = MODES_COLORS.text;
-  context.font = "11px DM Mono, monospace";
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText(equation, rect.left, rect.top - 17);
   if (!compact) {
     context.fillStyle = MODES_COLORS.faint;
-    context.font = "10px DM Mono, monospace";
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.textAlign = "right";
     context.fillText(detail, rect.left + rect.width, rect.top - 17);
   }
@@ -1636,7 +1695,7 @@ function drawModesPanelLabel(context, rect, title, equation, detail) {
 function drawModesRim(context, rect, label) {
   const x = rect.left + rect.width;
   context.save();
-  context.strokeStyle = "rgba(255,244,220,.54)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.muted;
   context.lineWidth = 1;
   context.beginPath();
   context.moveTo(x, rect.top);
@@ -1645,7 +1704,7 @@ function drawModesRim(context, rect, label) {
   context.translate(x - 5, rect.top + 10);
   context.rotate(-Math.PI / 2);
   context.fillStyle = MODES_COLORS.faint;
-  context.font = "11px DM Mono, monospace";
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.textAlign = "right";
   context.fillText(label.toUpperCase(), 0, 0);
   context.restore();
@@ -1661,11 +1720,11 @@ function drawAngularStrip(context, rect) {
   }
   drawModesSeries(context, rect, values, MODES_COLORS.white, 2.1);
   context.save();
-  context.fillStyle = "rgba(241,238,229,.78)";
-  context.font = "10px DM Mono, monospace";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText("SHARED ANGULAR FACTOR", rect.left, rect.top - 12);
   context.fillStyle = MODES_COLORS.faint;
-  context.font = "10px DM Mono, monospace";
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText("−π", rect.left, rect.top + rect.height + 17);
   context.textAlign = "center";
   context.fillText("0", rect.left + rect.width / 2, rect.top + rect.height + 17);
@@ -1677,7 +1736,7 @@ function drawAngularStrip(context, rect) {
 function renderModesComparison() {
   const { canvas, context, width, height } = modesCanvasMetrics();
   context.clearRect(0, 0, width, height);
-  context.fillStyle = "#101b20";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.background;
   context.fillRect(0, 0, width, height);
 
   const compact = width < 650;
@@ -1746,14 +1805,14 @@ function renderModesComparison() {
   if (cylinder.regime === "evanescent") {
     context.save();
     context.fillStyle = MODES_COLORS.faint;
-    context.font = "10px DM Mono, monospace";
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.fillText("dashed: growing branch rejected as x → −∞", cylinderRect.left + 8, cylinderRect.top + 15);
     context.restore();
   }
   if (modesState.k === 1 && modesState.transfer > .995) {
     context.save();
     context.fillStyle = MODES_COLORS.orange;
-    context.font = "10px DM Mono, monospace";
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.textAlign = "right";
     context.fillText("COMMON-ZERO NORMALIZATION", coneRect.left + coneRect.width - 8, coneRect.top + 15);
     context.restore();
@@ -1844,18 +1903,20 @@ function modesDrawGlobal(context, rect, solution, fieldValue) {
     const dx = (u - localPlot.cx) / (localPlot.radius * aspectScaleX);
     const dy = (localPlot.cy - v) / (localPlot.radius * aspectScaleY);
     const radius = Math.hypot(dx, dy) * solution.R;
-    if (radius > solution.R + .75) return [16, 27, 32];
+    if (radius > solution.R + .75) return SCHIFFER_VISUAL_THEME.backgroundRgb;
     const coordinates = unfoldedCoordinates(Math.atan2(dy, dx), solution);
-    if (!coordinates) return radius <= solution.R + .45 ? [63, 31, 29] : [16, 27, 32];
+    if (!coordinates) return radius <= solution.R + .45
+      ? SCHIFFER_VISUAL_THEME.backgroundAltRgb
+      : SCHIFFER_VISUAL_THEME.backgroundRgb;
     const wallRadius = solution.R - coneBoundaryGraph(coordinates.psi, solution);
-    if (radius > wallRadius) return [15, 27, 32];
+    if (radius > wallRadius) return SCHIFFER_VISUAL_THEME.backgroundAltRgb;
     return coneColorFor(fieldValue(radius, coordinates.psi));
   }, .58);
   context.save();
   context.imageSmoothingEnabled = true;
   context.drawImage(raster, rect.left, rect.top, rect.width, rect.height);
 
-  context.strokeStyle = "rgba(241,238,229,.12)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.setLineDash([3, 6]);
   [.35, .6, .82, 1].forEach((ratio) => {
@@ -1918,11 +1979,13 @@ function modesDrawGlobal(context, rect, solution, fieldValue) {
   context.lineWidth = 1.7;
   context.stroke();
 
-  context.fillStyle = "rgba(241,238,229,.82)";
-  context.font = "10px DM Mono, monospace";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText("WHOLE 28-COPY ASSEMBLY", rect.left + 10, rect.top + 16);
-  context.fillStyle = MODES_COLORS.cyan;
-  context.fillText("ONE WAVELENGTH", cropPoints[1].x + 5, cropPoints[1].y - 5);
+  if (rect.width >= 480) {
+    context.fillStyle = MODES_COLORS.cyan;
+    context.fillText("ONE WAVELENGTH", cropPoints[1].x + 5, cropPoints[1].y - 5);
+  }
   context.restore();
   return { plot, cropPoints, gap };
 }
@@ -1997,9 +2060,9 @@ function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
   const yToPixel = (value) => plot.top + (scale - value) / (2 * scale) * plot.height;
 
   context.save();
-  context.fillStyle = "rgba(8,17,21,.88)";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.panel;
   context.fillRect(rect.left, rect.top, rect.width, rect.height);
-  context.strokeStyle = "rgba(241,238,229,.1)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.beginPath();
   context.moveTo(plot.left, yToPixel(0));
@@ -2026,8 +2089,8 @@ function modesDrawRadialComparison(context, rect, solution, depth, comparison) {
   draw(bessel, MODES_COLORS.cyan, 2.2);
   draw(cylinder, MODES_COLORS.orange, 1.7);
 
-  context.font = "10px DM Mono, monospace";
-  context.fillStyle = "rgba(241,238,229,.75)";
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
+  context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
   context.fillText(compact ? "LOCAL MODE" : "LOCAL OSCILLATORY MODE", rect.left + 8, rect.top + 14);
   context.textAlign = "right";
   context.fillStyle = MODES_COLORS.cyan;
@@ -2053,21 +2116,21 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
     const x = interpolateNumber(xMin, xMax, u);
     const tangent = interpolateNumber(options.tangentSpan, -options.tangentSpan, v);
     const coordinates = modesPatchCoordinates(solution, options.centerAngle, tangent);
-    if (!coordinates) return [67, 31, 28];
+    if (!coordinates) return SCHIFFER_VISUAL_THEME.backgroundAltRgb;
     const wall = -coneBoundaryGraph(coordinates.psi, solution);
-    if (x > wall) return [15, 27, 32];
+    if (x > wall) return SCHIFFER_VISUAL_THEME.backgroundAltRgb;
     return coneColorFor(fieldValue(solution.R + x, coordinates.psi));
   }, compact ? .76 : .64);
 
   context.save();
-  context.fillStyle = "rgba(12,22,27,.74)";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.panel;
   context.fillRect(rect.left, rect.top, rect.width, rect.height);
   context.imageSmoothingEnabled = true;
   context.drawImage(raster, plot.left, plot.top, plot.width, plot.height);
 
   const xToPixel = (x) => plot.left + (x - xMin) / (xMax - xMin) * plot.width;
   const tangentToPixel = (tangent) => plot.top + (options.tangentSpan - tangent) / (2 * options.tangentSpan) * plot.height;
-  context.strokeStyle = "rgba(241,238,229,.13)";
+  context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
   context.lineWidth = 1;
   context.setLineDash([3, 6]);
   [xMin, xMin / 2, 0].forEach((x) => {
@@ -2098,11 +2161,13 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
   context.stroke();
   context.shadowBlur = 0;
 
-  context.strokeStyle = options.accent;
-  context.lineWidth = 1;
-  context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
-  context.fillStyle = "rgba(241,238,229,.83)";
-  context.font = "10px DM Mono, monospace";
+  if (!SCHIFFER_VISUAL_THEME.paperEdition) {
+    context.strokeStyle = options.accent;
+    context.lineWidth = 1;
+    context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
+  }
+  context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
+  context.font = SCHIFFER_VISUAL_THEME.labelFont;
   context.fillText(options.title, rect.left + (compact ? 8 : 12), rect.top + (compact ? 15 : 17));
   context.restore();
   const comparisonRect = {
@@ -2117,7 +2182,7 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
 }
 
 function updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, comparison, containsSeam) {
-  const formulaColor = "rgba(241,238,229,.52)";
+  const formulaColor = SCHIFFER_VISUAL_THEME.muted;
   setCanvasFormula("#modesCanvasWrap", "modesGlobalFormula", `R=${solution.R.toFixed(6)},\\quad s=${solution.s.toFixed(4)}`, {
     left: globalRect.left + 10, top: globalRect.top + 20, color: formulaColor,
   });
@@ -2160,7 +2225,7 @@ function renderModesNestedZoom() {
   const fieldValue = modesFastField(solution);
   const comparison = modesRadialComparison(solution);
   context.clearRect(0, 0, width, height);
-  context.fillStyle = "#101b20";
+  context.fillStyle = SCHIFFER_VISUAL_THEME.background;
   context.fillRect(0, 0, width, height);
   const compact = width < 650;
   let globalRect;
@@ -2180,10 +2245,11 @@ function renderModesNestedZoom() {
     centerAngle: cropAngle,
     tangentSpan: Math.PI,
     depth: modesState.depth,
-    title: "ONE ANGULAR WAVELENGTH · UNWRAPPED COLLAR",
+    title: compact ? "UNWRAPPED COLLAR" : "ONE ANGULAR WAVELENGTH · UNWRAPPED COLLAR",
     detail: containsSeam ? `Δξ = ${comparison.phaseDegrees.toFixed(2)}° · SEAM CENTERED` : "ψ-span = 2π · locally flat",
     accent: MODES_COLORS.cyan,
     comparison,
+    compact,
   });
   updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, comparison, containsSeam);
 
@@ -2344,7 +2410,7 @@ if (debyeData) {
   // sector, and the complete N-fold disk.  The local cone and global disk use
   // the same exact Bessel samples; the cylinder profile has matching rim data.
   const collarFieldState = { fold: 28, mode: 1, trig: "cos" };
-  const COLLAR_BACKGROUND = [16, 27, 32];
+  const COLLAR_BACKGROUND = SCHIFFER_VISUAL_THEME.backgroundRgb;
 
   function collarAngularValue(psi) {
     const angle = collarFieldState.mode * psi;
@@ -2374,8 +2440,8 @@ if (debyeData) {
 
   function collarRaster(canvas, sampler) {
     const wrap = canvas.parentElement;
-    const width = Math.max(210, wrap.clientWidth || 300);
-    const height = Math.max(300, wrap.clientHeight || 430);
+    const width = Math.max(1, wrap.clientWidth || 300);
+    const height = Math.max(1, wrap.clientHeight || 430);
     const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
     const rasterWidth = Math.round(width * ratio);
     const rasterHeight = Math.round(height * ratio);
@@ -2400,7 +2466,7 @@ if (debyeData) {
 
   function collarDrawCoordinateGrid(context, width, height) {
     context.save();
-    context.strokeStyle = "rgba(241,238,229,.13)";
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
     context.lineWidth = 1;
     [.2, .4, .6, .8].forEach((amount) => {
       context.beginPath();
@@ -2426,7 +2492,7 @@ if (debyeData) {
     });
     collarDrawCoordinateGrid(context, width, height);
     context.save();
-    context.strokeStyle = "rgba(241,238,229,.82)";
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
     context.lineWidth = 1.4;
     context.beginPath();
     context.moveTo(width - .7, 0);
@@ -2493,11 +2559,11 @@ if (debyeData) {
     });
     context.save();
     collarTracePatchBoundary(context, width, height);
-    context.strokeStyle = "rgba(241,238,229,.86)";
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
     context.lineWidth = 1.4;
     context.stroke();
-    context.fillStyle = "rgba(241,238,229,.56)";
-    context.font = "10px DM Mono, monospace";
+    context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.fillText("one sector", 10, 17);
     context.fillText("one angular period", 10, 32);
     context.restore();
@@ -2579,8 +2645,8 @@ if (debyeData) {
   function renderCollarDisk() {
     const canvas = $("#collarDiskCanvas");
     const wrap = canvas.parentElement;
-    const cssWidth = Math.max(210, wrap.clientWidth || 300);
-    const cssHeight = Math.max(300, wrap.clientHeight || 430);
+    const cssWidth = Math.max(1, wrap.clientWidth || 300);
+    const cssHeight = Math.max(1, wrap.clientHeight || 430);
     const plot = {
       cx: cssWidth * .49,
       cy: cssHeight * .51,
@@ -2601,7 +2667,7 @@ if (debyeData) {
     plot.cy = height * .51;
     plot.radius = Math.min(width, height) * .405;
     context.save();
-    context.strokeStyle = "rgba(241,238,229,.78)";
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
     context.lineWidth = 1.2;
     context.beginPath();
     context.arc(plot.cx, plot.cy, plot.radius, 0, TWO_PI);
@@ -2612,8 +2678,8 @@ if (debyeData) {
     context.strokeStyle = "#72c9c6";
     context.lineWidth = 2.4;
     context.stroke();
-    context.fillStyle = "rgba(241,238,229,.55)";
-    context.font = "10px DM Mono, monospace";
+    context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.fillText(`${collarFieldState.fold}-fold disk`, 10, 17);
     context.restore();
     renderCollarZoomConnectors(plot);
@@ -2712,8 +2778,8 @@ if (debyeData) {
   function debyeCanvasMetrics() {
     const canvas = $("#debyeCanvas");
     const wrap = $("#debyeCanvasWrap");
-    const width = Math.max(300, wrap.clientWidth || 900);
-    const height = Math.max(500, wrap.clientHeight || 550);
+    const width = Math.max(1, wrap.clientWidth || 900);
+    const height = Math.max(1, wrap.clientHeight || 550);
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
@@ -2727,7 +2793,7 @@ if (debyeData) {
     context.strokeStyle = MODES_COLORS.grid;
     context.fillStyle = MODES_COLORS.faint;
     context.lineWidth = 1;
-    context.font = "10px DM Mono, monospace";
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     yTicks.forEach(({ value, label }) => {
       const y = yMap(value);
       context.beginPath();
@@ -2783,12 +2849,14 @@ if (debyeData) {
     }
 
     context.save();
-    context.fillStyle = "rgba(12,22,27,.63)";
+    context.fillStyle = SCHIFFER_VISUAL_THEME.panel;
     context.fillRect(rect.left, rect.top, rect.width, rect.height);
-    context.strokeStyle = "rgba(241,238,229,.14)";
-    context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
-    context.fillStyle = "rgba(241,238,229,.86)";
-    context.font = "11px DM Mono, monospace";
+    if (!SCHIFFER_VISUAL_THEME.paperEdition) {
+      context.strokeStyle = SCHIFFER_VISUAL_THEME.line;
+      context.strokeRect(rect.left + .5, rect.top + .5, rect.width - 1, rect.height - 1);
+    }
+    context.fillStyle = SCHIFFER_VISUAL_THEME.ink;
+    context.font = SCHIFFER_VISUAL_THEME.labelFont;
     context.fillText(isWave ? "OSCILLATORY MODE" : "EVANESCENT MODE", rect.left + 14, rect.top + 20);
     context.restore();
 
@@ -2803,7 +2871,7 @@ if (debyeData) {
   }
 
   function updateDebyeCanvasFormulas(panels, seriesList) {
-    const formulaColor = "rgba(241,238,229,.55)";
+    const formulaColor = SCHIFFER_VISUAL_THEME.muted;
     seriesList.forEach((series, index) => {
       const panel = panels[index];
       const plotLeft = panel.left + 14;
@@ -2835,7 +2903,7 @@ if (debyeData) {
   function renderDebyeComparison() {
     const { canvas, context, width, height } = debyeCanvasMetrics();
     context.clearRect(0, 0, width, height);
-    context.fillStyle = "#101b20";
+    context.fillStyle = SCHIFFER_VISUAL_THEME.background;
     context.fillRect(0, 0, width, height);
     const compact = width < 620;
     const panels = [];

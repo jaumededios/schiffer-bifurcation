@@ -11,6 +11,8 @@ Let `Ω⊂ℝ²` be a smooth bounded domain and suppose a nonconstant eigenfunct
   `?layout-check=1` while developing to run its responsive layout contract;
   the page reports margin intrusion, overflow, misplaced controls, or a canvas
   whose bitmap aspect ratio disagrees with its CSS box in the browser console.
+  The same contract also checks display-math fit, source reading order, the
+  shared typography tokens, and the visual/aside structure of every applet.
 - `/paper/` is a proof-guided edition of the same argument and numerical figures. It adds a reading route, theorem statements, references, and progressively expandable proofs. In particular, the half-cylinder proof first displays the separated linearized blocks and their uniform lower bounds on `2≤λ≤3`; a nested panel then gives the Banach-space implicit-function argument. The cone proof uses the same structure for the uniform Lyapunov–Schmidt reduction.
 
 The paper edition uses the relevance, findability, understandability, and usability principles summarized by [GaZmagik/iso-24495](https://github.com/GaZmagik/iso-24495). That repository is an unofficial interpretation of the ISO plain-language standards, so the site makes no ISO-conformance claim.
@@ -25,16 +27,20 @@ The Tufte edition keeps content semantics separate from page geometry:
   pattern is the complete margin-note API;
 - `.math-statement` articles provide one grammar for definitions, problems,
   conjectures, propositions, lemmas, corollaries, and theorems;
+- `.paper-copy` is continuous exposition or derivation at reading measure;
+- `.small-multiples` is reserved for comparisons whose juxtaposition carries
+  information, while `.figure-band` is reserved for actual wide visuals;
 - `.interactive-plate` means an apparatus with direct `section` and `aside`
   children; the stylesheet chooses their desktop and mobile placement.
-- `.figure-band` groups a full-width visual, small multiple, or derivation;
-  individual figure names never enter the page-measure selectors.
+- `.data-table` presents compact tabular evidence at reading measure.
 
 The widths for these components live only in the measure tokens at the top of
 `tufte/tufte-port.css`; their instances need no per-item width classes or
 layout-test attributes. With `?layout-check=1`, `tufte/layout-contract.js`
 discovers the structures from their semantics and checks the contracts
-automatically.
+automatically. It also rejects ambiguous role combinations and verifies that
+prose, proof, caption, and apparatus-label text resolve to the canonical type
+tokens rather than inherited component sizes.
 
 ## Narrative structure
 

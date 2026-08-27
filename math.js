@@ -5,6 +5,7 @@
     throwOnError: false,
     strict: "warn",
   };
+  let scheduleMathFit = () => {};
 
   // At subscript size the italic nu of the normal direction is hard to tell
   // apart from a latin v. Setting it in the bold face keeps the shape legible
@@ -31,6 +32,7 @@
     element.querySelectorAll(".katex").forEach((node) => {
       node.classList.add(options.serif ? "katex-inline-serif" : "katex-inline-sans");
     });
+    scheduleMathFit();
   };
 
   window.SchifferMath = Object.freeze({ render });
@@ -68,4 +70,54 @@
     delimiters: [{ left: "\\[", right: "\\]", display: true }],
     preProcess: emphasizeNu,
   });
+
+  /* Tufte display mathematics belongs to the measure that contains it.  KaTeX
+     does not reflow long expressions, so fit the rendered glyph run to that
+     measure as a final typesetting step.  Content never supplies a local
+     font-size and every display follows the same resize contract. */
+  if (document.body.classList.contains("tufte-site")) {
+    let fitFrame = 0;
+    const fitDisplays = () => {
+      fitFrame = 0;
+      document.querySelectorAll(".tex-display").forEach((wrapper) => {
+        if (!wrapper.getClientRects().length) return;
+        wrapper.style.setProperty("--math-scale", "1");
+        const rootStyle = getComputedStyle(document.documentElement);
+        const baseMathSize = (parseFloat(rootStyle.getPropertyValue("--type-math")) || 1.18)
+          * (parseFloat(rootStyle.fontSize) || 16);
+        wrapper.style.setProperty("--math-size", `${baseMathSize}px`);
+        const contents = Array.from(wrapper.querySelectorAll(".katex-display > .katex"));
+        if (!contents.length) return;
+        const style = getComputedStyle(wrapper);
+        const available = wrapper.clientWidth
+          - parseFloat(style.paddingLeft || 0)
+          - parseFloat(style.paddingRight || 0);
+        if (available <= 1) return;
+        const required = Math.max(...contents.map((content) => content.scrollWidth));
+        const scale = required > available + 1
+          ? Math.max(.56, Math.min(1, available / required))
+          : 1;
+        wrapper.style.setProperty("--math-scale", scale.toFixed(4));
+        wrapper.style.setProperty("--math-size", `${baseMathSize * scale}px`);
+        wrapper.classList.toggle("math-fitted", scale < .999);
+      });
+    };
+    scheduleMathFit = () => {
+      cancelAnimationFrame(fitFrame);
+      fitFrame = requestAnimationFrame(() => requestAnimationFrame(fitDisplays));
+    };
+    const observedWidths = new WeakMap();
+    const observer = new ResizeObserver((entries) => {
+      const widthChanged = entries.some((entry) => {
+        const width = entry.contentRect.width;
+        const previous = observedWidths.get(entry.target);
+        observedWidths.set(entry.target, width);
+        return previous === undefined || Math.abs(previous - width) > .5;
+      });
+      if (widthChanged) scheduleMathFit();
+    });
+    document.querySelectorAll(".tex-display").forEach((wrapper) => observer.observe(wrapper));
+    window.addEventListener("resize", scheduleMathFit, { passive: true });
+    scheduleMathFit();
+  }
 })();

@@ -6,18 +6,58 @@
   const rounded = (value) => Math.round(value * 10) / 10;
   const marginSelector = "body.tufte-site main .marginnote";
   const disclosureSelector = "body.tufte-site main details:not(.secondary-controls)";
+  const roleSelector = ".paper-copy, .math-statement, .small-multiples, .figure-band, .data-table";
 
   function runLayoutContract() {
     const errors = [];
-    const narrow = window.matchMedia("(max-width: 760px)").matches;
+    const narrow = window.matchMedia("(max-width: 1000px)").matches;
+    const handset = window.matchMedia("(max-width: 760px)").matches;
     const page = document.documentElement.getBoundingClientRect();
     const rootStyle = getComputedStyle(document.documentElement);
     const reading = parseFloat(rootStyle.getPropertyValue("--measure-reading")) / 100;
     const figure = parseFloat(rootStyle.getPropertyValue("--measure-figure")) / 100;
     const readingInFigure = parseFloat(rootStyle.getPropertyValue("--measure-reading-in-figure")) / 100;
+    const typeProof = parseFloat(rootStyle.getPropertyValue("--type-proof")) * parseFloat(rootStyle.fontSize);
+    const typeCaption = parseFloat(rootStyle.getPropertyValue("--type-caption")) * parseFloat(rootStyle.fontSize);
+    const typeLabel = parseFloat(rootStyle.getPropertyValue("--type-label")) * parseFloat(rootStyle.fontSize);
+    const typeControlValue = parseFloat(rootStyle.getPropertyValue("--type-control-value")) * parseFloat(rootStyle.fontSize);
+
+    const sectionMeasure = (element, ratio) => {
+      const section = element.closest("main > section");
+      const parent = element.parentElement;
+      if (!section || !parent) return element.getBoundingClientRect().width;
+      return Math.min(parent.getBoundingClientRect().width, section.getBoundingClientRect().width * ratio);
+    };
+
+    const checkType = (selector, expected, label) => {
+      document.querySelectorAll(selector).forEach((element, index) => {
+        if (!element.getClientRects().length) return;
+        const actual = parseFloat(getComputedStyle(element).fontSize);
+        if (Math.abs(actual - expected) > .2) {
+          errors.push(`${label} ${index + 1} uses ${rounded(actual)}px instead of ${rounded(expected)}px`);
+        }
+      });
+    };
 
     if (document.documentElement.scrollWidth > window.innerWidth + 1) {
       errors.push(`page overflows by ${document.documentElement.scrollWidth - window.innerWidth}px`);
+    }
+
+    const expectedSectionOrder = [
+      "introduction",
+      "borrow-flexibility",
+      "geometric-escape",
+      "experiment",
+      "debye-experiment",
+      "phase-story",
+      "cone-experiment",
+      "modes-experiment",
+      "abundance-experiment",
+      "references",
+    ];
+    const actualSectionOrder = Array.from(document.querySelectorAll("main > section[id]"), (section) => section.id);
+    if (expectedSectionOrder.some((id, index) => actualSectionOrder[index] !== id)) {
+      errors.push("top-level sections do not follow source reading order");
     }
 
     document.querySelectorAll(marginSelector).forEach((aside, index) => {
@@ -72,6 +112,16 @@
       if (!parseFloat(summaryStyle.borderTopWidth) || !parseFloat(summaryStyle.borderBottomWidth)) {
         errors.push(`reading disclosure ${index + 1} is missing its summary rules`);
       }
+      const body = details.classList.contains("proof-details")
+        ? Array.from(details.children).find((child) => child !== summary)
+        : null;
+      if (body && body.getClientRects().length) {
+        const bodyBox = body.getBoundingClientRect();
+        const expectedBodyWidth = detailsBox.width * (narrow ? 1 : readingInFigure);
+        if (Math.abs(bodyBox.left - detailsBox.left) > 1 || Math.abs(bodyBox.width - expectedBodyWidth) > 2) {
+          errors.push(`reading disclosure ${index + 1} proof body is outside the reading measure`);
+        }
+      }
     });
 
     document.querySelectorAll("body.tufte-site main .math-statement").forEach((statement, index) => {
@@ -79,11 +129,33 @@
       if (!statement.querySelector(":scope > .math-statement-header")) errors.push(`math statement ${index + 1} has no direct header`);
       if (!statement.querySelector(":scope > .math-statement-body")) errors.push(`math statement ${index + 1} has no direct body`);
       const box = statement.getBoundingClientRect();
-      const parentBox = statement.parentElement.getBoundingClientRect();
-      let expectedWidth = parentBox.width;
-      if (!narrow && statement.parentElement.matches(".story-intro")) expectedWidth *= reading;
-      else if (!narrow && statement.parentElement.matches("body.tufte-site main > section")) expectedWidth *= figure;
+      const expectedWidth = sectionMeasure(statement, narrow ? 1 : reading);
       if (Math.abs(box.width - expectedWidth) > 2) errors.push(`math statement ${index + 1} is outside its semantic measure`);
+    });
+
+    document.querySelectorAll("body.tufte-site main .paper-copy").forEach((copy, index) => {
+      if (!copy.getClientRects().length) return;
+      const box = copy.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(copy, narrow ? 1 : reading);
+      if (Math.abs(box.width - expectedWidth) > 2) errors.push(`paper copy ${index + 1} is outside the reading measure`);
+      if (copy.classList.contains("figure-band") || copy.classList.contains("small-multiples")) {
+        errors.push(`paper copy ${index + 1} also claims a wide-measure role`);
+      }
+    });
+
+    document.querySelectorAll("body.tufte-site main .small-multiples").forEach((multiple, index) => {
+      if (!multiple.getClientRects().length) return;
+      const box = multiple.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(multiple, narrow ? 1 : figure);
+      if (Math.abs(box.width - expectedWidth) > 2) errors.push(`small multiple ${index + 1} is outside the figure measure`);
+      if (multiple.classList.contains("figure-band")) errors.push(`small multiple ${index + 1} also claims the figure role`);
+    });
+
+    document.querySelectorAll("body.tufte-site main .data-table").forEach((table, index) => {
+      if (!table.querySelector("table")) errors.push(`data table ${index + 1} has no table element`);
+      const box = table.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(table, narrow ? 1 : reading);
+      if (Math.abs(box.width - expectedWidth) > 2) errors.push(`data table ${index + 1} is outside the reading measure`);
     });
 
     document.querySelectorAll("body.tufte-site main .figure-band").forEach((band, index) => {
@@ -93,7 +165,30 @@
       const expectedWidth = parentBox.width * (narrow ? 1 : figure);
       if (Math.abs(box.width - expectedWidth) > 2) errors.push(`figure band ${index + 1} is outside the figure measure`);
       if (Math.abs(box.left - parentBox.left) > 1) errors.push(`figure band ${index + 1} is not aligned with the page grammar`);
+      if (!band.querySelector("canvas, svg, img, picture, video")) errors.push(`figure band ${index + 1} contains no visual`);
     });
+
+    document.querySelectorAll("body.tufte-site main .tex-display").forEach((display, index) => {
+      if (!display.getClientRects().length) return;
+      if (display.clientWidth <= 1) return;
+      if (display.scrollWidth > display.clientWidth + 1) {
+        errors.push(`display equation ${index + 1} overflows its semantic measure by ${rounded(display.scrollWidth - display.clientWidth)}px`);
+      }
+    });
+
+    document.querySelectorAll(`body.tufte-site main :is(${roleSelector})`).forEach((element, index) => {
+      const roles = ["paper-copy", "math-statement", "small-multiples", "figure-band", "data-table"]
+        .filter((role) => element.classList.contains(role));
+      if (roles.length > 1) errors.push(`editorial role ${index + 1} is ambiguous: ${roles.join(" + ")}`);
+    });
+
+    checkType("body.tufte-site main .paper-copy:not(.phase-story-lead):not(.debye-lead):not(.abundance-lead) p:not(.eyebrow)", typeProof, "proof paragraph");
+    checkType("body.tufte-site main .math-statement:not(.math-statement-problem):not(.math-statement-conjecture) .math-statement-body p", typeProof, "statement paragraph");
+    checkType("body.tufte-site main :is(figcaption, .formula-note, .phase-family-note, .collar-field-caption)", typeCaption, "caption");
+    checkType("body.tufte-site main :is(.control-heading, .control-label, .play-button, .axis-footer)", typeLabel, "apparatus label");
+    checkType("body.tufte-site main :is(.small-multiples article > span, .cylinder-proof-grid article > span)", typeLabel, "editorial label");
+    checkType("body.tufte-site main :is(.solver-readout, .modes-status, .phase-story-readout, .collar-field-readout, .debye-status, .abundance-readout) span", typeLabel, "readout label");
+    checkType("body.tufte-site main :is(.solver-readout, .modes-status, .phase-story-readout, .collar-field-readout, .debye-status, .abundance-readout) strong, body.tufte-site main .measurement-value-line strong", typeControlValue, "readout value");
 
     document.querySelectorAll(".interactive-plate").forEach((plate, index) => {
       if (getComputedStyle(plate).display === "none" || !plate.getClientRects().length) return;
@@ -102,6 +197,11 @@
       if (!controls || !visual) {
         errors.push(`interactive plate ${index + 1} is missing a direct control or visual child`);
         return;
+      }
+      const plateStyle = getComputedStyle(plate);
+      if ([plateStyle.borderTopWidth, plateStyle.borderRightWidth, plateStyle.borderBottomWidth, plateStyle.borderLeftWidth]
+        .some((value) => parseFloat(value) > 0)) {
+        errors.push(`interactive plate ${index + 1} has an outer card border`);
       }
       const controlBox = controls.getBoundingClientRect();
       const visualBox = visual.getBoundingClientRect();
@@ -121,6 +221,13 @@
           errors.push(`${canvas.id || "unnamed canvas"} has mismatched CSS and bitmap aspect ratios`);
         }
       });
+
+      visual.querySelectorAll(":scope > :is(.canvas-wrap, .geometry-canvas-wrap, .modes-canvas-wrap, .phase-story-canvas-wrap, .debye-canvas-wrap, .abundance-canvas-wrap), :scope > article > .collar-field-canvas-wrap").forEach((wrap) => {
+        const box = wrap.getBoundingClientRect();
+        if (handset && box.height > Math.max(520, box.width * 1.6)) {
+          errors.push(`interactive plate ${index + 1} has an implausibly tall narrow plot`);
+        }
+      });
     });
 
     const result = {
@@ -129,7 +236,10 @@
       margins: document.querySelectorAll(marginSelector).length,
       disclosures: document.querySelectorAll(disclosureSelector).length,
       statements: document.querySelectorAll("body.tufte-site main .math-statement").length,
+      paperCopies: document.querySelectorAll("body.tufte-site main .paper-copy").length,
+      smallMultiples: document.querySelectorAll("body.tufte-site main .small-multiples").length,
       figureBands: document.querySelectorAll("body.tufte-site main .figure-band").length,
+      dataTables: document.querySelectorAll("body.tufte-site main .data-table").length,
       plates: document.querySelectorAll(".interactive-plate").length,
       errors,
     };
