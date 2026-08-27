@@ -32,12 +32,18 @@ The Tufte edition keeps content semantics separate from page geometry:
 - `.paper-copy` is continuous exposition or derivation at reading measure;
 - `.small-multiples` is reserved for comparisons whose juxtaposition carries
   information, while `.figure-band` is reserved for actual wide visuals;
+- margin galleries use the same 55% reading measure, 5% gutter, and 40%
+  margin column as ordinary marginalia, so they never narrow the prose;
 - `.margin-figure-sequence` contains `.margin-figure-row` articles with one
   direct `.margin-figure`: the layout layer keeps prose on the reading measure,
   puts the figure wholly in the margin, removes card rules, and stacks the same
   structure on narrow screens;
 - `.interactive-plate` means an apparatus with direct `section` and `aside`
-  children; the stylesheet chooses their desktop and mobile placement.
+  children; on desktop the visual stays on the 55% reading measure, controls
+  occupy the 40% margin, and the 5% gutter supplies the separation. The same
+  structure stacks visual-first on narrow screens.
+- `.optional-digression` is a disclosure summary grammar with the small label
+  `Optional digression` followed by the actual title.
 - `.data-table` presents compact tabular evidence at reading measure.
 - `<lean-statement data-statement="…">` places a formal counterpart beside
   the corresponding prose statement. `lean-statements.js` owns the statement
@@ -54,6 +60,8 @@ discovers the structures from their semantics and checks the contracts
 automatically. It also rejects ambiguous role combinations and verifies that
 prose, proof, caption, and apparatus-label text resolve to the canonical type
 tokens rather than inherited component sizes.
+For figures, small multiples, and applets it also rejects decorative outer
+card borders, so rules remain reserved for formal statements and Lean source.
 
 To add another formal statement, add its title and plain Lean source to the
 registry in `lean-statements.js`, then place only the declarative
@@ -65,15 +73,11 @@ hand-authored highlighting spans or per-instance layout classes.
 
 The website is ordered as one argument rather than a gallery of simulations:
 
-1. The normalized overdetermined problem and its linear spectral-coincidence test.
-2. The disk obstruction: `J₁(ρ)=0` and `J_ℓ(ρ)=0` cannot share a positive zero for integer `ℓ≥2` by the Bourget–Siegel theorem; `ℓ=1` is translation.
-3. The flexible cylinder and sphere analogues.
-4. The quotient move from one `N`-fold disk sector to a length-`N` cone and its nearly cylindrical rim.
-5. The live half-cylinder free-boundary calculation.
-6. Direct Bessel-versus-cylinder radial comparisons.
-7. The quadratic order drift and its conversion into Debye phase drift.
-8. The numerical `R*=28.026397… → N=28` continuation, integer landing, and global-to-local one-wavelength zoom in one laboratory.
-9. A modulo-one plot of the computed crossings through `N=200`, followed by the two-phase existence mechanism.
+1. Pompeiu and Schiffer: the moving-probe problem, the disk counterexample, the Schiffer system, Williams' equivalence, and the formal Lean counterparts.
+2. Linear rigidity: the linearized spectral-coincidence test, the Bourget–Siegel obstruction on the disk, and the criticality interpretation.
+3. What if linear rigidity fails: the cylinder and sphere as subsection-level analogues where the excluded coincidence does occur.
+4. Bifurcating when it is impossible: the quotient move from one `N`-fold disk sector to a real-order cone and its half-cylinder limit.
+5. The bifurcation proof: the five-step route through the half-cylinder branch, Bessel-to-cylinder transfer, quadratic order drift, near-integer crossings, and the planar landing.
 
 The opening seven-stage geometry animation is explicitly schematic until its final boundary: it divides the actual 28-fold pattern, selects one sector, continuously folds its two radial sides into a single quotient seam, sends the cone tip to infinity, perturbs the resulting half-cylinder, and restores the cone. At integer order the motion is reversed rather than cross-faded: the seam is cut, the wiggly cone opens into one planar sector, and 28 identical sectors rotate into place. Its final wiggly outline uses the continued `N=28` boundary coefficients. The order/phase plot and nested zoom use the nonlinear branch data. The radial basis comparison is a separate fixed-`λ` Bessel dataset described below.
 

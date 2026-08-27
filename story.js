@@ -748,31 +748,7 @@
   const geometryStates = ["the field is repeated around the disk", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the rim follows the bifurcating boundary graph", "the half-cylinder branch determines a branch on finite cones", "the sectors fit exactly in the plane"];
   const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "adjacent copies open in order; each boundary profile stays on its sector"];
 
-  function drawGeometryNarrative(context, width, height, progress) {
-    const scaled = Math.max(0, Math.min(1, progress)) * 6;
-    const stage = Math.min(5, Math.floor(scaled));
-    const local = scaled - stage;
-    const outgoingOpacity = 1 - ease(local / .45);
-    const incomingOpacity = ease((local - .55) / .45);
-    const targetHalf = Math.min(118, height * .23);
-    [
-      { index: stage, opacity: outgoingOpacity },
-      { index: stage + 1, opacity: incomingOpacity },
-    ].forEach(({ index, opacity }) => {
-      if (opacity <= .001 || index >= geometryNames.length) return;
-      context.save(); context.globalAlpha *= opacity;
-      drawFrameLabel(
-        context,
-        width,
-        `${String(index + 1).padStart(2, "0")} / construction`,
-        geometryNames[index],
-        index === 6 ? "" : "the same quotient sector",
-      );
-      context.fillStyle = colors.faint; context.font = visualTheme.labelFont; context.textAlign = "center";
-      drawCenteredCaption(context, geometryCaptions[index], width * .5, height * .54 + targetHalf + 47, width - 48);
-      context.restore();
-    });
-  }
+  function drawGeometryNarrative() {}
 
   function renderGeometryMath(width, height, progress) {
     const order = select("#storyGeometryOrderFormula");
@@ -843,8 +819,10 @@
         : local < .01
           ? segment
           : Math.min(6, segment + 1);
-    select("#storyGeometryValue").textContent = geometryNames[active];
-    select("#storyGeometryState").textContent = geometryStates[active];
+    const stageValue = select("#storyGeometryValue");
+    const stageNote = select("#storyGeometryState");
+    if (stageValue) stageValue.textContent = `stage ${active + 1}`;
+    if (stageNote) stageNote.textContent = geometryCaptions[active];
     document.querySelectorAll("[data-story-stage]").forEach((button, index) => button.classList.toggle("active", index === active));
     canvas.setAttribute("aria-label", `Construction stage ${active + 1} of 7: ${geometryStates[active]}. The sector and its boundary wave remain continuous through the entire construction.`);
   }

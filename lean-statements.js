@@ -27,6 +27,14 @@
         "  (MeasurementMap Ω).Injective",
       ].join("\n"),
     }),
+    "disk-not-pompeiu": Object.freeze({
+      title: "DiskNotPompeiu",
+      source: [
+        "lemma DiskNotPompeiu (c : Plane) (r : ℝ) (hr : r > 0) :",
+        "    ¬ HasPompeiuProperty (Metric.ball c r) := by",
+        "  sorry",
+      ].join("\n"),
+    }),
     "schiffer-property": Object.freeze({
       title: "HasSchifferProperty",
       source: [

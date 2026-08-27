@@ -3,8 +3,8 @@
  *
  * The upstream tufte-css stylesheet is loaded before the application's
  * component styles.  This layer restores its page geometry after those
- * components have been styled: a 55% reading measure, a 40% margin, and
- * full-width figures for simulations and small multiples.
+ * components have been styled: a 55% reading measure, a 5% gutter, a 40%
+ * margin, and full-width figures for simulations and small multiples.
  *
  * Public layout vocabulary:
  *   main details                 prose disclosure (automatic)
@@ -61,17 +61,17 @@
   --measure-reading: 55%;
   --measure-margin: 40%;
   --measure-gutter: 5%;
-  --measure-figure: 90%;
-  --measure-reading-in-figure: 61.111%;
-  --measure-margin-in-figure: 33.333%;
-  --measure-gutter-in-figure: 5.556%;
+  --measure-figure: 100%;
+  --measure-reading-in-figure: 55%;
+  --measure-margin-in-figure: 40%;
+  --measure-gutter-in-figure: 5%;
   --measure-half-reading: 27.5%;
   --measure-note-in-reading: 50%;
   --measure-note-offset: -60%;
-  --measure-apparatus-visual: 72.5%;
-  --measure-apparatus-controls: 27.5%;
-  --measure-apparatus-visual-compact: 68%;
-  --measure-apparatus-controls-compact: 32%;
+  --measure-apparatus-visual: 55%;
+  --measure-apparatus-controls: 40%;
+  --measure-apparatus-visual-compact: 55%;
+  --measure-apparatus-controls-compact: 40%;
   --measure-mobile-note: 95%;
   --measure-mobile-note-inset: 2.5%;
   --layout-prose: var(--measure-reading);
@@ -164,7 +164,8 @@ body.tufte-site a:hover { color: var(--orange); }
 .site-toc summary i { color: var(--orange); font-family: var(--mono); font-size: var(--type-label); }
 .site-toc nav { border: 0; }
 .site-toc a,
-.site-toc a.toc-subsection {
+.site-toc a.toc-subsection,
+.site-toc a.toc-nested {
   min-height: 0;
   grid-template-columns: 2.2rem minmax(0, 1fr);
   padding: .38rem 0;
@@ -183,6 +184,7 @@ main { width: 100%; }
 :is(
   .intro,
   .story-intro,
+  .linear-rigidity,
   .borrow-flexibility,
   .geometric-escape,
   .experiment,
@@ -198,9 +200,20 @@ main { width: 100%; }
   background: var(--paper);
 }
 
-:is(.borrow-flexibility, .geometric-escape, .experiment, .modes-experiment, .phase-story, .debye-experiment, .abundance-experiment, .site-references) {
+body.tufte-site main > :is(.story-intro, .linear-rigidity, .geometric-escape, .experiment, .site-references) {
   border-top: 1px solid var(--line);
 }
+
+body.tufte-site main :is(.borrow-flexibility, .modes-experiment, .phase-story, .debye-experiment, .abundance-experiment) {
+  border-top: 0;
+}
+
+body.tufte-site main #linear-rigidity > .borrow-flexibility,
+body.tufte-site main #experiment > :is(.debye-experiment, .phase-story, .abundance-experiment, .cone-experiment, .modes-experiment) {
+  padding: 4.75rem 0 0;
+}
+
+body.tufte-site main #experiment > .modes-experiment { padding-bottom: 0; }
 
 /* Canonical Tufte type scale and text measure. */
 .intro { padding-top: 5rem; }
@@ -294,6 +307,27 @@ body.tufte-site h3 {
   padding: 0 0 2rem;
 }
 
+/* Vertical rhythm belongs to the section shell, not to whichever content
+   component happens to follow it.  This keeps chapter transitions compact
+   and prevents legacy component margins from stacking with section padding. */
+body.tufte-site main > .intro { padding-bottom: 2rem; }
+body.tufte-site main > .intro + .story-intro { padding-top: 2.75rem; }
+body.tufte-site main :is(.story-heading, .experiment-header) + :is(
+  .intro-copy,
+  .intro-copy-wide,
+  .borrow-lead,
+  .geometry-lead,
+  .proof-strategy-lead,
+  .half-cylinder-introduction,
+  .experiment-story-lead,
+  .cone-lead,
+  .modes-lead,
+  .phase-story-lead,
+  .debye-lead,
+  .abundance-lead,
+  .proof-strategy-subheading
+) { margin-top: 0; }
+
 .experiment-header > div:first-child { display: contents; }
 .story-heading h2, .experiment-header h2 { max-width: none; margin-top: 0; }
 .section-number,
@@ -364,9 +398,6 @@ body.tufte-site main .phase-story-example-note {
 
 .intro-copy { color: var(--ink); }
 .intro-copy h3 { max-width: none; }
-.siegel-theorem { width: 100%; }
-.siegel-theorem h4 { font-size: 1.2rem; font-style: italic; font-weight: 400; }
-.siegel-theorem p { font-size: 1.05rem; }
 .intro-chapter-heading { margin-top: 6rem; padding-top: 3rem; }
 
 .story-intro .intro-lead,
@@ -401,7 +432,7 @@ body.tufte-site main .phase-story-example-note {
 }
 
 .story-intro > .math-statement,
-body.tufte-site main > section > .math-statement,
+body.tufte-site main section > .math-statement,
 .statement-sequence > .math-statement {
   width: var(--measure-reading);
   max-width: var(--measure-reading);
@@ -466,6 +497,9 @@ body.tufte-site main .formal-statement-pair > .math-statement { margin: 0; }
   max-width: var(--measure-figure);
   margin-right: 0;
   margin-left: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
@@ -488,15 +522,14 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
   overflow: visible;
   background: transparent;
   border: 0;
-  border-top: 1px solid var(--ink);
+  border-top: 0;
 }
 .measurement-caption,
 .measurement-panel { min-width: 0; }
 .measurement-canvas {
   width: 100%;
   height: auto;
-  border: 1px solid var(--line);
-  border-top: 0;
+  border: 0;
 }
 .line-probe-panel .measurement-canvas { aspect-ratio: 4 / 3; }
 .pompeiu-panel .measurement-canvas { aspect-ratio: 1 / 1; }
@@ -512,6 +545,9 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
 
 body.tufte-site main .marginnote.intro-shapes {
   display: block;
+  width: 72.727%;
+  max-width: 72.727%;
+  margin-right: -81.818%;
   margin-top: 0;
   padding-top: 0;
   border: 0;
@@ -526,10 +562,7 @@ body.tufte-site main .marginnote.intro-shapes {
 .intro-shapes-aside,
 .intro-shapes-objects { display: contents; }
 .intro-shapes-aside-copy { display: none; }
-.intro-shape-computer { order: 3; }
-.intro-shape-bifurcation { order: 4; }
-.intro-shape-object:first-child { order: 1; }
-.intro-shape-object:last-child { order: 2; }
+.intro-shape { order: initial; }
 .intro-shape {
   min-width: 0;
   display: flex;
@@ -548,6 +581,7 @@ body.tufte-site main .marginnote.intro-shapes {
   margin: 0 0 .4rem;
   overflow: hidden;
 }
+.intro-shape > svg { display: none; }
 .intro-shape-object .intro-shape-media {
   width: 100%;
   margin-bottom: .4rem;
@@ -631,7 +665,7 @@ body.tufte-site main .shape-variation-figure > figcaption {
   margin: 0;
   padding: 1rem 0 0;
   color: var(--muted);
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 
 .membrane-figure {
@@ -647,7 +681,7 @@ body.tufte-site main .shape-variation-figure > figcaption {
   display: block;
   margin-top: 4rem;
   border: 0;
-  border-top: 1px solid var(--ink);
+  border-top: 0;
 }
 .chladni-photo-panel img {
   width: 100%;
@@ -658,8 +692,7 @@ body.tufte-site main .shape-variation-figure > figcaption {
   flex: none;
   object-fit: cover;
   object-position: 0 47%;
-  border: 1px solid var(--line);
-  border-top: 0;
+  border: 0;
 }
 .chladni-photo-panel figcaption {
   float: none;
@@ -673,12 +706,12 @@ body.tufte-site main .shape-variation-figure > figcaption {
 }
 .schiffer-mode-panel {
   width: 100%;
-  border-top: 1px solid var(--ink);
+  border-top: 0;
 }
 .schiffer-mode-heading { min-height: 0; padding: .85rem 0; border: 0; }
 .schiffer-mode-heading h3 { margin-bottom: 0; }
 .schiffer-mode-panel canvas { background: var(--paper); border: 0; }
-.schiffer-mode-controls { border: 0; border-top: 1px solid var(--line); }
+.schiffer-mode-controls { border: 0; border-top: 0; }
 .membrane-model-note { padding: .75rem 0 0; }
 .chladni-photo-panel figcaption,
 .membrane-model-note { font-style: italic; }
@@ -828,6 +861,22 @@ body.tufte-site main .marginnote > strong:first-child {
 .intro-proof-body, .proof-argument { width: var(--measure-reading-in-figure); max-width: var(--measure-reading-in-figure); margin-left: 0; }
 .proof-details { border-color: var(--line); }
 .proof-details > summary { font-family: var(--serif); font-variant: small-caps; text-transform: none; }
+body.tufte-site main details.optional-digression > summary > span {
+  display: grid;
+  gap: .2rem;
+  font-style: italic;
+  font-variant: normal;
+}
+body.tufte-site main details.optional-digression > summary small {
+  display: block;
+  color: var(--orange);
+  font-family: var(--serif);
+  font-size: var(--type-label) !important;
+  font-style: normal;
+  font-variant: small-caps;
+  letter-spacing: .055em;
+  line-height: 1.2;
+}
 body.tufte-site main .proof-details > :not(summary) {
   box-sizing: border-box;
   width: var(--measure-reading-in-figure);
@@ -892,6 +941,7 @@ body.tufte-site main details.lean-statement > .lean-statement-body {
   display: grid;
   grid-template-columns: minmax(0, var(--measure-apparatus-visual)) minmax(15rem, var(--measure-apparatus-controls));
   grid-template-areas: "visual controls";
+  column-gap: var(--measure-gutter);
   align-items: start;
   margin-top: 3rem;
   background: transparent;
@@ -902,12 +952,12 @@ body.tufte-site main details.lean-statement > .lean-statement-body {
 .interactive-plate > aside {
   grid-area: controls;
   min-width: 0;
-  padding: 1rem 0 0 1.5rem;
+  padding: 0 0 0 1.5rem;
   color: var(--ink);
   background: transparent !important;
-  border-top: 1px solid var(--ink);
+  border-top: 0;
   border-right: 0;
-  border-left: 1px solid var(--line-light);
+  border-left: 0;
 }
 
 .interactive-plate > section {
@@ -975,6 +1025,62 @@ body.tufte-site main .play-button {
   border-left: 0;
 }
 
+body.tufte-site main :is(
+  .control-heading,
+  .control-block,
+  .modes-control-block,
+  .debye-control-block,
+  .collar-field-control-block,
+  .solver-readout div,
+  .modes-status div,
+  .phase-story-readout div,
+  .collar-field-readout div,
+  .debye-status div,
+  .abundance-readout div,
+  .parameter-pair,
+  .crossing-card,
+  .crossing-card > div,
+  .fixed-zoom-pair,
+  .problem-map,
+  .phase-agreement
+) {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+}
+
+body.tufte-site main :is(
+  .canvas-toolbar,
+  .geometry-toolbar,
+  .modes-plot-toolbar,
+  .debye-plot-toolbar,
+  .abundance-toolbar,
+  .phase-family-toolbar,
+  .axis-footer,
+  .phase-family > footer
+) {
+  padding-right: 0;
+  padding-left: 0;
+  background: transparent !important;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+}
+
+body.tufte-site main .control-heading-reset {
+  justify-content: flex-end;
+}
+
+body.tufte-site main .shape-variation-figure {
+  grid-template-columns: minmax(0, var(--measure-reading)) minmax(15rem, var(--measure-margin));
+  grid-template-areas:
+    "heading heading"
+    "visual controls"
+    "caption caption";
+  column-gap: var(--measure-gutter);
+}
+
 /* The continuation was historically hidden, so its legacy dark-theme ink
    never passed through the paper normalization. Treat its explanatory
    pieces as the same prose, apparatus and caption roles used elsewhere. */
@@ -1036,7 +1142,48 @@ body.tufte-site main .cone-note p {
 .three-help { font-size: var(--type-label); }
 .geometry-toolbar > span:last-child,
 .geometry-stages button small { display: none; }
-.geometry-stages button { grid-template-rows: auto; }
+.geometry-stages {
+  margin-top: 0;
+  border-top: 0;
+  overflow: hidden;
+}
+.geometry-stages button {
+  box-sizing: border-box;
+  grid-template-rows: auto;
+  min-width: 0;
+  padding: .58rem 0;
+  overflow: hidden;
+  border-bottom: 0;
+}
+.geometry-stages button :is(strong, small) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.geometry-stages button + button { margin-top: .15rem; }
+.geometry-stages button.active strong { text-decoration: underline; text-decoration-thickness: .05em; text-underline-offset: .18em; }
+.geometry-stage-note {
+  margin: 1rem 0 1.15rem;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: var(--type-caption) !important;
+  font-style: italic;
+  line-height: var(--leading-caption);
+}
+.geometry-scrub output { display: none; }
+
+body.tufte-site main .geometry-laboratory {
+  grid-template-columns: minmax(0, var(--measure-reading)) minmax(15rem, var(--measure-margin));
+  column-gap: var(--measure-gutter);
+}
+body.tufte-site main .geometry-laboratory > aside { padding: 0; }
+body.tufte-site main .geometry-laboratory > section { align-self: start; }
+body.tufte-site main .geometry-canvas-panel {
+  grid-template-rows: clamp(340px, 36vw, 560px);
+}
+body.tufte-site main .geometry-canvas-wrap {
+  min-height: 0;
+  overflow: hidden;
+}
 
 /* The compact one-parameter plots use the same orientation, but retain a
    visible gutter so their readouts read as annotations rather than a panel. */
@@ -1160,7 +1307,7 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
 .modes-controls :is(.problem-map, .phase-law) { display: none; }
 .modes-controls .phase-track { margin-top: 1.25rem; }
 .modes-plot-panel { min-height: 0; grid-template-rows: 52px clamp(400px, 48vw, 680px) 30px; }
-.geometry-canvas-panel { min-height: 0; grid-template-rows: 48px clamp(360px, 48vw, 650px) 30px; }
+.geometry-canvas-panel { min-height: 0; }
 .abundance-plot-panel { min-height: 0; grid-template-rows: 52px auto clamp(380px, 46vw, 620px) 30px; }
 .abundance-laboratory { min-height: 0; }
 .abundance-readout-inline {
@@ -1267,10 +1414,9 @@ body.tufte-site main .paper-copy p:not(.eyebrow) {
 body.tufte-site main .paper-copy .tex-display {
   max-width: 100%;
   margin: 1.15rem 0;
-  padding: .35rem 0 .35rem 1rem;
+  padding: .35rem 0;
   background: transparent;
   border: 0;
-  border-left: 1px solid var(--orange);
 }
 
 /* Leads are still exposition, but use the main reading voice. */
@@ -1291,11 +1437,10 @@ body.tufte-site main .abundance-lead.paper-copy p + p { margin-top: 1.5rem; }
 body.tufte-site main .derivation-sequence { display: block; }
 body.tufte-site main .derivation-sequence article {
   min-height: 0;
-  padding: 2rem 0;
+  padding: 2rem 0 0;
   border: 0;
-  border-top: 1px solid var(--line);
 }
-body.tufte-site main .derivation-sequence article:last-child { border-bottom: 1px solid var(--line); }
+body.tufte-site main .derivation-sequence article + article { margin-top: 1.5rem; }
 body.tufte-site main .derivation-sequence article > span {
   display: block;
   color: var(--orange);
@@ -1307,12 +1452,10 @@ body.tufte-site main .derivation-sequence article > span {
 }
 body.tufte-site main .derivation-sequence .phase-tex {
   margin: 1.15rem 0;
-  padding: .35rem 0 .35rem 1rem;
+  padding: .35rem 0;
   background: transparent;
   border: 0;
-  border-left: 1px solid var(--line);
 }
-body.tufte-site main .derivation-sequence .boxed-equation { border-left-color: var(--orange); }
 
 /* A small multiple earns the wide measure only when juxtaposition carries
    information. It gets hairlines, never dashboard card chrome. */
@@ -1342,11 +1485,11 @@ body.tufte-site main .cylinder-seed-copy > p:last-child {
   line-height: var(--leading-body);
 }
 body.tufte-site main .cylinder-mode-pair {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 0;
+  border-bottom: 0;
 }
-body.tufte-site main .cylinder-mode-pair article { padding: 1.75rem 2rem; }
-body.tufte-site main .cylinder-mode-pair article + article { border-left: 1px solid var(--line); }
+body.tufte-site main .cylinder-mode-pair article { padding: 1.25rem 1.5rem 1.25rem 0; }
+body.tufte-site main .cylinder-mode-pair article + article { border-left: 0; }
 body.tufte-site main .cylinder-mode-pair .tex-display { min-height: 8rem; color: var(--ink); }
 body.tufte-site main .cylinder-mode-pair p {
   color: var(--muted);
@@ -1359,7 +1502,7 @@ body.tufte-site main :is(.cylinder-kernel-bridge, .cylinder-journal-note) {
   padding: 1.75rem 0;
   background: transparent;
   border-top: 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
 }
 body.tufte-site main :is(.cylinder-kernel-bridge, .cylinder-journal-note) > :first-child {
   display: block;
@@ -1381,32 +1524,15 @@ body.tufte-site main :is(.cylinder-kernel-bridge, .cylinder-journal-note) p {
 body.tufte-site main .motion-split {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 0;
+  border-bottom: 0;
 }
 body.tufte-site main .motion-split article {
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem 1.25rem 0;
   border: 0;
 }
-body.tufte-site main .motion-split article + article { border-left: 1px solid var(--line); }
+body.tufte-site main .motion-split article + article { border-left: 0; }
 body.tufte-site main .motion-split p {
-  color: var(--muted);
-  font-size: var(--type-caption) !important;
-  line-height: var(--leading-caption);
-}
-
-body.tufte-site main .debye-formula-grid {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-body.tufte-site main .debye-formula-grid article {
-  min-height: 0;
-  padding: 2rem;
-  border: 0;
-}
-body.tufte-site main .debye-formula-grid article + article { border-left: 1px solid var(--line); }
-body.tufte-site main .debye-formula-grid h3 { color: var(--ink); }
-body.tufte-site main .debye-formula-grid .formula-note {
   color: var(--muted);
   font-size: var(--type-caption) !important;
   line-height: var(--leading-caption);
@@ -1451,7 +1577,7 @@ body.tufte-site main .editorial-conclusion {
   display: block;
   min-height: 0;
   padding: 1.5rem 0 0;
-  border-top: 1px solid var(--ink);
+  border-top: 0;
 }
 body.tufte-site main .editorial-conclusion article {
   min-height: 0;
@@ -1461,7 +1587,7 @@ body.tufte-site main .editorial-conclusion article {
 body.tufte-site main .editorial-conclusion article + article {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 body.tufte-site main .editorial-conclusion article > span,
 body.tufte-site main .editorial-conclusion > span:first-child {
@@ -1618,6 +1744,11 @@ body.tufte-site main :is(
 body.tufte-site main .measurement-value-line strong {
   font-size: var(--type-control-value) !important;
 }
+body.tufte-site main .interactive-plate .range-scale,
+body.tufte-site main .interactive-plate .range-scale > span {
+  min-width: 0;
+  overflow: hidden;
+}
 body.tufte-site main .interactive-plate :is(
   header,
   footer,
@@ -1677,17 +1808,49 @@ body.tufte-site main :is(
   font-family: var(--mono);
   font-size: var(--type-control-value) !important;
 }
+
+body.tufte-site main :is(
+  .measurement-panel,
+  .shape-variation-controls,
+  .interactive-plate > aside
+) {
+  overflow-x: clip;
+}
+
 body.tufte-site main .math-statement-body > .tex-display {
   color: var(--ink) !important;
   background: transparent !important;
   border-right: 0;
-  border-left: 1px solid var(--line) !important;
+  border-left: 0 !important;
 }
 body.tufte-site main .math-statement .katex,
 body.tufte-site main .math-statement .katex * { color: inherit !important; }
 body.tufte-site main .tex-display { --math-scale: 1; --math-size: var(--type-math); }
 body.tufte-site main .tex-display .katex { font-size: var(--math-size) !important; }
 body.tufte-site main .tex-display.math-fitted { overflow-x: hidden; }
+
+body.tufte-site main .tex-display {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+body.tufte-site main :is(
+  .theorem-expansion,
+  .important-equation,
+  .boxed-equation,
+  .proof-argument .tex-display,
+  .cylinder-proof-grid .tex-display,
+  .collar-limit-argument .tex-display,
+  .uniform-drop-theorem .tex-display,
+  .real-order-theorem .tex-display,
+  .near-integer-theorem .tex-display,
+  .abundance-conclusion .tex-display
+) {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
 
 /* References are bibliography, not a card list. */
 .site-references h2 { width: var(--measure-reading); margin-top: 0; font-size: var(--type-section); font-style: italic; }
@@ -1703,7 +1866,7 @@ body > footer {
   padding: 2rem 0 3rem;
   color: var(--muted);
   background: var(--paper);
-  border-top: 1px solid var(--line);
+  border-top: 0;
   font-family: var(--serif);
   font-size: var(--type-label);
   font-variant: small-caps;
@@ -1718,16 +1881,20 @@ body > footer {
   .site-toc summary { padding: .55rem 0; }
   .story-intro .intro-lead { grid-template-columns: 1fr; }
   .story-intro .intro-lead > * { width: 100%; }
-  .interactive-plate {
+  body.tufte-site main .interactive-plate {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "visual" "controls";
     column-gap: 0;
+  }
+  body.tufte-site main .interactive-plate > :is(section, aside) {
+    width: 100%;
+    max-width: 100%;
   }
   .interactive-plate > aside,
   .collar-field-controls {
     margin: 0;
     padding: 1.4rem 0 0;
-    border-top: 1px solid var(--line);
+    border-top: 0;
     border-left: 0;
   }
   body.tufte-site main .cone-view-notes { width: 100%; max-width: 100%; grid-template-columns: minmax(0, 1fr); }
@@ -1740,6 +1907,9 @@ body > footer {
   }
   .debye-plot-panel {
     grid-template-rows: 52px clamp(500px, 130vw, 570px) 30px;
+  }
+  body.tufte-site main .geometry-canvas-panel {
+    grid-template-rows: clamp(300px, 88vw, 520px);
   }
   .collar-field-visual { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -1765,10 +1935,11 @@ body > footer {
   .brand span { max-width: 15rem; }
   .brand svg { display: none; }
 
-  :is(
-    .intro,
-    .story-intro,
-    .borrow-flexibility,
+	  :is(
+	    .intro,
+	    .story-intro,
+	    .linear-rigidity,
+	    .borrow-flexibility,
     .geometric-escape,
     .experiment,
     .modes-experiment,
@@ -1814,11 +1985,11 @@ body > footer {
     width: 100%;
     max-width: 100%;
   }
-  body.tufte-site main :is(.cylinder-mode-pair, .motion-split, .debye-formula-grid) {
+  body.tufte-site main :is(.cylinder-mode-pair, .motion-split) {
     grid-template-columns: minmax(0, 1fr);
   }
-  body.tufte-site main :is(.cylinder-mode-pair, .motion-split, .debye-formula-grid) article + article {
-    border-top: 1px solid var(--line);
+  body.tufte-site main :is(.cylinder-mode-pair, .motion-split) article + article {
+    border-top: 0;
     border-left: 0;
   }
   body.tufte-site main :is(.modes-lead, .abundance-lead) { display: block; }
@@ -1867,7 +2038,7 @@ body > footer {
   }
   input.margin-toggle:checked + .marginnote.intro-shapes { display: block; }
 
-  .interactive-plate > aside { border-top: 1px solid var(--line); border-left: 0; }
+  .interactive-plate > aside { border-top: 0; border-left: 0; }
   .phase-story-lab > aside,
   .debye-controls { margin: 0; padding: 1.4rem 0 0; }
   .collar-field-visual { grid-template-columns: minmax(0, 1fr); }
@@ -1906,6 +2077,56 @@ body > footer {
     margin-top: .45rem;
     text-align: right;
   }
+}
+
+/* Final chrome reset. Statement and Lean frames remain semantic; figures,
+   small multiples and applets rely on measure, captions and marginal controls
+   rather than enclosing rails. */
+body.tufte-site main :is(.figure-band, .small-multiples, .interactive-plate) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.tufte-site main :is(
+  .interactive-plate > aside,
+  .controls,
+  .geometry-controls,
+  .modes-controls,
+  .debye-controls,
+  .collar-field-controls,
+  .phase-story-lab > aside,
+  .canvas-toolbar,
+  .geometry-toolbar,
+  .modes-plot-toolbar,
+  .debye-plot-toolbar,
+  .abundance-toolbar,
+  .axis-footer,
+  .phase-family-toolbar,
+  .phase-family > footer,
+  .abundance-readout-inline,
+  .candidate-stamp,
+  .cone-view-notes,
+  .cone-note,
+  .collar-field-panel,
+  .collar-field-panel > header,
+  .collar-field-panel > footer
+) {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.tufte-site main :is(
+  .measurement-panel,
+  .measurement-canvas,
+  .chladni-photo-panel,
+  .chladni-photo-panel img,
+  .schiffer-mode-panel,
+  .schiffer-mode-controls,
+  .shape-variation-stage,
+  .variation-stage-caption
+) {
+  border: 0 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

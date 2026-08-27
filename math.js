@@ -102,8 +102,9 @@
           - parseFloat(style.paddingRight || 0);
         if (available <= 1) return;
         const required = Math.max(...contents.map((content) => content.scrollWidth));
+        const safety = Math.min(14, Math.max(4, available * .03));
         const scale = required > available + 1
-          ? Math.max(.56, Math.min(1, available / required))
+          ? Math.max(.52, Math.min(1, (available - safety) / required))
           : 1;
         wrapper.style.setProperty("--math-scale", scale.toFixed(4));
         wrapper.style.setProperty("--math-size", `${baseMathSize * scale}px`);

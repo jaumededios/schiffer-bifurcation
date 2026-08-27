@@ -15,6 +15,8 @@
     const page = document.documentElement.getBoundingClientRect();
     const rootStyle = getComputedStyle(document.documentElement);
     const reading = parseFloat(rootStyle.getPropertyValue("--measure-reading")) / 100;
+    const margin = parseFloat(rootStyle.getPropertyValue("--measure-margin")) / 100;
+    const gutter = parseFloat(rootStyle.getPropertyValue("--measure-gutter")) / 100;
     const figure = parseFloat(rootStyle.getPropertyValue("--measure-figure")) / 100;
     const readingInFigure = parseFloat(rootStyle.getPropertyValue("--measure-reading-in-figure")) / 100;
     const typeProof = parseFloat(rootStyle.getPropertyValue("--type-proof")) * parseFloat(rootStyle.fontSize);
@@ -50,6 +52,7 @@
 
     const expectedLeanStatements = [
       "pompeiu-property",
+      "disk-not-pompeiu",
       "schiffer-property",
       "schiffer-pompeiu-equivalence",
       "schiffer-star-shaped",
@@ -62,27 +65,42 @@
 
     const expectedSectionOrder = [
       "introduction",
-      "borrow-flexibility",
+      "linear-rigidity",
       "geometric-escape",
       "experiment",
+      "references",
+    ];
+    const actualSectionOrder = Array.from(document.querySelectorAll("main > section[id]"), (section) => section.id);
+    if (actualSectionOrder.length !== expectedSectionOrder.length
+        || expectedSectionOrder.some((id, index) => actualSectionOrder[index] !== id)) {
+      errors.push("top-level sections do not follow source reading order");
+    }
+
+    if (!document.querySelector("#linear-rigidity > #borrow-flexibility")) {
+      errors.push("cylinder and sphere material is not nested inside Section II");
+    }
+    if (document.querySelector("main > #borrow-flexibility")) {
+      errors.push("borrowed-flexibility material is still a top-level section");
+    }
+    const expectedProofSectionOrder = [
       "debye-experiment",
       "phase-story",
       "abundance-experiment",
       "cone-experiment",
       "modes-experiment",
-      "references",
     ];
-    const actualSectionOrder = Array.from(document.querySelectorAll("main > section[id]"), (section) => section.id);
-    if (expectedSectionOrder.some((id, index) => actualSectionOrder[index] !== id)) {
-      errors.push("top-level sections do not follow source reading order");
+    const actualProofSectionOrder = Array.from(document.querySelectorAll("#experiment > section[id]"), (section) => section.id);
+    if (actualProofSectionOrder.length !== expectedProofSectionOrder.length
+        || expectedProofSectionOrder.some((id, index) => actualProofSectionOrder[index] !== id)) {
+      errors.push("Section IV proof subsections do not follow source reading order");
     }
 
     const expectedProofContents = [
-      ["5.1", "#half-cylinder-strategy"],
-      ["5.2", "#debye-experiment"],
-      ["5.3", "#phase-story"],
-      ["5.4", "#abundance-experiment"],
-      ["5.5", "#cone-experiment"],
+      ["4.1", "#half-cylinder-strategy"],
+      ["4.2", "#debye-experiment"],
+      ["4.3", "#phase-story"],
+      ["4.4", "#abundance-experiment"],
+      ["4.5", "#cone-experiment"],
     ];
     const actualProofContents = Array.from(document.querySelectorAll(".site-toc .toc-subsection"), (link) => [
       link.querySelector("b")?.textContent.trim(),
@@ -95,7 +113,31 @@
       errors.push("proof contents do not match the authored dependency order");
     }
 
-    const coneSection = document.querySelector("#cone-experiment");
+    document.querySelectorAll("details.optional-digression").forEach((details, index) => {
+      const summary = details.querySelector(":scope > summary");
+      const span = summary?.querySelector(":scope > span");
+      const label = span?.querySelector(":scope > small");
+      if (!summary || !span || label?.textContent.trim() !== "Optional digression") {
+        errors.push(`optional digression ${index + 1} does not use the shared summary grammar`);
+      }
+    });
+    const optionalTitles = Array.from(document.querySelectorAll("details.optional-digression > summary > span"), (span) => {
+      const label = span.querySelector(":scope > small");
+      return Array.from(span.childNodes)
+        .filter((node) => node !== label)
+        .map((node) => node.textContent)
+        .join("")
+        .trim();
+    });
+    [
+      "The Schiffer property implies failure of the Pompeiu property",
+      "Failure of the Pompeiu property implies the Schiffer property",
+      "Berenstein conjecture: What if we switch the Neumann and Dirichlet conditions?",
+    ].forEach((title) => {
+      if (!optionalTitles.includes(title)) errors.push(`missing optional digression: ${title}`);
+    });
+
+    const coneSection = document.querySelector("#experiment > #cone-experiment");
     if (!coneSection?.getClientRects().length) errors.push("the cone continuation is not visible");
     if (!coneSection?.querySelector(":scope > .abundance-conclusion")) {
       errors.push("the landing argument is not attached to the continuation section");
@@ -119,7 +161,7 @@
       if (!index) return false;
       return !(halfCylinderSequence[index - 1].compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
     })) {
-      errors.push("Subsection 5.1 does not follow theorem, expansion, applet order");
+      errors.push("Subsection 4.1 does not follow theorem, expansion, applet order");
     }
 
     document.querySelectorAll(marginSelector).forEach((aside, index) => {
@@ -259,6 +301,15 @@
       if (multiple.classList.contains("figure-band")) errors.push(`small multiple ${index + 1} also claims the figure role`);
     });
 
+    document.querySelectorAll("body.tufte-site main :is(.figure-band, .small-multiples, .interactive-plate)").forEach((element, index) => {
+      if (!element.getClientRects().length) return;
+      const style = getComputedStyle(element);
+      if ([style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth]
+        .some((value) => parseFloat(value) > 0)) {
+        errors.push(`visual role ${index + 1} regained an outer card border`);
+      }
+    });
+
     document.querySelectorAll("body.tufte-site main .data-table").forEach((table, index) => {
       if (!table.querySelector("table")) errors.push(`data table ${index + 1} has no table element`);
       const box = table.getBoundingClientRect();
@@ -327,6 +378,28 @@
         .some((value) => parseFloat(value) > 0)) {
         errors.push("comparison gallery has plate rules");
       }
+      if (!narrow) {
+        const gallery = comparisonCells[0].closest(".intro-shapes");
+        const galleryBox = gallery.getBoundingClientRect();
+        const copy = document.querySelector(".construction-flow");
+        const copyBox = copy?.getBoundingClientRect();
+        const sectionBox = gallery.closest("main > section").getBoundingClientRect();
+        const expectedGalleryWidth = sectionBox.width * margin;
+        const expectedCopyWidth = sectionBox.width * reading;
+        const expectedGap = sectionBox.width * gutter;
+        if (copyBox && Math.abs(copyBox.width - expectedCopyWidth) > 2) {
+          errors.push("construction prose no longer keeps the reading measure");
+        }
+        if (Math.abs(galleryBox.width - expectedGalleryWidth) > 2) {
+          errors.push("comparison gallery does not occupy the canonical margin measure");
+        }
+        if (copyBox && galleryBox.left < copyBox.right + expectedGap - 2) {
+          errors.push("comparison gallery intrudes into the construction prose measure");
+        }
+        if (galleryBox.right > sectionBox.right + 1) {
+          errors.push("comparison gallery leaves the canonical page measure");
+        }
+      }
     }
 
     document.querySelectorAll("body.tufte-site main .tex-display").forEach((display, index) => {
@@ -368,11 +441,37 @@
       }
       const controlBox = controls.getBoundingClientRect();
       const visualBox = visual.getBoundingClientRect();
+      const plateBox = plate.getBoundingClientRect();
+      [controls, visual].forEach((child, childIndex) => {
+        const childStyle = getComputedStyle(child);
+        if ([childStyle.borderTopWidth, childStyle.borderRightWidth, childStyle.borderBottomWidth, childStyle.borderLeftWidth]
+          .some((value) => parseFloat(value) > 0)) {
+          errors.push(`interactive plate ${index + 1} ${childIndex ? "visual" : "controls"} regained card rules`);
+        }
+      });
       if (narrow) {
         if (controlBox.top < visualBox.bottom - 1) errors.push(`interactive plate ${index + 1} controls are not below its visual`);
+        if (Math.abs(visualBox.width - plateBox.width) > 2) {
+          errors.push(`interactive plate ${index + 1} visual does not fill the narrow measure`);
+        }
+        if (Math.abs(controlBox.width - plateBox.width) > 2) {
+          errors.push(`interactive plate ${index + 1} controls do not fill the narrow measure`);
+        }
       } else {
         if (controlBox.left < visualBox.right - 1) errors.push(`interactive plate ${index + 1} controls are not to the right of its visual`);
         if (Math.abs(controlBox.top - visualBox.top) > 1) errors.push(`interactive plate ${index + 1} control and visual tops do not align`);
+        const expectedVisualWidth = plateBox.width * reading;
+        const expectedControlWidth = plateBox.width * margin;
+        const expectedGap = plateBox.width * gutter;
+        if (Math.abs(visualBox.width - expectedVisualWidth) > 2) {
+          errors.push(`interactive plate ${index + 1} visual is not on the reading measure`);
+        }
+        if (Math.abs(controlBox.width - expectedControlWidth) > 2) {
+          errors.push(`interactive plate ${index + 1} controls are not on the margin measure`);
+        }
+        if (Math.abs(controlBox.left - (visualBox.right + expectedGap)) > 2) {
+          errors.push(`interactive plate ${index + 1} does not preserve the reading-gutter-margin rhythm`);
+        }
       }
 
       visual.querySelectorAll(":scope > article > header").forEach((header, panelIndex) => {
