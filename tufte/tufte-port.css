@@ -355,6 +355,15 @@ body.tufte-site h3 {
   line-height: 1.45 !important;
 }
 
+/* Displayed mathematics in Tufte CSS is part of the text block, not a
+   coloured application card. */
+.schiffer-intro-system {
+  margin: 1.5rem 0;
+  padding: .5rem 0;
+  background: transparent;
+  border: 0;
+}
+
 /* Full-width figures are the visual spine of the article. */
 figure.fullwidth,
 :is(
@@ -487,25 +496,42 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
 }
 
 .membrane-figure {
-  clear: both;
-  display: grid;
-  grid-template-columns: 55% 40%;
-  gap: 5%;
-  align-items: start;
+  clear: none;
+  display: block;
+  width: var(--tufte-text);
+  max-width: var(--tufte-text);
+  margin: 4rem 0;
   background: transparent;
   border: 0;
 }
 .chladni-photo-panel {
-  grid-column: 2;
-  grid-row: 1;
+  display: block;
+  margin-top: 4rem;
   border: 0;
   border-top: 1px solid var(--ink);
 }
-.chladni-photo-panel img { max-height: none; border: 1px solid var(--line); border-top: 0; }
-.chladni-photo-panel > p { padding: .75rem 0 0; }
+.chladni-photo-panel img {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  flex: none;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-top: 0;
+}
+.chladni-photo-panel figcaption {
+  float: none;
+  clear: none;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: .65rem 0 0;
+  font-size: 1rem !important;
+  line-height: 1.35 !important;
+}
 .schiffer-mode-panel {
-  grid-column: 1;
-  grid-row: 1;
+  width: 100%;
   border-top: 1px solid var(--ink);
 }
 .schiffer-mode-heading { min-height: 0; padding: .85rem 0; border: 0; }
@@ -513,8 +539,11 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
 .schiffer-mode-panel canvas { border: 1px solid var(--line); }
 .schiffer-mode-controls { border-right: 1px solid var(--line); border-left: 1px solid var(--line); }
 .membrane-model-note { padding: .75rem 0 0; }
-.chladni-photo-panel > p,
+.chladni-photo-panel figcaption,
 .membrane-model-note { font-style: italic; }
+
+.phase-derivation-grid,
+.motion-split { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 /* Tufte's small-multiple logic replaces dashboard cards. */
 .world-cards {
@@ -811,9 +840,12 @@ body > footer {
 
 .tex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 
-@media (max-width: 1000px) {
+@media (max-width: 1350px) {
   .status { display: none; }
   .topbar { grid-template-columns: 1fr auto; }
+}
+
+@media (max-width: 1000px) {
   .site-toc { position: relative; top: auto; right: auto; width: 100%; margin: 1rem 0 0; }
   .site-toc summary { padding: .55rem 0; }
   .story-intro .intro-lead { grid-template-columns: 1fr; }
@@ -896,9 +928,17 @@ body > footer {
   .intro-shape-object + .intro-shape-object { margin-top: 0; }
   .intro-shapes-examples { grid-column: 1; grid-row: 3; margin-top: 0; }
   .intro-shapes-credit { grid-column: 1; grid-row: 4; }
-  .membrane-figure { grid-template-columns: 1fr; }
-  .schiffer-mode-panel { grid-column: 1; grid-row: 1; }
-  .chladni-photo-panel { grid-column: 1; grid-row: 2; margin-top: 2rem; }
+  .membrane-figure { width: 100%; max-width: 100%; }
+  .chladni-photo-panel.marginnote { display: none; }
+  #chladni-photo-note:checked + .chladni-photo-panel {
+    display: block;
+    float: none;
+    clear: both;
+    left: 0;
+    width: 95%;
+    max-width: 95%;
+    margin: 1rem 2.5%;
+  }
 
   :is(.intro-theorem, .cylinder-theorem, .uniform-drop-theorem, .near-integer-theorem) { grid-template-columns: 1fr; }
   .intro-theorem > :first-child,
