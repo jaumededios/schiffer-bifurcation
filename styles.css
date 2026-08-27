@@ -577,6 +577,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .collar-trig-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 18px; }
 .collar-trig-switch button { padding: 10px; color: rgba(241,238,229,.48); border: 1px solid var(--line-light); background: transparent; cursor: pointer; font: 11px var(--mono); text-transform: uppercase; }
 .collar-trig-switch button.active { color: var(--paper); border-color: var(--teal); background: rgba(77,162,163,.13); }
+.collar-trig-switch button:disabled { opacity: .36; cursor: not-allowed; }
 .collar-field-readout { margin-top: auto; padding-top: 18px; }
 .collar-field-readout div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-light); }
 .collar-field-readout span { color: rgba(241,238,229,.38); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .055em; }
@@ -584,7 +585,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .collar-field-panel { min-width: 0; display: grid; grid-template-rows: 65px minmax(430px,1fr) 38px; border-right: 1px solid var(--line-light); }
 .collar-field-panel:nth-of-type(3) { border-right: 0; }
 .collar-field-panel > header { min-width: 0; padding: 15px 17px; border-bottom: 1px solid var(--line-light); }
-.collar-field-panel > header span { display: block; margin-bottom: 8px; color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .065em; }
+.collar-field-panel > header > span { display: block; margin-bottom: 8px; color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .065em; }
 .collar-field-panel > header strong { display: block; overflow: hidden; color: rgba(241,238,229,.78); font: 11px var(--mono); font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
 .collar-field-canvas-wrap { min-height: 0; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 48%,#20353b 0,#101b20 74%); }
 .collar-field-canvas-wrap canvas { display: block; width: 100%; height: 100%; }

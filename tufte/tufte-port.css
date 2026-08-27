@@ -970,12 +970,12 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
   min-width: 0;
   max-width: 100%;
 }
-.collar-field-panel { grid-template-rows: 48px clamp(260px, 28vw, 390px) 28px; border: 0; }
+.collar-field-laboratory .collar-field-visual > .collar-field-panel { grid-template-rows: 48px clamp(260px, 28vw, 390px) 28px; border: 0; }
 .collar-field-panel + .collar-field-panel { border-left: 1px solid var(--line); }
 .collar-field-panel > header { padding: .85rem 1rem; border-bottom: 1px solid var(--line); }
 .collar-field-panel > header > span {
   display: block;
-  margin-bottom: .35rem;
+  margin-bottom: 0;
   color: var(--orange);
   font-family: var(--mono);
   font-size: var(--type-label);
@@ -983,7 +983,7 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
   text-transform: uppercase;
 }
 .collar-field-panel > header > strong {
-  display: block;
+  display: none;
   overflow: hidden;
   color: var(--ink);
   font: 400 var(--type-label)/1.3 var(--mono);
@@ -1726,7 +1726,7 @@ body > footer {
   .phase-story-lab > aside,
   .debye-controls { margin: 0; padding: 1.4rem 0 0; }
   .collar-field-visual { grid-template-columns: minmax(0, 1fr); }
-  .collar-field-panel { grid-template-rows: 48px clamp(240px, 72vw, 320px) 28px; }
+  .collar-field-laboratory .collar-field-visual > .collar-field-panel { grid-template-rows: 48px clamp(240px, 72vw, 320px) 28px; }
   .collar-field-panel + .collar-field-panel { border-top: 1px solid var(--line); border-left: 0; }
   .collar-field-caption { padding-right: 0; }
   .canvas-toolbar { justify-content: flex-end; overflow: hidden; }

@@ -212,6 +212,16 @@
         if (Math.abs(controlBox.top - visualBox.top) > 1) errors.push(`interactive plate ${index + 1} control and visual tops do not align`);
       }
 
+      visual.querySelectorAll(":scope > article > header").forEach((header, panelIndex) => {
+        const title = header.querySelector(":scope > strong");
+        if (!title || !title.getClientRects().length) return;
+        const headerBox = header.getBoundingClientRect();
+        const titleBox = title.getBoundingClientRect();
+        if (titleBox.bottom > headerBox.bottom + 1 || titleBox.right > headerBox.right + 1) {
+          errors.push(`interactive plate ${index + 1} panel heading ${panelIndex + 1} escapes its header`);
+        }
+      });
+
       visual.querySelectorAll("canvas").forEach((canvas) => {
         const box = canvas.getBoundingClientRect();
         if (!box.width || !box.height || !canvas.width || !canvas.height) return;

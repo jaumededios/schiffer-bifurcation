@@ -15,7 +15,7 @@
     <script defer src="../math.js?v=20260827.8"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260827.6">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.8">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.9">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -1091,6 +1091,7 @@
             <p>Thus changing \(r_0\) translates the local wave by the explicit phase rate \(d\xi/dr_0=\Phi(\sqrt\lambda)\). For the higher channels, the nonoscillatory Debye formula gives</p>
             <div class="tex-display important-equation">\[\frac{J_{kr_0}(\sqrt\lambda(r_0+x))}{J_{kr_0}(\sqrt\lambda r_0)}\longrightarrow e^{\sqrt{k^2-\lambda}\,x},\qquad k\ge2.\]</div>
             <p>The last limit is the exponential regime of the same expansion, <a href="https://dlmf.nist.gov/10.19.E3" target="_blank" rel="noreferrer">DLMF (10.19.3) ↗</a>, applied with order \(kr_0\) and argument-to-order ratio \(\sqrt\lambda/k&lt;1\).</p>
+            <p>The radial channel \(k=0\) is also oscillatory. Put \(\sigma_R=(J_0(\rho_R)^2+J_0'(\rho_R)^2)^{1/2}\) and \(B_{0,R}(x)=J_0(q_R(R+x))/\sigma_R\). If \(d_{0,R}=B_{0,R}'(0)\), its cylinder comparison is the Cauchy-matched wave \(C_{0,R}(x)=B_{0,R}(0)\cos(q_Rx)+(d_{0,R}/q_R)\sin(q_Rx)\). On a fixed collar, the Bessel equation for \(B_{0,R}\) converges to \(C''+\lambda_RC=0\).</p>
             <p>In the figures below we choose a Neumann-normalized slice of this family. Let \(\rho_R\) be the fourth positive zero of \(J_R'\), put \(q_R=\rho_R/R\), and set \(\lambda_R=q_R^2\). This branch has \(2.50&lt;\lambda_R&lt;2.72\) throughout the displayed interval \(26\le R\le30\). Then</p>
             <div class="tex-display important-equation">\[B_R(x)=\frac{J_R(q_R(R+x))}{J_R(\rho_R)},\qquad B_R(0)=1,\qquad B_R'(0)=0.\]</div>
             <p>Thus every displayed \(k=1\) profile is an actual Neumann eigenmode. Its cylinder comparison is \(C_R(x)=\cos(\sqrt{\lambda_R-1}\,x)\), with the same value and derivative at the boundary.</p>
@@ -1113,8 +1114,8 @@
 
             <div class="collar-field-control-block">
               <div class="control-label"><label for="collarKRange">wave parameter \(k\)</label><output id="collarKValue">1</output></div>
-              <input id="collarKRange" type="range" min="1" max="3" value="1" step="1">
-              <div class="range-scale"><span>1</span><span>2</span><span>3</span></div>
+              <input id="collarKRange" type="range" min="0" max="3" value="1" step="1">
+              <div class="range-scale"><span>0</span><span>1</span><span>2</span><span>3</span></div>
               <p id="collarRegimeCopy">Neumann mode: <span class="formula">\(\partial_r u=0\)</span> at <span class="formula">\(r=N\)</span>.</p>
             </div>
 
@@ -1172,7 +1173,7 @@
               \sin(kN\vartheta)=\sin(k\psi).
               \]
             </div>
-            <p>The sine/cosine pair gives the dependence on the periodic cylinder coordinate. More precisely, <span class="formula">\(A\cos(k\psi)+B\sin(k\psi)=C\cos(k\psi-\phi)\)</span>, so this two-dimensional freedom is the choice of phase, or equivalently the origin of <span class="formula">\(\psi\)</span> around the cylinder. This is the angular phase; it is separate from the radial Bessel phase controlled by <span class="formula">\(r_0\)</span>.</p>
+            <p>For \(k=0\), the angular factor is constant and there is no sine partner or angular phase. For \(k\ge1\), the sine/cosine pair gives the dependence on the periodic cylinder coordinate. More precisely, <span class="formula">\(A\cos(k\psi)+B\sin(k\psi)=C\cos(k\psi-\phi)\)</span>, so this two-dimensional freedom is the choice of phase, or equivalently the origin of <span class="formula">\(\psi\)</span> around the cylinder. This angular phase is separate from the radial Bessel phase controlled by <span class="formula">\(r_0\)</span>.</p>
           </div>
         </div>
 
@@ -1708,7 +1709,7 @@
       <p class="eyebrow">Debye approximations</p>
       <p>The radial comparison is separate from the nonlinear branch. For each real <span class="formula">\(26\le R\le30\)</span>, it continues the fourth positive zero <span class="formula">\(\rho_R\)</span> of <span class="formula">\(J_R'\)</span>, puts <span class="formula">\(q_R=\rho_R/R\)</span>, and evaluates exact samples of <span class="formula">\(J_{kR}(q_Rr)\)</span> on <span class="formula">\(r\in[R-5,R]\)</span>. The browser interpolates the precomputed SciPy values in <span class="formula">\(R\)</span> and <span class="formula">\(r\)</span>.</p>
       <p>The four-panel comparison displays one separated eigenfunction at a time. Its cone collar uses those same exact samples, while its whole-disk panel uses additional exact SciPy profiles at the integer orders <span class="formula">\(N=26,\ldots,30\)</span>. The heat maps, coordinate transformations, sine/cosine selection, and crop geometry are all evaluated in the browser.</p>
-      <p>For <span class="formula">\(k=1\)</span>, the Bessel trace is normalized by its boundary value and satisfies <span class="formula">\(B_R(0)=1\)</span>, <span class="formula">\(B_R'(0)=0\)</span>; the cylinder curve is <span class="formula">\(\cos(\sqrt{\lambda_R-1}\,x)\)</span> with the same Neumann data. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are normalized at the boundary and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda_R}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
+      <p>For <span class="formula">\(k=0\)</span>, the browser phase-normalizes the radial profile by <span class="formula">\(\sigma_R=(J_0(\rho_R)^2+J_0'(\rho_R)^2)^{1/2}\)</span> and compares it with the oscillatory cylinder solution having the same value and derivative at the rim. For <span class="formula">\(k=1\)</span>, the Bessel trace satisfies <span class="formula">\(B_R(0)=1\)</span>, <span class="formula">\(B_R'(0)=0\)</span>; the cylinder curve is <span class="formula">\(\cos(\sqrt{\lambda_R-1}\,x)\)</span> with the same Neumann data. For <span class="formula">\(k=2,3\)</span>, the Bessel traces are normalized at the boundary and compared with <span class="formula">\(e^{\sqrt{k^2-\lambda_R}\,x}\)</span>. All vertical axes are linear and all comparison curves are solid.</p>
       <hr>
       <p class="eyebrow">Geometric construction and phase variation</p>
       <p>The seven-stage disk–cone figure describes the quotient and limiting operations geometrically. PDE data enter in the final boundary, reconstructed from the stored coefficients at the computed endpoint <span class="formula">\(R=N=28\)</span>. In the order/phase graph, cyan solid curves interpolate the continuation records, and orange solid curves show the quadratic approximation determined by <span class="formula">\(R''(0)\)</span>.</p>
@@ -1719,12 +1720,12 @@
     </dialog>
 
     <script defer src="../cone-data.js"></script>
-    <script defer src="../debye-data.js"></script>
+    <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260827.8"></script>
+    <script defer src="../app.js?v=20260827.9"></script>
     <script defer src="../story.js?v=20260827.8"></script>
     <script defer src="../abundance.js?v=20260827.8"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>
-    <script defer src="layout-contract.js?v=20260827.8"></script>
+    <script defer src="layout-contract.js?v=20260827.9"></script>
   </body>
 </html>
