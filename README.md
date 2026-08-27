@@ -30,6 +30,10 @@ The Tufte edition keeps content semantics separate from page geometry:
 - `.paper-copy` is continuous exposition or derivation at reading measure;
 - `.small-multiples` is reserved for comparisons whose juxtaposition carries
   information, while `.figure-band` is reserved for actual wide visuals;
+- `.margin-figure-sequence` contains `.margin-figure-row` articles with one
+  direct `.margin-figure`: the layout layer keeps prose on the reading measure,
+  puts the figure wholly in the margin, removes card rules, and stacks the same
+  structure on narrow screens;
 - `.interactive-plate` means an apparatus with direct `section` and `aside`
   children; the stylesheet chooses their desktop and mobile placement.
 - `.data-table` presents compact tabular evidence at reading measure.

@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.8"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260827.7">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.10">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.11">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -29,8 +29,6 @@
         <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M6 4v26M6 4c12 0 12 8 22 8M6 30c12 0 12-8 22-8"/><path class="accent" d="M28 5v24"/></svg>
         <span>Counterexamples to Schiffer's conjecture</span>
       </a>
-      <div class="status"><span>mathematical exposition · numerical figures · <a href="../paper/">paper edition</a></span></div>
-      <button id="methodButton" class="method-button" type="button">Computational notes</button>
     </header>
 
     <details class="site-toc">
@@ -454,14 +452,9 @@
         </details>
 
         <div class="intro-copy intro-copy-wide construction-flow">
-          <p>Everything after this is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer order is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
-          <label for="construction-gallery-note" class="margin-toggle" aria-label="Show the comparison plate">&#8853;</label>
+          <label for="construction-gallery-note" class="margin-toggle" aria-label="Show the shape comparison">&#8853;</label>
           <input type="checkbox" id="construction-gallery-note" class="margin-toggle">
-        <figure class="marginnote margin-gallery intro-shapes">
-          <figcaption>
-            <p class="eyebrow">Comparison plate</p>
-            <h3>Four periodically fluted boundaries.</h3>
-          </figcaption>
+        <figure class="marginnote margin-gallery intro-shapes" aria-label="Four examples with periodically fluted boundaries">
           <div class="intro-shapes-row">
             <div class="intro-shapes-examples">
               <div class="intro-shape intro-shape-result intro-shape-computer">
@@ -514,10 +507,10 @@
               </div>
             </div>
           </div>
-          <p class="intro-shapes-credit">Images shared with the <a href="https://pompeiu-schiffer.org" target="_blank" rel="noreferrer">joint Schiffer–Pompeiu exposition</a>.</p>
         </figure>
 
-          <p><strong>The two constructions.</strong> The first domain in the margin plate comes from the computer-assisted proof of Colbrook and Stepaniants; the second comes from the bifurcation argument of Cao-Labora and de Dios Pont. In both mathematical pictures the outer curve is \(\partial\Omega\), and the colour field shows the corresponding solution \(u\). The coin and biscuit are included only to compare their periodically undulating boundaries.</p>
+          <p>Everything after this is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer order is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
+          <p><strong>The two constructions.</strong> The first mathematical figure comes from the computer-assisted proof of Colbrook and Stepaniants; the second comes from the bifurcation argument of Cao-Labora and de Dios Pont. In both pictures the outer curve is \(\partial\Omega\), and the colour field shows the corresponding solution \(u\). The coin and biscuit are included only to compare their periodically undulating boundaries; their photographs are shared with the <a href="https://pompeiu-schiffer.org" target="_blank" rel="noreferrer">joint Schiffer–Pompeiu exposition</a>.</p>
           <p>Both questions were answered in early August 2026, by <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer">Colbrook–Stepaniants</a> and <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>. The rest of the site exposes those proofs.</p>
         </div>
       </section>
@@ -527,10 +520,13 @@
           <span class="section-number">03</span>
           <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the spectral coincidence excluded on the disk.</h2></div>
         </header>
-        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The sliders below move along the two branches, with the symmetric domain at <span class="formula">\(s=0\)</span>.</p></div>
-        <div class="world-cards figure-band">
-          <article>
-            <div class="world-visual">
+        <div class="borrow-lead">
+          <p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The sliders below move along the two branches, with the symmetric domain at <span class="formula">\(s=0\)</span>.</p>
+          <p>The common mechanism is a precise coincidence of special functions. Separation of variables produces a radial or zonal family satisfying the Neumann condition and a nonradial family satisfying the Dirichlet condition. A bifurcation becomes possible when the two families have the same eigenvalue: trigonometric waves on the cylinder, associated Legendre functions on the sphere, and, later, Bessel functions on the cone. The disk is rigid precisely because the corresponding Bessel coincidence is forbidden.</p>
+        </div>
+        <div class="world-cards margin-figure-sequence">
+          <article class="margin-figure-row">
+            <aside class="world-visual margin-figure" aria-label="Interactive cylinder branch figure">
             <div class="world-sketch realistic-world" role="img" aria-label="A compact domain on a three-dimensional flat cylinder whose two boundary loops are controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
@@ -572,7 +568,7 @@
               <input id="cylinderBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Cylinder bifurcation parameter from minus epsilon to plus epsilon">
               <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
             </div>
-            </div>
+            </aside>
             <span>flat cylinder</span><h3>A radial Neumann mode and a nonradial Dirichlet mode have the same eigenvalue.</h3>
             <p>On the half-cylinder \(x\le0\), separation of variables gives, for every \(\lambda&gt;1\),</p>
             <div class="world-mode-pair tex-display">
@@ -586,8 +582,8 @@
             <p>At \(x=0\), the first wave has Neumann data and the second has Dirichlet data. Consequently, this spectral coincidence holds for every \(\lambda&gt;1\) on the half-cylinder. For \(1&lt;\lambda&lt;4\), every higher channel \(k\ge2\) is evanescent. Fall, Minlend and Weth obtain the corresponding nonlinear bifurcations on compact flat cylinders; the half-cylinder version used below follows from the same separated equations and weighted-space argument.</p>
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
-          <article>
-            <div class="world-visual">
+          <article class="margin-figure-row">
+            <aside class="world-visual margin-figure" aria-label="Interactive spherical branch figure">
             <div class="world-sketch realistic-world" role="img" aria-label="A contractible spherical cap contained in the northern hemisphere whose eight-fold boundary is controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
@@ -626,14 +622,10 @@
               <input id="sphereBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Spherical bifurcation parameter from minus epsilon to plus epsilon">
               <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
             </div>
-            </div>
+            </aside>
             <span>half-sphere</span><h3>A geodesic disk bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández bifurcate from the north-pole disk <span class="formula">\(\cos\theta&gt;a_*\)</span>, where <span class="formula">\(a_*\approx0.477\)</span>. Its boundary lies strictly north of the equator. The slider displays the expansion <span class="formula">\(\theta(\phi;s)=\arccos(a_*)+s b_*\cos(8\phi)+o(s)\)</span>; the amplitude is enlarged so that the eight-fold term is visible.</p>
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
-        </div>
-        <div class="borrow-conclusion paper-copy editorial-conclusion">
-          <span>The common mechanism</span>
-          <p>The flexibility comes from a precise coincidence of special functions. Separation of variables produces a radial or zonal family satisfying the Neumann condition and a nonradial family satisfying the Dirichlet condition. A bifurcation becomes possible when the two families have the same eigenvalue: trigonometric waves on the cylinder, associated Legendre functions on the sphere, and, later, Bessel functions on the cone. The disk is rigid precisely because the corresponding Bessel coincidence is forbidden.</p>
         </div>
       </section>
 
@@ -1687,10 +1679,10 @@
     <script defer src="../cone-data.js"></script>
     <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260827.9"></script>
+    <script defer src="../app.js?v=20260827.10"></script>
     <script defer src="../story.js?v=20260827.8"></script>
     <script defer src="../abundance.js?v=20260827.8"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>
-    <script defer src="layout-contract.js?v=20260827.10"></script>
+    <script defer src="layout-contract.js?v=20260827.11"></script>
   </body>
 </html>

@@ -6,7 +6,7 @@
   const rounded = (value) => Math.round(value * 10) / 10;
   const marginSelector = "body.tufte-site main .marginnote";
   const disclosureSelector = "body.tufte-site main details:not(.secondary-controls)";
-  const roleSelector = ".paper-copy, .math-statement, .lean-statement, .small-multiples, .figure-band, .data-table";
+  const roleSelector = ".paper-copy, .math-statement, .lean-statement, .small-multiples, .figure-band, .margin-figure-sequence, .data-table";
 
   function runLayoutContract() {
     const errors = [];
@@ -229,6 +229,59 @@
       if (!band.querySelector("canvas, svg, img, picture, video")) errors.push(`figure band ${index + 1} contains no visual`);
     });
 
+    document.querySelectorAll("body.tufte-site main .margin-figure-sequence").forEach((sequence, index) => {
+      if (!sequence.getClientRects().length) return;
+      const box = sequence.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(sequence, narrow ? 1 : figure);
+      if (Math.abs(box.width - expectedWidth) > 2) {
+        errors.push(`margin-figure sequence ${index + 1} is outside the figure measure`);
+      }
+      sequence.querySelectorAll(":scope > .margin-figure-row").forEach((row, rowIndex) => {
+        const visual = row.querySelector(":scope > .margin-figure");
+        const prose = row.querySelector(":scope > :is(span, h3, p)");
+        if (!visual || !prose) {
+          errors.push(`margin-figure row ${index + 1}.${rowIndex + 1} lacks direct prose or a direct margin figure`);
+          return;
+        }
+        const rowStyle = getComputedStyle(row);
+        const visualStyle = getComputedStyle(visual);
+        if ([rowStyle.borderTopWidth, rowStyle.borderRightWidth, rowStyle.borderBottomWidth, rowStyle.borderLeftWidth,
+          visualStyle.borderTopWidth, visualStyle.borderRightWidth, visualStyle.borderBottomWidth, visualStyle.borderLeftWidth]
+          .some((value) => parseFloat(value) > 0)) {
+          errors.push(`margin-figure row ${index + 1}.${rowIndex + 1} has card rules`);
+        }
+        if (!narrow) {
+          const visualBox = visual.getBoundingClientRect();
+          const proseBox = prose.getBoundingClientRect();
+          if (visualBox.left < proseBox.right + 4) {
+            errors.push(`margin figure ${index + 1}.${rowIndex + 1} enters the reading measure`);
+          }
+          if (Math.abs(visualBox.top - proseBox.top) > 1) {
+            errors.push(`margin figure ${index + 1}.${rowIndex + 1} is not top-aligned with its prose`);
+          }
+        }
+      });
+    });
+
+    const comparisonCells = Array.from(document.querySelectorAll("body.tufte-site main .intro-shapes .intro-shape-media"));
+    if (comparisonCells.length !== 4) {
+      errors.push(`comparison gallery has ${comparisonCells.length} cells instead of 4`);
+    } else {
+      const reference = comparisonCells[0].getBoundingClientRect();
+      comparisonCells.forEach((cell, index) => {
+        const box = cell.getBoundingClientRect();
+        if (Math.abs(box.width - box.height) > 1) errors.push(`comparison cell ${index + 1} is not square`);
+        if (Math.abs(box.width - reference.width) > 1 || Math.abs(box.height - reference.height) > 1) {
+          errors.push(`comparison cell ${index + 1} does not share the gallery shape`);
+        }
+      });
+      const galleryStyle = getComputedStyle(comparisonCells[0].closest(".intro-shapes"));
+      if ([galleryStyle.borderTopWidth, galleryStyle.borderRightWidth, galleryStyle.borderBottomWidth, galleryStyle.borderLeftWidth]
+        .some((value) => parseFloat(value) > 0)) {
+        errors.push("comparison gallery has plate rules");
+      }
+    }
+
     document.querySelectorAll("body.tufte-site main .tex-display").forEach((display, index) => {
       if (!display.getClientRects().length) return;
       if (display.clientWidth <= 1) return;
@@ -238,7 +291,7 @@
     });
 
     document.querySelectorAll(`body.tufte-site main :is(${roleSelector})`).forEach((element, index) => {
-      const roles = ["paper-copy", "math-statement", "lean-statement", "small-multiples", "figure-band", "data-table"]
+      const roles = ["paper-copy", "math-statement", "lean-statement", "small-multiples", "figure-band", "margin-figure-sequence", "data-table"]
         .filter((role) => element.classList.contains(role));
       if (roles.length > 1) errors.push(`editorial role ${index + 1} is ambiguous: ${roles.join(" + ")}`);
     });
@@ -312,6 +365,7 @@
       paperCopies: document.querySelectorAll("body.tufte-site main .paper-copy").length,
       smallMultiples: document.querySelectorAll("body.tufte-site main .small-multiples").length,
       figureBands: document.querySelectorAll("body.tufte-site main .figure-band").length,
+      marginFigureSequences: document.querySelectorAll("body.tufte-site main .margin-figure-sequence").length,
       dataTables: document.querySelectorAll("body.tufte-site main .data-table").length,
       leanStatements: document.querySelectorAll("body.tufte-site main .lean-statement").length,
       plates: document.querySelectorAll(".interactive-plate").length,

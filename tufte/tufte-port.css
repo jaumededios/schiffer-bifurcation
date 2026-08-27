@@ -109,7 +109,7 @@ body.tufte-site a:hover { color: var(--orange); }
   min-height: 0;
   height: auto;
   display: grid;
-  grid-template-columns: var(--measure-reading) minmax(0, 1fr) auto;
+  grid-template-columns: var(--measure-reading);
   gap: 1rem;
   align-items: baseline;
   padding: 1.25rem 0 .85rem;
@@ -127,16 +127,6 @@ body.tufte-site a:hover { color: var(--orange); }
 
 .brand svg { width: 1.35rem; height: 1.35rem; }
 .brand svg .accent { stroke: var(--orange); }
-.status { color: var(--muted); font-size: var(--type-label); letter-spacing: .06em; }
-.status a { color: var(--ink); border: 0; text-decoration: underline; }
-.method-button {
-  padding: 0;
-  color: var(--muted);
-  border: 0;
-  font-size: var(--type-control);
-  letter-spacing: .06em;
-}
-.method-button:hover { color: var(--orange); }
 
 /* Contents live in the margin beside the title, where a Tufte page expects
    navigation and commentary.  It remains collapsible so it never becomes a
@@ -505,21 +495,18 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
   column-gap: var(--measure-gutter-in-figure);
 }
 
-.intro-shapes {
+body.tufte-site main .marginnote.intro-shapes {
   display: block;
-  margin-top: .3rem;
-  padding-top: .6rem;
-  border-top: 1px solid var(--ink);
+  margin-top: 0;
+  padding-top: 0;
+  border: 0;
 }
-.intro-shapes figcaption {
-  float: none;
-  width: 100%;
-  max-width: none;
-  margin: 0 0 .8rem;
+.intro-shapes-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem .8rem;
+  align-items: start;
 }
-.intro-shapes figcaption h3 { margin: 0; font: italic 400 var(--type-note)/1.25 var(--serif); }
-.intro-shapes figcaption .eyebrow { margin-bottom: .35rem; font-size: var(--type-label); }
-.intro-shapes-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
 .intro-shapes-examples,
 .intro-shapes-aside,
 .intro-shapes-objects { display: contents; }
@@ -528,22 +515,51 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
 .intro-shape-bifurcation { order: 4; }
 .intro-shape-object:first-child { order: 1; }
 .intro-shape-object:last-child { order: 2; }
-.intro-shape { min-width: 0; padding: 0 !important; border: 0 !important; text-align: left; }
+.intro-shape {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 !important;
+  border: 0 !important;
+  text-align: center;
+}
+.intro-shape-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  margin: 0 0 .4rem;
+  overflow: hidden;
+}
 .intro-shape-object .intro-shape-media {
   width: 100%;
   margin-bottom: .4rem;
 }
-.intro-shape-media { width: 100%; margin: 0 0 .4rem; }
+.intro-shape-domain img,
+.intro-shape-computer .intro-shape-domain img {
+  position: static;
+  width: 92%;
+  height: 92%;
+  margin: 0;
+  object-fit: contain;
+  object-position: center;
+}
+.intro-shape-object .intro-shape-media img {
+  position: absolute;
+  top: 50%;
+  max-width: none;
+  height: auto;
+  transform: translateY(-50%);
+}
+.intro-shape-biscuit img { left: 0; width: 200%; }
+.intro-shape-coin img { right: 0; width: 228%; }
 .intro-shape-kicker,
 .intro-shape small { display: none; }
 .intro-shape b {
   font: italic 400 var(--type-label)/1.25 var(--serif);
-}
-.intro-shapes-credit {
-  margin: .8rem 0 0;
-  padding-top: .55rem;
-  font-size: var(--type-label) !important;
-  line-height: 1.35 !important;
+  text-align: center;
 }
 
 .shape-variation-figure figcaption {
@@ -655,37 +671,58 @@ body.tufte-site main .shape-variation-figure > figcaption {
 .phase-derivation-grid,
 .motion-split { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-/* Tufte's small-multiple logic replaces dashboard cards. */
-.world-cards {
+/* A reusable prose-with-margin-figure primitive. Content authors choose the
+   semantic role; the layout layer owns the Tufte geometry and narrow-screen
+   collapse. */
+body.tufte-site main .margin-figure-sequence {
+  width: var(--measure-figure);
+  max-width: var(--measure-figure);
   display: block;
-  border-right: 0;
-  border-left: 0;
+  margin: 2.5rem 0 0;
+  border: 0;
 }
-.world-cards article {
+body.tufte-site main .margin-figure-row {
   display: grid;
   grid-template-columns: var(--measure-reading) var(--measure-margin);
   column-gap: var(--measure-gutter);
   align-items: start;
   min-height: 0;
-  padding: 3rem 0;
+  padding: 1rem 0 2rem;
   background: transparent;
-  border-right: 0;
-  border-bottom: 1px solid var(--line);
+  border: 0;
 }
-.world-cards article + article { padding-right: 0; padding-left: 0; }
-.world-cards article > :not(.world-visual) { grid-column: 1; }
-.world-cards .world-visual {
+body.tufte-site main .margin-figure-row + .margin-figure-row {
+  margin-top: 2rem;
+}
+body.tufte-site main .margin-figure-row > :not(.margin-figure) { grid-column: 1; }
+body.tufte-site main .margin-figure-row > :is(h3, p, .tex-display) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+body.tufte-site main .margin-figure-row > .margin-figure {
   grid-column: 2;
-  grid-row: 1 / span 8;
+  grid-row: 1 / span 20;
   margin: 0;
-  border-top: 1px solid var(--ink);
+  border: 0;
+  background: transparent;
 }
+.world-cards { border: 0; }
 .world-cards .world-sketch { height: auto; aspect-ratio: 1.5 / 1; }
-.world-cards .world-branch-control { padding-right: .7rem; padding-left: .7rem; }
+.world-cards .world-sketch { background: transparent; }
+.world-cards .world-branch-control {
+  padding: .75rem 0 0;
+  border: 0;
+  background: transparent;
+}
+.world-cards .world-mode-pair {
+  padding: .7rem 0 0;
+  border: 0;
+}
 .world-cards .world-sketch text:not(.world-domain-label) { display: none; }
 .world-cards article > span { margin-top: 0; }
 .world-cards h3 { font-style: normal; }
-.borrow-conclusion { grid-template-columns: var(--measure-half-reading) var(--measure-reading); gap: var(--measure-gutter); padding: 2rem 0; border-right: 0; border-left: 0; }
+.borrow-lead p + p { margin-top: 1.4rem; }
 
 /* One reset wins over the legacy presentation of every statement kind. New
    theorem names never need to be added to a selector list. */
@@ -1661,11 +1698,6 @@ body > footer {
 
 .tex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 
-@media (max-width: 1350px) {
-  .status { display: none; }
-  .topbar { grid-template-columns: 1fr auto; }
-}
-
 @media (max-width: 1000px) {
   .site-toc { position: relative; top: auto; right: auto; width: 100%; margin: 1rem 0 0; }
   .site-toc summary { padding: .55rem 0; }
@@ -1796,7 +1828,7 @@ body > footer {
   .measurement-caption { grid-column: 1; grid-row: 1; margin-bottom: 1.5rem; }
   .measurement-panel { grid-column: 1; grid-row: 2; }
   .intro-shapes { display: block; }
-  .intro-shapes figcaption, .shape-variation-figure figcaption { width: 100%; margin: 0; }
+  .shape-variation-figure figcaption { width: 100%; margin: 0; }
   .intro-shapes-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
   .intro-shape-object + .intro-shape-object { margin-top: 0; }
   .membrane-figure { width: 100%; max-width: 100%; }
@@ -1804,6 +1836,7 @@ body > footer {
   /* Tufte's margin notes become opt-in blocks on a narrow screen.  Every
      note, figure and gallery uses this same adjacent-toggle contract. */
   body.tufte-site main .marginnote { display: none; }
+  body.tufte-site main .marginnote.intro-shapes { display: none; }
   input.margin-toggle:checked + .marginnote {
     display: block;
     float: none;
@@ -1813,6 +1846,7 @@ body > footer {
     max-width: var(--measure-mobile-note);
     margin: 1rem var(--measure-mobile-note-inset);
   }
+  input.margin-toggle:checked + .marginnote.intro-shapes { display: block; }
 
   .interactive-plate > aside { border-top: 1px solid var(--line); border-left: 0; }
   .phase-story-lab > aside,
@@ -1826,10 +1860,21 @@ body > footer {
   .axis-footer { justify-content: center; overflow: hidden; }
   .axis-footer > :first-child,
   .axis-footer > :last-child { display: none; }
-  .world-cards { grid-template-columns: 1fr; }
-  .world-cards article, .world-cards article + article { display: block; padding: 2rem 0; border-right: 0; border-bottom: 1px solid var(--line); }
-  .world-cards .world-visual { width: 100%; margin-bottom: 1.5rem; }
-  .borrow-conclusion { grid-template-columns: 1fr; }
+  body.tufte-site main .margin-figure-sequence { width: 100%; max-width: 100%; }
+  body.tufte-site main .margin-figure-row,
+  body.tufte-site main .margin-figure-row + .margin-figure-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0;
+    padding: 2rem 0;
+    border: 0;
+  }
+  body.tufte-site main .margin-figure-row > .margin-figure {
+    order: 2;
+    width: 100%;
+    margin: 1.25rem 0 0;
+  }
   .cylinder-seed-copy, .cylinder-kernel-bridge, .cylinder-journal-note, .real-order-bridge > header, .real-order-theorem, .basis-limit-derivation, .angular-quotient-note, .near-integer-theorem, .abundance-conclusion, .abundance-examples > header { grid-template-columns: 1fr; }
   .site-references ol { width: 100%; max-width: 100%; }
   .site-references li { grid-template-columns: 2rem minmax(0, 1fr); }

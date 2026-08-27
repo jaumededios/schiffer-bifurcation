@@ -972,7 +972,7 @@ $("#resetButton").addEventListener("click", () => {
   scheduleUpdate();
 });
 
-$("#methodButton").addEventListener("click", () => $("#methodDialog").showModal());
+$("#methodButton")?.addEventListener("click", () => $("#methodDialog").showModal());
 $("#closeMethod").addEventListener("click", () => $("#methodDialog").close());
 $("#methodDialog").addEventListener("click", (event) => { if (event.target === $("#methodDialog")) $("#methodDialog").close(); });
 
