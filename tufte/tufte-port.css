@@ -618,9 +618,16 @@ figure.fullwidth { clear: both; margin-top: 4rem; margin-bottom: 4rem; }
   width: 90%;
   max-width: 90%;
   margin: 4rem 0;
-  border-color: var(--line);
+  border: 0;
 }
-.disk-sidequest > summary { width: 55%; padding: 1rem 0; font-family: var(--serif); }
+.disk-sidequest > summary {
+  box-sizing: border-box;
+  width: 61.111%;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--serif);
+}
 .disk-sidequest > summary span { font-size: 1.35rem; font-style: italic; }
 .disk-sidequest > summary small { font-size: .8rem; font-style: normal; font-variant: small-caps; }
 .disk-sidequest-body { padding: 2rem 0; }
