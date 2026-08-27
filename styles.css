@@ -1047,11 +1047,23 @@ dialog p:not(.eyebrow) {
 .intro-shapes figcaption { max-width: 880px; }
 .intro-shapes figcaption h3 { margin: 8px 0 14px; font: 500 clamp(25px, 2.5vw, 36px)/1.12 var(--serif); letter-spacing: -.02em; }
 .intro-shapes figcaption p:last-child { margin: 0 0 34px; color: var(--muted); font-size: var(--type-body); line-height: 1.8; }
-.intro-shapes-row { display: grid; grid-template-columns: minmax(360px, 1.55fr) repeat(2, minmax(0, .725fr)); gap: 32px; align-items: start; }
+.intro-shapes-row { display: block; }
+.intro-shapes-examples { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+.intro-shape-result { padding: 0 40px 0 0; }
+.intro-shape-result + .intro-shape-result { padding: 0 0 0 40px; border-left: 1px solid var(--line); }
 .intro-shape { min-width: 0; }
-.intro-shape-media { position: relative; aspect-ratio: 1; margin: 0 0 18px; overflow: hidden; background: rgba(255,255,255,.34); border: 1px solid var(--line); }
+.intro-shape-media { position: relative; aspect-ratio: 1; margin: 0 0 18px; overflow: hidden; background: transparent; }
 .intro-shape-media img { display: block; }
-.intro-shape-domain img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.intro-shape-domain img { width: 100%; height: 100%; object-fit: contain; }
+.intro-shape-computer .intro-shape-domain img { width: 93%; height: 93%; margin: 3.5%; }
+.intro-shape-kicker { margin: 0 0 8px; color: var(--orange); font: 10px/1.4 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+.intro-shapes-aside { margin-top: 52px; padding-top: 30px; border-top: 1px solid var(--line); }
+.intro-shapes-aside-copy { max-width: 660px; margin: 0 auto 28px; text-align: center; }
+.intro-shapes-aside-copy h4 { margin: 7px 0 10px; color: var(--ink); font: 500 26px/1.2 var(--serif); }
+.intro-shapes-aside-copy p:last-child { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.intro-shapes-objects { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 64px; max-width: 720px; margin-inline: auto; }
+.intro-shape-object { text-align: center; }
+.intro-shape-object .intro-shape-media { width: min(100%, 280px); margin: 0 auto 16px; }
 .intro-shape-coin img,
 .intro-shape-biscuit img { position: absolute; top: 50%; width: 202%; max-width: none; height: auto; transform: translateY(-50%); }
 .intro-shape-coin img { right: 0; }
@@ -1086,13 +1098,15 @@ dialog p:not(.eyebrow) {
   .story-intro { padding: 64px 6vw 72px; }
   .site-references { padding: 70px 24px 82px; }
   .intro-copy h3 { font-size: 27px; }
-  .intro-shapes-row { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 30px 22px; }
-  .intro-shape:first-child { grid-column: 1 / -1; }
-  .intro-shape:first-child .intro-shape-media { max-width: 560px; }
+  .intro-shape-result { padding-right: 24px; }
+  .intro-shape-result + .intro-shape-result { padding-left: 24px; }
+  .intro-shapes-objects { gap: 30px; }
 }
 @media (max-width: 540px) {
-  .intro-shapes-row { grid-template-columns: minmax(0,1fr); }
-  .intro-shape:first-child { grid-column: auto; }
+  .intro-shapes-examples, .intro-shapes-objects { grid-template-columns: minmax(0,1fr); }
+  .intro-shape-result, .intro-shape-result + .intro-shape-result { padding: 0; }
+  .intro-shape-result + .intro-shape-result { margin-top: 38px; padding-top: 38px; border-top: 1px solid var(--line); border-left: 0; }
+  .intro-shape-object + .intro-shape-object { margin-top: 34px; }
 }
 
 /* The two introductory measurement applets share one figure system. Their
