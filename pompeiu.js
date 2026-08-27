@@ -544,9 +544,9 @@
 })();
 
 /* A live plot of the first three radial Neumann modes of the unit disk. The
- * frequencies are the first three positive zeros of J_1. Drawing concentric
- * annuli keeps the animation inexpensive while evaluating the actual J_0
- * profile in the browser. */
+ * frequencies are the first three positive zeros of J_1. The left panel is a
+ * shallow oblique projection of the actual radial graph z=J_0(rho r)cos(t),
+ * while the right panel shows the same profile in radial coordinates. */
 (() => {
   "use strict";
 
@@ -564,7 +564,7 @@
     { n: 3, rho: 10.1734681351, nodes: [2.4048255577, 5.5200781103, 8.6537279129] },
   ];
   const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { mode: MODES[2], running: !reducedMotion, visible: true, phase: 0, previous: 0 };
+  const state = { mode: MODES[2], running: !reducedMotion, visible: true, phase: 0, previous: 0, lastDraw: 0 };
   let width = 0, height = 0, dpr = 1, frame = 0;
 
   function besselJ0(x) {
@@ -585,15 +585,164 @@
     { t: .75, rgb: [239, 112, 71] },
     { t: 1, rgb: [166, 43, 73] },
   ];
-  function ramp(value) {
+  function rampRgb(value) {
     const t = Math.max(0, Math.min(1, (value + 1.05) / 2.1));
     let left = STOPS[0], right = STOPS[STOPS.length - 1];
     for (let i = 1; i < STOPS.length; i++) {
       if (t <= STOPS[i].t) { left = STOPS[i - 1]; right = STOPS[i]; break; }
     }
     const local = (t - left.t) / Math.max(1e-8, right.t - left.t);
-    const rgb = left.rgb.map((c, i) => Math.round(c + (right.rgb[i] - c) * local));
-    return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+    return left.rgb.map((c, i) => Math.round(c + (right.rgb[i] - c) * local));
+  }
+
+  function surfaceColour(value, light) {
+    const rgb = rampRgb(value);
+    const lit = rgb.map((channel) => {
+      if (light >= 1) return channel + (255 - channel) * Math.min(.28, light - 1);
+      return channel * Math.max(.72, light);
+    }).map((channel) => Math.round(Math.max(0, Math.min(255, channel))));
+    return `rgb(${lit[0]},${lit[1]},${lit[2]})`;
+  }
+
+  function membranePath(points) {
+    context.beginPath();
+    points.forEach((point, index) => {
+      if (index) context.lineTo(point.x, point.y);
+      else context.moveTo(point.x, point.y);
+    });
+  }
+
+  function drawMembrane(temporal) {
+    const cx = width * .285;
+    const cy = height * .535;
+    const radiusX = Math.min(height * .35, width * .225);
+    const radiusY = radiusX * .43;
+    const verticalScale = radiusX * .135;
+    const radialSteps = 30;
+    const angularSteps = 72;
+    const profile = Array.from(
+      { length: radialSteps + 1 },
+      (_, index) => besselJ0(state.mode.rho * index / radialSteps) * temporal,
+    );
+
+    const project = (radial, theta, value) => ({
+      x: cx + radiusX * radial * Math.cos(theta),
+      y: cy + radiusY * radial * Math.sin(theta) - verticalScale * value,
+    });
+
+    // A restrained shadow fixes the orientation without making the membrane
+    // look like a thick plate.
+    context.fillStyle = "rgba(19,33,38,.13)";
+    context.beginPath();
+    context.ellipse(cx, cy + radiusY * .88 + verticalScale * .62, radiusX * .9, radiusY * .22, 0, 0, Math.PI * 2);
+    context.fill();
+
+    const cells = [];
+    for (let radialIndex = 0; radialIndex < radialSteps; radialIndex++) {
+      const radial0 = radialIndex / radialSteps;
+      const radial1 = (radialIndex + 1) / radialSteps;
+      for (let angularIndex = 0; angularIndex < angularSteps; angularIndex++) {
+        const theta0 = Math.PI * 2 * angularIndex / angularSteps;
+        const theta1 = Math.PI * 2 * (angularIndex + 1) / angularSteps;
+        const points = [
+          project(radial0, theta0, profile[radialIndex]),
+          project(radial1, theta0, profile[radialIndex + 1]),
+          project(radial1, theta1, profile[radialIndex + 1]),
+          project(radial0, theta1, profile[radialIndex]),
+        ];
+        const thetaMid = (theta0 + theta1) / 2;
+        const value = (profile[radialIndex] + profile[radialIndex + 1]) / 2;
+        const slope = (profile[radialIndex + 1] - profile[radialIndex]) * radialSteps;
+        const light = .92 + .13 * Math.cos(thetaMid + .85) - .035 * Math.tanh(slope * .4);
+        cells.push({
+          points,
+          depth: points.reduce((sum, point) => sum + point.y, 0) / points.length,
+          colour: surfaceColour(value, light),
+        });
+      }
+    }
+    cells.sort((left, right) => left.depth - right.depth);
+    context.lineJoin = "round";
+    cells.forEach((cell) => {
+      membranePath(cell.points);
+      context.closePath();
+      context.fillStyle = cell.colour;
+      context.fill();
+    });
+
+    // Sparse coordinate curves make the vertical displacement legible while
+    // preserving the smooth appearance of the radial graph.
+    context.strokeStyle = "rgba(19,33,38,.16)";
+    context.lineWidth = .65;
+    for (let angularIndex = 0; angularIndex < 16; angularIndex++) {
+      const theta = Math.PI * 2 * angularIndex / 16;
+      const points = [];
+      for (let radialIndex = 0; radialIndex <= radialSteps; radialIndex++) {
+        points.push(project(radialIndex / radialSteps, theta, profile[radialIndex]));
+      }
+      membranePath(points);
+      context.stroke();
+    }
+    for (let radialIndex = 5; radialIndex < radialSteps; radialIndex += 5) {
+      const radial = radialIndex / radialSteps;
+      const points = [];
+      for (let angularIndex = 0; angularIndex <= angularSteps; angularIndex++) {
+        const theta = Math.PI * 2 * angularIndex / angularSteps;
+        points.push(project(radial, theta, profile[radialIndex]));
+      }
+      membranePath(points);
+      context.closePath();
+      context.stroke();
+    }
+
+    // The nodal circles remain at zero height throughout the motion.
+    context.strokeStyle = "rgba(248,244,230,.9)";
+    context.lineWidth = 1.15;
+    state.mode.nodes.forEach((zero) => {
+      const radial = zero / state.mode.rho;
+      const points = [];
+      for (let angularIndex = 0; angularIndex <= angularSteps; angularIndex++) {
+        points.push(project(radial, Math.PI * 2 * angularIndex / angularSteps, 0));
+      }
+      membranePath(points);
+      context.closePath();
+      context.stroke();
+    });
+
+    // Radiality makes the boundary value independent of angle, while
+    // J_1(rho_n)=0 makes the radial slope vanish there. The whole rim is one
+    // ellipse translated by a single vertical amount.
+    const rimValue = profile[radialSteps];
+    const rim = [];
+    for (let angularIndex = 0; angularIndex <= angularSteps; angularIndex++) {
+      rim.push(project(1, Math.PI * 2 * angularIndex / angularSteps, rimValue));
+    }
+    membranePath(rim);
+    context.closePath();
+    context.strokeStyle = "#132126";
+    context.lineWidth = 2;
+    context.stroke();
+
+    const rimPoint = project(1, 0, rimValue);
+    context.setLineDash([3, 3]);
+    context.strokeStyle = "rgba(19,33,38,.42)";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(rimPoint.x, cy);
+    context.lineTo(rimPoint.x, rimPoint.y);
+    context.stroke();
+    context.setLineDash([]);
+    context.fillStyle = "#ff7449";
+    context.beginPath();
+    context.arc(rimPoint.x, rimPoint.y, 3, 0, Math.PI * 2);
+    context.fill();
+
+    context.fillStyle = "rgba(19,33,38,.62)";
+    context.font = '500 11px "DM Mono", ui-monospace, monospace';
+    context.textAlign = "left";
+    context.fillText("shallow 3D displacement", width * .06, height * .11);
+    context.fillStyle = "#ff7449";
+    context.fillText("constant value along the rim", width * .06, height * .92);
   }
 
   function draw() {
@@ -605,25 +754,7 @@
     context.fillStyle = "#e8e1cf";
     context.fillRect(0, 0, width, height);
 
-    const cx = width * .285;
-    const cy = height * .49;
-    const radius = Math.min(height * .37, width * .225);
-    const rings = 150;
-    for (let i = rings; i >= 1; i--) {
-      const radial = i / rings;
-      context.beginPath();
-      context.arc(cx, cy, radius * radial + .8, 0, Math.PI * 2);
-      context.fillStyle = ramp(besselJ0(state.mode.rho * radial) * temporal);
-      context.fill();
-    }
-    context.strokeStyle = "#132126";
-    context.lineWidth = 2;
-    context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.stroke();
-    context.strokeStyle = "rgba(241,238,229,.82)";
-    context.lineWidth = 1.2;
-    state.mode.nodes.forEach((zero) => {
-      context.beginPath(); context.arc(cx, cy, radius * zero / state.mode.rho, 0, Math.PI * 2); context.stroke();
-    });
+    drawMembrane(temporal);
 
     const graphLeft = width * .57;
     const graphRight = width * .95;
@@ -666,7 +797,7 @@
     context.fillText("selected radial profile", graphLeft, height * .11);
     context.fillStyle = "#ff7449";
     context.fillText("radial profile at this instant", graphLeft, height * .96);
-    canvas.setAttribute("aria-label", `Animated radial Neumann mode ${state.mode.n} on the disk, with frequency parameter ${state.mode.rho.toFixed(4)}`);
+    canvas.setAttribute("aria-label", `Shallow three-dimensional animation of radial Neumann mode ${state.mode.n} on the disk, with frequency parameter ${state.mode.rho.toFixed(4)}`);
   }
 
   function resize() {
@@ -691,8 +822,11 @@
     const elapsed = Math.min(80, now - state.previous);
     state.previous = now;
     if (state.running && state.visible) {
-      state.phase = (state.phase + elapsed * Math.PI / 2000) % (2 * Math.PI);
-      draw();
+      state.phase = (state.phase + elapsed * Math.PI / 4000) % (2 * Math.PI);
+      if (!state.lastDraw || now - state.lastDraw >= 1000 / 30) {
+        state.lastDraw = now;
+        draw();
+      }
     }
     frame = requestAnimationFrame(animate);
   }
