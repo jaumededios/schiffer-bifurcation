@@ -15,9 +15,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs-lean@1.2.0/dist/lean.min.js"></script>
-    <script defer src="lean-statements.js?v=20260827.4"></script>
-    <script defer src="math.js"></script>
-    <link rel="stylesheet" href="styles.css?v=20260827.8">
+    <script defer src="lean-statements.js?v=20260827.5"></script>
+    <script defer src="math.js?v=20260827.9"></script>
+    <link rel="stylesheet" href="styles.css?v=20260827.9">
   </head>
   <body>
     <div class="noise" aria-hidden="true"></div>
@@ -1078,35 +1078,55 @@
 
             <div class="collar-field-readout">
               <div><span>cone order</span><strong id="collarAngularOrder">28</strong></div>
-              <div><span>collar depth</span><strong>5</strong></div>
+              <div><span>displayed depths</span><strong>5 / 13</strong></div>
+              <div><span>(k=1) turning depth</span><strong id="collarTurningValue">10.65</strong></div>
               <div><span>spectral parameter</span><strong id="collarLambdaValue">\(\lambda_N=2.6042\)</strong></div>
             </div>
+
+            <figure class="collar-field-locator">
+              <header><span>complete planar field</span><strong id="collarDiskTitle">angular order 28</strong></header>
+              <div class="collar-field-locator-canvas"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with the two displayed sectors outlined"></canvas></div>
+              <figcaption><span><i class="collar-local-key"></i>5-unit collar</span><span><i class="collar-wide-key"></i>13-unit view</span></figcaption>
+            </figure>
           </aside>
 
-          <article class="collar-field-panel">
-            <header><span>02 / cylinder</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
-            <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a flat cylinder collar"></canvas></div>
-            <footer><span>\(x=-5\)</span><span>same coordinates</span><span>\(x=0\)</span></footer>
-          </article>
+          <section class="collar-field-visual">
+            <article class="collar-field-panel collar-field-panel-local">
+              <header><span>02 / boundary collar · cylinder</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a five-unit flat-cylinder collar"></canvas></div>
+              <footer><span>\(x=-5\)</span><span>fixed collar</span><span>\(x=0\)</span></footer>
+            </article>
 
-          <article class="collar-field-panel">
-            <header><span>03 / one planar sector</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
-            <div class="collar-field-canvas-wrap"><canvas id="collarConeCanvas" role="img" aria-label="Selected Bessel mode on a magnified collar of one planar sector"></canvas></div>
-            <footer><span>\(r=N-5\)</span><span>magnified wedge</span><span>\(r=N\)</span></footer>
-          </article>
+            <article class="collar-field-panel collar-field-panel-local">
+              <header><span>03 / boundary collar · unfolded cone</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarConeCanvas" role="img" aria-label="Selected Bessel mode on the five-unit collar of one unfolded cone sector"></canvas></div>
+              <footer><span>\(r=N-5\)</span><span>same scale</span><span>\(r=N\)</span></footer>
+            </article>
 
-          <article class="collar-field-panel collar-global-panel">
-            <header><span>04 / complete planar field</span><strong id="collarDiskTitle">angular order 28</strong></header>
-            <div class="collar-field-canvas-wrap"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with its magnified sector outlined"></canvas></div>
-            <footer><span>whole disk</span><span class="collar-crop-key"><i></i>panel 03</span></footer>
-          </article>
+            <article class="collar-field-panel collar-field-panel-wide">
+              <header><span>04 / wider view · cylinder</span><strong id="collarCylinderWideTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarCylinderWideCanvas" role="img" aria-label="Selected separated mode on a thirteen-unit flat-cylinder collar"></canvas></div>
+              <footer><span>\(x=-13\)</span><span>same coordinates</span><span>\(x=0\)</span></footer>
+            </article>
 
-          <svg id="collarZoomConnectors" class="collar-zoom-connectors" aria-hidden="true" focusable="false">
-            <line id="collarZoomConnectorTop"></line>
-            <line id="collarZoomConnectorBottom"></line>
-          </svg>
+            <article class="collar-field-panel collar-field-panel-wide">
+              <header><span>05 / wider view · unfolded cone</span><strong id="collarConeWideTitle">\(J_{28}(q_Nr)\)</strong></header>
+              <div class="collar-field-canvas-wrap"><canvas id="collarConeWideCanvas" role="img" aria-label="Selected Bessel mode on a thirteen-unit collar of one unfolded cone sector"></canvas></div>
+              <footer><span>\(r=N-13\)</span><span>same scale</span><span>\(r=N\)</span></footer>
+            </article>
 
-          <p class="collar-field-caption">Each colored field is a single selected separated eigenfunction. Under the collar identification <span class="formula">\(\theta=\psi\)</span>, Panels 02 and 03 use the same coordinates and the same color scale. Panel 03 evaluates the exact regular Bessel profile; Panel 02 uses the cylinder mode with the same boundary data. The cyan frame and guide lines in Panel 04 identify the sector enlarged in Panel 03.</p>
+            <p class="collar-field-caption">Each row uses one coordinate range and one colour scale. The first row is the fixed five-unit collar used in the limit theorem. The second row deliberately looks farther into the two domains. <span class="collar-turning-key"><i></i>For \(k=1\), the red rule marks the cone turning radius \(r=N/\sqrt{\lambda_N}\).</span></p>
+          </section>
+        </div>
+
+        <div class="collar-scale-reading paper-copy">
+          <span>What changes away from the boundary?</span>
+          <div>
+            <p data-collar-regime="0"><strong>For \(k=0\),</strong> both radial equations remain oscillatory. The nodal bands therefore look qualitatively alike in both rows, although the Bessel amplitude varies slowly with \(r\).</p>
+            <p data-collar-regime="1" class="is-active"><strong>For \(k=1\),</strong> the profiles agree on the boundary collar. The wider cone sector crosses \(r=N/\sqrt{\lambda_N}\), where its radial equation changes from oscillatory to evanescent, while the cylinder wave continues to oscillate.</p>
+            <p data-collar-regime="higher"><strong>For \(k\ge2\),</strong> both profiles are evanescent from the boundary inward. Widening the view mostly adds a region where both fields are already exponentially small.</p>
+            <p>The proof localizes to a fixed collar \(x\in[-L,0]\) and then lets \(N\to\infty\). The lower row records the finite-\(N\) behaviour farther inside the two domains.</p>
+          </div>
         </div>
 
         <div class="angular-quotient-note paper-copy">
@@ -1662,8 +1682,8 @@
     <script defer src="cone-data.js"></script>
     <script defer src="debye-data.js?v=20260827.3"></script>
     <script defer src="abundance-data.js"></script>
-    <script defer src="app.js?v=20260827.3"></script>
-    <script defer src="story.js"></script>
+    <script defer src="app.js?v=20260827.11"></script>
+    <script defer src="story.js?v=20260827.9"></script>
     <script defer src="abundance.js"></script>
     <script defer src="pompeiu.js?v=20260827.2"></script>
   </body>
