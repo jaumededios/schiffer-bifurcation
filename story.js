@@ -238,8 +238,12 @@
   function canvasMetrics(canvasSelector, wrapSelector, minimumHeight) {
     const canvas = select(canvasSelector);
     const wrap = select(wrapSelector);
-    const width = Math.max(300, wrap.clientWidth || 900);
-    const height = Math.max(minimumHeight, wrap.clientHeight || minimumHeight);
+    // The bitmap and its CSS box must have the same aspect ratio.  Earlier we
+    // clamped the backing store to a minimum size while CSS was free to make
+    // the wrapper smaller; the browser then independently scaled x and y and
+    // visibly crushed circles and cone sections at narrow breakpoints.
+    const width = Math.max(1, Math.round(wrap.clientWidth || canvas.clientWidth || 900));
+    const height = Math.max(1, Math.round(wrap.clientHeight || canvas.clientHeight || minimumHeight));
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
@@ -261,12 +265,19 @@
     context.font = "10px DM Mono, monospace";
     context.fillText(eyebrow.toUpperCase(), 24, 26);
     context.fillStyle = colors.paper;
-    context.font = "300 25px Newsreader, serif";
+    let titleSize = width < 520 ? 19 : 25;
+    context.font = `300 ${titleSize}px Newsreader, serif`;
+    while (titleSize > 15 && context.measureText(title).width > width - 48) {
+      titleSize -= 1;
+      context.font = `300 ${titleSize}px Newsreader, serif`;
+    }
     context.fillText(title, 24, 54);
-    context.fillStyle = colors.faint;
-    context.font = "10px DM Mono, monospace";
-    context.textAlign = "right";
-    context.fillText(detail, width - 24, 27);
+    if (width >= 520) {
+      context.fillStyle = colors.faint;
+      context.font = "10px DM Mono, monospace";
+      context.textAlign = "right";
+      context.fillText(detail, width - 24, 27);
+    }
     context.restore();
   }
 

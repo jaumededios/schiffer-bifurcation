@@ -2,9 +2,15 @@
 
 Let `Ω⊂ℝ²` be a smooth bounded domain and suppose a nonconstant eigenfunction satisfies `−Δu=λu` in `Ω`, with both `u=constant` and `∂νu=0` on `∂Ω`. Schiffer's conjecture says that this overdetermined boundary behavior should force `Ω` to be a disk. This browser-based narrative explains why the disk is locally rigid, why the analogous problem is flexible on the half-cylinder and sphere, and how that flexibility can be transferred back to the plane using long cones and an integer symmetry landing.
 
-## Two editions
+## Three editions
 
 - `/` is the visual-first interactive exposition.
+- `/tufte/` is the same interactive exposition recast in Tufte's reading
+  grammar: a stable text measure, genuine margin notes and figures, framed
+  mathematical statements, and right-hand apparatus rails. Add
+  `?layout-check=1` while developing to run its responsive layout contract;
+  the page reports margin intrusion, overflow, misplaced controls, or a canvas
+  whose bitmap aspect ratio disagrees with its CSS box in the browser console.
 - `/paper/` is a proof-guided edition of the same argument and numerical figures. It adds a reading route, theorem statements, references, and progressively expandable proofs. In particular, the half-cylinder proof first displays the separated linearized blocks and their uniform lower bounds on `2≤λ≤3`; a nested panel then gives the Banach-space implicit-function argument. The cone proof uses the same structure for the uniform Lyapunov–Schmidt reduction.
 
 The paper edition uses the relevance, findability, understandability, and usability principles summarized by [GaZmagik/iso-24495](https://github.com/GaZmagik/iso-24495). That repository is an unofficial interpretation of the ISO plain-language standards, so the site makes no ISO-conformance claim.

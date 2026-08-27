@@ -14,8 +14,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
     <script defer src="../math.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
-    <link rel="stylesheet" href="../styles.css?v=20260827.3">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.3">
+    <link rel="stylesheet" href="../styles.css?v=20260827.5">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.5">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -71,21 +71,33 @@
             \]
           </div>
           <p>Pompeiu asked in 1929 whether the collection of all these readings determines the unknown field. Mathematically, this asks whether the map \(f\mapsto M_\Omega f\) is injective.</p>
-          <p>We say that a bounded set \(\Omega\) has the <em>Pompeiu property</em> if this map is injective. Since \(M_\Omega\) is linear, this is equivalent to saying that its kernel is trivial. In other words, for every function \(f\),</p>
-          <div class="tex-display">
-            \[
-            \int_{E(\Omega)}f(x)\,dx=0
-            \quad\text{for every rigid motion }E
-            \qquad\Longrightarrow\qquad
-            f=0.
-            \]
-          </div>
-          <p>Can a bounded set fail to have the Pompeiu property? Pompeiu conjectured that every bounded set has it.</p>
+          <article class="math-statement math-statement-definition" aria-labelledby="pompeiuDefinitionTitle">
+            <header class="math-statement-header"><span>Definition</span><small>Pompeiu property</small></header>
+            <div class="math-statement-body">
+              <p id="pompeiuDefinitionTitle">A bounded set \(\Omega\) has the <em>Pompeiu property</em> when \(f\mapsto M_\Omega f\) is injective. Since \(M_\Omega\) is linear, this is equivalent to saying that, for every function \(f\),</p>
+              <div class="tex-display">
+                \[
+                \int_{E(\Omega)}f(x)\,dx=0
+                \quad\text{for every rigid motion }E
+                \qquad\Longrightarrow\qquad
+                f=0.
+                \]
+              </div>
+            </div>
+          </article>
 
-          <aside class="probe-question probe-question-inline" aria-label="The Pompeiu problem">
-            <span>Pompeiu's problem</span>
-            <p>Does every bounded planar set have the Pompeiu property?</p>
+          <label for="pompeiu-history-note" class="margin-toggle" aria-label="Show the historical note">&#8853;</label>
+          <input type="checkbox" id="pompeiu-history-note" class="margin-toggle">
+          <aside class="marginnote tufte-margin historical-margin" data-margin-aside>
+            <strong class="tufte-margin-title">Historical note</strong>
+            <p>Pompeiu claimed that disks and squares have the Pompeiu property. His disk proof was incorrect, while the square proof assumed that \(f\) tends to a limit at infinity. Christov later proved the square case without this assumption; Chakalov established the disk counterexample in 1944.</p>
+            <p>Brown, Schreiber and Taylor proved that noncircular ellipses, polygonal regions, and compact convex sets with a corner have the property <a class="history-citation" href="#ref-bst">[5]</a>. The connected smooth-domain question remained open until the two planar counterexamples proved in 2026 <a class="history-citation" href="#ref-colbrook">[12]</a>, <a class="history-citation" href="#ref-cao-dedios">[13]</a>.</p>
           </aside>
+
+          <article class="math-statement math-statement-problem" aria-labelledby="pompeiuProblemTitle">
+            <header class="math-statement-header"><span>Problem</span><small>Pompeiu · 1929</small></header>
+            <div class="math-statement-body"><p id="pompeiuProblemTitle">Does every bounded planar set have the Pompeiu property?</p></div>
+          </article>
 
           <p>Chakalov showed in 1944 that the answer is no: every disk fails to have the Pompeiu property. Rotational symmetry makes the loss of information plausible, since rotating a disk produces no new footprint. The optional digression below gives an explicit nonzero function in the kernel.</p>
           <p>Finite disjoint unions of congruent disks give further examples. A function whose integral vanishes over every moved disk also has integral zero over every moved copy of such a union. We shall therefore consider connected smooth bounded domains. The modern Pompeiu conjecture asserts that, in this class, only disks fail to have the Pompeiu property.</p>
@@ -94,6 +106,7 @@
         <details class="disk-sidequest">
           <summary><span><small>Optional digression</small>Why does the disk fail the Pompeiu property?</span><i>expand +</i></summary>
           <div class="disk-sidequest-body">
+            <p class="applet-instruction">These figures are interactive: drag the highlighted set to move its centre, and use the slider to change its size.</p>
             <figure class="fullwidth measurement-figure line-probe-figure" id="lineProbeFigure">
               <figcaption class="measurement-caption">
                 <p class="eyebrow">A one-dimensional model</p>
@@ -126,77 +139,83 @@
               </div>
             </figure>
 
-            <div class="intro-copy">
-              <h3>Proposition. Every disk fails the Pompeiu property.</h3>
-              <p>Let \(B_r\) be a disk of radius \(r\), and let \(\rho_\star&gt;0\) be a zero of \(J_1\). Then</p>
-              <div class="tex-display">
-                \[
-                f(x)=\cos\!\left(\frac{\rho_\star}{r}x_1\right)
-                \]
-              </div>
-              <p>is nonzero and satisfies \(\int_{E(B_r)}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
-            </div>
-          <figure class="fullwidth measurement-figure pompeiu-figure" id="pompeiuFigure">
-            <figcaption class="measurement-caption">
-              <p class="eyebrow">A two-dimensional model</p>
-              <h3>The Pompeiu operator for a disk.</h3>
-              <p>Here \(f(x)=\cos(x_1)\), so the exceptional radius is the first positive zero \(r=3.8317\ldots\) of \(J_1\). The displayed value is the integral over the translated disk.</p>
-            </figcaption>
-            <div class="measurement-panel pompeiu-panel">
-              <canvas class="measurement-canvas" id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
-              <div class="measurement-side pompeiu-side">
-                <div class="measurement-size-control">
-                  <label for="pompeiuRadius"><span>Disk radius</span><output id="pompeiuRadiusValue" for="pompeiuRadius">\(r=3.8317\ldots\)</output></label>
-                  <div class="measurement-slider">
-                    <input id="pompeiuRadius" type="range" min="0.5" max="6.8" step="0.01" value="3.8317059702" aria-label="Dilate the disk by changing its radius">
-                    <i class="measurement-slider-mark" aria-hidden="true"></i>
+            <div class="intro-copy disk-proof-flow">
+              <label for="pompeiu-model-note" class="margin-toggle" aria-label="Show the interactive disk probe">&#8853;</label>
+              <input type="checkbox" id="pompeiu-model-note" class="margin-toggle">
+              <figure class="marginnote tufte-margin pompeiu-margin-figure" data-margin-aside id="pompeiuFigure" aria-label="Interactive disk probe for the function cosine of x one">
+                <div class="measurement-panel pompeiu-panel">
+                  <canvas class="measurement-canvas" id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
+                  <div class="measurement-side pompeiu-side">
+                    <div class="measurement-size-control">
+                      <label for="pompeiuRadius"><span>Disk radius</span><output id="pompeiuRadiusValue" for="pompeiuRadius">\(r=3.8317\ldots\)</output></label>
+                      <div class="measurement-slider">
+                        <input id="pompeiuRadius" type="range" min="0.5" max="6.8" step="0.01" value="3.8317059702" aria-label="Dilate the disk by changing its radius">
+                        <i class="measurement-slider-mark" aria-hidden="true"></i>
+                      </div>
+                      <div class="measurement-range-scale"><span>\(0.5\)</span><span class="measurement-range-mark">\(\rho_1\)</span><span>\(6.8\)</span></div>
+                    </div>
+                    <div class="measurement-readout pompeiu-readout">
+                      <div class="measurement-value-line"><span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span><strong id="pompeiuValue">= 0.000</strong></div>
+                    </div>
                   </div>
-                  <div class="measurement-range-scale"><span>\(0.5\)</span><span class="measurement-range-mark">\(\rho_1\)</span><span>\(6.8\)</span></div>
                 </div>
-                <div class="measurement-readout pompeiu-readout">
-                  <div class="measurement-value-line"><span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span><strong id="pompeiuValue">= 0.000</strong></div>
-                </div>
-                <p class="measurement-hint pompeiu-hint">Drag the probe; vary its radius.</p>
-              </div>
-            </div>
-          </figure>
+              </figure>
 
-          <div class="disk-sidequest-proof">
-            <h4>Proof.</h4>
-            <p>Translation of the disk gives a convolution:</p>
-            <div class="tex-display">
+              <p class="eyebrow">A two-dimensional model</p>
+              <article class="math-statement math-statement-proposition" aria-labelledby="diskPropositionTitle">
+                <header class="math-statement-header"><span>Proposition</span><small>disk counterexample</small></header>
+                <div class="math-statement-body">
+                  <h3 id="diskPropositionTitle">Every disk fails the Pompeiu property.</h3>
+                  <p>Let \(B_r\) be a disk of radius \(r\), and let \(\rho_\star&gt;0\) be a zero of \(J_1\). Then</p>
+                  <div class="tex-display">
+                    \[
+                    f(x)=\cos\!\left(\frac{\rho_\star}{r}x_1\right)
+                    \]
+                  </div>
+                  <p>is nonzero and satisfies \(\int_{E(B_r)}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
+                </div>
+              </article>
+              <p class="disk-model-note">The margin experiment fixes \(f(x)=\cos(x_1)\) and varies the disk around the first positive zero \(r=3.8317\ldots\) of \(J_1\).</p>
+
+              <div class="disk-sidequest-proof">
+                <label for="bst-proof-note" class="margin-toggle" aria-label="Show the Brown, Schreiber and Taylor note">&#8853;</label>
+                <input type="checkbox" id="bst-proof-note" class="margin-toggle">
+                <aside class="marginnote tufte-margin" data-margin-aside>Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin.</aside>
+                <h4>Proof.</h4>
+                <p>Translation of the disk gives a convolution:</p>
+                <div class="tex-display">
               \[
               \int_{B_r+t}f(x)\,dx
               =(\mathbf 1_{B_r}*f)(t).
               \]
-            </div>
-            <p>The Fourier transform turns convolution into multiplication, and</p>
-            <div class="tex-display">
+                </div>
+                <p>The Fourier transform turns convolution into multiplication, and</p>
+                <div class="tex-display">
               \[
               \widehat{\mathbf 1_{B_r}}(\xi)
               =2\pi r\,\frac{J_1(r|\xi|)}{|\xi|}.
               \]
-            </div>
-            <p>Take \(f(x)=\cos(\sqrt\lambda\,x_1)\). Its Fourier transform is supported at the two frequencies \(\xi=\pm\sqrt\lambda\,e_1\). If \(\sqrt\lambda\,r=\rho_\star\), where \(J_1(\rho_\star)=0\), then \(\widehat{\mathbf 1_{B_r}}\) vanishes at both frequencies. Therefore</p>
-            <div class="tex-display">
+                </div>
+                <p>Take \(f(x)=\cos(\sqrt\lambda\,x_1)\). Its Fourier transform is supported at the two frequencies \(\xi=\pm\sqrt\lambda\,e_1\). If \(\sqrt\lambda\,r=\rho_\star\), where \(J_1(\rho_\star)=0\), then \(\widehat{\mathbf 1_{B_r}}\) vanishes at both frequencies. Therefore</p>
+                <div class="tex-display">
               \[
               \int_{B_r+t}\cos(\sqrt\lambda\,x_1)\,dx=0
               \qquad\text{for every }t\in\mathbb R^2.
               \]
+                </div>
+                <p>Thus the convolution \(\mathbf 1_{B_r}*f\) vanishes identically. Rotational invariance of the disk completes the proof. <span class="qed">□</span></p>
+              </div>
             </div>
-            <p>Thus the convolution \(\mathbf 1_{B_r}*f\) vanishes identically. Rotational invariance of the disk completes the proof. <span class="qed">□</span></p>
-            <p class="intro-proof-aside">Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin.</p>
-          </div>
-
-          <div class="disk-sidequest-history">
-            <h4>Historical note.</h4>
-            <p>Pompeiu claimed that disks and squares have the Pompeiu property. His disk proof was incorrect, while the square proof used the additional assumption that \(f\) tends to a limit at infinity. Christov later proved the square case without this assumption. Chakalov established the disk counterexample in 1944.</p>
-            <p>Brown, Schreiber and Taylor proved that noncircular ellipses, polygonal regions, and compact convex sets with a corner have the Pompeiu property <a class="history-citation" href="#ref-bst">[5, Theorems 5.1 and 5.9, and Corollary 5.12]</a>. The connected smooth-domain question remained open until the two planar counterexamples proved in 2026 <a class="history-citation" href="#ref-colbrook">[12]</a>, <a class="history-citation" href="#ref-cao-dedios">[13]</a>.</p>
-          </div>
           </div>
         </details>
 
         <div class="intro-copy intro-copy-wide intro-chapter-heading">
+          <label for="chladni-photo-note" class="margin-toggle" aria-label="Show the Chladni plate photograph">&#8853;</label>
+          <input type="checkbox" id="chladni-photo-note" class="margin-toggle">
+          <figure class="marginnote tufte-margin chladni-photo-panel" data-margin-aside>
+            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along circular nodal lines separating four radial nodal domains on a vibrating round Chladni plate">
+            <figcaption>Chladni plate with circular nodes. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Pieter Kuiper, public domain.</a></figcaption>
+          </figure>
           <p class="eyebrow">The Schiffer problem</p>
           <h3>Can a membrane vibrate with constant amplitude along its boundary?</h3>
           <p>A normal mode of a scalar membrane has the form \(U(x,t)=u(x)\cos(\sqrt\lambda\,t)\), where the spatial profile satisfies \((\Delta+\lambda)u=0\). The Neumann condition \(\partial_\nu u=0\) describes a reflecting boundary. Schiffer asked for domains carrying a nonconstant normal mode whose value is constant along the boundary. After rescaling the mode, the problem is</p>
@@ -211,13 +230,11 @@
             \tag{S}
             \]
           </div>
-          <p>A domain \(\Omega\) for which (S) has a solution is said to have the <em>Schiffer property</em>. The disk has this property: its radial modes are multiples of \(J_0(\sqrt\lambda\,r)\), and their normal derivative vanishes at the boundary whenever \(J_1(\sqrt\lambda\,r)=0\). Schiffer's conjecture asserted that every smooth bounded planar domain with this property is a disk.</p>
-          <label for="chladni-photo-note" class="margin-toggle" aria-label="Show the Chladni plate photograph">&#8853;</label>
-          <input type="checkbox" id="chladni-photo-note" class="margin-toggle">
-          <figure class="marginnote chladni-photo-panel">
-            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along circular nodal lines separating four radial nodal domains on a vibrating round Chladni plate">
-            <figcaption>Chladni plate with circular nodes. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Pieter Kuiper, public domain.</a></figcaption>
-          </figure>
+          <p>A domain \(\Omega\) for which (S) has a solution is said to have the <em>Schiffer property</em>. The disk has this property: its radial modes are multiples of \(J_0(\sqrt\lambda\,r)\), and their normal derivative vanishes at the boundary whenever \(J_1(\sqrt\lambda\,r)=0\).</p>
+          <article class="math-statement math-statement-conjecture" aria-labelledby="schifferConjectureTitle">
+            <header class="math-statement-header"><span>Conjecture</span><small>Schiffer</small></header>
+            <div class="math-statement-body"><p id="schifferConjectureTitle">Every connected smooth bounded planar domain with the Schiffer property is a disk.</p></div>
+          </article>
         </div>
 
         <figure class="membrane-figure" id="schifferModeFigure">
@@ -236,9 +253,9 @@
           </div>
         </figure>
 
-        <article class="intro-theorem" aria-labelledby="williamsTheoremTitle">
-          <div class="intro-theorem-label"><span>The unexpected connection</span><small>Williams · 1976</small></div>
-          <div>
+        <article class="math-statement math-statement-theorem intro-theorem" aria-labelledby="williamsTheoremTitle">
+          <header class="math-statement-header"><span>Theorem</span><small>Williams · 1976</small></header>
+          <div class="math-statement-body">
             <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
             <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
             <ol>
@@ -274,6 +291,9 @@
         <details class="proof-details intro-proof">
           <summary><span>Failure of the Pompeiu property implies the Schiffer property</span><i>expand +</i></summary>
           <div class="intro-proof-body">
+            <label for="williams-technical-note" class="margin-toggle" aria-label="Show the technical note">&#8853;</label>
+            <input type="checkbox" id="williams-technical-note" class="margin-toggle">
+            <aside class="marginnote tufte-margin intro-footnote" data-margin-aside id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</aside>
             <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
             <div class="tex-display">
@@ -283,7 +303,6 @@
             </div>
             <p>We have that \(v\) solves \((\Delta+\lambda)v=1\) inside \(\Omega\) and \((\Delta+\lambda)v=0\) outside. The regularity of \(v\) in Fourier<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup> implies that it decays in physical space. Together with \((\Delta+\lambda)v=0\), this allows us to propagate \(v=0\) from infinity to the exterior of \(\Omega\) (recall here that \(\Omega\) is simply connected). Thus, \(v\) is compactly supported in \(\overline\Omega\), and satisfies \((\Delta+\lambda)v=1\). The decay of \(v\) in Fourier space tells us that \(v\) is \(C^1\), so that \(v|_{\partial\Omega}=0\) and \(\partial_\nu v|_{\partial\Omega}=0\).</p>
             <p>Lastly, considering \(u=1-\lambda v\), we see that it satisfies \((\Delta+\lambda)u=0\), as well as \(u|_{\partial\Omega}=1\) and \(\partial_\nu u|_{\partial\Omega}=0\). It is not constant, since a constant solution of \((\Delta+\lambda)u=0\) with \(\lambda&gt;0\) vanishes identically. <span class="qed">□</span></p>
-            <p class="intro-proof-aside intro-footnote" id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</p>
           </div>
         </details>
 
@@ -348,16 +367,16 @@
           </div>
         </div>
 
-        <div class="intro-lead">
-          <div class="intro-copy">
+        <div class="intro-copy intro-copy-wide linearized-criterion-flow">
             <p>The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
             <p>This approach has been used in overdetermined problems. Unfortunately, the only planar Schiffer examples we know are balls, and there Siegel proved that there is no agreement of Neumann and Dirichlet eigenvalues, blocking the route described above.</p>
-          </div>
-          <div class="equation-system intro-statement" role="img" aria-label="A Schiffer example can be perturbed when lambda is also a Dirichlet eigenvalue">
-            <span class="system-label">Perturbation</span>
-            <p class="intro-question">Suppose a Schiffer example \((u,\Omega)\), so in particular \(u\) is a Neumann eigenfunction of the Laplacian with eigenvalue \(\lambda\). We can perturb that solution if \(\lambda\) is also a Dirichlet eigenvalue.</p>
-            <p>In that case its eigenfunction \(\delta u\) is the corresponding perturbation of \(u\), and \(\Omega\) is perturbed by \(\partial_\nu\delta u/\lambda\).</p>
-          </div>
+          <article class="math-statement math-statement-criterion" aria-labelledby="linearizedCriterionTitle">
+            <header class="math-statement-header"><span>Criterion</span><small>linearized perturbation</small></header>
+            <div class="math-statement-body">
+              <p id="linearizedCriterionTitle">Suppose \((u,\Omega)\) is a Schiffer example, so in particular \(u\) is a Neumann eigenfunction with eigenvalue \(\lambda\). The linearized system admits a nontrivial deformation when \(\lambda\) is also a Dirichlet eigenvalue.</p>
+              <p>Its Dirichlet eigenfunction \(\delta u\) supplies the field variation, while the boundary moves with normal velocity \(\delta\Omega=\partial_\nu\delta u/\lambda\).</p>
+            </div>
+          </article>
         </div>
 
         <details class="proof-details intro-proof">
@@ -400,6 +419,9 @@
         <details class="proof-details intro-proof">
           <summary><span>Why the boundary condition is a criticality condition</span><i>expand +</i></summary>
           <div class="intro-proof-body">
+            <label for="criticality-converse-note" class="margin-toggle" aria-label="Show the converse note">&#8853;</label>
+            <input type="checkbox" id="criticality-converse-note" class="margin-toggle">
+            <aside class="marginnote tufte-margin" data-margin-aside>The converse needs one more step. Criticality under the area constraint gives the Lagrange condition \(|\nabla u|^2-\mu u^2=\text{const}\) on \(\partial\Omega\), which looks weaker; Fall and Weth show that any nontrivial solution of it has \(u^2\) constant on the boundary, so on a connected boundary \(u\) itself is constant. Simplicity of \(\mu\) is not a technicality here. The ball in \(\mathbb R^n\) maximizes the first nonzero Neumann eigenvalue at fixed volume, so it is certainly critical, yet that eigenvalue has multiplicity \(n\) and none of its eigenfunctions is constant on the sphere.</aside>
             <p>Deform with normal velocity \(f=V\cdot\nu\) on \(\partial\Omega\). The Hadamard formula for a simple Neumann eigenvalue is</p>
             <div class="tex-display">
               \[
@@ -414,18 +436,17 @@
               \]
             </div>
             <p>which is zero for every area-preserving deformation. The constant \(c\) is not zero: if it were, \(u\) and \(\partial_\nu u\) would both vanish on \(\partial\Omega\) and unique continuation would force \(u\equiv0\). <span class="qed">□</span></p>
-            <p class="intro-proof-aside">The converse needs one more step. Criticality under the area constraint gives the Lagrange condition \(|\nabla u|^2-\mu u^2=\text{const}\) on \(\partial\Omega\), which looks weaker; Fall and Weth show that any nontrivial solution of it has \(u^2\) constant on the boundary, so on a connected boundary \(u\) itself is constant. Simplicity of \(\mu\) is not a technicality here. The ball in \(\mathbb R^n\) maximizes the first nonzero Neumann eigenvalue at fixed volume, so it is certainly critical, yet that eigenvalue has multiplicity \(n\) and none of its eigenfunctions is constant on the sphere.</p>
           </div>
         </details>
 
-        <div class="intro-copy intro-copy-wide">
+        <div class="intro-copy intro-copy-wide construction-flow">
           <p>Everything after this is a way of arranging the coincidence somewhere else. On the flat cylinder and on the sphere the two spectra do meet, which is section 03; sections 04 and 05 transport that meeting back to the plane through cone quotients, where the integer order is relaxed to a real parameter and then tuned until it lands back on an integer.</p>
-        </div>
-        <figure class="fullwidth intro-shapes">
+          <label for="construction-gallery-note" class="margin-toggle" aria-label="Show the comparison plate">&#8853;</label>
+          <input type="checkbox" id="construction-gallery-note" class="margin-toggle">
+        <figure class="marginnote tufte-margin margin-gallery intro-shapes" data-margin-aside>
           <figcaption>
-            <p class="eyebrow">The two constructions</p>
-            <h3>Two noncircular Schiffer domains and their eigenfunctions.</h3>
-            <p>The first domain comes from the computer-assisted proof of Colbrook and Stepaniants; the second comes from the bifurcation argument of Cao-Labora and de Dios Pont. In both pictures the outer curve is \(\partial\Omega\), and the colour field shows the corresponding solution \(u\). The photographs below are included only to compare their periodically undulating boundaries.</p>
+            <p class="eyebrow">Comparison plate</p>
+            <h3>Four periodically fluted boundaries.</h3>
           </figcaption>
           <div class="intro-shapes-row">
             <div class="intro-shapes-examples">
@@ -482,7 +503,7 @@
           <p class="intro-shapes-credit">Images shared with the <a href="https://pompeiu-schiffer.org" target="_blank" rel="noreferrer">joint Schiffer–Pompeiu exposition</a>.</p>
         </figure>
 
-        <div class="intro-copy intro-copy-wide intro-close">
+          <p><strong>The two constructions.</strong> The first domain in the margin plate comes from the computer-assisted proof of Colbrook and Stepaniants; the second comes from the bifurcation argument of Cao-Labora and de Dios Pont. In both mathematical pictures the outer curve is \(\partial\Omega\), and the colour field shows the corresponding solution \(u\). The coin and biscuit are included only to compare their periodically undulating boundaries.</p>
           <p>Both questions were answered in early August 2026, by <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer">Colbrook–Stepaniants</a> and <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Cao-Labora–de Dios Pont</a>. The rest of the site exposes those proofs.</p>
         </div>
       </section>
@@ -594,7 +615,7 @@
           <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
         <div class="geometry-lead"><h3>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h3><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
-        <div class="geometry-laboratory">
+        <div class="geometry-laboratory interactive-plate">
           <aside class="geometry-controls">
             <div class="control-heading"><span>Planar quotient and large-\(N\) limit</span><button id="storyGeometryResetButton" type="button">Reset</button></div>
             <div class="geometry-stages" aria-label="Seven stages of the quotient construction">
@@ -713,9 +734,9 @@
           </div>
         </div>
 
-        <div class="cylinder-theorem">
-          <div class="theorem-label"><span>Theorem 5.1</span><small>uniform half-cylinder branch</small></div>
-          <div class="theorem-statement">
+        <article class="math-statement math-statement-wide cylinder-theorem">
+          <header class="math-statement-header"><span>Theorem</span><small>5.1 · uniform half-cylinder branch</small></header>
+          <div class="math-statement-body theorem-statement">
             <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
             <div class="theorem-system tex-display">
               \[
@@ -746,7 +767,7 @@
             </div>
             <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
           </div>
-        </div>
+        </article>
 
         <details class="cylinder-jet-proof proof-details">
           <summary><span>Derivation of the first- and second-order terms</span><i>expand +</i></summary>
@@ -836,7 +857,7 @@
           <p>The applet below computes a finite Fourier approximation to the family in Theorem 5.1. For each <span class="formula">\((\lambda,s)\in[2,3]\times[-0.85,0.85]\)</span>, it solves simultaneously for the boundary graph and the Helmholtz field. The flat and three-dimensional panels display the same numerical solution in two coordinate systems.</p>
         </div>
 
-        <div class="laboratory">
+        <div class="laboratory interactive-plate">
           <aside class="controls" aria-label="Simulation controls">
             <div class="control-heading">
               <span>Parameters</span>
@@ -962,7 +983,7 @@
           </div>
         </div>
 
-        <div class="laboratory cone-laboratory">
+        <div class="laboratory cone-laboratory interactive-plate">
           <aside class="controls" aria-label="Cone simulation controls">
             <div class="control-heading">
               <span>Branch controls</span>
@@ -1070,7 +1091,7 @@
           <p>The one-wavelength crop is centered at the cut, so the discrepancy caused by nonintegral \(R\) is visible in the enlarged panel. The radial trace isolates the non-evanescent mode, while the higher angular corrections have exponential radial profiles. Regularity at the cone point selects one Bessel profile, and the Debye approximation gives its dependence on \(R\) through the local phase.</p>
         </div>
 
-        <div class="modes-laboratory">
+        <div class="modes-laboratory interactive-plate">
           <aside class="modes-controls light-controls" aria-label="Nested angular zoom controls">
             <div class="control-heading">
               <span>Nested zoom controls</span>
@@ -1197,9 +1218,9 @@
           <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
           <p>One caveat about the laboratory below. It runs on the crossing \(R_*=28.026397\ldots\), whose spectral ratio is \(\lambda_*=3.317011\ldots\), and that value lies <em>outside</em> the window \(2\le\lambda_*\le3\) assumed in Corollary 5.3 and in Theorems 5.1 and 5.2. It is shown because it is the crossing whose branch was continued numerically all the way to an integer. The proof runs instead on the crossings inside the window, which subsection 5.5 supplies; the formulas of this subsection are exact at either value.</p>
         </div>
-        <div class="uniform-drop-theorem">
-          <div class="uniform-drop-label"><span>Corollary 5.3</span><small>uniform decrease of \(R\)</small></div>
-          <div>
+        <article class="math-statement math-statement-wide uniform-drop-theorem">
+          <header class="math-statement-header"><span>Corollary</span><small>5.3 · uniform decrease of \(R\)</small></header>
+          <div class="math-statement-body">
             <p>There are constants \(R_{\mathrm{drop}},s_*,\eta_*&gt;0\), independent of the crossing, such that every real-order crossing with</p>
             <div class="tex-display">
               \[
@@ -1217,7 +1238,7 @@
             </div>
             <p>The number \(\eta_*\) may be small, but it is independent of \(R_*\) for all sufficiently large crossings. This is the estimate needed to reach an integer value of \(R\).</p>
           </div>
-        </div>
+        </article>
         <div class="phase-derivation-grid">
           <article>
             <span>01 / compute the variation of \(R\)</span>
@@ -1253,7 +1274,7 @@
             <p>The cosine has zero average. Consequently, the first nonzero variation of the cone parameter \(R\) is the negative quadratic term computed above.</p>
           </article>
         </div>
-        <div class="phase-story-lab">
+        <div class="phase-story-lab interactive-plate">
           <aside>
             <div class="control-heading"><span>Computed branch reaching \(N=28\)</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
@@ -1300,9 +1321,9 @@
               <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
             </div>
           </header>
-          <div class="real-order-theorem">
-            <div><span>Theorem 5.2</span><small>uniform cone bifurcation</small></div>
-            <article>
+          <article class="math-statement math-statement-wide real-order-theorem">
+            <header class="math-statement-header"><span>Theorem</span><small>5.2 · uniform cone bifurcation</small></header>
+            <div class="math-statement-body">
               <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
               <div class="tex-display">
                 \[
@@ -1322,8 +1343,8 @@
                 \]
               </div>
               <p>The theorem applies to every sufficiently large real crossing. At any individual smaller simple crossing, the usual local bifurcation theorem gives a branch whose interval may depend on that crossing. For large \(R_*\), a fixed boundary collar converges to the half-cylinder of Theorem 5.1, which gives estimates uniform in \(R_*\). The finitely many crossings in a bounded range of \(R_*\) are handled separately.</p>
-            </article>
-          </div>
+            </div>
+          </article>
         </section>
 
         <div class="debye-lead paper-copy">
@@ -1471,7 +1492,7 @@
           </div>
         </div>
 
-        <div class="debye-laboratory">
+        <div class="debye-laboratory interactive-plate">
           <aside class="debye-controls" aria-label="Large-radius Bessel comparison controls">
             <div class="control-heading">
               <span>Vary the boundary radius</span>
@@ -1525,9 +1546,9 @@
           <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
           <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
         </div>
-        <div class="near-integer-theorem">
-          <span>Theorem 5.5 · near-integer crossings</span>
-          <div>
+        <article class="math-statement math-statement-wide near-integer-theorem">
+          <header class="math-statement-header"><span>Theorem</span><small>5.5 · near-integer crossings</small></header>
+          <div class="math-statement-body">
             <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
             <div class="tex-display">
               \[
@@ -1540,7 +1561,7 @@
             </div>
             <p>The scatter plot below is a finite numerical sample of these coincidences. The theorem itself comes from aligning the fixed-order McMahon phase and the large-order Debye phase.</p>
           </div>
-        </div>
+        </article>
         <details class="abundance-proof-details proof-details">
           <summary><span>Proof sketch of Theorem 5.5</span><i>expand +</i></summary>
           <div class="proof-argument abundance-proof-argument">
@@ -1679,5 +1700,6 @@
     <script defer src="../story.js"></script>
     <script defer src="../abundance.js"></script>
     <script defer src="../pompeiu.js"></script>
+    <script defer src="layout-contract.js?v=20260827.5"></script>
   </body>
 </html>
