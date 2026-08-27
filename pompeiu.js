@@ -420,7 +420,7 @@
     { n: 3, rho: 10.1734681351, nodes: [2.4048255577, 5.5200781103, 8.6537279129] },
   ];
   const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { mode: MODES[0], running: !reducedMotion, visible: true, phase: 0, previous: 0 };
+  const state = { mode: MODES[2], running: !reducedMotion, visible: true, phase: 0, previous: 0 };
   let width = 0, height = 0, dpr = 1, frame = 0;
 
   function besselJ0(x) {

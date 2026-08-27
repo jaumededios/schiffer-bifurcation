@@ -217,19 +217,19 @@
 
         <figure class="membrane-figure" id="schifferModeFigure">
           <div class="chladni-photo-panel">
-            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along four circular nodal lines on a vibrating round Chladni plate">
-            <p>Sand collects along the stationary nodal circles of a vibrating metal plate. The plate in this photograph is driven at 3.986 kHz. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Photograph: Pieter Kuiper, public domain.</a></p>
+            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along circular nodal lines separating four radial nodal domains on a vibrating round Chladni plate">
+            <p>Sand collects along stationary nodal circles, separating four radial nodal domains. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Photograph: Pieter Kuiper, public domain.</a></p>
           </div>
           <div class="schiffer-mode-panel">
             <div class="schiffer-mode-heading">
-              <div><p class="eyebrow">Radial modes of the disk</p><h3>Every point of the rim moves together.</h3></div>
+              <div><p class="eyebrow">Radial Neumann eigenfunctions</p><h3>The profiles \(J_0(\rho_n r)\), where \(J_1(\rho_n)=0\).</h3></div>
               <button type="button" id="schifferModePlay" class="mode-play" aria-pressed="false">pause</button>
             </div>
             <canvas id="schifferModeCanvas" role="img" aria-label="Animated radial Neumann eigenmode on a disk"></canvas>
             <div class="schiffer-mode-controls" role="group" aria-label="Choose a radial mode">
-              <button type="button" data-radial-mode="1" aria-pressed="true">mode 1</button>
+              <button type="button" data-radial-mode="1" aria-pressed="false">mode 1</button>
               <button type="button" data-radial-mode="2" aria-pressed="false">mode 2</button>
-              <button type="button" data-radial-mode="3" aria-pressed="false">mode 3</button>
+              <button type="button" data-radial-mode="3" aria-pressed="true">mode 3</button>
             </div>
             <p class="membrane-model-note">The photograph illustrates nodal patterns for a thin elastic plate. The animation evaluates the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
           </div>
