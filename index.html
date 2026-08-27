@@ -57,19 +57,19 @@
       <section id="introduction" class="story-intro">
         <div class="story-heading light-story-heading">
           <span class="section-number">I</span>
-          <div><p class="eyebrow">Pompeiu's problem</p><h2>Can a moving probe recover a field from its averages?</h2></div>
+          <div><p class="eyebrow">Pompeiu's problem</p><h2>Which probe shapes retain enough information to recover the field?</h2></div>
         </div>
 
         <div class="intro-lead intro-physics-lead">
           <div class="intro-copy">
-            <p>Suppose that a physical quantity varies across a sample: its temperature, its local composition, or the roughness of its surface. A measuring probe has a footprint \(\Omega\). When the probe is placed on the sample, it returns a single reading obtained from the field over that footprint, rather than its value at one point.</p>
-            <p>We may translate and rotate the probe, and take as many readings as we wish. If the unknown field is \(f\) and \(E\) is a rigid motion, write \(E(\Omega)\) for the transformed footprint. We model the reading in configuration \(E\) by</p>
+            <p>Suppose that you are designing a probe to measure a physical quantity that varies across a sample: its temperature, its local composition, or the roughness of its surface. One choice in the design is the probe's footprint \(\Omega\), the region over which it takes a reading. Physical limitations prevent the instrument from measuring the field at a single point, so it returns an average over this footprint. You want to choose \(\Omega\) so that these averaged measurements retain as much information as possible.</p>
+            <p>Once the footprint has been chosen, suppose that you may translate and rotate the probe and take as many readings as you wish. If the unknown field is \(f\) and \(E\) is a rigid motion, write \(E(\Omega)\) for the transformed footprint. We model the reading in configuration \(E\) by</p>
             <div class="tex-display intro-inline-display">
               \[
               M_\Omega f(E)=\int_{E(\Omega)}f(x)\,dx.
               \]
             </div>
-            <p>Pompeiu asked in 1929 whether the collection of all these readings determines \(f\).</p>
+            <p>Pompeiu asked in 1929 whether the collection of all these readings determines \(f\), or equivalently whether the chosen footprint can distinguish every pair of fields.</p>
           </div>
           <aside class="probe-question" aria-label="The Pompeiu problem">
             <span>Pompeiu's problem</span>
