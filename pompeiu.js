@@ -14,14 +14,12 @@
 
   const canvas = root.querySelector("#pompeiuCanvas");
   const valueOut = root.querySelector("#pompeiuValue");
-  const meterFill = root.querySelector("#pompeiuMeterFill");
   const radiusInput = root.querySelector("#pompeiuRadius");
   const radiusOut = root.querySelector("#pompeiuRadiusValue");
   const context = canvas && canvas.getContext("2d");
-  if (!context || !valueOut || !meterFill || !radiusInput || !radiusOut) return;
+  if (!context || !valueOut || !radiusInput || !radiusOut) return;
 
   const FIRST_ZERO = 3.8317059702;
-  const METER_MAX = 12;
   const VIEW_Y = 7.4;
   const state = { radius: FIRST_ZERO, centre: { x: 0, y: 0 }, dragging: false };
 
@@ -177,11 +175,7 @@
 
     const value = diskAmplitude(state.radius) * Math.cos(state.centre.x);
     const shown = Math.abs(value) < 5e-4 ? 0 : value;
-    valueOut.textContent = shown.toFixed(3);
-    const fraction = Math.min(1, Math.abs(value) / METER_MAX);
-    meterFill.style.width = `${(fraction * 50).toFixed(2)}%`;
-    meterFill.style.left = value >= 0 ? "50%" : `${(50 - fraction * 50).toFixed(2)}%`;
-    meterFill.style.background = Math.abs(value) < 5e-4 ? "var(--teal)" : (value > 0 ? "#a62b49" : "#2a747d");
+    valueOut.textContent = `= ${shown.toFixed(3)}`;
     canvas.setAttribute("aria-label",
       `Disk of radius ${state.radius.toFixed(3)} centred at (${state.centre.x.toFixed(2)}, ${state.centre.y.toFixed(2)}); the integral of cosine of x one over it is ${shown.toFixed(3)}`);
   }
@@ -258,10 +252,9 @@
   const canvas = root.querySelector("#lineProbeCanvas");
   const context = canvas && canvas.getContext("2d");
   const valueOut = root.querySelector("#lineProbeValue");
-  const meterFill = root.querySelector("#lineProbeMeterFill");
   const lengthInput = root.querySelector("#lineProbeLength");
   const lengthOut = root.querySelector("#lineProbeLengthValue");
-  if (!context || !valueOut || !meterFill || !lengthInput || !lengthOut) return;
+  if (!context || !valueOut || !lengthInput || !lengthOut) return;
 
   const VIEW = 4 * Math.PI;
   const state = { length: 2 * Math.PI, centre: 0, dragging: false };
@@ -310,11 +303,7 @@
   function updateReadout() {
     const value = 2 * Math.sin(state.length / 2) * Math.cos(state.centre);
     const shown = Math.abs(value) < 5e-4 ? 0 : value;
-    valueOut.textContent = shown.toFixed(3);
-    const fraction = Math.min(1, Math.abs(value) / 2);
-    meterFill.style.width = `${(fraction * 50).toFixed(2)}%`;
-    meterFill.style.left = value >= 0 ? "50%" : `${(50 - fraction * 50).toFixed(2)}%`;
-    meterFill.style.background = Math.abs(value) < 5e-4 ? "var(--teal)" : (value > 0 ? "#a62b49" : "#2a747d");
+    valueOut.textContent = `= ${shown.toFixed(3)}`;
     canvas.setAttribute("aria-label", `Interval of length ${state.length.toFixed(3)} centred at ${state.centre.toFixed(2)}; its integral of cosine x is ${shown.toFixed(3)}`);
   }
 

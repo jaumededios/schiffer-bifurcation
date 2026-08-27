@@ -1139,11 +1139,9 @@ dialog p:not(.eyebrow) {
 .measurement-range-scale > span:last-child { right: 0; }
 .measurement-range-mark { left: var(--measurement-mark); color: var(--orange); transform: translateX(-50%); }
 .measurement-readout { display: grid; gap: 9px; margin-top: auto; padding: 18px; color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: var(--type-caption); }
+.measurement-value-line { display: flex; align-items: baseline; gap: .5em; white-space: nowrap; }
 .pompeiu-readout strong { color: var(--ink); font: 500 19px var(--mono); font-variant-numeric: tabular-nums; }
 .measurement-hint { min-height: 63px; margin: 0; padding: 13px 18px; color: var(--muted); font: 400 var(--type-label)/1.65 var(--mono); letter-spacing: .025em; }
-.pompeiu-meter { position: relative; height: 6px; background: rgba(19,33,38,.07); }
-.pompeiu-meter::before { content: ""; position: absolute; left: 50%; top: -4px; bottom: -4px; width: 1px; background: var(--line); }
-.pompeiu-meter i { position: absolute; top: 0; bottom: 0; left: 50%; width: 0; background: var(--teal); }
 
 /* Physics-first introduction: interval probe, planar probe, and membrane modes. */
 .intro-physics-lead { align-items: stretch !important; }
