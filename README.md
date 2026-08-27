@@ -33,6 +33,11 @@ The Tufte edition keeps content semantics separate from page geometry:
 - `.interactive-plate` means an apparatus with direct `section` and `aside`
   children; the stylesheet chooses their desktop and mobile placement.
 - `.data-table` presents compact tabular evidence at reading measure.
+- `<lean-statement data-statement="…">` places a formal counterpart beside
+  the corresponding prose statement. `lean-statements.js` owns the statement
+  registry, renders the native disclosure, and invokes the maintained Lean
+  Highlight.js grammar lazily when it opens; article markup never duplicates
+  the disclosure shell or syntax tokens.
 
 The widths for these components live only in the measure tokens at the top of
 `tufte/tufte-port.css`; their instances need no per-item width classes or
@@ -41,6 +46,12 @@ discovers the structures from their semantics and checks the contracts
 automatically. It also rejects ambiguous role combinations and verifies that
 prose, proof, caption, and apparatus-label text resolve to the canonical type
 tokens rather than inherited component sizes.
+
+To add another formal statement, add its title and plain Lean source to the
+registry in `lean-statements.js`, then place only the declarative
+`<lean-statement data-statement="key"></lean-statement>` element after the
+matching mathematical statement in each edition where it belongs. Do not add
+hand-authored highlighting spans or per-instance layout classes.
 
 ## Narrative structure
 

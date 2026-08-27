@@ -6,7 +6,7 @@
   const rounded = (value) => Math.round(value * 10) / 10;
   const marginSelector = "body.tufte-site main .marginnote";
   const disclosureSelector = "body.tufte-site main details:not(.secondary-controls)";
-  const roleSelector = ".paper-copy, .math-statement, .small-multiples, .figure-band, .data-table";
+  const roleSelector = ".paper-copy, .math-statement, .lean-statement, .small-multiples, .figure-band, .data-table";
 
   function runLayoutContract() {
     const errors = [];
@@ -21,6 +21,7 @@
     const typeCaption = parseFloat(rootStyle.getPropertyValue("--type-caption")) * parseFloat(rootStyle.fontSize);
     const typeLabel = parseFloat(rootStyle.getPropertyValue("--type-label")) * parseFloat(rootStyle.fontSize);
     const typeControlValue = parseFloat(rootStyle.getPropertyValue("--type-control-value")) * parseFloat(rootStyle.fontSize);
+    const typeCode = parseFloat(rootStyle.getPropertyValue("--type-code")) * parseFloat(rootStyle.fontSize);
 
     const sectionMeasure = (element, ratio) => {
       const section = element.closest("main > section");
@@ -42,6 +43,10 @@
     if (document.documentElement.scrollWidth > window.innerWidth + 1) {
       errors.push(`page overflows by ${document.documentElement.scrollWidth - window.innerWidth}px`);
     }
+
+    document.querySelectorAll("lean-statement").forEach((host, index) => {
+      errors.push(`Lean statement host ${index + 1} was not rendered${host.dataset.statement ? ` (${host.dataset.statement})` : ""}`);
+    });
 
     const expectedSectionOrder = [
       "introduction",
@@ -99,18 +104,29 @@
       const summaryBox = summary.getBoundingClientRect();
       const detailsStyle = getComputedStyle(details);
       const summaryStyle = getComputedStyle(summary);
-      const expectedWidth = detailsBox.width * (narrow ? 1 : readingInFigure);
+      const formalStatement = details.classList.contains("lean-statement");
+      const expectedWidth = detailsBox.width * (formalStatement || narrow ? 1 : readingInFigure);
       if (Math.abs(summaryBox.width - expectedWidth) > 2) {
         errors.push(`reading disclosure ${index + 1} rule is not on the reading measure`);
       }
       if (Math.abs(summaryBox.left - detailsBox.left) > 1) {
         errors.push(`reading disclosure ${index + 1} is not aligned with the reading measure`);
       }
-      if (parseFloat(detailsStyle.borderTopWidth) || parseFloat(detailsStyle.borderBottomWidth)) {
-        errors.push(`reading disclosure ${index + 1} leaks a border across its full parent`);
-      }
-      if (!parseFloat(summaryStyle.borderTopWidth) || !parseFloat(summaryStyle.borderBottomWidth)) {
-        errors.push(`reading disclosure ${index + 1} is missing its summary rules`);
+      if (formalStatement) {
+        if (![detailsStyle.borderTopWidth, detailsStyle.borderRightWidth, detailsStyle.borderBottomWidth, detailsStyle.borderLeftWidth]
+          .every((value) => parseFloat(value) > 0)) {
+          errors.push(`Lean statement ${index + 1} is missing its disclosure frame`);
+        }
+        if (!details.querySelector(":scope > .lean-statement-body > pre > code")) {
+          errors.push(`Lean statement ${index + 1} has no direct code body`);
+        }
+      } else {
+        if (parseFloat(detailsStyle.borderTopWidth) || parseFloat(detailsStyle.borderBottomWidth)) {
+          errors.push(`reading disclosure ${index + 1} leaks a border across its full parent`);
+        }
+        if (!parseFloat(summaryStyle.borderTopWidth) || !parseFloat(summaryStyle.borderBottomWidth)) {
+          errors.push(`reading disclosure ${index + 1} is missing its summary rules`);
+        }
       }
       const body = details.classList.contains("proof-details")
         ? Array.from(details.children).find((child) => child !== summary)
@@ -177,7 +193,7 @@
     });
 
     document.querySelectorAll(`body.tufte-site main :is(${roleSelector})`).forEach((element, index) => {
-      const roles = ["paper-copy", "math-statement", "small-multiples", "figure-band", "data-table"]
+      const roles = ["paper-copy", "math-statement", "lean-statement", "small-multiples", "figure-band", "data-table"]
         .filter((role) => element.classList.contains(role));
       if (roles.length > 1) errors.push(`editorial role ${index + 1} is ambiguous: ${roles.join(" + ")}`);
     });
@@ -189,6 +205,8 @@
     checkType("body.tufte-site main :is(.small-multiples article > span, .cylinder-proof-grid article > span)", typeLabel, "editorial label");
     checkType("body.tufte-site main :is(.solver-readout, .modes-status, .phase-story-readout, .collar-field-readout, .debye-status, .abundance-readout) span", typeLabel, "readout label");
     checkType("body.tufte-site main :is(.solver-readout, .modes-status, .phase-story-readout, .collar-field-readout, .debye-status, .abundance-readout) strong, body.tufte-site main .measurement-value-line strong", typeControlValue, "readout value");
+    checkType("body.tufte-site main .lean-statement > summary small", typeLabel, "Lean disclosure label");
+    checkType("body.tufte-site main .lean-statement :is(summary code, pre code)", typeCode, "Lean source");
 
     document.querySelectorAll(".interactive-plate").forEach((plate, index) => {
       if (getComputedStyle(plate).display === "none" || !plate.getClientRects().length) return;
@@ -250,6 +268,7 @@
       smallMultiples: document.querySelectorAll("body.tufte-site main .small-multiples").length,
       figureBands: document.querySelectorAll("body.tufte-site main .figure-band").length,
       dataTables: document.querySelectorAll("body.tufte-site main .data-table").length,
+      leanStatements: document.querySelectorAll("body.tufte-site main .lean-statement").length,
       plates: document.querySelectorAll(".interactive-plate").length,
       errors,
     };
@@ -265,4 +284,7 @@
     requestAnimationFrame(() => requestAnimationFrame(runLayoutContract));
   });
   window.addEventListener("resize", () => requestAnimationFrame(runLayoutContract));
+  document.addEventListener("toggle", (event) => {
+    if (event.target instanceof HTMLDetailsElement) requestAnimationFrame(runLayoutContract);
+  }, true);
 })();

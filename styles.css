@@ -18,6 +18,7 @@
   --type-caption: 12px;
   --type-control: 11px;
   --type-label: 11px;
+  --type-code: 12px;
   --type-math: 16px;
   --layout-max: 1320px;
   --layout-gutter: max(24px, calc((100vw - var(--layout-max)) / 2));
@@ -161,6 +162,25 @@ a { color: inherit; }
 .proof-details[open] > summary { border-bottom: 1px solid var(--line-light); }
 .proof-details[open] > summary i { font-size: 0; }
 .proof-details[open] > summary i::after { content: "collapse −"; font-size: 11px; }
+
+/* A native disclosure for formal counterparts of prose statements. Content
+   supplies only the Lean source; this component owns its label, measure, and
+   open/closed presentation everywhere it is used. */
+.lean-statement { width: 100%; margin: 24px 0 30px; border: 1px solid var(--line); background: transparent; }
+.lean-statement > summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 10px 13px; color: var(--ink); cursor: pointer; list-style: none; font-family: var(--mono); }
+.lean-statement > summary::-webkit-details-marker { display: none; }
+.lean-statement > summary > span { min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.lean-statement > summary small { color: var(--orange); font: 500 var(--type-label)/1.4 var(--mono); letter-spacing: .075em; text-transform: uppercase; }
+.lean-statement > summary code { overflow: hidden; color: var(--muted); font: 400 var(--type-code)/1.4 var(--mono); font-variant: normal; text-overflow: ellipsis; white-space: nowrap; }
+.lean-statement > summary i { flex: 0 0 auto; color: var(--orange); font: 400 var(--type-label)/1.4 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; }
+.lean-statement[open] > summary { border-bottom: 1px solid var(--line); }
+.lean-statement[open] > summary > i { font-size: 0; }
+.lean-statement[open] > summary > i::after { content: "hide −"; font-size: var(--type-label); }
+.lean-statement-body { padding: 15px 17px 17px; background: var(--paper-2); }
+.lean-statement pre { max-width: 100%; margin: 0; overflow: visible; white-space: pre-wrap; overflow-wrap: break-word; tab-size: 2; }
+.lean-statement pre code { color: var(--ink-2); font: 400 var(--type-code)/1.65 var(--mono); font-variant: normal; }
+.lean-statement pre code.hljs { display: block; padding: 0; color: var(--ink-2); background: transparent; }
+.lean-statement > summary:focus-visible { outline: 2px solid var(--teal); outline-offset: -3px; }
 .literature-link { color: var(--orange); text-underline-offset: 3px; }
 
 .borrow-lead { margin: 42px 0 38px 70px; max-width: 850px; color: var(--muted); font-size: 14px; line-height: 1.72; }

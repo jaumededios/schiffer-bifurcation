@@ -45,6 +45,7 @@
   --type-label: .78rem;
   --type-control: .78rem;
   --type-control-value: 1rem;
+  --type-code: .88rem;
   --type-math: 1.18rem;
   --type-display-mobile: 3rem;
   --type-subsection-mobile: 1.45rem;
@@ -791,6 +792,32 @@ body.tufte-site main details:not(.secondary-controls) > summary {
   text-transform: none;
 }
 body.tufte-site main details:not(.secondary-controls)[open] > summary { border-bottom: 1px solid var(--line); }
+
+/* Formalization disclosures live wherever the corresponding prose statement
+   lives. Their full local width is therefore inherited from the prose layer;
+   authors never choose a page measure when adding Lean source. */
+body.tufte-site main details.lean-statement {
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 0 1.8rem;
+  border: 1px solid var(--line);
+}
+body.tufte-site main details.lean-statement > summary {
+  width: 100%;
+  max-width: 100%;
+  padding: .65rem .8rem;
+  border: 0;
+  font-family: var(--mono);
+  font-variant: normal;
+}
+body.tufte-site main details.lean-statement[open] > summary { border-bottom: 1px solid var(--line); }
+body.tufte-site main details.lean-statement > .lean-statement-body {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem 1.1rem 1.1rem;
+}
 
 /* The laboratories share one composition contract: numerical image on the
    reading side, apparatus on the right.  Keeping the placement here (rather
