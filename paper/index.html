@@ -66,7 +66,8 @@
             <h3>Pompeiu asked whether a function is determined by its averages.</h3>
             <p>In 1929 Dimitrie Pompeiu considered the following question: fix a bounded domain \(\Omega\subset\mathbb R^2\). Given a continuous function \(f\colon\mathbb R^2\to\mathbb R\), can we determine \(f\) from knowing the integrals of \(f\) on every rigid motion (translation and rotation) of \(\Omega\)?</p>
             <p>If the answer to Pompeiu's question were to be false, we would have \(f_1\) and \(f_2\) different with the same integrals over any rigid motion of \(\Omega\), and therefore their difference would integrate to zero over any rigid motion of \(\Omega\). Thus, Pompeiu's question can be asked as: if \(\int_{\sigma(\Omega)}f(x)\,dx=0\) for every rigid motion \(\sigma\), is it necessarily true that \(f(x)=0\)?</p>
-            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property: \(f(x)=\cos(\sqrt\lambda\,x_1)\) is a counterexample for a disk of radius \(r\) whenever \(\rho_\star=\sqrt\lambda\,r\) is a zero of the Bessel function \(J_1\). Deciding whether any other domain fails has stayed open ever since; polygons, ellipses other than disks, and convex domains with corners all have the Pompeiu property.</p>
+            <p>A domain for which the answer is yes is said to have the <em>Pompeiu property</em>. Pompeiu's own proofs of the Pompeiu property for disks and squares did not stand: the disk proof was wrong outright, and the square proof needed the extra hypothesis that \(f\) tends to a limit at infinity. Christov later filled the square case, while Chakalov, in 1944, proved that disks fail to have the Pompeiu property: \(f(x)=\cos(\sqrt\lambda\,x_1)\) is a counterexample for a disk of radius \(r\) whenever \(\rho_\star=\sqrt\lambda\,r\) is a zero of the Bessel function \(J_1\). A disk has an evident loss of information because rotating it produces no new set. The Pompeiu conjecture asks whether disks are the only connected smooth planar domains without the Pompeiu property.</p>
+            <p>If connectedness is dropped, finite disjoint unions of congruent disks give immediate further counterexamples. We therefore restrict attention to connected smooth domains. Polygons, noncircular ellipses, and convex domains with corners all have the Pompeiu property.</p>
           </div>
           <div class="equation-system intro-statement" role="img" aria-label="Suppose we know the integral of f over sigma of Omega for every rigid motion sigma. Can we determine f?">
             <span class="system-label">\(\operatorname{Pompeiu}(\Omega)\)</span>
@@ -76,33 +77,30 @@
         </div>
 
         <details class="proof-details intro-proof">
-          <summary><span>Why the disk fails: one convolution</span><i>expand +</i></summary>
+          <summary><span>Why does the disk fail the Pompeiu property?</span><i>expand +</i></summary>
           <div class="intro-proof-body">
-            <p>Let \(\Omega\) be a disk of radius \(r\) centred at the origin and let \(t\in\mathbb R^2\). From Pompeiu's property applied to translations by \(t\),</p>
+            <p>Let \(\Omega\) be a disk of radius \(r\), let \(\rho_\star\) be a positive zero of \(J_1\), and set \(\lambda=(\rho_\star/r)^2\) and \(f(x)=\cos(\sqrt\lambda\,x_1)\). For every translation vector \(t\in\mathbb R^2\),</p>
             <div class="tex-display">
               \[
               \int_{\Omega+t}f(x)\,dx
               =\int_{\mathbb R^2}\mathbf 1_{\Omega}(t-x)f(x)\,dx
-              =(\mathbf 1_{\Omega}*f)(t)=0,
-              \qquad\forall\,t\in\mathbb R^2 .
+              =(\mathbf 1_{\Omega}*f)(t).
               \]
             </div>
-            <p>Now take the Fourier transform, which turns a convolution into a product. We obtain \(\widehat f(\xi)\,\widehat{\mathbf 1_{\Omega}}(\xi)=0\) for all \(\xi\). Since</p>
+            <p>The Fourier transform turns this convolution into a product. Since</p>
             <div class="tex-display">
               \[
               \widehat{\mathbf 1_{\Omega}}(\xi)=2\pi r\,\frac{J_1(r|\xi|)}{|\xi|},
               \]
             </div>
-            <p>with \(J_1\) the first Bessel function, it is natural to take</p>
+            <p>and the Fourier transform of \(f\) is supported at \(\xi=\pm\sqrt\lambda\,e_1\), the choice \(J_1(\sqrt\lambda\,r)=J_1(\rho_\star)=0\) gives</p>
             <div class="tex-display">
               \[
-              f(x)=\cos\bigl(\sqrt\lambda\,x_1\bigr),
-              \qquad
-              \lambda=\Bigl(\frac{\rho_\star}{r}\Bigr)^{\!2},
+              \widehat{\mathbf 1_\Omega}(\xi)\,\widehat f(\xi)=0.
               \]
             </div>
-            <p>where \(\rho_\star\) is any positive zero of \(J_1\). Then \(\widehat f(\xi)\), as a distribution, is supported on \(|\xi|=\sqrt\lambda=\rho_\star/r\), which is exactly where \(J_1(r|\xi|)=0\). The product of \(\widehat f\) and \(J_1(r|\xi|)\) vanishes identically, so this shows the failure of the Pompeiu property for the disk. One can also perform the direct two-dimensional integral and see that \(f(x)=\cos(\sqrt\lambda\,x_1)\) integrates to zero on every disk of radius \(r\). <span class="qed">□</span></p>
-            <p class="intro-proof-aside">Brown, Schreiber and Taylor proved, more generally, that this failure is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin. The disk clearly does that, but the question of whether there is another domain with that property remained open.</p>
+            <p>Thus \(\mathbf 1_\Omega*f=0\), so \(f\not\equiv0\) has integral zero over every translate of the disk. Rotations produce the same disk, and therefore \(\Omega\) fails the Pompeiu property. <span class="qed">□</span></p>
+            <p class="intro-proof-aside">Brown, Schreiber and Taylor proved, more generally, that this failure is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin. The disk clearly does that, but the question of whether there is another connected smooth domain with that property remained open.</p>
           </div>
         </details>
 
@@ -152,7 +150,7 @@
         </div>
 
         <details class="proof-details intro-proof">
-          <summary><span>From Schiffer to Pompeiu: one Green identity</span><i>expand +</i></summary>
+          <summary><span>The Schiffer property implies failure of the Pompeiu property</span><i>expand +</i></summary>
           <div class="intro-proof-body">
             <p>Let \((u,\lambda)\) solve the Schiffer system on \(\Omega\), and let \(f\) be <em>any</em> solution of \(\Delta f+\lambda f=0\) on the whole plane (the plane wave \(f(x)=\cos(\sqrt\lambda\,x_1)\) will do). Fix a rigid motion \(\sigma\) and write \(\Omega_\sigma=\sigma(\Omega)\), \(u_\sigma=u\circ\sigma^{-1}\), which solves the same system on \(\Omega_\sigma\). Green's second identity reads</p>
             <div class="tex-display">
@@ -174,7 +172,7 @@
         </details>
 
         <details class="proof-details intro-proof">
-          <summary><span>From Pompeiu to Schiffer: one division in Fourier space</span><i>expand +</i></summary>
+          <summary><span>Failure of the Pompeiu property implies the Schiffer property</span><i>expand +</i></summary>
           <div class="intro-proof-body">
             <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
@@ -191,7 +189,8 @@
 
 
         <div class="intro-copy intro-copy-wide">
-          <h3>What happens if we look for \(\Omega\) close to a ball.</h3>
+          <h3>Linear rigidity of the disk counterexample.</h3>
+          <p>One reason to expect Schiffer's conjecture to hold is that the disk is rigid at the formal, infinitesimal level: every linearized deformation through Schiffer solutions comes from a translation or a dilation, and therefore produces no nearby noncircular domain.</p>
           <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction.</p>
         </div>
 

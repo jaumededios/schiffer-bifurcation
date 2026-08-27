@@ -72,31 +72,32 @@
           </div>
           <aside class="probe-question" aria-label="The Pompeiu problem">
             <span>Pompeiu's problem</span>
-            <p>For a fixed probe \(\Omega\), does</p>
+            <p>For a fixed bounded set \(\Omega\), does</p>
             <div class="tex-display">
               \[
               \bigl\{M_\Omega f(E): E\text{ a rigid motion}\bigr\}
               \]
             </div>
-            <p>determine the field \(f\)?</p>
+            <p>determine the function \(f\)?</p>
           </aside>
         </div>
 
         <div class="intro-copy intro-copy-wide intro-linear-step">
-          <p class="eyebrow">Reduction to the kernel</p>
           <h3>The Pompeiu property is the injectivity of \(M_\Omega\).</h3>
-          <p>The map \(f\mapsto M_\Omega f\) is linear. If two fields \(f_1\) and \(f_2\) give the same reading in every configuration, then their difference \(g=f_1-f_2\) satisfies</p>
+          <p>The map \(f\mapsto M_\Omega f\) is linear. If two functions \(f_1\) and \(f_2\) give the same reading in every configuration, then their difference \(g=f_1-f_2\) satisfies</p>
           <div class="tex-display">
             \[
             \int_{E(\Omega)}g(x)\,dx=0
             \qquad\text{for every rigid motion }E.
             \]
           </div>
-          <p>We therefore say that \(\Omega\) has the <em>Pompeiu property</em> when \(\ker M_\Omega=\{0\}\). The recovery problem asks which bounded planar domains have this property.</p>
+          <p>We therefore say that \(\Omega\) has the <em>Pompeiu property</em> when \(\ker M_\Omega=\{0\}\). The recovery problem asks which bounded planar sets have this property.</p>
+          <p>Chakalov showed in 1944 that disks do not have the Pompeiu property. A disk has an evident loss of information: rotating it does not change the set, so rotations supply no measurements beyond those already obtained by translation. The Pompeiu conjecture asks whether, among connected smooth planar domains, disks are the only domains without the Pompeiu property.</p>
+          <p>Connectedness matters here. Any finite disjoint union of congruent disks also fails the Pompeiu property, since the same nonzero function has integral zero over every moved copy of each disk. We therefore look for connected smooth counterexamples.</p>
         </div>
 
         <details class="disk-sidequest">
-          <summary><span><small>Optional digression</small>From the interval model to the disk counterexample</span><i>expand +</i></summary>
+          <summary><span><small>Optional digression</small>Why does the disk fail the Pompeiu property?</span><i>expand +</i></summary>
           <div class="disk-sidequest-body">
             <figure class="line-probe-figure" id="lineProbeFigure">
               <figcaption>
@@ -192,7 +193,7 @@
           <div class="disk-sidequest-history">
             <h4>Historical note.</h4>
             <p>Pompeiu claimed that disks and squares have the Pompeiu property. His disk proof was incorrect, while the square proof used the additional assumption that \(f\) tends to a limit at infinity. Christov later proved the square case without this assumption. Chakalov established the disk counterexample in 1944.</p>
-            <p>Polygons, noncircular ellipses, and convex domains with corners were subsequently shown to have the Pompeiu property. The smooth-domain question remained open until the counterexamples discussed on this page.</p>
+            <p>Polygons, noncircular ellipses, and convex domains with corners were subsequently shown to have the Pompeiu property. The connected smooth-domain question remained open until the counterexamples discussed on this page.</p>
           </div>
           </div>
         </details>
@@ -218,7 +219,7 @@
         <figure class="membrane-figure" id="schifferModeFigure">
           <div class="chladni-photo-panel">
             <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round_Chladni_plate_with_4_circular_nodes.JPG?width=1024" loading="lazy" decoding="async" alt="Sand gathered along circular nodal lines separating four radial nodal domains on a vibrating round Chladni plate">
-            <p>Sand collects along stationary nodal circles, separating four radial nodal domains. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Photograph: Pieter Kuiper, public domain.</a></p>
+            <p>On a vibrating membrane, sand collects along stationary nodal circles, separating four radial nodal domains. <a href="https://commons.wikimedia.org/wiki/File:Round_Chladni_plate_with_4_circular_nodes.JPG" target="_blank" rel="noreferrer">Photograph: Pieter Kuiper, public domain.</a></p>
           </div>
           <div class="schiffer-mode-panel">
             <div class="schiffer-mode-heading">
@@ -241,7 +242,7 @@
             <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
             <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
             <ol>
-              <li>there is a nonzero continuous field \(f\) such that \(\int_{E(\Omega)}f(x)\,dx=0\) for every rigid motion \(E\);</li>
+              <li>there is a nonzero continuous function \(f\) such that \(\int_{E(\Omega)}f(x)\,dx=0\) for every rigid motion \(E\);</li>
               <li>there are \(\lambda&gt;0\) and a nonconstant function \(u\) solving the Schiffer problem (S) on \(\Omega\).</li>
             </ol>
             <p>Consequently, a smooth noncircular solution of the Schiffer problem also gives a smooth noncircular probe without the Pompeiu property.</p>
@@ -249,7 +250,7 @@
         </article>
 
         <details class="proof-details intro-proof">
-          <summary><span>From Schiffer to Pompeiu: one Green identity</span><i>expand +</i></summary>
+          <summary><span>The Schiffer property implies failure of the Pompeiu property</span><i>expand +</i></summary>
           <div class="intro-proof-body">
             <p>Let \((u,\lambda)\) solve the Schiffer system on \(\Omega\), and let \(f\) be <em>any</em> solution of \(\Delta f+\lambda f=0\) on the whole plane (the plane wave \(f(x)=\cos(\sqrt\lambda\,x_1)\) will do). Fix a rigid motion \(\sigma\) and write \(\Omega_\sigma=\sigma(\Omega)\), \(u_\sigma=u\circ\sigma^{-1}\), which solves the same system on \(\Omega_\sigma\). Green's second identity reads</p>
             <div class="tex-display">
@@ -271,7 +272,7 @@
         </details>
 
         <details class="proof-details intro-proof">
-          <summary><span>From Pompeiu to Schiffer: one division in Fourier space</span><i>expand +</i></summary>
+          <summary><span>Failure of the Pompeiu property implies the Schiffer property</span><i>expand +</i></summary>
           <div class="intro-proof-body">
             <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
@@ -288,7 +289,8 @@
 
 
         <div class="intro-copy intro-copy-wide">
-          <h3>What happens if we look for \(\Omega\) close to a ball.</h3>
+          <h3>Linear rigidity of the disk counterexample.</h3>
+          <p>One reason to expect Schiffer's conjecture to hold is that the disk is rigid at the formal, infinitesimal level: every linearized deformation through Schiffer solutions comes from a translation or a dilation, and therefore produces no nearby noncircular domain.</p>
           <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction.</p>
         </div>
 
