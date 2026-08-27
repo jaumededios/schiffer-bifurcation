@@ -327,16 +327,33 @@ body.tufte-site h3 {
 }
 
 .probe-question {
+  float: none;
+  clear: both;
+  width: 100%;
+  max-width: 100%;
   min-height: 0;
-  padding: .55rem 0;
+  margin: 2rem 0;
+  padding: .8rem 0 1rem;
   color: var(--muted);
   background: transparent;
   border: 0;
   border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
-.probe-question > span { color: var(--orange); font-variant: small-caps; }
-.probe-question p { margin: .6rem 0 0; font-size: 1.1rem !important; line-height: 1.4 !important; }
-label.margin-toggle { color: var(--orange); }
+.probe-question > span {
+  margin: 0;
+  color: var(--orange);
+  font-size: .78rem;
+  font-variant: small-caps;
+  letter-spacing: .06em;
+}
+.probe-question p {
+  margin: .45rem 0 0;
+  color: var(--ink);
+  font-size: 1.25rem !important;
+  font-style: italic;
+  line-height: 1.45 !important;
+}
 
 /* Full-width figures are the visual spine of the article. */
 figure.fullwidth,
