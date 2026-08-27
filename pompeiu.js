@@ -1,3 +1,110 @@
+/* The normal graph used in the linearized shape calculation. The arrows show
+ * the fixed velocity f nu at t=0; the slider moves the current boundary in
+ * either direction through that reference shape. */
+(() => {
+  "use strict";
+
+  const root = document.getElementById("shapeVariationFigure");
+  if (!root) return;
+  const svg = root.querySelector("#shapeVariationSvg");
+  const reference = root.querySelector("#shapeVariationReference");
+  const current = root.querySelector("#shapeVariationCurrent");
+  const arrows = root.querySelector("#shapeVariationArrows");
+  const displacement = root.querySelector("#shapeVariationDisplacement");
+  const point = root.querySelector("#shapeVariationPoint");
+  const movedPoint = root.querySelector("#shapeVariationMovedPoint");
+  const pointLabel = root.querySelector("#shapeVariationPointLabel");
+  const domainSubscript = root.querySelector("#shapeVariationDomainSubscript");
+  const slider = root.querySelector("#shapeVariationSlider");
+  const output = root.querySelector("#shapeVariationValue");
+  if (!svg || !reference || !current || !arrows || !displacement || !point ||
+      !movedPoint || !pointLabel || !domainSubscript || !slider || !output) return;
+
+  const NS = "http://www.w3.org/2000/svg";
+  const CX = 310;
+  const CY = 195;
+  const RADIUS = 121;
+  const DISPLACEMENT = 28;
+  const ARROW_SCALE = 28;
+
+  // A smooth, deliberately asymmetric profile. It is fixed throughout the
+  // interaction; the slider changes only the signed deformation parameter.
+  const profile = (theta) => .62 * Math.cos(2 * theta)
+    + .27 * Math.sin(3 * theta) + .18 * Math.cos(theta) - .10;
+
+  function boundaryPoint(theta, tau = 0) {
+    const radius = RADIUS + tau * DISPLACEMENT * profile(theta);
+    return {
+      x: CX + radius * Math.cos(theta),
+      y: CY + radius * Math.sin(theta),
+    };
+  }
+
+  function boundaryPath(tau) {
+    const points = [];
+    for (let i = 0; i < 240; i++) {
+      const theta = 2 * Math.PI * i / 240;
+      points.push(boundaryPoint(theta, tau));
+    }
+    return points.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ") + " Z";
+  }
+
+  reference.setAttribute("d", boundaryPath(0));
+  for (let i = 0; i < 12; i++) {
+    const theta = 2 * Math.PI * i / 12;
+    const velocity = profile(theta);
+    if (Math.abs(velocity) < .14) continue;
+    const start = boundaryPoint(theta, 0);
+    const endRadius = RADIUS + ARROW_SCALE * velocity;
+    const line = document.createElementNS(NS, "line");
+    line.setAttribute("x1", start.x.toFixed(2));
+    line.setAttribute("y1", start.y.toFixed(2));
+    line.setAttribute("x2", (CX + endRadius * Math.cos(theta)).toFixed(2));
+    line.setAttribute("y2", (CY + endRadius * Math.sin(theta)).toFixed(2));
+    arrows.appendChild(line);
+  }
+
+  function setLine(line, a, b) {
+    line.setAttribute("x1", a.x.toFixed(2));
+    line.setAttribute("y1", a.y.toFixed(2));
+    line.setAttribute("x2", b.x.toFixed(2));
+    line.setAttribute("y2", b.y.toFixed(2));
+  }
+
+  function setCircle(circle, p) {
+    circle.setAttribute("cx", p.x.toFixed(2));
+    circle.setAttribute("cy", p.y.toFixed(2));
+  }
+
+  function update(rawTau) {
+    let tau = Math.max(-1, Math.min(1, Number(rawTau)));
+    if (Math.abs(tau) <= .035) tau = 0;
+    slider.value = String(tau);
+    current.setAttribute("d", boundaryPath(tau));
+
+    const base = boundaryPoint(0, 0);
+    const moved = boundaryPoint(0, tau);
+    setLine(displacement, base, moved);
+    setCircle(point, base);
+    setCircle(movedPoint, moved);
+    pointLabel.setAttribute("x", (moved.x + 10).toFixed(2));
+    pointLabel.setAttribute("y", (moved.y - 9).toFixed(2));
+    pointLabel.textContent = tau === 0 ? "p₀" : "pₜ";
+    domainSubscript.textContent = tau === 0 ? "0" : "t";
+
+    const source = tau === 0 ? "t=0" : `t=${tau > 0 ? "+" : ""}${tau.toFixed(2)}\\varepsilon`;
+    window.SchifferMath?.render(output, source);
+    const position = 50 * (tau + 1);
+    const low = Math.min(50, position).toFixed(2);
+    const high = Math.max(50, position).toFixed(2);
+    slider.style.background = `linear-gradient(to right, rgba(19,33,38,.16) 0%, rgba(19,33,38,.16) ${low}%, var(--orange) ${low}%, var(--orange) ${high}%, rgba(19,33,38,.16) ${high}%, rgba(19,33,38,.16) 100%)`;
+    svg.setAttribute("aria-label", `Normal deformation at t divided by epsilon equal to ${tau.toFixed(2)}. The dashed reference boundary and orange current boundary are shown with fixed normal-velocity arrows.`);
+  }
+
+  slider.addEventListener("input", () => update(slider.value));
+  update(0);
+})();
+
 /* Interactive figure for the introduction: the integral of cos(x1) over a disk.
  *
  * The field is drawn on a bounded window in the plane, and the disk is dragged

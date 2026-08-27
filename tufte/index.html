@@ -294,43 +294,45 @@
           <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction.</p>
         </div>
 
-        <figure class="fullwidth shape-variation-figure intro-variation-figure">
+        <figure class="fullwidth shape-variation-figure intro-variation-figure" id="shapeVariationFigure">
           <div class="shape-variation-heading">
             <span>The normal perturbation</span>
-            <p>The perturbed domain \(\Omega+\delta\Omega\,\nu\) is obtained by pushing every boundary point \(p\) along the outward normal by \(\delta\Omega(p)\). Only that normal motion changes the domain to first order; sliding the boundary along itself merely relabels its points.</p>
+            <p>Write \(f=\delta\Omega\colon\partial\Omega\to\mathbb R\) for the normal velocity. The family \(\Omega_t\) is obtained, to first order, by moving each boundary point \(p\) a signed distance \(t f(p)\) along the outward normal. Move the slider through \(t=0\) to see this variation.</p>
           </div>
-          <div class="shape-variation-diagrams">
-            <svg viewBox="0 0 440 300" role="img" aria-label="A domain with alternating inward and outward normal arrows prescribed by delta Omega">
-              <defs><marker id="normalArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
-              <circle class="variation-domain" cx="220" cy="145" r="88"/>
-              <text class="variation-domain-label" x="220" y="151" text-anchor="middle">&#937;</text>
-              <g class="variation-normal-field" marker-end="url(#normalArrow)">
-                <line x1="308" y1="145" x2="322" y2="145"/>
-                <line x1="264" y1="221.2" x2="257" y2="209.1"/>
-                <line x1="176" y1="221.2" x2="169" y2="233.3"/>
-                <line x1="132" y1="145" x2="146" y2="145"/>
-                <line x1="176" y1="68.8" x2="169" y2="56.7"/>
-                <line x1="264" y1="68.8" x2="257" y2="80.9"/>
-              </g>
-              <text class="variation-svg-label" x="220" y="278" text-anchor="middle">the normal perturbation &#948;&#937;&#183;&#957;</text>
-              <text class="variation-sign-label" x="326" y="132">&#948;&#937; &gt; 0</text>
-              <text class="variation-sign-label" x="258" y="202">&#948;&#937; &lt; 0</text>
-            </svg>
-            <div class="variation-map"><span>\(p\longmapsto p+\delta\Omega\,\nu\)</span><i aria-hidden="true">&rarr;</i></div>
-            <svg viewBox="0 0 440 300" role="img" aria-label="The original boundary in a dashed line and the perturbed boundary in orange">
-              <path class="variation-deformed-domain" transform="translate(-580 -20)" d="M 902.0 165.0 C 902.0 173.4, 898.9 183.0, 894.6 190.3 C 890.3 197.7, 882.8 204.0, 876.2 209.0 C 869.7 214.0, 861.8 216.9, 855.2 220.2 C 848.7 223.6, 842.8 225.7, 837.0 229.1 C 831.2 232.5, 826.4 236.5, 820.2 240.4 C 814.0 244.4, 807.6 249.8, 800.0 253.0 C 792.4 256.2, 783.2 259.5, 774.7 259.6 C 766.2 259.6, 756.3 257.6, 749.0 253.3 C 741.7 249.1, 735.0 241.6, 730.8 234.2 C 726.6 226.8, 724.8 217.2, 723.8 209.0 C 722.8 200.8, 724.2 192.5, 724.6 185.2 C 724.9 177.9, 726.0 171.7, 726.0 165.0 C 726.0 158.3, 724.9 152.1, 724.6 144.8 C 724.2 137.5, 722.8 129.2, 723.8 121.0 C 724.8 112.8, 726.6 103.2, 730.8 95.8 C 735.0 88.4, 741.7 80.9, 749.0 76.7 C 756.3 72.4, 766.2 70.4, 774.7 70.4 C 783.2 70.5, 792.4 73.8, 800.0 77.0 C 807.6 80.2, 814.0 85.6, 820.2 89.6 C 826.4 93.5, 831.2 97.5, 837.0 100.9 C 842.8 104.3, 848.7 106.4, 855.2 109.8 C 861.8 113.1, 869.7 116.0, 876.2 121.0 C 882.8 126.0, 890.3 132.3, 894.6 139.7 C 898.9 147.0, 902.0 156.6, 902.0 165.0 Z"/>
-              <circle class="variation-original-boundary" cx="220" cy="145" r="88"/>
-              <circle class="variation-point original" cx="308" cy="145" r="3"/>
-              <circle class="variation-point moved" cx="322" cy="145" r="3"/>
-              <line class="variation-distance" x1="308" y1="145" x2="322" y2="145"/>
-              <text class="variation-domain-label" x="220" y="151" text-anchor="middle">&#937;&#8242;</text>
-              <text class="variation-svg-label" x="139" y="48">&#8706;&#937;</text>
-              <text class="variation-svg-label accent" x="311" y="74">&#8706;&#937;&#8242;</text>
-              <text class="variation-sign-label" x="315" y="132">&#948;&#937;(p)</text>
-              <text class="variation-svg-label" x="220" y="278" text-anchor="middle">dashed: original &#183; orange: perturbed</text>
-            </svg>
+          <div class="shape-variation-interactive">
+            <div class="shape-variation-stage">
+              <svg id="shapeVariationSvg" viewBox="0 0 620 390" role="img" aria-label="A reference domain, a moving normally perturbed boundary, and visible arrows for the normal velocity">
+                <defs><marker id="shapeVariationArrow" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
+                <path id="shapeVariationCurrent" class="variation-deformed-domain"/>
+                <path id="shapeVariationReference" class="variation-original-boundary"/>
+                <g id="shapeVariationArrows" class="variation-normal-field" marker-end="url(#shapeVariationArrow)"></g>
+                <line id="shapeVariationDisplacement" class="variation-distance"/>
+                <circle id="shapeVariationPoint" class="variation-point original" r="3.5"/>
+                <circle id="shapeVariationMovedPoint" class="variation-point moved" r="4"/>
+                <text class="variation-domain-label" x="310" y="202" text-anchor="middle">&#937;<tspan id="shapeVariationDomainSubscript" baseline-shift="sub" font-size="13">0</tspan></text>
+                <text class="variation-svg-label" x="24" y="30">dashed: &#8706;&#937;</text>
+                <text class="variation-svg-label accent" x="24" y="50">orange: &#8706;&#937;<tspan baseline-shift="sub" font-size="8">t</tspan></text>
+                <text id="shapeVariationPointLabel" class="variation-sign-label" text-anchor="start">p</text>
+              </svg>
+              <div class="variation-stage-caption"><i aria-hidden="true"></i><span>the arrows show the velocity \(f\nu\) at \(t=0\)</span></div>
+            </div>
+            <div class="shape-variation-controls">
+              <span class="variation-equation-label">First-order normal graph</span>
+              <div class="tex-display variation-equation">\[p_t=p+t\,f(p)\nu(p)+O(t^2).\]</div>
+              <div class="variation-control-label"><label for="shapeVariationSlider">deformation parameter</label><output id="shapeVariationValue" for="shapeVariationSlider">\(t=0\)</output></div>
+              <div class="variation-slider-track">
+                <input id="shapeVariationSlider" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Move the signed deformation parameter t from minus epsilon to plus epsilon">
+                <i aria-hidden="true"></i>
+              </div>
+              <div class="variation-slider-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
+              <div class="variation-legend">
+                <span><i class="reference" aria-hidden="true"></i>reference boundary \(\partial\Omega\)</span>
+                <span><i class="current" aria-hidden="true"></i>current boundary \(\partial\Omega_t\)</span>
+              </div>
+              <p>At \(t=0\), the two boundaries coincide. The arrows remain visible because they represent the derivative of the family at that instant.</p>
+            </div>
           </div>
-          <figcaption>Writing \(\Omega'=\Omega+\delta\Omega\,\nu\) for the perturbed domain. Positive \(\delta\Omega\) moves the boundary outward and negative \(\delta\Omega\) moves it inward.</figcaption>
+          <figcaption>The slider displays \(t/\varepsilon\in[-1,1]\) for one fixed smooth velocity \(f=\delta\Omega\). Positive values follow \(f\nu\); negative values reverse the motion. The diagram records the first-order normal variation used in the linearized problem below.</figcaption>
         </figure>
 
         <div class="intro-copy intro-copy-wide">
