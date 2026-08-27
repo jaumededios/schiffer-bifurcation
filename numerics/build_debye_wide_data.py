@@ -5,8 +5,9 @@ zero rho_R of J_R'.  The spectral scale q_R=rho_R/R therefore makes the k=1
 profile J_R(q_R r) a genuine Neumann eigenfunction at r=R.  Each profile is
 sampled on the fixed physical collar [R - 5, R].
 
-This family is deliberately separate from the nonlinear N=28 continuation,
-which keeps rho fixed and moves R by only 0.026.
+The k=0 channel is phase-normalized; the k>=1 channels are normalized by
+their rim value.  This family is deliberately separate from the nonlinear
+N=28 continuation, which keeps rho fixed and moves R by only 0.026.
 """
 
 import json
@@ -27,6 +28,7 @@ NEUMANN_ROOT_INDEX = 4
 DEPTH = 5.0
 X_SAMPLES = 101
 GLOBAL_Q_SAMPLES = 181
+MODES = (0, 1, 2, 3)
 
 
 def rounded(value):
@@ -77,28 +79,46 @@ def main():
     lambda_values = q_values ** 2
     x_grid = np.linspace(-DEPTH, 0.0, X_SAMPLES)
     q_grid = np.linspace(0.0, 1.0, GLOBAL_Q_SAMPLES)
-    profiles = {"1": [], "2": [], "3": []}
+    profiles = {str(mode): [] for mode in MODES}
+    rim_slopes = {"0": []}
 
     for radius, rho, spectral_scale in zip(radii, rho_values, q_values):
         argument = spectral_scale * (radius + x_grid)
-        for mode in (1, 2, 3):
+        for mode in MODES:
             order = mode * radius
             values = special.jv(order, argument)
             value_at_rim = special.jv(order, rho)
 
-            if mode == 1:
-                # The choice J_R'(rho_R)=0 makes this a Neumann profile.
-                # Value normalization then gives f(0)=1 and f'(0)=0 exactly.
-                normalized = values / value_at_rim
+            if mode == 0:
+                # A phase normalization is stable even when the rim happens
+                # to lie near a zero of J_0.  It makes the corresponding
+                # cylinder sine-cosine coefficient vector have unit norm.
+                normalization = math.hypot(
+                    value_at_rim, special.jvp(0, rho, 1)
+                )
             else:
-                # The evanescent channels are positive in this regime.  Rim
-                # normalization makes the limiting exponential equal to one
-                # at x=0 and avoids the tiny absolute scale of large-order J.
-                normalized = values / value_at_rim
+                normalization = value_at_rim
+
+            # For k=1, J_R'(rho_R)=0 gives exact Neumann data.  The k>=2
+            # channels are positive here and become boundary-normalized
+            # exponentials.  The phase normalization above handles k=0.
+            normalized = values / normalization
 
             if not np.all(np.isfinite(normalized)):
                 raise RuntimeError(f"non-finite mode {mode} profile at r0={radius}")
             profiles[str(mode)].append(normalized.tolist())
+            if mode == 0:
+                # The k=0 cylinder channel is oscillatory.  Its comparison is
+                # the sine-cosine combination with the same normalized Cauchy
+                # data at the rim, not a falsely imposed Neumann cosine.
+                normalized_slope = (
+                    spectral_scale * special.jvp(0, rho, 1) / normalization
+                )
+                if not math.isfinite(normalized_slope):
+                    raise RuntimeError(
+                        f"non-finite mode 0 rim slope at r0={radius}"
+                    )
+                rim_slopes["0"].append(float(normalized_slope))
 
     # Whole-disk profiles are needed only at integer fold orders.  They use
     # exactly the same normalization as the collar samples, so a marked
@@ -109,11 +129,16 @@ def main():
         spectral_scale = q_values[row]
         rho = rho_values[row]
         fold_profiles = {}
-        for mode in (1, 2, 3):
+        for mode in MODES:
             order = mode * fold_order
             values = special.jv(order, spectral_scale * fold_order * q_grid)
             value_at_rim = special.jv(order, rho)
-            normalized = values / value_at_rim
+            normalization = (
+                math.hypot(value_at_rim, special.jvp(0, rho, 1))
+                if mode == 0
+                else value_at_rim
+            )
+            normalized = values / normalization
             if not np.all(np.isfinite(normalized)):
                 raise RuntimeError(
                     f"non-finite global mode {mode} profile at N={fold_order}"
@@ -122,7 +147,7 @@ def main():
         global_profiles[str(fold_order)] = fold_profiles
 
     payload = {
-        "source": "SciPy evaluation of J_(kR)(q_R r), with q_R R the fourth positive zero of J_R', on a fixed rim collar and whole integer-order disk",
+        "source": "SciPy evaluation of J_(kR)(q_R r) for k=0,1,2,3, with k=0 phase-normalized and k>=1 rim-normalized, and with q_R R the fourth positive zero of J_R', on a fixed rim collar and whole integer-order disk",
         "rMin": R_MIN,
         "rMax": R_MAX,
         "rReference": R_REFERENCE,
@@ -135,6 +160,7 @@ def main():
         "rhoValues": rho_values.tolist(),
         "lambdaValues": lambda_values.tolist(),
         "profiles": profiles,
+        "rimSlopes": rim_slopes,
         "globalProfiles": global_profiles,
     }
     OUTPUT_PATH.write_text(

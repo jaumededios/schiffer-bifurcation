@@ -2340,6 +2340,11 @@ if (debyeData) {
     return debyeInterpolateColumn(debyeData.rhoValues, radius);
   }
 
+  function debyeRimSlopeAt(mode, radius) {
+    const values = debyeData.rimSlopes?.[String(mode)];
+    return values ? debyeInterpolateColumn(values, radius) : 0;
+  }
+
   // Four-scale 2D dictionary: controls, flat cylinder, one magnified planar
   // sector, and the complete N-fold disk.  The local cone and global disk use
   // the same exact Bessel samples; the cylinder profile has matching rim data.
@@ -2347,6 +2352,7 @@ if (debyeData) {
   const COLLAR_BACKGROUND = [16, 27, 32];
 
   function collarAngularValue(psi) {
+    if (collarFieldState.mode === 0) return 1;
     const angle = collarFieldState.mode * psi;
     return collarFieldState.trig === "cos" ? Math.cos(angle) : Math.sin(angle);
   }
@@ -2362,6 +2368,12 @@ if (debyeData) {
   function collarCylinderRadial(x) {
     const mode = collarFieldState.mode;
     const lambda = debyeLambdaAt(collarFieldState.fold);
+    if (mode === 0) {
+      const frequency = Math.sqrt(lambda);
+      const rimValue = collarExactRadial(0);
+      const rimSlope = debyeRimSlopeAt(0, collarFieldState.fold);
+      return rimValue * Math.cos(frequency * x) + rimSlope / frequency * Math.sin(frequency * x);
+    }
     if (mode >= 2) return Math.exp(Math.sqrt(mode * mode - lambda) * x);
     return Math.cos(Math.sqrt(lambda - 1) * x);
   }
@@ -2435,7 +2447,9 @@ if (debyeData) {
     context.restore();
     canvas.setAttribute(
       "aria-label",
-      `Cylinder mode k ${collarFieldState.mode} with ${collarFieldState.trig} angular data on the collar from x minus five to zero.`
+      collarFieldState.mode === 0
+        ? "Radial cylinder mode k 0 on the collar from x minus five to zero, with Cauchy data matched to the regular Bessel profile at the rim."
+        : `Cylinder mode k ${collarFieldState.mode} with ${collarFieldState.trig} angular data on the collar from x minus five to zero.`
     );
   }
 
@@ -2499,7 +2513,7 @@ if (debyeData) {
     context.fillStyle = "rgba(241,238,229,.56)";
     context.font = "10px DM Mono, monospace";
     context.fillText("one sector", 10, 17);
-    context.fillText("one angular period", 10, 32);
+    context.fillText(collarFieldState.mode === 0 ? "radial mode · no angular variation" : "one angular period", 10, 32);
     context.restore();
     canvas.setAttribute(
       "aria-label",
@@ -2593,7 +2607,9 @@ if (debyeData) {
       if (q > 1) return COLLAR_BACKGROUND;
       const theta = Math.atan2(y, x);
       const angle = collarFieldState.mode * collarFieldState.fold * theta;
-      const angular = collarFieldState.trig === "cos" ? Math.cos(angle) : Math.sin(angle);
+      const angular = collarFieldState.mode === 0
+        ? 1
+        : collarFieldState.trig === "cos" ? Math.cos(angle) : Math.sin(angle);
       return colorFor(collarGlobalRadial(q) * angular);
     });
     // collarRaster and the local geometry use the same CSS dimensions.
@@ -2629,13 +2645,21 @@ if (debyeData) {
     const lambda = debyeLambdaAt(fold);
     $("#collarNValue").textContent = String(fold);
     $("#collarKValue").textContent = String(mode);
-    $("#collarTrigValue").textContent = trig;
+    $("#collarTrigValue").textContent = mode === 0 ? "constant" : trig;
     $("#collarAngularOrder").textContent = String(angularOrder);
-    setMath("#collarCylinderTitle", `u_${mode}^{\\mathrm{cyl}}\\;${trig}(${mode === 1 ? "\\theta" : `${mode}\\theta`})`, { serif: true });
-    setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}(q_Nr)\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
-    setMath("#collarDiskTitle", `\\text{angular order }${angularOrder}`, { serif: true });
+    if (mode === 0) {
+      setMath("#collarCylinderTitle", "u_0^{\\mathrm{cyl}}(x)", { serif: true });
+      setMath("#collarConeTitle", "u_0^{\\mathrm{cone}}(r)\\propto J_0(q_Nr)", { serif: true });
+      setMath("#collarDiskTitle", "\\text{radial mode, angular order }0", { serif: true });
+    } else {
+      setMath("#collarCylinderTitle", `u_${mode}^{\\mathrm{cyl}}\\;${trig}(${mode === 1 ? "\\theta" : `${mode}\\theta`})`, { serif: true });
+      setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}(q_Nr)\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
+      setMath("#collarDiskTitle", `\\text{angular order }${angularOrder}`, { serif: true });
+    }
     setMath("#collarLambdaValue", `\\lambda_N=${lambda.toFixed(4)}`);
-    if (mode === 1) {
+    if (mode === 0) {
+      setMath("#collarRegimeCopy", "\\text{Radial channel: }C''+\\lambda_N C=0\\text{, with matched rim data.}", { serif: true });
+    } else if (mode === 1) {
       setMath("#collarRegimeCopy", "\\text{Neumann mode: }\\partial_r u=0\\text{ at }r=N.", { serif: true });
     } else {
       $("#collarRegimeCopy").textContent = "The selected channel is evanescent in the normal direction.";
@@ -2644,6 +2668,7 @@ if (debyeData) {
       const active = button.dataset.collarTrig === trig;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
+      button.disabled = mode === 0;
     });
   }
 
@@ -2663,6 +2688,7 @@ if (debyeData) {
   });
   $("#collarKRange").addEventListener("input", (event) => {
     collarFieldState.mode = Number(event.target.value);
+    if (collarFieldState.mode === 0) collarFieldState.trig = "cos";
     setRangeFill(event.target);
     updateCollarFieldComparison();
   });
