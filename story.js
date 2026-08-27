@@ -223,6 +223,23 @@
     context.restore();
   }
 
+  function drawCenteredCaption(context, text, centerX, topY, maxWidth, lineHeight = 14) {
+    const words = text.split(/\s+/);
+    const lines = [];
+    let line = "";
+    words.forEach((word) => {
+      const candidate = line ? `${line} ${word}` : word;
+      if (line && context.measureText(candidate).width > maxWidth) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = candidate;
+      }
+    });
+    if (line) lines.push(line);
+    lines.forEach((entry, index) => context.fillText(entry, centerX, topY + index * lineHeight));
+  }
+
   function drawDiskFrame(context, width, height, opacity) {
     context.save();
     context.globalAlpha = opacity;
@@ -335,8 +352,8 @@
     const halfAngle = Math.PI / copies;
     if (selection > 0) {
       context.beginPath(); context.moveTo(cx, cy);
-      context.lineTo(cx + radius * 1.04 * Math.cos(-halfAngle), cy + radius * 1.04 * Math.sin(-halfAngle));
-      context.arc(cx, cy, radius * 1.04, -halfAngle, halfAngle);
+      context.lineTo(cx + radius * Math.cos(-halfAngle), cy + radius * Math.sin(-halfAngle));
+      context.arc(cx, cy, radius, -halfAngle, halfAngle);
       context.closePath(); context.fillStyle = `rgba(255,116,73,${.08 + .24 * selection})`; context.fill();
       context.strokeStyle = colors.orange; context.lineWidth = 2.4; context.stroke();
     }
@@ -383,15 +400,22 @@
     const tip = options.tip ?? width * .16;
     const right = options.right ?? width * .84;
     const surfaceLeft = options.surfaceLeft ?? Math.max(-width * .12, tip);
+    const length = right - tip;
+    const referenceLength = width * .68;
     return {
       tip,
       right,
-      length: right - tip,
+      length,
       cy: height * .54,
       half: options.half ?? Math.min(118, height * .23),
       fold: options.fold ?? 1,
       flatOpening: options.flatOpening ?? Math.PI / 28,
       wave: options.wave ?? 0,
+      // The cone order grows in proportion to its displayed radial length.
+      // Consequently length / order is a fixed pixels-per-radial-unit scale
+      // during the cone-to-cylinder limit.  An explicit order is supplied
+      // only when the already constructed finite sector is moved or resized.
+      order: options.order ?? 28 * length / referenceLength,
       rimDepth: 10,
       radialStart: Math.max(0, Math.min(.985, (surfaceLeft - tip) / (right - tip))),
     };
@@ -400,7 +424,10 @@
   function geometrySheetPoint(sheet, radial, angular, deformed = true) {
     const theta = Math.PI * angular;
     const wall = deformed ? sheet.wave * landingWall(theta + GEOMETRY_PROFILE_PHASE) : 0;
-    const materialRadius = radial * (1 - wall / 28);
+    // h(psi) is a displacement in radial units.  Dividing by the current
+    // order, rather than always by 28, keeps its displayed radial amplitude
+    // fixed while the cone point recedes to the half-cylinder limit.
+    const materialRadius = radial * (1 - wall / sheet.order);
     const flatAngle = sheet.flatOpening * angular;
     const flatX = sheet.tip + materialRadius * sheet.length * Math.cos(flatAngle);
     const flatY = sheet.cy + materialRadius * sheet.length * Math.sin(flatAngle);
@@ -509,7 +536,6 @@
     const diskCx = lerp(width * .5, width * .16, zoom);
     const diskRadius = lerp(fullDiskRadius, width * .68, zoom);
     const targetHalf = Math.min(118, height * .23);
-    const flatOpening = lerp(Math.PI / 28, Math.atan2(targetHalf, width * .68), zoom);
 
     if (discard < .999) {
       drawNfoldDisk(context, width, height, {
@@ -526,9 +552,13 @@
     const sheet = geometrySheetState(width, height, {
       tip: diskCx,
       right: diskCx + diskRadius,
-      half: lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, zoom),
-      flatOpening,
+      // Until folding begins this is exactly the selected disk sector: the
+      // same centre, radius, and opening angle.  The display ellipse is made
+      // taller only while the material sector is folded into the cone.
+      half: lerp(diskRadius * Math.sin(Math.PI / 28), targetHalf, fold),
+      flatOpening: Math.PI / 28,
       fold,
+      order: 28,
     });
     drawGeometrySheet(context, sheet, { opacity: materialOpacity });
   }
@@ -550,10 +580,11 @@
     const orderOpacity = ease(t / .12);
     if (orderOpacity > .001) {
       context.save(); context.globalAlpha *= orderOpacity;
-      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-      const orderLabel = t > .965 ? "N → ∞" : `N ≈ ${Math.round(28 / (1 - .9 * t))}`;
+      context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace";
+      const orderLabel = t > .965 ? "R → ∞" : `R ≈ ${Math.round(sheet.order)}`;
       const tipMotion = t > .965 ? "half-cylinder limit" : returning ? "R decreases" : "R increases";
-      context.fillText(`${orderLabel} · ${tipMotion}`, width * .08 + 92, sheet.cy - sheet.half - 28);
+      context.textAlign = width < 620 ? "left" : "center";
+      context.fillText(`${orderLabel} · ${tipMotion}`, width < 620 ? 24 : width * .08 + 92, sheet.cy - sheet.half - (width < 620 ? 50 : 28));
       context.restore();
     }
 
@@ -561,7 +592,12 @@
     if (waveLabelOpacity > .001) {
       context.save(); context.globalAlpha *= waveLabelOpacity;
       context.fillStyle = colors.orange; context.font = "10px DM Mono, monospace"; context.textAlign = "left";
-      context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, width * .84 - 330), sheet.cy - sheet.half - 29);
+      if (width < 620) {
+        context.fillText("x = h(ψ)", 24, sheet.cy - sheet.half - 30);
+        context.fillText("≈ s cos(ψ − φ) + higher modes", 24, sheet.cy - sheet.half - 14);
+      } else {
+        context.fillText("x = h(ψ) ≈ s cos(ψ − φ) + higher modes", Math.max(surfaceLeft + 100, width * .84 - 330), sheet.cy - sheet.half - 29);
+      }
       context.restore();
     }
   }
@@ -570,20 +606,30 @@
     const fan = ease(amount);
     const copies = 28;
     const seamOpacity = 1 - ease((fan - .72) / .28);
+    const halfOpening = Math.PI / copies;
 
-    // Copy zero is the unfolded material sheet itself. The remaining copies
-    // all start there with zero opacity and rotate simultaneously into place.
+    // Copy zero remains fixed.  The adjacent material sectors unfold in
+    // order, two at a time, and every active copy moves as one rigid piece.
+    // In particular its boundary profile never slides through the sector.
     drawGeometrySheet(context, sheet, { seamOpacity });
-    for (let copy = copies - 1; copy >= 1; copy--) {
-      const birth = ease(fan / .18);
-      if (birth <= .0001) continue;
-      const targetRotation = copy / copies * TAU;
-      context.save();
-      context.translate(sheet.tip, sheet.cy);
-      context.rotate(targetRotation * fan);
-      context.translate(-sheet.tip, -sheet.cy);
-      drawGeometrySheet(context, sheet, { opacity: birth, seamOpacity });
-      context.restore();
+    const sequentialProgress = fan * 14;
+    for (let distance = 1; distance <= 14; distance++) {
+      const local = Math.max(0, Math.min(1, sequentialProgress - (distance - 1)));
+      if (local <= .0001) continue;
+      const travel = ease(local);
+      const opacity = ease(local / .16);
+      const sides = distance === 14 ? [1] : [-1, 1];
+      sides.forEach((side) => {
+        // The new copy begins on top of the preceding copy and rotates through
+        // one sector angle until the two radial sides agree.
+        const rotation = side * 2 * halfOpening * (distance - 1 + travel);
+        context.save();
+        context.translate(sheet.tip, sheet.cy);
+        context.rotate(rotation);
+        context.translate(-sheet.tip, -sheet.cy);
+        drawGeometrySheet(context, sheet, { opacity, seamOpacity });
+        context.restore();
+      });
     }
 
     const outlineOpacity = ease((fan - .82) / .18);
@@ -607,9 +653,9 @@
 
   function drawUnfolding(context, width, height, amount) {
     const t = Math.max(0, Math.min(1, amount));
-    const open = ease(t / .38);
-    const transfer = ease((t - .32) / .22);
-    const fan = ease((t - .52) / .48);
+    const open = ease(t / .30);
+    const transfer = ease((t - .28) / .20);
+    const fan = ease((t - .50) / .50);
     const finalRadius = Math.min(width * .27, height * .34);
     const initialTip = width * .16;
     const initialRight = width * .84;
@@ -624,6 +670,9 @@
       fold: 1 - open,
       flatOpening: lerp(initialOpening, Math.PI / 28, transfer),
       wave: 1,
+      // This is the same R = 28 material sector throughout; transfer changes
+      // only the camera-scale embedding before its planar copies are opened.
+      order: 28,
     });
 
     if (fan > .0001) drawSectorFan(context, sheet, fan);
@@ -707,7 +756,7 @@
   const geometryState = { progress: 0, playing: false, frame: null };
   const geometryNames = ["start with N-fold symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-N limit", "bifurcate on the half-cylinder", "return to finite R", "set R = N and lift to the plane"];
   const geometryStates = ["the field is repeated in N sectors", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the perturbed boundary is x = h(ψ)", "the half-cylinder branch determines a branch on finite cones", "at R = N, the N sectors fit exactly in the plane"];
-  const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "cut the seam and rotate 28 copies into place"];
+  const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "adjacent copies open in order; each boundary profile stays on its sector"];
 
   function drawGeometryNarrative(context, width, height, progress) {
     const scaled = Math.max(0, Math.min(1, progress)) * 6;
@@ -730,7 +779,7 @@
         index === 6 ? "R = N = 28 at the lift" : "the same quotient sector",
       );
       context.fillStyle = colors.faint; context.font = "10px DM Mono, monospace"; context.textAlign = "center";
-      context.fillText(geometryCaptions[index], width * .5, height * .54 + targetHalf + 47);
+      drawCenteredCaption(context, geometryCaptions[index], width * .5, height * .54 + targetHalf + 47, width - 48);
       context.restore();
     });
   }
