@@ -1213,7 +1213,8 @@ body.tufte-site main .geometry-canvas-wrap {
 .phase-story-readout { margin-top: 1rem; }
 
 /* The collar comparison uses the same visual + margin-apparatus primitive as
-   every other lab. Its visual child owns a two-scale, two-domain matrix. */
+   every other lab. The original three views occupy three cells; the fourth
+   holds a long half-cylinder at the complete disk's geometric scale. */
 .collar-field-laboratory {
   grid-template-columns: minmax(0, var(--measure-apparatus-visual)) minmax(15rem, var(--measure-apparatus-controls));
   border: 0;
@@ -1245,24 +1246,6 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
 .collar-field-readout div { padding: .3rem 0; border-color: var(--line); }
 .collar-field-readout span { color: var(--muted); }
 .collar-field-readout strong { color: var(--ink); }
-.collar-field-locator {
-  margin: 1.25rem 0 0;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-}
-.collar-field-locator > header {
-  margin-bottom: .65rem;
-  color: var(--muted);
-  font-size: var(--type-label);
-}
-.collar-field-locator > header strong { color: var(--ink); font-weight: 400; }
-.collar-field-locator-canvas { width: min(100%, 11.5rem); }
-.collar-field-locator figcaption {
-  gap: .35rem .8rem;
-  margin-top: .55rem;
-  color: var(--muted);
-  font-size: var(--type-label);
-}
 .collar-field-visual {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1276,12 +1259,22 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
   min-width: 0;
   max-width: 100%;
 }
+.collar-field-canvas-cell {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.collar-half-cylinder-wrap {
+  min-height: 1px;
+  background: transparent !important;
+}
 .collar-field-laboratory .collar-field-visual > .collar-field-panel {
   grid-template-rows: 48px clamp(220px, 22vw, 310px) 28px;
   border: 0;
 }
 .collar-field-panel:nth-child(even) { border-left: 1px solid var(--line); }
-.collar-field-panel-wide { border-top: 1px solid var(--line) !important; }
+.collar-field-panel:nth-child(n+3) { border-top: 1px solid var(--line); }
 .collar-field-panel > header { padding: .85rem 1rem; border-bottom: 1px solid var(--line); }
 .collar-field-panel > header > span {
   display: block;
@@ -1311,39 +1304,14 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
   font-family: var(--serif);
   font-style: italic;
 }
-.collar-turning-key { margin-top: .45rem; }
-.collar-turning-key i { border-color: var(--orange); }
-.collar-scale-reading {
-  width: var(--measure-reading-in-figure);
-  display: block;
-  margin: 1.75rem 0 0;
-  padding: 1.25rem 0 0;
-  border: 0;
-  border-top: 1px solid var(--line);
+.collar-crop-key { display: flex; align-items: center; gap: .35rem; }
+.collar-crop-key i {
+  width: .75rem;
+  height: .48rem;
+  display: inline-block;
+  border: 1px solid #72c9c6;
 }
-.collar-scale-reading > span {
-  display: block;
-  margin-bottom: .5rem;
-  color: var(--muted);
-  font-size: var(--type-label);
-}
-.collar-scale-reading p {
-  margin: 0;
-  padding: .35rem 0 .35rem .9rem;
-  color: var(--muted);
-  border-left: 1px solid transparent;
-  font-family: var(--serif);
-  font-size: var(--type-caption);
-  line-height: var(--leading-caption);
-}
-.collar-scale-reading p.is-active { color: var(--ink); border-left-color: var(--orange); }
-.collar-scale-reading p:last-child {
-  margin-top: .7rem;
-  padding-left: 0;
-  color: var(--ink);
-  border-left: 0;
-  font-style: italic;
-}
+.collar-zoom-connectors { display: none; }
 
 /* The global/local cone view uses the canonical apparatus rail too. */
 .modes-laboratory {
@@ -2171,14 +2139,9 @@ body.tufte-site main :is(
   .candidate-stamp,
   .cone-view-notes,
   .cone-note,
-  .collar-field-locator,
-  .collar-field-locator > header,
-  .collar-field-locator figcaption,
   .collar-field-panel,
   .collar-field-panel > header,
-  .collar-field-panel > footer,
-  .collar-scale-reading,
-  .collar-scale-reading p
+  .collar-field-panel > footer
 ) {
   border: 0 !important;
   box-shadow: none !important;
