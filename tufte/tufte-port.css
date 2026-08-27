@@ -360,6 +360,9 @@ body.tufte-site h3 {
 
 .intro-copy { color: var(--ink); }
 .intro-copy h3 { max-width: none; }
+.siegel-theorem { width: 100%; }
+.siegel-theorem h4 { font-size: 1.2rem; font-style: italic; font-weight: 400; }
+.siegel-theorem p { font-size: 1.05rem; }
 .intro-chapter-heading { margin-top: 6rem; padding-top: 3rem; }
 
 .story-intro .intro-lead,
@@ -656,15 +659,15 @@ body.tufte-site main .shape-variation-figure > figcaption {
   border-bottom: 1px solid var(--line);
 }
 .world-cards article + article { padding-right: 0; padding-left: 0; }
-.world-cards article > :not(.world-sketch) { grid-column: 1; }
-.world-cards .world-sketch {
+.world-cards article > :not(.world-visual) { grid-column: 1; }
+.world-cards .world-visual {
   grid-column: 2;
   grid-row: 1 / span 8;
-  height: auto;
-  aspect-ratio: 1.5 / 1;
   margin: 0;
   border-top: 1px solid var(--ink);
 }
+.world-cards .world-sketch { height: auto; aspect-ratio: 1.5 / 1; }
+.world-cards .world-branch-control { padding-right: .7rem; padding-left: .7rem; }
 .world-cards .world-sketch text:not(.world-domain-label) { display: none; }
 .world-cards article > span { margin-top: 0; }
 .world-cards h3 { font-style: normal; }
@@ -1733,7 +1736,7 @@ body > footer {
   .axis-footer > :last-child { display: none; }
   .world-cards { grid-template-columns: 1fr; }
   .world-cards article, .world-cards article + article { display: block; padding: 2rem 0; border-right: 0; border-bottom: 1px solid var(--line); }
-  .world-cards .world-sketch { width: 100%; margin-bottom: 1.5rem; }
+  .world-cards .world-visual { width: 100%; margin-bottom: 1.5rem; }
   .borrow-conclusion { grid-template-columns: 1fr; }
   .cylinder-seed-copy, .cylinder-kernel-bridge, .cylinder-journal-note, .real-order-bridge > header, .real-order-theorem, .basis-limit-derivation, .angular-quotient-note, .near-integer-theorem, .abundance-conclusion, .abundance-examples > header { grid-template-columns: 1fr; }
   .site-references ol { width: 100%; max-width: 100%; }

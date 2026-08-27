@@ -243,13 +243,13 @@
               <div><p class="eyebrow">Radial Neumann eigenfunctions</p><h3>The profiles \(J_0(\rho_n r)\), where \(J_1(\rho_n)=0\).</h3></div>
               <button type="button" id="schifferModePlay" class="mode-play" aria-pressed="false">pause</button>
             </div>
-            <canvas id="schifferModeCanvas" role="img" aria-label="Animated radial Neumann eigenmode on a disk"></canvas>
+            <canvas id="schifferModeCanvas" role="img" aria-label="Shallow three-dimensional animation of a radial Neumann eigenmode on a disk"></canvas>
             <div class="schiffer-mode-controls" role="group" aria-label="Choose a radial mode">
               <button type="button" data-radial-mode="1" aria-pressed="false">mode 1</button>
               <button type="button" data-radial-mode="2" aria-pressed="false">mode 2</button>
               <button type="button" data-radial-mode="3" aria-pressed="true">mode 3</button>
             </div>
-            <p class="membrane-model-note">The photograph illustrates nodal patterns for a thin elastic plate. The animation evaluates the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
+            <p class="membrane-model-note">The photograph illustrates nodal patterns for a thin elastic plate. The shallow surface and the radial trace evaluate the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
           </div>
         </figure>
 
@@ -294,7 +294,7 @@
             <label for="williams-technical-note" class="margin-toggle" aria-label="Show the technical note">&#8853;</label>
             <input type="checkbox" id="williams-technical-note" class="margin-toggle">
             <aside class="marginnote intro-footnote" id="intro-fn-williams"><sup>1</sup> Vanishing on a real circle does not by itself make the quotient harmless. Since \(\Omega\) is bounded, \(\widehat{\mathbf 1_\Omega}\) extends to an entire function of \(\xi\in\mathbb C^2\), and what the division really needs is that it vanish on the complex quadric \(\xi\cdot\xi=\lambda\). Supplying that, and quantifying the decay of \(\widehat v\) that makes \(v\) a \(C^1\) function and licenses the propagation from infinity, is the technical content of Williams' argument, and is where the smoothness of \(\partial\Omega\) is used.</aside>
-            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by some \(f\not\equiv0\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
+            <p>Suppose \(\Omega\) fails the Pompeiu property, witnessed by a nonzero function \(f\). Run the convolution argument above on each rotated copy \(\sigma(\Omega)\), with \(\sigma\) a rotation about the origin, and use \(\widehat{\mathbf 1_{\sigma(\Omega)}}(\xi)=\widehat{\mathbf 1_{\Omega}}(\sigma^{-1}\xi)\). Picking any \(\xi_0\) in the support of \(\widehat f\) and letting \(\sigma\) run over all rotations shows that \(\widehat{\mathbf 1_\Omega}\) vanishes on the entire circle \(|\xi|=|\xi_0|\), and that circle is not a point since \(\widehat{\mathbf 1_\Omega}(0)=|\Omega|&gt;0\).</p>
             <p>Now, take \(\lambda=|\xi_0|^2\). Since \(\widehat{\mathbf 1_\Omega}\) vanishes at \(|\xi|^2=\lambda\), we divide it by \((\lambda-|\xi|^2)\), which is the Fourier symbol of \(\Delta+\lambda\). Consider<sup class="fn-ref"><a href="#intro-fn-williams">1</a></sup></p>
             <div class="tex-display">
               \[
@@ -320,17 +320,16 @@
           </header>
             <section class="shape-variation-stage">
               <svg id="shapeVariationSvg" viewBox="0 0 620 390" role="img" aria-label="A reference domain, a moving normally perturbed boundary, and visible arrows for the normal velocity">
-                <defs><marker id="shapeVariationArrow" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"/></marker></defs>
+                <defs><marker id="shapeVariationArrow" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.5" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z"/></marker></defs>
                 <path id="shapeVariationCurrent" class="variation-deformed-domain"/>
                 <path id="shapeVariationReference" class="variation-original-boundary"/>
+                <g id="shapeVariationArrowAnchors" class="variation-arrow-anchors"></g>
                 <g id="shapeVariationArrows" class="variation-normal-field" marker-end="url(#shapeVariationArrow)"></g>
                 <line id="shapeVariationDisplacement" class="variation-distance"/>
                 <circle id="shapeVariationPoint" class="variation-point original" r="3.5"/>
                 <circle id="shapeVariationMovedPoint" class="variation-point moved" r="4"/>
-                <text class="variation-domain-label" x="310" y="202" text-anchor="middle">&#937;<tspan id="shapeVariationDomainSubscript" baseline-shift="sub" font-size="13">0</tspan></text>
-                <text class="variation-svg-label" x="24" y="30">dashed: &#8706;&#937;</text>
-                <text class="variation-svg-label accent" x="24" y="50">orange: &#8706;&#937;<tspan baseline-shift="sub" font-size="8">t</tspan></text>
-                <text id="shapeVariationPointLabel" class="variation-sign-label" text-anchor="start">p</text>
+                <foreignObject x="270" y="171" width="80" height="48"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationDomainLabel" class="variation-domain-math">\(\Omega_0\)</div></foreignObject>
+                <foreignObject id="shapeVariationPointLabelBox" x="446" y="174" width="54" height="32"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationPointLabel" class="variation-point-math">\(p_0\)</div></foreignObject>
               </svg>
               <div class="variation-stage-caption"><i aria-hidden="true"></i><span>the arrows show the velocity \(f\nu\) at \(t=0\)</span></div>
             </section>
@@ -367,7 +366,18 @@
 
         <div class="intro-copy intro-copy-wide linearized-criterion-flow">
             <p>The crucial observation now is that the first two equations tell us that \(\delta u\) is a <em>Dirichlet eigenfunction</em> of the Laplacian, with <em>the same eigenvalue</em> \(\lambda\). Then, one can solve the third equation for \(\delta\Omega\), which actually simplifies from a small computation showing \(\partial_\nu^2u|_{\partial\Omega}=-\lambda\).</p>
-            <p>This approach has been used in overdetermined problems. Unfortunately, the only planar Schiffer examples we know are balls, and there Siegel proved that there is no agreement of Neumann and Dirichlet eigenvalues, blocking the route described above.</p>
+            <p>For the unit disk, this criterion reduces to a statement about zeros of Bessel functions.</p>
+            <article class="siegel-theorem" aria-labelledby="siegelTheoremTitle">
+              <h4 id="siegelTheoremTitle">Theorem (Bourget's hypothesis; Siegel, 1929).</h4>
+              <p>If \(m\) and \(n\) are distinct nonnegative integers, then \(J_m\) and \(J_n\) have no common positive zero. Equivalently,</p>
+              <div class="tex-display">
+                \[
+                \rho&gt;0,\qquad J_m(\rho)=J_n(\rho)=0
+                \quad\Longrightarrow\quad m=n.
+                \]
+              </div>
+            </article>
+            <p>Indeed, a radial Schiffer mode on the disk has \(J_1(\rho)=0\), while a Dirichlet variation in angular mode \(\ell\) would require \(J_\ell(\rho)=0\) at the same \(\rho\). Siegel's theorem excludes every \(\ell\ge2\). The remaining mode \(\ell=1\) is the derivative of the radial solution under translation, so it does not produce a new domain. Thus the disk has no genuine nonradial direction for this linearized construction.</p>
           <article class="math-statement math-statement-criterion" aria-labelledby="linearizedCriterionTitle">
             <header class="math-statement-header"><span>Criterion</span><small>linearized perturbation</small></header>
             <div class="math-statement-body">
@@ -511,10 +521,11 @@
           <span class="section-number">03</span>
           <div><p class="eyebrow">Change the ambient geometry</p><h2>The cylinder and sphere admit the spectral coincidence excluded on the disk.</h2></div>
         </header>
-        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The figures below vary the branch parameter <span class="formula">\(s\)</span> slowly, beginning at the symmetric domain <span class="formula">\(s=0\)</span>.</p></div>
+        <div class="borrow-lead"><p>The linearization in the <a href="#introduction">introduction</a> tells us what to look for: a radial Schiffer eigenvalue that is also a nonradial Dirichlet eigenvalue. The Bourget–Siegel theorem rules this out on a disk. It does occur on the flat cylinder and on the sphere, and in both geometries the resulting linearized kernel produces genuine nonradial Schiffer branches. The sliders below move along the two branches, with the symmetric domain at <span class="formula">\(s=0\)</span>.</p></div>
         <div class="world-cards figure-band">
           <article>
-            <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated compact domain on a three-dimensional flat cylinder whose two boundary loops vary with the bifurcation parameter s">
+            <div class="world-visual">
+            <div class="world-sketch realistic-world" role="img" aria-label="A compact domain on a three-dimensional flat cylinder whose two boundary loops are controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
                   <linearGradient id="cylinderSurface" x1="0" y1="0" x2="0" y2="1">
@@ -550,6 +561,12 @@
                 <text x="260" y="286" text-anchor="middle">a compact domain on ℝ × S¹ · both orange curves belong to ∂Ω</text>
               </svg>
             </div>
+            <div class="world-branch-control">
+              <div><label for="cylinderBranchRange">branch parameter \(s\)</label><output id="cylinderBranchValue" for="cylinderBranchRange">\(s=0\)</output></div>
+              <input id="cylinderBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Cylinder bifurcation parameter from minus epsilon to plus epsilon">
+              <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
+            </div>
+            </div>
             <span>flat cylinder</span><h3>A radial Neumann mode and a nonradial Dirichlet mode have the same eigenvalue.</h3>
             <p>On the half-cylinder \(x\le0\), separation of variables gives, for every \(\lambda&gt;1\),</p>
             <div class="world-mode-pair tex-display">
@@ -564,7 +581,8 @@
             <a class="literature-link" href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, JEMS (2025) ↗</a>
           </article>
           <article>
-            <div class="world-sketch realistic-world" role="img" aria-label="A slowly animated contractible domain on a shaded sphere whose eight-fold boundary varies with the bifurcation parameter s">
+            <div class="world-visual">
+            <div class="world-sketch realistic-world" role="img" aria-label="A contractible spherical cap contained in the northern hemisphere whose eight-fold boundary is controlled by the bifurcation parameter s">
               <svg viewBox="0 0 520 300" aria-hidden="true">
                 <defs>
                   <radialGradient id="sphereSurface" cx="34%" cy="24%"><stop stop-color="#f7f4e9"/><stop offset=".34" stop-color="#bdd8ce"/><stop offset=".68" stop-color="#4f8583"/><stop offset="1" stop-color="#183039"/></radialGradient>
@@ -577,7 +595,7 @@
                 <g filter="url(#sphereShadow)">
                   <circle cx="260" cy="143" r="111" fill="url(#sphereSurface)" stroke="#132126" stroke-width="2"/>
                   <g clip-path="url(#sphereClip)" fill="none" stroke="#132126" stroke-opacity=".22">
-                    <ellipse cx="260" cy="143" rx="111" ry="35"/><ellipse cx="260" cy="143" rx="56" ry="111"/>
+                    <ellipse class="sphere-equator-reference" cx="260" cy="143" rx="111" ry="85"/><ellipse cx="260" cy="143" rx="56" ry="111"/>
                     <path d="M260 32C205 66 205 220 260 254M260 32C315 66 315 220 260 254M149 143C184 105 336 105 371 143M149 143C184 181 336 181 371 143"/>
                   </g>
                   <g class="sphere-boundary-legacy" hidden aria-hidden="true">
@@ -594,10 +612,16 @@
                   <circle cx="260" cy="143" r="111" fill="none" stroke="#132126" stroke-width="2"/>
                 </g>
                 <text class="world-domain-label dark-label" x="260" y="82" text-anchor="middle">Ω</text>
-                <text x="260" y="286" text-anchor="middle">eight-fold boundary mode · solid front, dashed back</text>
+                <text x="260" y="286" text-anchor="middle">orange: ∂Ω (solid/dashed) · teal: equator</text>
               </svg>
             </div>
-            <span>hemisphere</span><h3>A spherical cap bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández find a transverse intersection of a zonal Neumann branch and a nonzonal Dirichlet branch. This intersection produces smooth contractible Schiffer domains on the hemisphere.</p>
+            <div class="world-branch-control">
+              <div><label for="sphereBranchRange">branch parameter \(s\)</label><output id="sphereBranchValue" for="sphereBranchRange">\(s=0\)</output></div>
+              <input id="sphereBranchRange" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Spherical bifurcation parameter from minus epsilon to plus epsilon">
+              <div class="range-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
+            </div>
+            </div>
+            <span>half-sphere</span><h3>A geodesic disk bifurcates in an eight-fold mode.</h3><p>Cao-Labora and Fernández bifurcate from the north-pole disk <span class="formula">\(\cos\theta&gt;a_*\)</span>, where <span class="formula">\(a_*\approx0.477\)</span>. Its boundary lies strictly north of the equator. The slider displays the expansion <span class="formula">\(\theta(\phi;s)=\arccos(a_*)+s b_*\cos(8\phi)+o(s)\)</span>; the amplitude is enlarged so that the eight-fold term is visible.</p>
             <a class="literature-link" href="https://arxiv.org/abs/2510.05732" target="_blank" rel="noreferrer">Cao-Labora–Fernández (2025) ↗</a>
           </article>
         </div>
@@ -1653,6 +1677,7 @@
           <li id="ref-colbrook"><span>[12]</span><p>M. J. Colbrook and G. Stepaniants, <a href="https://arxiv.org/abs/2608.01579" target="_blank" rel="noreferrer"><em>A computer-assisted counterexample to the planar Pompeiu and Schiffer conjectures</em></a>, arXiv:2608.01579 (2026).</p></li>
           <li id="ref-cao-dedios"><span>[13]</span><p>G. Cao-Labora and J. de Dios Pont, <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer"><em>Counterexamples to Schiffer's Conjecture</em></a>, arXiv:2608.05114 (2026). The construction expounded here.</p></li>
           <li><span>[14]</span><p>F. W. J. Olver et al., editors, <a href="https://dlmf.nist.gov/10" target="_blank" rel="noreferrer"><em>NIST Digital Library of Mathematical Functions, Chapter 10: Bessel Functions</em></a>.</p></li>
+          <li><span>[15]</span><p>C. L. Siegel, <em>Über einige Anwendungen diophantischer Approximationen</em>, <em>Abhandlungen der Preußischen Akademie der Wissenschaften, Physikalisch-Mathematische Klasse</em>, no. 1 (1929), 1–70. Bourget's hypothesis is a special case of Siegel's theorem on Bessel functions.</p></li>
         </ol>
       </section>
     </main>
