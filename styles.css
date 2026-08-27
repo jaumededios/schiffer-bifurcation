@@ -19,6 +19,10 @@
   --type-control: 11px;
   --type-label: 11px;
   --type-math: 16px;
+  --layout-max: 1320px;
+  --layout-gutter: max(24px, calc((100vw - var(--layout-max)) / 2));
+  --layout-indent: 55px;
+  --layout-prose: 900px;
 }
 
 * { box-sizing: border-box; }
@@ -752,7 +756,7 @@ dialog hr { height: 1px; margin: 32px 0; background: var(--line); border: 0; }
   .abundance-proof-argument { margin-left: auto; }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 840px) {
   .topbar { padding: 0 20px; grid-template-columns: 1fr auto; }
   .status { display: none; }
   .site-toc { position: relative; top: auto; left: auto; width: auto; margin: 18px 18px 0; box-shadow: none; }
@@ -1046,7 +1050,7 @@ dialog p:not(.eyebrow) {
   .story-intro .intro-lead { grid-template-columns: minmax(0,1fr); gap: 36px; margin-left: 0; }
   .intro-copy-wide, .intro-proof, .intro-shapes { margin-left: 0; }
 }
-@media (max-width: 760px) {
+@media (max-width: 840px) {
   .story-intro { padding: 64px 6vw 72px; }
   .site-references { padding: 70px 24px 82px; }
   .intro-copy h3 { font-size: 27px; }
@@ -1162,7 +1166,7 @@ dialog p:not(.eyebrow) {
   .line-probe-figure, .disk-sidequest, .membrane-figure, .intro-theorem { margin-left: 0; }
   .membrane-figure { grid-template-columns: minmax(260px,.75fr) minmax(420px,1.25fr); }
 }
-@media (max-width: 760px) {
+@media (max-width: 840px) {
   .line-probe-panel, .membrane-figure { grid-template-columns: minmax(0,1fr); }
   .line-probe-panel canvas { border-right: 0; border-bottom: 1px solid var(--line); }
   .chladni-photo-panel { border-right: 0; border-bottom: 1px solid var(--line); }
@@ -1175,6 +1179,85 @@ dialog p:not(.eyebrow) {
   .probe-question { padding: 27px 22px; }
   .schiffer-mode-heading { min-height: 0; }
   .schiffer-mode-heading h3 { font-size: 23px; }
+}
+
+/* Editorial width system.
+   Backgrounds remain full-bleed; every chapter uses the same centred outer
+   container. Prose, indented mathematical statements, and wide figures then
+   occupy three stable measures inside that container. */
+:is(
+  .intro,
+  .story-intro,
+  .borrow-flexibility,
+  .geometric-escape,
+  .experiment,
+  .modes-experiment,
+  .phase-story,
+  .debye-experiment,
+  .abundance-experiment,
+  .site-references
+) { padding-inline: var(--layout-gutter); }
+
+body > footer { padding-inline: var(--layout-gutter); }
+
+.intro-bottom p { max-width: var(--layout-prose); margin-right: auto; }
+.world-cards, .borrow-conclusion { margin-left: 0; }
+.phase-story .story-heading,
+.uniform-drop-theorem,
+.phase-derivation-grid,
+.motion-split,
+.phase-story-lab,
+.phase-family { margin-right: 0; margin-left: 0; }
+
+@media (min-width: 1001px) {
+  .intro-bottom p { margin-left: var(--layout-indent); }
+
+  .story-intro .intro-lead { margin-left: 0; }
+  .intro-copy-wide,
+  .intro-proof,
+  .disk-sidequest,
+  .intro-theorem { margin-left: var(--layout-indent); }
+  .intro-shapes,
+  .intro-variation-figure,
+  .membrane-figure { max-width: none; margin-left: 0; }
+  .disk-sidequest,
+  .intro-theorem { max-width: none; }
+
+  .borrow-lead,
+  .geometry-lead,
+  .proof-strategy-lead,
+  .proof-strategy-subheading,
+  .cylinder-spectral-seed,
+  .cylinder-theorem,
+  .cylinder-jet-proof,
+  .cone-lead,
+  .modes-lead,
+  .phase-story-lead,
+  .real-order-bridge,
+  .debye-lead,
+  .abundance-lead,
+  .near-integer-theorem,
+  .abundance-proof-details { margin-left: var(--layout-indent); }
+
+  .proof-strategy-subheading,
+  .cylinder-spectral-seed,
+  .abundance-lead,
+  .near-integer-theorem,
+  .abundance-proof-details { max-width: none; }
+}
+
+@media (max-width: 1100px) {
+  .phase-derivation-grid,
+  .motion-split,
+  .debye-formula-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .phase-derivation-grid article,
+  .motion-split article,
+  .debye-formula-grid article { min-width: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+
+  .phase-derivation-grid article:last-child,
+  .motion-split article:last-child,
+  .debye-formula-grid article:last-child { border-bottom: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
