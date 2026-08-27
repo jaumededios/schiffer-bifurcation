@@ -388,6 +388,10 @@
     event.preventDefault();
   });
   buttons.forEach((button) => button.addEventListener("click", () => selectInterval(button.dataset.interval)));
+  const disclosure = root.closest("details");
+  if (disclosure) disclosure.addEventListener("toggle", () => {
+    if (disclosure.open) requestAnimationFrame(resize);
+  });
   if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
   window.addEventListener("resize", resize);
   window.addEventListener("load", resize);

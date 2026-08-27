@@ -82,53 +82,67 @@
           </aside>
         </div>
 
-        <figure class="line-probe-figure" id="lineProbeFigure">
-          <figcaption>
-            <p class="eyebrow">Begin in one dimension</p>
-            <h3>An interval measures the field underneath it.</h3>
-            <p>The coloured curve is \(f(x)=\cos x\). Move the interval along the line. Take a probe whose length is \(2\pi\). It contains one complete period at every position, so every reading is zero even though the field is not.</p>
-          </figcaption>
-          <div class="line-probe-panel">
-            <canvas id="lineProbeCanvas" tabindex="0" role="img" aria-label="An interval moving over the field cosine x"></canvas>
-            <div class="line-probe-side">
-              <div class="pompeiu-controls" role="group" aria-label="Choose the interval length">
-                <button type="button" class="pompeiu-choice" data-interval="short" aria-pressed="false"><span>ordinary interval</span><b>L = 2</b></button>
-                <button type="button" class="pompeiu-choice" data-interval="blind" aria-pressed="true"><span>one full period</span><b>\(L=2\pi\)</b></button>
-              </div>
-              <div class="pompeiu-readout">
-                <span>\(\int_{t-L/2}^{t+L/2}\cos x\,dx\)</span>
-                <strong id="lineProbeValue">0.000</strong>
-                <div class="pompeiu-meter"><i id="lineProbeMeterFill"></i></div>
-              </div>
-              <p class="pompeiu-hint">drag the interval, or use the arrow keys</p>
-            </div>
-          </div>
-          <div class="line-probe-identity tex-display">
-            \[
-            \int_{t-L/2}^{t+L/2}\cos x\,dx=2\sin(L/2)\cos t.
-            \]
-          </div>
-        </figure>
-
         <div class="intro-copy intro-copy-wide intro-linear-step">
-          <h3>The recovery question is linear.</h3>
-          <p>If two fields \(f_1\) and \(f_2\) give the same reading in every configuration, their difference \(g=f_1-f_2\) satisfies</p>
+          <p class="eyebrow">Reduction to the kernel</p>
+          <h3>The Pompeiu property is the injectivity of \(M_\Omega\).</h3>
+          <p>The map \(f\mapsto M_\Omega f\) is linear. If two fields \(f_1\) and \(f_2\) give the same reading in every configuration, then their difference \(g=f_1-f_2\) satisfies</p>
           <div class="tex-display">
             \[
             \int_{E\Omega}g(x)\,dx=0
             \qquad\text{for every rigid motion }E.
             \]
           </div>
-          <p>Thus the measurements determine every field precisely when the only field invisible to the probe is \(g=0\). A domain \(\Omega\) with this property is said to have the <em>Pompeiu property</em>.</p>
-          <p>A circular probe has an additional symmetry: rotating it leaves its footprint unchanged, so rotations supply no new measurements. At certain radii a disk is completely blind to a nonzero plane wave. This led to the modern form of the problem: are disks the only smooth bounded planar domains without the Pompeiu property?</p>
+          <p>We therefore say that \(\Omega\) has the <em>Pompeiu property</em> when \(\ker M_\Omega=\{0\}\). The recovery problem asks which bounded planar domains have this property.</p>
         </div>
 
-        <details class="plane-probe-details">
-          <summary><span>Open the planar disk experiment</span><i>expand +</i></summary>
+        <details class="disk-sidequest">
+          <summary><span><small>Optional digression</small>From the interval model to the disk counterexample</span><i>expand +</i></summary>
+          <div class="disk-sidequest-body">
+            <figure class="line-probe-figure" id="lineProbeFigure">
+              <figcaption>
+                <p class="eyebrow">A one-dimensional model</p>
+                <h3>The Pompeiu operator for an interval.</h3>
+                <p>Let \(I_L=[-L/2,L/2]\) and \(f(x)=\cos x\). For the translate \(I_L+t\), direct integration gives</p>
+                <div class="tex-display line-probe-computation">
+                  \[
+                  \int_{I_L+t}f(x)\,dx
+                  =\int_{t-L/2}^{t+L/2}\cos x\,dx
+                  =2\sin(L/2)\cos t.
+                  \]
+                </div>
+                <p>Hence \(I_{2\pi}\) fails the one-dimensional Pompeiu property: the nonzero function \(\cos x\) belongs to the kernel for every translation. The panel below plots this identity as \(t\) varies.</p>
+              </figcaption>
+              <div class="line-probe-panel">
+                <canvas id="lineProbeCanvas" tabindex="0" role="img" aria-label="An interval moving over the field cosine x"></canvas>
+                <div class="line-probe-side">
+                  <div class="pompeiu-controls" role="group" aria-label="Choose the interval length">
+                    <button type="button" class="pompeiu-choice" data-interval="short" aria-pressed="false"><span>\(\sin(L/2)\ne0\)</span><b>\(L=2\)</b></button>
+                    <button type="button" class="pompeiu-choice" data-interval="blind" aria-pressed="true"><span>\(\sin(L/2)=0\)</span><b>\(L=2\pi\)</b></button>
+                  </div>
+                  <div class="pompeiu-readout">
+                    <span>\(\int_{t-L/2}^{t+L/2}\cos x\,dx\)</span>
+                    <strong id="lineProbeValue">0.000</strong>
+                    <div class="pompeiu-meter"><i id="lineProbeMeterFill"></i></div>
+                  </div>
+                  <p class="pompeiu-hint">drag to vary \(t\), or use the arrow keys</p>
+                </div>
+              </div>
+            </figure>
+
+            <div class="intro-copy">
+              <h3>Proposition. Every disk fails the Pompeiu property.</h3>
+              <p>Let \(B_r\) be a disk of radius \(r\), and let \(\rho_\star&gt;0\) be a zero of \(J_1\). Then</p>
+              <div class="tex-display">
+                \[
+                f(x)=\cos\!\left(\frac{\rho_\star}{r}x_1\right)
+                \]
+              </div>
+              <p>is nonzero and satisfies \(\int_{E B_r}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
+            </div>
           <figure class="pompeiu-figure" id="pompeiuFigure">
             <figcaption>
-              <p class="eyebrow">The same experiment in the plane</p>
-              <p>The colour is \(f(x)=\cos(x_1)\). Choose a radius and drag the disk. At \(r=3.8317\ldots\), the first positive zero of \(J_1\), the integral is zero for every position of the disk.</p>
+              <p class="eyebrow">Numerical illustration</p>
+              <p>Here \(f(x)=\cos(x_1)\), so the exceptional radius is the first positive zero \(r=3.8317\ldots\) of \(J_1\). The displayed value is the integral over the translated disk.</p>
             </figcaption>
             <div class="pompeiu-panel">
               <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
@@ -147,20 +161,10 @@
               </div>
             </div>
           </figure>
-        </details>
 
-        <details class="proof-details intro-proof intro-history">
-          <summary><span>The early history of the problem</span><i>expand +</i></summary>
-          <div class="intro-proof-body">
-            <p>Pompeiu claimed that disks and squares have the Pompeiu property. His proof for the disk was incorrect, and his proof for the square required the additional assumption that \(f\) tends to a limit at infinity. Christov later proved the square case without that assumption. In 1944 Chakalov proved that disks fail the property.</p>
-            <p>Many positive cases were subsequently established: polygons, noncircular ellipses, and convex domains with corners all have the Pompeiu property. The question for smooth domains remained open until the counterexamples discussed on this page.</p>
-          </div>
-        </details>
-
-        <details class="proof-details intro-proof">
-          <summary><span>Why a disk misses a plane wave</span><i>expand +</i></summary>
-          <div class="intro-proof-body">
-            <p>Let \(B_r\) be the disk of radius \(r\). Translation of the probe gives a convolution:</p>
+          <div class="disk-sidequest-proof">
+            <h4>Proof.</h4>
+            <p>Translation of the disk gives a convolution:</p>
             <div class="tex-display">
               \[
               \int_{B_r+t}f(x)\,dx
@@ -181,7 +185,15 @@
               \qquad\text{for every }t\in\mathbb R^2.
               \]
             </div>
-            <p>Rotations of the disk give the same domain, so this nonzero field is invisible in every allowed configuration. Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin. <span class="qed">□</span></p>
+            <p>Thus the convolution \(\mathbf 1_{B_r}*f\) vanishes identically. Rotational invariance of the disk completes the proof. <span class="qed">□</span></p>
+            <p class="intro-proof-aside">Brown, Schreiber and Taylor proved more generally that failure of the Pompeiu property is equivalent to \(\widehat{\mathbf 1_\Omega}\) vanishing on a circle centred at the origin.</p>
+          </div>
+
+          <div class="disk-sidequest-history">
+            <h4>Historical note.</h4>
+            <p>Pompeiu claimed that disks and squares have the Pompeiu property. His disk proof was incorrect, while the square proof used the additional assumption that \(f\) tends to a limit at infinity. Christov later proved the square case without this assumption. Chakalov established the disk counterexample in 1944.</p>
+            <p>Polygons, noncircular ellipses, and convex domains with corners were subsequently shown to have the Pompeiu property. The smooth-domain question remained open until the counterexamples discussed on this page.</p>
+          </div>
           </div>
         </details>
 

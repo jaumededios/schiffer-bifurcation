@@ -1102,19 +1102,28 @@ dialog p:not(.eyebrow) {
 .line-probe-panel canvas:active { cursor: grabbing; }
 .line-probe-panel canvas:focus-visible { outline: 2px solid var(--orange); outline-offset: -3px; }
 .line-probe-side { display: flex; flex-direction: column; min-width: 0; }
-.line-probe-identity { margin: 0; padding: 18px 24px; color: var(--ink); border: 1px solid var(--line); border-top: 0; background: rgba(255,255,255,.12); overflow-x: auto; }
-.line-probe-identity .katex-display { margin: 0; }
+.line-probe-computation { margin: 24px 0; color: var(--ink); overflow-x: auto; }
 .intro-linear-step { margin-top: 72px; }
 
-.plane-probe-details { max-width: 960px; margin: 52px 0 0 70px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.plane-probe-details > summary { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; color: var(--ink); cursor: pointer; list-style: none; font: 500 var(--type-label)/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
-.plane-probe-details > summary::-webkit-details-marker { display: none; }
-.plane-probe-details > summary i { color: var(--orange); font-style: normal; font-weight: 400; }
-.plane-probe-details[open] > summary { border-bottom: 1px solid var(--line); }
-.plane-probe-details[open] > summary i { font-size: 0; }
-.plane-probe-details[open] > summary i::after { content: "collapse −"; font-size: var(--type-label); }
-.plane-probe-details .pompeiu-figure { margin: 34px 0 42px; }
-.intro-history { margin-top: 42px; }
+.disk-sidequest { max-width: 1060px; margin: 52px 0 0 70px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.disk-sidequest > summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; color: var(--ink); cursor: pointer; list-style: none; font: 500 var(--type-label)/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.disk-sidequest > summary::-webkit-details-marker { display: none; }
+.disk-sidequest > summary > span { display: grid; gap: 5px; }
+.disk-sidequest > summary small { color: var(--orange); font: inherit; }
+.disk-sidequest > summary i { flex: 0 0 auto; color: var(--orange); font-style: normal; font-weight: 400; }
+.disk-sidequest[open] > summary { border-bottom: 1px solid var(--line); }
+.disk-sidequest[open] > summary i { font-size: 0; }
+.disk-sidequest[open] > summary i::after { content: "collapse −"; font-size: var(--type-label); }
+.disk-sidequest-body { padding: 48px 0 42px; }
+.disk-sidequest .line-probe-figure { margin: 0 0 68px; }
+.disk-sidequest .line-probe-figure + .intro-copy { max-width: 840px; padding-top: 58px; border-top: 1px solid var(--line); }
+.disk-sidequest .pompeiu-figure { margin: 42px 0 52px; }
+.disk-sidequest-proof, .disk-sidequest-history { max-width: 840px; padding-top: 40px; color: var(--muted); border-top: 1px solid var(--line); font-size: var(--type-proof); line-height: 1.82; }
+.disk-sidequest-proof h4, .disk-sidequest-history h4 { margin: 0 0 20px; color: var(--ink); font: 500 var(--type-body)/1.5 var(--sans); }
+.disk-sidequest-proof p, .disk-sidequest-history p { margin: 0 0 16px; }
+.disk-sidequest-proof .tex-display { margin: 22px 0; color: var(--ink); overflow-x: auto; }
+.disk-sidequest-history { margin-top: 42px; }
+.disk-sidequest-history p:last-child { margin-bottom: 0; }
 
 .intro-chapter-heading { margin-top: 96px; padding-top: 68px; border-top: 1px solid var(--ink); }
 .intro-chapter-heading > .eyebrow { margin-bottom: 15px; font-size: var(--type-label); }
@@ -1150,7 +1159,7 @@ dialog p:not(.eyebrow) {
 .intro-theorem li + li { margin-top: 8px; }
 
 @media (max-width: 1000px) {
-  .line-probe-figure, .plane-probe-details, .membrane-figure, .intro-theorem { margin-left: 0; }
+  .line-probe-figure, .disk-sidequest, .membrane-figure, .intro-theorem { margin-left: 0; }
   .membrane-figure { grid-template-columns: minmax(260px,.75fr) minmax(420px,1.25fr); }
 }
 @media (max-width: 760px) {
