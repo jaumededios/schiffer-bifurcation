@@ -22,7 +22,7 @@
   --layout-max: 1320px;
   --layout-gutter: max(24px, calc((100vw - var(--layout-max)) / 2));
   --layout-indent: 55px;
-  --layout-prose: 900px;
+  --layout-prose: 72ch;
 }
 
 * { box-sizing: border-box; }
@@ -1025,7 +1025,7 @@ dialog p:not(.eyebrow) {
 .intro-copy p { margin: 0 0 17px; }
 .intro-copy p:last-child { margin-bottom: 0; }
 .intro-copy a { color: var(--orange); text-underline-offset: 3px; }
-.intro-copy-wide { max-width: 900px; margin: 60px 0 0 70px; }
+.intro-copy-wide { max-width: var(--layout-prose); margin: 60px 0 0 70px; }
 .story-intro .intro-statement { min-height: 0; padding: 44px 34px 28px; }
 .story-intro .intro-statement .intro-question { margin: 0; color: var(--ink); font-size: 17px; line-height: 1.62; }
 .story-intro .intro-statement > p { margin: 18px 0 0; font-size: 13px; line-height: 1.7; }
@@ -1237,6 +1237,13 @@ dialog p:not(.eyebrow) {
 body > footer { padding-inline: var(--layout-gutter); }
 
 .intro-bottom p { max-width: var(--layout-prose); margin-right: auto; }
+.borrow-lead,
+.geometry-lead,
+.proof-strategy-lead,
+.half-cylinder-introduction,
+.experiment-story-lead,
+.phase-story-lead,
+.debye-lead { max-width: var(--layout-prose); }
 .world-cards, .borrow-conclusion { margin-left: 0; }
 .phase-story .story-heading,
 .uniform-drop-theorem,
@@ -1294,6 +1301,41 @@ body > footer { padding-inline: var(--layout-gutter); }
   .phase-derivation-grid article:last-child,
   .motion-split article:last-child,
   .debye-formula-grid article:last-child { border-bottom: 0; }
+}
+
+/* On a wide laptop or desktop, the contents become a persistent reading rail.
+   Reserving its width keeps it from covering the first lines of each section;
+   the remaining page is exactly the width of the mathematical exposition. */
+@media (min-width: 1280px) {
+  body { padding-left: 240px; }
+
+  .site-toc {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 240px;
+    overflow-y: auto;
+    background: var(--paper);
+    border: 0;
+    border-right: 1px solid var(--line);
+    box-shadow: none;
+  }
+
+  .site-toc summary {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    min-height: 72px;
+    padding: 0 18px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    cursor: default;
+  }
+
+  .site-toc summary i { display: none; }
+  .site-toc nav { border-top: 0; }
+  .site-toc a { padding-right: 18px; padding-left: 18px; }
+  .site-toc a.toc-subsection { padding-left: 34px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

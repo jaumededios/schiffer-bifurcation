@@ -31,8 +31,21 @@
     return label;
   };
   const siteToc = select(".site-toc");
+  const tocRailQuery = window.matchMedia("(min-width: 1280px)");
+  const syncTocMode = () => {
+    if (siteToc) siteToc.open = tocRailQuery.matches;
+  };
+  syncTocMode();
+  tocRailQuery.addEventListener?.("change", syncTocMode);
+  siteToc?.querySelector("summary")?.addEventListener("click", (event) => {
+    if (!tocRailQuery.matches) return;
+    event.preventDefault();
+    siteToc.open = true;
+  });
   siteToc?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => { siteToc.open = false; });
+    link.addEventListener("click", () => {
+      if (!tocRailQuery.matches) siteToc.open = false;
+    });
   });
   const TAU = Math.PI * 2;
   const GEOMETRY_PROFILE_PHASE = -Math.PI / 2;
