@@ -55,14 +55,59 @@
       "experiment",
       "debye-experiment",
       "phase-story",
+      "abundance-experiment",
       "cone-experiment",
       "modes-experiment",
-      "abundance-experiment",
       "references",
     ];
     const actualSectionOrder = Array.from(document.querySelectorAll("main > section[id]"), (section) => section.id);
     if (expectedSectionOrder.some((id, index) => actualSectionOrder[index] !== id)) {
       errors.push("top-level sections do not follow source reading order");
+    }
+
+    const expectedProofContents = [
+      ["5.1", "#half-cylinder-strategy"],
+      ["5.2", "#debye-experiment"],
+      ["5.3", "#phase-story"],
+      ["5.4", "#abundance-experiment"],
+      ["5.5", "#cone-experiment"],
+    ];
+    const actualProofContents = Array.from(document.querySelectorAll(".site-toc .toc-subsection"), (link) => [
+      link.querySelector("b")?.textContent.trim(),
+      link.getAttribute("href"),
+    ]);
+    if (expectedProofContents.some(([number, href], index) => {
+      const actual = actualProofContents[index];
+      return !actual || actual[0] !== number || actual[1] !== href;
+    })) {
+      errors.push("proof contents do not match the authored dependency order");
+    }
+
+    const coneSection = document.querySelector("#cone-experiment");
+    if (!coneSection?.getClientRects().length) errors.push("the cone continuation is not visible");
+    if (!coneSection?.querySelector(":scope > .abundance-conclusion")) {
+      errors.push("the landing argument is not attached to the continuation section");
+    }
+    const transferTheorem = document.querySelector("#debye-experiment .real-order-bridge");
+    const transferEvidence = document.querySelector("#debye-experiment .debye-conclusion");
+    if (!transferTheorem || !transferEvidence || !(transferEvidence.compareDocumentPosition(transferTheorem) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+      errors.push("the cone transfer theorem appears before its limiting evidence");
+    }
+    if (document.querySelector("#modes-experiment .collar-limit-argument")) {
+      errors.push("the landing zoom repeats machinery established before the landing");
+    }
+    const halfCylinderSequence = [
+      document.querySelector("#experiment .cylinder-theorem"),
+      document.querySelector("#experiment .cylinder-spectral-seed"),
+      document.querySelector("#experiment .cylinder-jet-proof"),
+      document.querySelector("#experiment .experiment-story-lead"),
+      document.querySelector("#experiment > .laboratory"),
+    ];
+    if (halfCylinderSequence.some((node) => !node) || halfCylinderSequence.some((node, index) => {
+      if (!index) return false;
+      return !(halfCylinderSequence[index - 1].compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
+    })) {
+      errors.push("Subsection 5.1 does not follow theorem, expansion, applet order");
     }
 
     document.querySelectorAll(marginSelector).forEach((aside, index) => {

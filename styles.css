@@ -79,15 +79,8 @@ a { color: inherit; }
 .katex-inline-sans .mainrm,
 .katex-inline-sans .mord:not([class*="math"]) { font-family: KaTeX_SansSerif, var(--sans); }
 
-.intro { order: 0; }
-.borrow-flexibility { order: 3; padding: 110px 7vw; background: var(--paper-2); }
-.geometric-escape { order: 4; padding: 105px 7vw 0; color: var(--paper); background: var(--ink); }
-#experiment { order: 5; }
-#debye-experiment { order: 6; }
-.phase-story { order: 7; }
-#cone-experiment { order: 8; }
-#modes-experiment { order: 8; }
-#abundance-experiment { order: 9; }
+.borrow-flexibility { padding: 110px 7vw; background: var(--paper-2); }
+.geometric-escape { padding: 105px 7vw 0; color: var(--paper); background: var(--ink); }
 
 .story-heading { display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: start; gap: 28px; }
 .story-heading h2 { max-width: var(--layout-prose); }
@@ -316,6 +309,7 @@ a { color: inherit; }
 .experiment-header { display: flex; align-items: end; justify-content: space-between; padding-bottom: 40px; }
 .experiment-header > div:first-child { display: flex; align-items: flex-start; gap: 24px; }
 .section-number { width: 31px; height: 31px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font: 11px var(--mono); opacity: .45; flex: 0 0 auto; }
+.subsection-number { width: auto; min-width: 31px; padding: 0 8px; white-space: nowrap; }
 .eyebrow { margin: 0 0 11px; color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
 h2 { margin: 0; font: 300 clamp(38px, 3.7vw, 56px)/.98 var(--serif); letter-spacing: -.032em; }
 .equations { display: flex; align-items: baseline; gap: 20px; font: 11px var(--mono); color: rgba(241,238,229,.7); }
@@ -493,6 +487,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .phase-story .story-heading { margin: 0 3vw; }
 .phase-story-lead { max-width: 870px; margin: 42px 0 38px calc(3vw + 70px); color: var(--muted); font-size: 14px; line-height: 1.75; }
 .phase-story-lead p { margin: 0 0 17px; }
+.phase-story-example-note { max-width: 870px; margin: 22px 3vw 38px calc(3vw + 70px); color: var(--muted); font-size: 11px; line-height: 1.74; }
 .uniform-drop-theorem { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 45px; margin: 0 3vw; padding: 34px; border: 1px solid var(--line); border-bottom: 0; background: rgba(255,255,255,.2); }
 .uniform-drop-label { display: flex; flex-direction: column; gap: 8px; }
 .uniform-drop-label span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
@@ -557,8 +552,8 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .real-order-bridge header p, .real-order-theorem p { max-width: 900px; margin: 0; color: rgba(241,238,229,.52); font-size: 11px; line-height: 1.76; }
 .real-order-theorem { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 40px; padding: 34px; border-top: 1px solid var(--line-light); background: rgba(255,255,255,.018); }
 .real-order-theorem > div { display: flex; flex-direction: column; gap: 8px; }
-.real-order-theorem > div span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
-.real-order-theorem > div small { color: rgba(241,238,229,.4); font: 11px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.real-order-theorem > div > span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+.real-order-theorem > div > small { color: rgba(241,238,229,.4); font: 11px/1.55 var(--mono); text-transform: uppercase; letter-spacing: .07em; }
 .real-order-theorem article { min-width: 0; }
 .real-order-theorem article p { margin-bottom: 14px; }
 .real-order-theorem .tex-display { max-width: 780px; margin: 13px 0 16px; padding: 10px 14px; border-left: 2px solid var(--orange); background: rgba(255,116,73,.03); }
@@ -687,6 +682,7 @@ input[type="range"]::-moz-range-thumb { width: 9px; height: 9px; border: 3px sol
 .abundance-conclusion > div { min-width: 0; }
 .abundance-conclusion .tex-display { margin: 12px 0; padding: 8px 12px; color: var(--paper); border-left: 2px solid var(--teal); background: rgba(77,162,163,.055); }
 .abundance-conclusion .katex-display { text-align: left; }
+.landing-close { max-width: 870px; margin: 42px 0 0 calc(3vw + 70px); color: var(--muted); font-size: 14px; line-height: 1.75; }
 .abundance-examples { border: 1px solid var(--line-light); border-top: 0; }
 .abundance-examples > header { display: grid; grid-template-columns: 250px minmax(0,1fr); gap: 45px; align-items: center; padding: 30px 35px; border-bottom: 1px solid var(--line-light); }
 .abundance-examples > header > span { color: var(--orange); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -1070,7 +1066,7 @@ dialog p:not(.eyebrow) {
 /* Introduction · Pompeiu's question, Chakalov's disk, and Williams' equivalence.
    Sits between the hero and section 01; shares the flex order of .intro so that
    document order decides, and reuses the light paper surface. */
-.story-intro { order: 0; padding: 96px 7vw 104px; color: var(--ink); background: var(--paper); --line-light: var(--line); }
+.story-intro { padding: 96px 7vw 104px; color: var(--ink); background: var(--paper); --line-light: var(--line); }
 .story-intro .intro-lead { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(400px,.88fr); gap: 72px; align-items: start; margin: 54px 0 0 70px; }
 .intro-copy { max-width: 720px; color: var(--muted); font-size: 15px; line-height: 1.82; }
 .intro-copy h3 { max-width: 780px; margin: 0 0 20px; color: var(--ink); font: 300 34px/1.04 var(--serif); letter-spacing: -.018em; }
@@ -1136,7 +1132,7 @@ dialog p:not(.eyebrow) {
 
 /* References. `main` is a flex column with explicit section order values, so
    this needs one of its own to stay at the bottom. */
-.site-references { order: 20; padding: 84px 7vw 100px; color: var(--ink); background: var(--paper); border-top: 1px solid var(--ink); }
+.site-references { padding: 84px 7vw 100px; color: var(--ink); background: var(--paper); border-top: 1px solid var(--ink); }
 .site-references h2 { margin: 0 0 42px; font-size: clamp(44px, 5vw, 70px); }
 .site-references ol { max-width: 980px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
 .site-references li { display: grid; grid-template-columns: 42px minmax(0,1fr); gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }

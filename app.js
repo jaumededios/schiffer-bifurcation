@@ -1084,10 +1084,11 @@ function coneColorFor(value) {
 function resizeConeCanvas() {
   const canvas = $("#coneCanvas");
   const wrap = $("#coneCanvasWrap");
-  const displayWidth = Math.max(360, wrap.clientWidth || 900);
-  const displayHeight = Math.max(420, wrap.clientHeight || 620);
-  canvas.width = Math.min(760, Math.round(displayWidth * .86));
-  canvas.height = Math.min(650, Math.round(displayHeight * .86));
+  const displayWidth = Math.max(1, wrap.clientWidth || 900);
+  const displayHeight = Math.max(1, wrap.clientHeight || 620);
+  const renderScale = Math.min(1, 760 / displayWidth, 650 / displayHeight);
+  canvas.width = Math.max(1, Math.round(displayWidth * renderScale));
+  canvas.height = Math.max(1, Math.round(displayHeight * renderScale));
   return { canvas, width: canvas.width, height: canvas.height };
 }
 

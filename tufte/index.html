@@ -43,8 +43,8 @@
         <a class="toc-subsection" href="#half-cylinder-strategy"><b>5.1</b><span>The half-cylinder branch</span></a>
         <a class="toc-subsection" href="#debye-experiment"><b>5.2</b><span>From cylinders to cones</span></a>
         <a class="toc-subsection" href="#phase-story"><b>5.3</b><span>Decrease of the cone radius</span></a>
-        <a class="toc-subsection" href="#modes-experiment"><b>5.4</b><span>Continuation to integral order</span></a>
-        <a class="toc-subsection" href="#abundance-experiment"><b>5.5</b><span>Crossings near integers</span></a>
+        <a class="toc-subsection" href="#abundance-experiment"><b>5.4</b><span>Crossings near integers</span></a>
+        <a class="toc-subsection" href="#cone-experiment"><b>5.5</b><span>Landing and planar lift</span></a>
         <a href="#references"><b>R</b><span>References</span></a>
       </nav>
     </details>
@@ -691,7 +691,7 @@
 
         <div class="proof-strategy-lead">
           <h3>The construction is carried out in five steps.</h3>
-          <p><strong>Subsection 5.1</strong> constructs a bifurcating Schiffer family on the half-cylinder. <strong>Subsection 5.2</strong> transfers this construction uniformly to cones of large real order by comparing their Bessel modes with the separated cylinder modes. <strong>Subsection 5.3</strong> computes the first nonzero variation of the cone parameter and proves that it decreases by an amount independent of the initial large crossing. <strong>Subsection 5.4</strong> follows the resulting cone geometry toward an integral value of the order. <strong>Subsection 5.5</strong> supplies common Bessel zeros arbitrarily close above integers, so the uniform decrease reaches an integer and the cone unfolds to a planar domain.</p>
+          <p><strong>Subsection 5.1</strong> constructs a bifurcating Schiffer family on the half-cylinder. <strong>Subsection 5.2</strong> transfers this construction uniformly to cones of large real order by comparing their Bessel modes with the separated cylinder modes. <strong>Subsection 5.3</strong> computes the first nonzero variation of the cone parameter and proves that it decreases by an amount independent of the initial large crossing. <strong>Subsection 5.4</strong> supplies common Bessel zeros arbitrarily close above integers. <strong>Subsection 5.5</strong> combines that arithmetic input with the uniform decrease: the cone order crosses an integer, the branch lands there, and the cone unfolds to a planar domain.</p>
         </div>
 
         <div id="half-cylinder-strategy" class="proof-strategy-subheading">
@@ -702,6 +702,41 @@
         <div class="half-cylinder-introduction">
           <p>In this subsection we will show that the cylinder solution can be perturbed independently of the eigenvalue <span class="formula">\(\lambda\in[2,3]\)</span>: the same interval in the bifurcation parameter <span class="formula">\(s\)</span> works for every <span class="formula">\(\lambda\)</span> in this range.</p>
         </div>
+
+        <article class="math-statement cylinder-theorem">
+          <header class="math-statement-header"><span>Theorem</span><small>5.1 · uniform half-cylinder branch</small></header>
+          <div class="math-statement-body theorem-statement">
+            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
+            <div class="theorem-system tex-display">
+              \[
+              \begin{cases}
+              (\Delta+\lambda)u_{\lambda,s}=0 &amp; \text{in }\Omega_{\lambda,s},\\
+              u_{\lambda,s}=1 &amp; \text{on }\partial\Omega_{\lambda,s},\\
+              \partial_\nu u_{\lambda,s}=0 &amp; \text{on }\partial\Omega_{\lambda,s}.
+              \end{cases}
+              \]
+            </div>
+            <p>Use rotation in <span class="formula">\(\theta\)</span> to choose the cosine direction, axial translation to impose <span class="formula">\(\int_{S^1}h_{\lambda,s}=0\)</span>, and the first Fourier coefficient of <span class="formula">\(h_{\lambda,s}\)</span> as the branch parameter <span class="formula">\(s\)</span>. In this gauge, put <span class="formula">\(\beta=\sqrt{\lambda-1}\)</span> and <span class="formula">\(\alpha_2=\sqrt{4-\lambda}\)</span>. Then the boundary and field have the forced expansion</p>
+            <div class="theorem-expansion tex-display">
+              \[
+              h_{\lambda,s}(\theta)
+              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O(s^3),
+              \]
+              \[\begin{aligned}
+              u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
+              &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
+              &amp;\quad-\frac{\lambda s^2}{4}\cos(\sqrt\lambda\,x)\\
+              &amp;\quad-\frac{\lambda s^2}{4}e^{\alpha_2x}\cos2\theta\\
+              &amp;\quad+O(s^3).
+              \end{aligned}\]
+            </div>
+            <div class="cylinder-needed-later">
+              <span>Something we will need later</span>
+              <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. In the cone calculation, the exponential derivative is replaced by the corresponding Bessel logarithmic derivative, whose large-radius limit is <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
+            </div>
+            <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
+          </div>
+        </article>
 
         <div class="cylinder-spectral-seed small-multiples">
           <div class="cylinder-seed-copy">
@@ -761,41 +796,6 @@
             <p>Fall, Minlend and Weth prove the corresponding bifurcation theorem for compact flat cylinders. The half-cylinder statement used here follows from the same separation-of-variables and local-bifurcation argument: the boundary condition at the second end is replaced by boundedness as <span class="formula">\(x\to-\infty\)</span>. For <span class="formula">\(2\leq\lambda\leq3\)</span>, the inverses on the complementary Fourier modes are bounded uniformly in <span class="formula">\(\lambda\)</span>. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
           </div>
         </div>
-
-        <article class="math-statement cylinder-theorem">
-          <header class="math-statement-header"><span>Theorem</span><small>5.1 · uniform half-cylinder branch</small></header>
-          <div class="math-statement-body theorem-statement">
-            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
-            <div class="theorem-system tex-display">
-              \[
-              \begin{cases}
-              (\Delta+\lambda)u_{\lambda,s}=0 &amp; \text{in }\Omega_{\lambda,s},\\
-              u_{\lambda,s}=1 &amp; \text{on }\partial\Omega_{\lambda,s},\\
-              \partial_\nu u_{\lambda,s}=0 &amp; \text{on }\partial\Omega_{\lambda,s}.
-              \end{cases}
-              \]
-            </div>
-            <p>Use rotation in <span class="formula">\(\theta\)</span> to choose the cosine direction, axial translation to impose <span class="formula">\(\int_{S^1}h_{\lambda,s}=0\)</span>, and the first Fourier coefficient of <span class="formula">\(h_{\lambda,s}\)</span> as the branch parameter <span class="formula">\(s\)</span>. In this gauge, put <span class="formula">\(\beta=\sqrt{\lambda-1}\)</span> and <span class="formula">\(\alpha_2=\sqrt{4-\lambda}\)</span>. Then the boundary and field have the forced expansion</p>
-            <div class="theorem-expansion tex-display">
-              \[
-              h_{\lambda,s}(\theta)
-              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O(s^3),
-              \]
-              \[\begin{aligned}
-              u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
-              &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
-              &amp;\quad-\frac{\lambda s^2}{4}\cos(\sqrt\lambda\,x)\\
-              &amp;\quad-\frac{\lambda s^2}{4}e^{\alpha_2x}\cos2\theta\\
-              &amp;\quad+O(s^3).
-              \end{aligned}\]
-            </div>
-            <div class="cylinder-needed-later">
-              <span>Something we will need later</span>
-              <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. In the cone calculation, the exponential derivative is replaced by the corresponding Bessel logarithmic derivative, whose large-radius limit is <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
-            </div>
-            <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
-          </div>
-        </article>
 
         <details class="cylinder-jet-proof proof-details">
           <summary><span>Derivation of the first- and second-order terms</span><i>expand +</i></summary>
@@ -1001,40 +1001,6 @@
           </div>
         </header>
 
-        <section class="real-order-bridge statement-sequence" aria-labelledby="realOrderTheoremTitle">
-          <header>
-            <span>Before taking the large-radius limit</span>
-            <div>
-              <h3 id="realOrderTheoremTitle">The cone problem is defined for real order.</h3>
-              <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
-            </div>
-          </header>
-          <article class="math-statement real-order-theorem">
-            <header class="math-statement-header"><span>Theorem</span><small>5.2 · uniform cone bifurcation</small></header>
-            <div class="math-statement-body">
-              <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
-              <div class="tex-display">
-                \[
-                \begin{gathered}
-                R_*\ge R_{\mathrm{unif}},\qquad J_1(\rho)=J_{R_*}(\rho)=0,\\
-                2\le\lambda_*:=\dfrac{\rho^2}{R_*^2}\le3.
-                \end{gathered}
-                \]
-              </div>
-              <p>has a nontrivial \(C^3\) cone branch \(s\mapsto(R(s),u_s,h_s)\), defined for the same interval \(|s|\le s_*\), with</p>
-              <div class="tex-display real-order-result">
-                \[
-                \begin{gathered}
-                R(0)=R_*,\qquad h_s(\psi)=s\cos\psi+O(s^2),\\
-                \displaystyle\sup_{|s|\le s_*}|R'''(s)|\le C_3.
-                \end{gathered}
-                \]
-              </div>
-              <p>The theorem applies to every sufficiently large real crossing. At any individual smaller simple crossing, the usual local bifurcation theorem gives a branch whose interval may depend on that crossing. For large \(R_*\), a fixed boundary collar converges to the half-cylinder of Theorem 5.1, which gives estimates uniform in \(R_*\). The finitely many crossings in a bounded range of \(R_*\) are handled separately.</p>
-            </div>
-          </article>
-        </section>
-
         <div class="debye-lead paper-copy">
           <p>Let the cone have boundary radius \(r_0\) and metric \(dr^2+(r^2/r_0^2)d\psi^2\). At a crossing the boundary radius and the Bessel order are the same number: there \(\lambda=\rho^2/R^2\), and the boundary sits at \(\sqrt\lambda\,r_0=\rho\), so \(r_0=\rho/\sqrt\lambda=R\). That is why one letter serves for both. After separating the angular variable, the cone and half-cylinder have the bases below. The assertion is local: in the coordinate \(x=r-r_0\), the coefficients of the cone radial equation converge on every fixed interval to the constant coefficients of the cylinder equation as \(r_0\to\infty\).</p>
         </div>
@@ -1226,6 +1192,41 @@
           <article><span>Neumann oscillatory profiles</span><strong>Both \(k=1\) curves satisfy the boundary condition.</strong><p>The Bessel profile is rescaled by choosing \(q_RR=\rho_R\), where \(J_R'(\rho_R)=0\), and is normalized to equal one at the rim. Its cylinder comparison is therefore the cosine with the same Neumann Cauchy data: \(C_R(0)=1\) and \(C_R'(0)=0\).</p></article>
           <article><span>The three radial regimes</span><strong>One oscillatory mode and two exponential modes.</strong><p>The \(k=1\) panel compares the Neumann Bessel profile with \(\cos(\sqrt{\lambda_R-1}\,x)\). The \(k=2,3\) panels use the same \(\lambda_R\) and a linear vertical scale, on which the Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\).</p></article>
         </div>
+
+        <section class="real-order-bridge statement-sequence" aria-labelledby="realOrderTheoremTitle">
+          <header>
+            <span>5.2.4 · the transfer theorem</span>
+            <div>
+              <h3 id="realOrderTheoremTitle">The cylinder branch persists on large real-order cones.</h3>
+              <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
+            </div>
+          </header>
+          <article class="math-statement real-order-theorem">
+            <header class="math-statement-header"><span>Theorem</span><small>5.2 · uniform cone bifurcation</small></header>
+            <div class="math-statement-body">
+              <p>There are constants \(R_{\mathrm{unif}},s_*,C_3&gt;0\) such that every sufficiently large <em>real</em> crossing</p>
+              <div class="tex-display">
+                \[
+                \begin{gathered}
+                R_*\ge R_{\mathrm{unif}},\qquad J_1(\rho)=J_{R_*}(\rho)=0,\\
+                2\le\lambda_*:=\dfrac{\rho^2}{R_*^2}\le3.
+                \end{gathered}
+                \]
+              </div>
+              <p>has a nontrivial \(C^3\) cone branch \(s\mapsto(R(s),u_s,h_s)\), defined for the same interval \(|s|\le s_*\), with</p>
+              <div class="tex-display real-order-result">
+                \[
+                \begin{gathered}
+                R(0)=R_*,\qquad h_s(\psi)=s\cos\psi+O(s^2),\\
+                \displaystyle\sup_{|s|\le s_*}|R'''(s)|\le C_3.
+                \end{gathered}
+                \]
+              </div>
+              <p>The theorem applies to every sufficiently large real crossing. At any individual smaller simple crossing, the usual local bifurcation theorem gives a branch whose interval may depend on that crossing. For large \(R_*\), a fixed boundary collar converges to the half-cylinder of Theorem 5.1, which gives estimates uniform in \(R_*\). The finitely many crossings in a bounded range of \(R_*\) are handled separately.</p>
+            </div>
+          </article>
+        </section>
+
       </section>
 
       <section id="phase-story" class="phase-story">
@@ -1236,7 +1237,6 @@
         <div class="phase-story-lead paper-copy">
           <p>Suppose that a real crossing has \(R_*=N+\delta\), where \(N\) is an integer and \(\delta&gt;0\). To prove that the nonlinear branch reaches \(R=N\), one needs a decrease in \(R\) that is uniform as \(R_*\to\infty\). We show that every sufficiently large crossing in the fixed window \(2\le\lambda_*\le3\) admits the same positive lower bound for this decrease.</p>
           <p>Subsection 5.2 varied \(r_0\) at fixed \(\lambda\) to display the basis limit. The proof follows a different path: at a crossing \(J_1(\rho)=J_{R_*}(\rho)=0\), it keeps \(\rho\) fixed and solves for the cone radius \(R=R(s)\). We therefore make two computations in order: the nonlinear boundary equations determine \(R''(0)\), and the fixed-\(\rho\) Debye phase converts that radius change into a phase change.</p>
-          <p>One caveat about the laboratory below. It runs on the crossing \(R_*=28.026397\ldots\), whose spectral ratio is \(\lambda_*=3.317011\ldots\), and that value lies <em>outside</em> the window \(2\le\lambda_*\le3\) assumed in Corollary 5.3 and in Theorems 5.1 and 5.2. It is shown because it is the crossing whose branch was continued numerically all the way to an integer. The proof runs instead on the crossings inside the window, which subsection 5.5 supplies; the formulas of this subsection are exact at either value.</p>
         </div>
         <article class="math-statement uniform-drop-theorem">
           <header class="math-statement-header"><span>Corollary</span><small>5.3 · uniform decrease of \(R\)</small></header>
@@ -1296,12 +1296,13 @@
         </div>
         <div class="phase-story-lab interactive-plate figure-band">
           <aside>
-            <div class="control-heading"><span>Computed branch reaching \(N=28\)</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
+            <div class="control-heading"><span>Illustrative branch · \(N=28\)</span><button id="phaseStoryResetButton" type="button">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
             <div class="phase-story-readout"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
           </aside>
           <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic variation from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
         </div>
+        <p class="phase-story-example-note"><em>Numerical illustration.</em> The applet uses the continued crossing \(R_*=28.026397\ldots\), with \(\lambda_*=3.317011\ldots\), because that branch has been computed all the way to an integer. The uniform proof uses the crossings in \(2\le\lambda_*\le3\) supplied by Subsection 5.4; the formulas above apply in both cases.</p>
         <section class="phase-family figure-band figure-with-caption" aria-labelledby="phaseFamilyTitle">
           <header>
             <span>What the calculation predicts across real order</span>
@@ -1313,17 +1314,101 @@
           <div class="phase-family-toolbar"><strong>real crossing order versus branch parameter</strong><span>orange: \([2,3]\) search · outlined: \(R_*=28.026397\) · cyan: two-jet</span></div>
           <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real order from 6 to 30, with integer values corresponding to planar fold symmetries, fourteen computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
           <footer><span>\(R=6\)</span><span>order \(R\) (fold symmetry) · integer \(R\) corresponds to a planar solution</span><span>\(R=30\)</span></footer>
-          <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the two branches of each parabola in the \((R,s)\)-plane. The proof uses the fact that the decrease in \(R\) is bounded below uniformly at all sufficiently large crossings. The final section finds crossings whose distance from an integer is smaller than this uniform bound.</p>
+          <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the two branches of each parabola in the \((R,s)\)-plane. The proof uses the fact that the decrease in \(R\) is bounded below uniformly at all sufficiently large crossings. Subsection 5.4 finds crossings whose distance from an integer is smaller than this uniform bound.</p>
         </section>
       </section>
 
-      <section id="cone-experiment" class="experiment cone-experiment" hidden aria-hidden="true">
+      <section id="abundance-experiment" class="abundance-experiment">
+        <header class="experiment-header abundance-header">
+          <div><span class="section-number">5.4</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>The common-zero condition holds arbitrarily close to integer order.</h2></div></div>
+          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
+        </header>
+        <div class="abundance-lead paper-copy">
+          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
+          <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
+        </div>
+        <article class="math-statement near-integer-theorem">
+          <header class="math-statement-header"><span>Theorem</span><small>5.4 · near-integer crossings</small></header>
+          <div class="math-statement-body">
+            <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
+            <div class="tex-display">
+              \[
+              \begin{gathered}
+              N&lt;R_*&lt;N+\delta,\\
+              J_1(\rho)=J_{R_*}(\rho)=0,\\
+              2&lt;\dfrac{\rho^2}{R_*^2}&lt;3.
+              \end{gathered}
+              \]
+            </div>
+            <p>The scatter plot below is a finite numerical sample of these coincidences. The theorem itself comes from aligning the fixed-order McMahon phase and the large-order Debye phase.</p>
+          </div>
+        </article>
+        <details class="abundance-proof-details proof-details">
+          <summary><span>Proof sketch of Theorem 5.4</span><i>expand +</i></summary>
+          <div class="proof-argument abundance-proof-argument">
+            <p><em>Proof sketch.</em> Put</p>
+            <div class="tex-display">
+              \[
+              \Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1}),
+              \qquad \sqrt2&lt;q&lt;\sqrt3.
+              \]
+            </div>
+            <p>The fixed-order McMahon expansion and the large-order Debye expansion give, in the relevant range,</p>
+            <div class="tex-display">
+              \[
+              \begin{aligned}
+              j_{1,n}&=\pi\left(n+\frac14\right)+o(1),\\
+              N\Phi\!\left(\frac{j_{N,m}}N\right)
+              &=\pi\left(m-\frac14\right)+o(1).
+              \end{aligned}
+              \]
+            </div>
+            <p>Choose \(q_*\in(\sqrt2,\sqrt3)\) such that \(1\), \(q_*/\pi\), and \(\Phi(q_*)/\pi\) are linearly independent over \(\mathbb Q\). Kronecker's theorem makes the orbit</p>
+            <div class="tex-display">
+              \[
+              N\longmapsto
+              \left(N\frac{q_*}{\pi},
+              N\frac{\Phi(q_*)}{\pi}\right)
+              \pmod{\mathbb Z^2}
+              \]
+            </div>
+            <p>dense in the two-torus. Hence, for arbitrarily large integers \(N\), the two phases can be chosen simultaneously so that a zero \(j_{1,n}\) lies just above \(Nq_*\), while a zero \(j_{N,m}\) lies just below it. The errors in the two asymptotic formulae tend to zero, so their gap can be made arbitrarily small.</p>
+            <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
+          </div>
+        </details>
+        <div class="abundance-laboratory figure-band">
+          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
+            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through \(N=200\)</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
+            <div class="abundance-readout abundance-readout-inline">
+              <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
+              <div><span>smallest sample \(R-\lfloor R\rfloor\)</span><strong id="abundanceBestValue">—</strong></div>
+              <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
+            </div>
+            <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
+            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=200\)</span></div>
+          </section>
+        </div>
+        <section class="abundance-examples data-table" aria-labelledby="abundanceExamplesTitle">
+          <header>
+            <span>Five examples from the full search</span>
+            <h3 id="abundanceExamplesTitle">Five particularly close examples.</h3>
+          </header>
+          <div class="abundance-examples-table-wrap">
+            <table class="abundance-examples-table">
+              <thead><tr><th scope="col">integer \(N\)</th><th scope="col">crossing order \(R\)</th><th scope="col">gap \(R-N\)</th></tr></thead>
+              <tbody id="abundanceExamplesBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section id="cone-experiment" class="experiment cone-experiment">
         <header class="experiment-header cone-header">
           <div>
-            <span class="section-number">5.4</span>
+            <span class="section-number">5.5</span>
             <div>
-              <p class="eyebrow">Nonlinear continuation on cones</p>
-              <h2>The cone parameter decreases to \(R=28\).</h2>
+              <p class="eyebrow">Landing and planar lift</p>
+              <h2>The cone branch reaches integer order and unfolds into the plane.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Cone model equations">
@@ -1333,10 +1418,25 @@
           </div>
         </header>
 
+        <div class="abundance-conclusion paper-copy editorial-conclusion">
+          <span>5.5.1 · the landing argument</span>
+          <h3>The uniform decrease crosses the next integer.</h3>
+          <div>
+            <p>Apply Theorem 5.4 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Subsection 5.3. Along the resulting cone branch,</p>
+            <div class="tex-display">
+              \[
+              R(0)=R_*&gt;N,\qquad
+              R(s_*)\le R_*-\eta_*&lt;N.
+              \]
+            </div>
+            <p>By continuity, there is some \(0&lt;s_N&lt;s_*\) such that \(R(s_N)=N\). At this nonzero parameter, the cone lifts to a noncircular \(N\)-fold planar Schiffer domain. The finite set of plotted points illustrates the arithmetic argument; Theorem 5.4 makes the initial gap smaller than the uniform decrease supplied by Subsection 5.3.</p>
+          </div>
+        </div>
+
         <div class="cone-lead">
-          <p>The smallest candidate found in the search below order \(100\) has <span class="formula">\(R_*=28.026397\ldots\)</span>. At this value, twenty-eight copies leave a narrow angular gap. Along the computed branch, \(R\) decreases to \(28\); at that value the copies fit exactly and define a planar domain.</p>
+          <p>For the visualization, choose the computed crossing <span class="formula">\(R_*=28.026397\ldots\)</span>. At this value, twenty-eight copies leave a narrow angular gap. Along its branch, \(R\) decreases to \(28\); at that value the copies fit exactly and define the planar domain promised by the general landing argument above.</p>
           <div class="candidate-stamp">
-            <small>selected crossing</small>
+            <small>illustrative crossing</small>
             <strong>\(N=28\)</strong>
             <span>\(\rho_*=j_{1,16}\)</span>
             <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">paper / figure 1 ↗</a>
@@ -1433,10 +1533,10 @@
       <section id="modes-experiment" class="modes-experiment">
         <header class="experiment-header modes-header">
           <div>
-            <span class="section-number">5.4</span>
+            <span class="section-number subsection-number">5.5.2</span>
             <div>
-              <p class="eyebrow">Global and boundary-scale coordinates</p>
-              <h2>The same cone solution in two coordinate systems.</h2>
+              <p class="eyebrow">One-wavelength zoom</p>
+              <h2>Read the landed solution globally and on its boundary collar.</h2>
             </div>
           </div>
           <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
@@ -1448,7 +1548,7 @@
 
         <div class="modes-lead">
           <p>The left panel shows the complete 28-sector representation. The cyan box selects one angular wavelength, an arc whose rescaled length is approximately \(2\pi\). The large panel displays that region in the coordinates \(x=r-R\) and \(\psi=R\phi\). In these coordinates, the curved boundary is directly comparable with the half-cylinder boundary.</p>
-          <p>The one-wavelength crop is centered at the cut, so the discrepancy caused by nonintegral \(R\) is visible in the enlarged panel. The radial trace isolates the non-evanescent mode, while the higher angular corrections have exponential radial profiles. Regularity at the cone point selects one Bessel profile, and the Debye approximation gives its dependence on \(R\) through the local phase.</p>
+          <p>This is a coordinate comparison, not a second proof of the limiting machinery. Subsection 5.2 established the separated cone-to-cylinder limit and Subsection 5.3 established the phase motion; the applet now uses both to annotate the same branch as it closes its seam.</p>
         </div>
 
         <div class="modes-laboratory interactive-plate figure-band">
@@ -1520,150 +1620,9 @@
           </section>
         </div>
 
-        <div class="collar-limit-argument paper-copy">
-          <span>The equation represented in the figure</span>
-          <div>
-            <h3>The separated cone equation converges to the separated cylinder equation.</h3>
-            <p>For the angular factor <span class="formula">\(\cos(k\psi)\)</span> or <span class="formula">\(\sin(k\psi)\)</span>, the radial factor on the cone satisfies</p>
-            <div class="tex-display">
-              \[
-              F''(r)+\frac1rF'(r)+\left(\lambda-\frac{k^2R^2}{r^2}\right)F(r)=0.
-              \]
-            </div>
-            <p>Regularity at the cone point leaves the one-dimensional space generated by <span class="formula">\(J_{kR}(\sqrt\lambda\,r)\)</span>. The second ordinary Bessel solution <span class="formula">\(Y_{kR}\)</span> is singular at the cone point; the modified Bessel functions solve the equation obtained after replacing <span class="formula">\(\lambda\)</span> by <span class="formula">\(-\lambda\)</span>.</p>
-            <p>Set <span class="formula">\(r=R+x\)</span>, where <span class="formula">\(x\in[-L,0]\)</span> and <span class="formula">\(L\)</span> is fixed. The equation becomes</p>
-            <div class="tex-display collar-limit-equation">
-              \[
-              \begin{aligned}
-              q_{k,R}(x)&:=\lambda-\frac{k^2R^2}{(R+x)^2},\\
-              F_R''+\frac1{R+x}F_R'+q_{k,R}(x)F_R&=0,\\
-              q_{k,R}(x)&\longrightarrow\lambda-k^2,\\
-              f''+(\lambda-k^2)f&=0.
-              \end{aligned}
-              \]
-            </div>
-            <p>For <span class="formula">\(1&lt;\lambda&lt;4\)</span>, the limiting <span class="formula">\(k=1\)</span> equation has the basis <span class="formula">\(\cos(\sqrt{\lambda-1}\,x)\)</span>, <span class="formula">\(\sin(\sqrt{\lambda-1}\,x)\)</span>. For <span class="formula">\(k\ge2\)</span>, boundedness as <span class="formula">\(x\to-\infty\)</span> selects <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span>. These are the profiles compared in the preceding panels.</p>
-            <p>For the proof, <span class="formula">\(\rho\)</span> is fixed and <span class="formula">\(\lambda=\rho^2/R^2\)</span>. The leading Debye phase at the boundary is</p>
-            <div class="tex-display">
-              \[
-              \begin{aligned}
-              \xi_\rho(R)
-              &=\sqrt{\rho^2-R^2}-R\arccos(R/\rho)-\frac\pi4,\\
-              \xi_\rho'(R)&=-\arccos(R/\rho)\ne0.
-              \end{aligned}
-              \]
-            </div>
-            <p>Thus, at leading Debye order, the Cauchy phase of the local <span class="formula">\(k=1\)</span> cylinder wave is a locally invertible function of <span class="formula">\(R\)</span>. The uniform Debye expansion gives the same conclusion for the exact Bessel Cauchy data when <span class="formula">\(R\)</span> is large. If the bifurcating branch is even, then</p>
-            <div class="tex-display collar-limit-result">
-              \[
-              \begin{aligned}
-              R(s)&=R_*+\frac12R''(0)s^2+O(s^4),\\
-              \xi_\rho(R(s))-\xi_\rho(R_*)
-              &=-\frac12\arccos(R_*/\rho)R''(0)s^2+O(s^4).
-              \end{aligned}
-              \]
-            </div>
-            <p>The curvature <span class="formula">\(R''(0)\)</span> was computed in subsection 5.3 from the nonlinear boundary equations; it is negative, so the phase advances as the branch leaves the crossing.</p>
-          </div>
+        <div class="landing-close paper-copy">
+          <p><strong>At the landed endpoint \(R=N\), the seam is closed.</strong> The complete field at left consists of \(N\) copies of the quotient solution; the boundary-collar view at right is one wavelength of that same field in the coordinates established in Subsection 5.2. Together they are the promised noncircular \(N\)-fold planar Schiffer domain.</p>
         </div>
-      </section>
-
-      <section id="abundance-experiment" class="abundance-experiment">
-        <header class="experiment-header abundance-header">
-          <div><span class="section-number">5.5</span><div><p class="eyebrow">Near-integer Bessel crossings</p><h2>The common-zero condition holds arbitrarily close to integer order.</h2></div></div>
-          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
-        </header>
-        <div class="abundance-lead paper-copy">
-          <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in section 01: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
-          <p><strong>The role of integrality.</strong> The cone branch exists for real \(R\). Its planar \(N\)-fold lift occurs when \(R=N\in\mathbb N\). Subsection 5.3 supplies a uniform decrease \(\eta_*\) in the value of \(R\). We must therefore find a crossing \(R_*=N+\delta\) with \(0&lt;\delta&lt;\eta_*\).</p>
-        </div>
-        <article class="math-statement near-integer-theorem">
-          <header class="math-statement-header"><span>Theorem</span><small>5.5 · near-integer crossings</small></header>
-          <div class="math-statement-body">
-            <p>For every \(\delta&gt;0\) and every lower threshold \(N_{\min}\), there are an integer \(N\ge N_{\min}\), a real order \(R_*\), and a frequency \(\rho&gt;0\) such that</p>
-            <div class="tex-display">
-              \[
-              \begin{gathered}
-              N&lt;R_*&lt;N+\delta,\\
-              J_1(\rho)=J_{R_*}(\rho)=0,\\
-              2&lt;\dfrac{\rho^2}{R_*^2}&lt;3.
-              \end{gathered}
-              \]
-            </div>
-            <p>The scatter plot below is a finite numerical sample of these coincidences. The theorem itself comes from aligning the fixed-order McMahon phase and the large-order Debye phase.</p>
-          </div>
-        </article>
-        <details class="abundance-proof-details proof-details">
-          <summary><span>Proof sketch of Theorem 5.5</span><i>expand +</i></summary>
-          <div class="proof-argument abundance-proof-argument">
-            <p><em>Proof sketch.</em> Put</p>
-            <div class="tex-display">
-              \[
-              \Phi(q)=\sqrt{q^2-1}-\arccos(q^{-1}),
-              \qquad \sqrt2&lt;q&lt;\sqrt3.
-              \]
-            </div>
-            <p>The fixed-order McMahon expansion and the large-order Debye expansion give, in the relevant range,</p>
-            <div class="tex-display">
-              \[
-              \begin{aligned}
-              j_{1,n}&=\pi\left(n+\frac14\right)+o(1),\\
-              N\Phi\!\left(\frac{j_{N,m}}N\right)
-              &=\pi\left(m-\frac14\right)+o(1).
-              \end{aligned}
-              \]
-            </div>
-            <p>Choose \(q_*\in(\sqrt2,\sqrt3)\) such that \(1\), \(q_*/\pi\), and \(\Phi(q_*)/\pi\) are linearly independent over \(\mathbb Q\). Kronecker's theorem makes the orbit</p>
-            <div class="tex-display">
-              \[
-              N\longmapsto
-              \left(N\frac{q_*}{\pi},
-              N\frac{\Phi(q_*)}{\pi}\right)
-              \pmod{\mathbb Z^2}
-              \]
-            </div>
-            <p>dense in the two-torus. Hence, for arbitrarily large integers \(N\), the two phases can be chosen simultaneously so that a zero \(j_{1,n}\) lies just above \(Nq_*\), while a zero \(j_{N,m}\) lies just below it. The errors in the two asymptotic formulae tend to zero, so their gap can be made arbitrarily small.</p>
-            <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
-          </div>
-        </details>
-        <div class="abundance-laboratory figure-band">
-          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
-            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through \(N=200\)</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
-            <div class="abundance-readout abundance-readout-inline">
-              <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
-              <div><span>smallest sample \(R-\lfloor R\rfloor\)</span><strong id="abundanceBestValue">—</strong></div>
-              <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
-            </div>
-            <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
-            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=200\)</span></div>
-          </section>
-        </div>
-        <div class="abundance-conclusion paper-copy editorial-conclusion">
-          <span>Reaching integer order</span>
-          <h3>The decrease in \(R\) exceeds the initial gap \(R_*-N\).</h3>
-          <div>
-            <p>Apply Theorem 5.5 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Subsection 5.3. Along the resulting cone branch,</p>
-            <div class="tex-display">
-              \[
-              R(0)=R_*&gt;N,\qquad
-              R(s_*)\le R_*-\eta_*&lt;N.
-              \]
-            </div>
-            <p>By continuity, there is some \(0&lt;s_N&lt;s_*\) such that \(R(s_N)=N\). At this nonzero parameter, the cone lifts to a noncircular \(N\)-fold planar Schiffer domain. The finite set of plotted points illustrates the arithmetic argument; Theorem 5.5 makes the initial gap smaller than the uniform decrease supplied by Subsection 5.3.</p>
-          </div>
-        </div>
-        <section class="abundance-examples data-table" aria-labelledby="abundanceExamplesTitle">
-          <header>
-            <span>Five examples from the full search</span>
-            <h3 id="abundanceExamplesTitle">Five particularly close examples.</h3>
-          </header>
-          <div class="abundance-examples-table-wrap">
-            <table class="abundance-examples-table">
-              <thead><tr><th scope="col">integer \(N\)</th><th scope="col">crossing order \(R\)</th><th scope="col">gap \(R-N\)</th></tr></thead>
-              <tbody id="abundanceExamplesBody"></tbody>
-            </table>
-          </div>
-        </section>
       </section>
 
       <section id="references" class="site-references" aria-labelledby="siteReferencesTitle">

@@ -189,7 +189,6 @@ body.tufte-site a:hover { color: var(--orange); }
 .site-toc a b { color: var(--ink); font-family: et-book-roman-old-style, var(--serif); }
 
 main { width: 100%; }
-body.tufte-site main > section { order: initial; }
 
 :is(
   .intro,
@@ -307,7 +306,8 @@ body.tufte-site h3 {
 
 .experiment-header > div:first-child { display: contents; }
 .story-heading h2, .experiment-header h2 { max-width: none; margin-top: 0; }
-.section-number {
+.section-number,
+.subsection-number {
   width: auto;
   height: auto;
   display: block;
@@ -317,6 +317,19 @@ body.tufte-site h3 {
   border-radius: 0;
   font: 400 var(--type-note)/1 et-book-roman-old-style, var(--serif);
   opacity: 1;
+}
+
+body.tufte-site .cone-experiment { padding-bottom: 2.5rem; }
+body.tufte-site .modes-experiment { padding-top: 2.5rem; border-top: 0; }
+
+body.tufte-site main .phase-story-example-note {
+  width: var(--measure-reading);
+  max-width: var(--measure-reading);
+  margin: 1.5rem 0 3rem;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: var(--type-caption);
+  line-height: var(--leading-caption);
 }
 
 .eyebrow {
@@ -910,6 +923,55 @@ body.tufte-site main .play-button {
   border-left: 0;
 }
 
+/* The continuation was historically hidden, so its legacy dark-theme ink
+   never passed through the paper normalization. Treat its explanatory
+   pieces as the same prose, apparatus and caption roles used elsewhere. */
+body.tufte-site main .cone-lead > p span { color: inherit; font: inherit; }
+body.tufte-site main .candidate-stamp { border-color: var(--line); }
+body.tufte-site main .candidate-stamp small,
+body.tufte-site main .candidate-stamp a,
+body.tufte-site main .crossing-card span { color: var(--muted); }
+body.tufte-site main .candidate-stamp strong,
+body.tufte-site main .crossing-card strong { color: var(--ink); }
+body.tufte-site main .crossing-card p {
+  color: var(--ink);
+  font-size: var(--type-caption) !important;
+  line-height: var(--leading-caption);
+}
+body.tufte-site main .cone-data-badge {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border-color: var(--line);
+}
+body.tufte-site main .cone-view-notes {
+  width: var(--measure-figure);
+  max-width: var(--measure-figure);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--measure-gutter-in-figure);
+  margin-top: 1.5rem;
+  border: 0;
+}
+body.tufte-site main .cone-note {
+  min-height: 0;
+  padding: 1rem 0 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  box-shadow: none;
+}
+body.tufte-site main .cone-note:hover,
+body.tufte-site main .cone-note.active { background: transparent; box-shadow: none; }
+body.tufte-site main .cone-note.active { border-top-color: var(--orange); }
+body.tufte-site main .cone-note > span { margin-bottom: .75rem; color: var(--orange); }
+body.tufte-site main .cone-note strong { color: var(--ink); font-size: var(--type-subsection); }
+body.tufte-site main .cone-note p {
+  color: var(--muted);
+  font-size: var(--type-caption) !important;
+  line-height: var(--leading-caption);
+}
+
 /* Explanatory prose already precedes these laboratories. Inside the figure,
    keep only what is needed to operate it. */
 :is(.controls .control-block, .modes-controls .modes-control-block, .debye-controls .debye-control-block, .collar-field-controls .collar-field-control-block) > p {
@@ -917,7 +979,7 @@ body.tufte-site main .play-button {
 }
 
 .laboratory { min-height: 0; }
-.canvas-panel { grid-template-rows: 48px clamp(300px, 39vw, 550px) 30px; }
+.canvas-panel { min-height: 0; grid-template-rows: 48px clamp(300px, 39vw, 550px) 30px; }
 .canvas-toolbar { padding-right: 1rem; padding-left: 1rem; }
 .three-help { font-size: var(--type-label); }
 .geometry-toolbar > span:last-child,
@@ -1569,6 +1631,8 @@ body.tufte-site main .math-statement-body > .tex-display {
   border-right: 0;
   border-left: 1px solid var(--line) !important;
 }
+body.tufte-site main .math-statement .katex,
+body.tufte-site main .math-statement .katex * { color: inherit !important; }
 body.tufte-site main .tex-display { --math-scale: 1; --math-size: var(--type-math); }
 body.tufte-site main .tex-display .katex { font-size: var(--math-size) !important; }
 body.tufte-site main .tex-display.math-fitted { overflow-x: hidden; }
@@ -1619,6 +1683,7 @@ body > footer {
     border-top: 1px solid var(--line);
     border-left: 0;
   }
+  body.tufte-site main .cone-view-notes { width: 100%; max-width: 100%; grid-template-columns: minmax(0, 1fr); }
   body.tufte-site main .shape-variation-figure {
     grid-template-areas: "heading" "visual" "controls" "caption";
   }

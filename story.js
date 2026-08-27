@@ -74,69 +74,6 @@
     tooltip: visualTheme.tooltip,
   };
 
-  // The Tufte edition is authored in reading order, so source, focus and
-  // visual navigation agree without a runtime layout mutation. The original
-  // visual edition retains its legacy section normalization for compatibility.
-  if (!document.body.classList.contains("tufte-site")) {
-    const main = select("main");
-    [
-      ".intro",
-      "#introduction",
-      ".paper-reading-guide",
-      "#borrow-flexibility",
-      "#geometric-escape",
-      "#experiment",
-      "#debye-experiment",
-      "#phase-story",
-      "#cone-experiment",
-      "#modes-experiment",
-      "#abundance-experiment",
-      ".paper-references",
-      "#references",
-    ].forEach((selector) => {
-      const section = select(selector);
-      if (main && section) main.appendChild(section);
-    });
-  }
-
-  // Subsection 5.1 follows the usual mathematical order: theorem, numerical
-  // illustration, and then the derivation of the linear and quadratic terms.
-  const halfCylinderHeading = select("#half-cylinder-strategy");
-  const halfCylinderIntroduction = select(".half-cylinder-introduction");
-  const cylinderTheorem = select(".cylinder-theorem");
-  const cylinderAppletIntroduction = select(".experiment-story-lead");
-  const cylinderLaboratory = select("#experiment > .laboratory");
-  const cylinderReadout = select("#experiment > .readout-strip");
-  const cylinderSeparation = select(".cylinder-spectral-seed");
-  const uniformCylinderProof = select(".uniform-cylinder-proof");
-  const cylinderJetProof = select(".cylinder-jet-proof");
-  if (halfCylinderHeading && halfCylinderIntroduction && cylinderTheorem
-      && cylinderAppletIntroduction && cylinderLaboratory && cylinderReadout
-      && cylinderSeparation && cylinderJetProof) {
-    if (document.documentElement.classList.contains("paper-edition")) {
-      halfCylinderHeading.after(
-        halfCylinderIntroduction,
-        cylinderSeparation,
-        cylinderTheorem,
-        ...(uniformCylinderProof ? [uniformCylinderProof] : []),
-        cylinderJetProof,
-        cylinderAppletIntroduction,
-        cylinderLaboratory,
-        cylinderReadout,
-      );
-    } else {
-      halfCylinderHeading.after(
-        halfCylinderIntroduction,
-        cylinderTheorem,
-        cylinderAppletIntroduction,
-        cylinderLaboratory,
-        cylinderReadout,
-        cylinderSeparation,
-        cylinderJetProof,
-      );
-    }
-  }
-
   // The two model geometries in Section 3 have independent, manually operated
   // branch parameters.  They show the leading geometry of the local branches;
   // the slider endpoints are labelled ±epsilon rather than assigned a false
