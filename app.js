@@ -45,6 +45,8 @@ const THREE_CAMERA_FIT_ASPECT = 1.5;
 const THREE_RIM_WORLD_X = 8;
 const THREE_CAMERA_TARGET_X = THREE_RIM_WORLD_X - 1;
 const THREE_CAMERA_OFFSET = { x: 5.9, y: 3.9, z: 12.4 };
+const THREE_ZOOM_MIN = .62;
+const THREE_ZOOM_MAX = 1.55;
 const TWO_PI = Math.PI * 2;
 const CYLINDER_WALL_MODES = [2, 3];
 const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
@@ -57,7 +59,7 @@ const threeState = {
   camera: null,
   group: null,
   pointer: null,
-  zoom: 1,
+  zoom: THREE_ZOOM_MIN,
 };
 
 function boundary(theta, parameters = state) {
@@ -525,7 +527,7 @@ function installThreeInteraction(canvas) {
   canvas.addEventListener("wheel", (event) => {
     event.preventDefault();
     const factor = event.deltaY > 0 ? 1.08 : .92;
-    threeState.zoom = Math.max(.62, Math.min(1.55, threeState.zoom * factor));
+    threeState.zoom = Math.max(THREE_ZOOM_MIN, Math.min(THREE_ZOOM_MAX, threeState.zoom * factor));
     resizeThreeRenderer();
     renderThreeFrame();
   }, { passive: false });
