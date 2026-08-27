@@ -15,11 +15,11 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs-lean@1.2.0/dist/lean.min.js"></script>
-    <script defer src="../lean-statements.js?v=20260827.2"></script>
+    <script defer src="../lean-statements.js?v=20260827.3"></script>
     <script defer src="../math.js?v=20260827.8"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
-    <link rel="stylesheet" href="../styles.css?v=20260827.7">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.11">
+    <link rel="stylesheet" href="../styles.css?v=20260827.8">
+    <link rel="stylesheet" href="tufte-port.css?v=20260827.12">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -235,6 +235,7 @@
             \]
           </div>
           <p>A domain \(\Omega\) for which (S) has a solution is said to have the <em>Schiffer property</em>. The disk has this property: its radial modes are multiples of \(J_0(\sqrt\lambda\,r)\), and their normal derivative vanishes at the boundary whenever \(J_1(\sqrt\lambda\,r)=0\).</p>
+          <lean-statement data-statement="schiffer-property"></lean-statement>
           <article class="math-statement math-statement-conjecture" aria-labelledby="schifferConjectureTitle">
             <header class="math-statement-header"><span>Conjecture</span><small>Schiffer</small></header>
             <div class="math-statement-body"><p id="schifferConjectureTitle">Every connected smooth bounded planar domain with the Schiffer property is a disk.</p></div>
@@ -257,18 +258,21 @@
           </div>
         </figure>
 
-        <article class="math-statement math-statement-theorem intro-theorem" aria-labelledby="williamsTheoremTitle">
-          <header class="math-statement-header"><span>Theorem</span><small>Williams · 1976</small></header>
-          <div class="math-statement-body">
-            <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
-            <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
-            <ol>
-              <li>there is a nonzero continuous function \(f\) such that \(\int_{E(\Omega)}f(x)\,dx=0\) for every rigid motion \(E\);</li>
-              <li>there are \(\lambda&gt;0\) and a nonconstant function \(u\) solving the Schiffer problem (S) on \(\Omega\).</li>
-            </ol>
-            <p>Consequently, a smooth noncircular solution of the Schiffer problem also gives a smooth noncircular probe without the Pompeiu property.</p>
-          </div>
-        </article>
+        <div class="formal-statement-pair">
+          <article class="math-statement math-statement-theorem intro-theorem" aria-labelledby="williamsTheoremTitle">
+            <header class="math-statement-header"><span>Theorem</span><small>Williams · 1976</small></header>
+            <div class="math-statement-body">
+              <h3 id="williamsTheoremTitle">The Pompeiu and Schiffer problems are equivalent.</h3>
+              <p>Let \(\Omega\subset\mathbb R^2\) be a bounded, simply connected domain with smooth boundary. Then the following statements are equivalent:</p>
+              <ol>
+                <li>there is a nonzero continuous function \(f\) such that \(\int_{E(\Omega)}f(x)\,dx=0\) for every rigid motion \(E\);</li>
+                <li>there are \(\lambda&gt;0\) and a nonconstant function \(u\) solving the Schiffer problem (S) on \(\Omega\).</li>
+              </ol>
+              <p>Consequently, a smooth noncircular solution of the Schiffer problem also gives a smooth noncircular probe without the Pompeiu property.</p>
+            </div>
+          </article>
+          <lean-statement data-statement="schiffer-pompeiu-equivalence"></lean-statement>
+        </div>
 
         <details class="proof-details intro-proof">
           <summary><span>The Schiffer property implies failure of the Pompeiu property</span><i>expand +</i></summary>
@@ -1410,6 +1414,17 @@
           </div>
         </header>
 
+        <div class="formal-statement-pair main-result-pair">
+          <article class="math-statement math-statement-theorem" aria-labelledby="mainResultTitle">
+            <header class="math-statement-header"><span>Theorem</span><small>Main result</small></header>
+            <div class="math-statement-body">
+              <h3 id="mainResultTitle">A noncircular star-shaped planar Schiffer domain exists.</h3>
+              <p>There is a bounded, nonempty planar domain with a regular \(C^2\) boundary, star-shaped with respect to the origin, which is not a disk and has the Schiffer property.</p>
+            </div>
+          </article>
+          <lean-statement data-statement="schiffer-star-shaped"></lean-statement>
+        </div>
+
         <div class="abundance-conclusion paper-copy editorial-conclusion">
           <span>5.5.1 · the landing argument</span>
           <h3>The uniform decrease crosses the next integer.</h3>
@@ -1683,6 +1698,6 @@
     <script defer src="../story.js?v=20260827.8"></script>
     <script defer src="../abundance.js?v=20260827.8"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>
-    <script defer src="layout-contract.js?v=20260827.11"></script>
+    <script defer src="layout-contract.js?v=20260827.12"></script>
   </body>
 </html>

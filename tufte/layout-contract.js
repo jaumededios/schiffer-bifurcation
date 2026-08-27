@@ -48,6 +48,18 @@
       errors.push(`Lean statement host ${index + 1} was not rendered${host.dataset.statement ? ` (${host.dataset.statement})` : ""}`);
     });
 
+    const expectedLeanStatements = [
+      "pompeiu-property",
+      "schiffer-property",
+      "schiffer-pompeiu-equivalence",
+      "schiffer-star-shaped",
+    ];
+    const actualLeanStatements = Array.from(document.querySelectorAll("details.lean-statement"), (statement) => statement.dataset.statement);
+    if (actualLeanStatements.length !== expectedLeanStatements.length
+        || expectedLeanStatements.some((key, index) => actualLeanStatements[index] !== key)) {
+      errors.push("Lean counterparts do not follow the mathematical narrative");
+    }
+
     const expectedSectionOrder = [
       "introduction",
       "borrow-flexibility",
@@ -165,6 +177,21 @@
         if (!details.querySelector(":scope > .lean-statement-body > pre > code")) {
           errors.push(`Lean statement ${index + 1} has no direct code body`);
         }
+        if (details.open) {
+          const pre = details.querySelector(":scope > .lean-statement-body > pre");
+          const code = pre?.querySelector(":scope > code.language-lean");
+          if (pre && code) {
+            const preBox = pre.getBoundingClientRect();
+            const codeBox = code.getBoundingClientRect();
+            if (Math.abs(codeBox.left - preBox.left) > 1 || codeBox.width < preBox.width - 1) {
+              errors.push(`Lean statement ${index + 1} code viewport collapsed inside its disclosure`);
+            }
+            if (code.textContent.includes("abbrev")
+                && !Array.from(code.querySelectorAll(".hljs-keyword"), (token) => token.textContent).includes("abbrev")) {
+              errors.push(`Lean statement ${index + 1} does not highlight Lean 4 abbrev declarations`);
+            }
+          }
+        }
       } else {
         if (parseFloat(detailsStyle.borderTopWidth) || parseFloat(detailsStyle.borderBottomWidth)) {
           errors.push(`reading disclosure ${index + 1} leaks a border across its full parent`);
@@ -192,6 +219,26 @@
       const box = statement.getBoundingClientRect();
       const expectedWidth = sectionMeasure(statement, narrow ? 1 : reading);
       if (Math.abs(box.width - expectedWidth) > 2) errors.push(`math statement ${index + 1} is outside its semantic measure`);
+    });
+
+    document.querySelectorAll("body.tufte-site main .formal-statement-pair").forEach((pair, index) => {
+      const statement = pair.querySelector(":scope > .math-statement");
+      const lean = pair.querySelector(":scope > .lean-statement");
+      if (!statement || !lean) {
+        errors.push(`formal statement pair ${index + 1} lacks prose or Lean`);
+        return;
+      }
+      const pairBox = pair.getBoundingClientRect();
+      const expectedWidth = sectionMeasure(pair, narrow ? 1 : reading);
+      if (Math.abs(pairBox.width - expectedWidth) > 2) {
+        errors.push(`formal statement pair ${index + 1} is outside the reading measure`);
+      }
+      [statement, lean].forEach((child) => {
+        const childBox = child.getBoundingClientRect();
+        if (Math.abs(childBox.left - pairBox.left) > 1 || Math.abs(childBox.width - pairBox.width) > 2) {
+          errors.push(`formal statement pair ${index + 1} has mismatched counterparts`);
+        }
+      });
     });
 
     document.querySelectorAll("body.tufte-site main .paper-copy").forEach((copy, index) => {

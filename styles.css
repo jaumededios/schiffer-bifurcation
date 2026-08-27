@@ -170,9 +170,10 @@ a { color: inherit; }
 .lean-statement[open] > summary > i { font-size: 0; }
 .lean-statement[open] > summary > i::after { content: "hide −"; font-size: var(--type-label); }
 .lean-statement-body { padding: 15px 17px 17px; background: var(--paper-2); }
-.lean-statement pre { max-width: 100%; margin: 0; overflow: visible; white-space: pre-wrap; overflow-wrap: break-word; tab-size: 2; }
+.lean-statement pre { box-sizing: border-box; width: 100%; max-width: 100%; margin: 0; overflow-x: auto; overflow-y: hidden; white-space: pre; overflow-wrap: normal; tab-size: 2; }
 .lean-statement pre code { color: var(--ink-2); font: 400 var(--type-code)/1.65 var(--mono); font-variant: normal; }
-.lean-statement pre code.hljs { display: block; padding: 0; color: var(--ink-2); background: transparent; }
+.lean-statement pre > code,
+.lean-statement pre code.hljs { box-sizing: border-box; width: max-content; min-width: 100%; margin: 0; padding: 0; overflow: visible; color: var(--ink-2); background: transparent; white-space: inherit; overflow-wrap: normal; }
 .lean-statement > summary:focus-visible { outline: 2px solid var(--teal); outline-offset: -3px; }
 .literature-link { color: var(--orange); text-underline-offset: 3px; }
 

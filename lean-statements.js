@@ -5,17 +5,82 @@
     "pompeiu-property": Object.freeze({
       title: "HasPompeiuProperty",
       source: [
+        "import Mathlib",
+        "",
+        "open MeasureTheory Metric Topology",
+        "",
         "abbrev Plane := (EuclideanSpace ℝ (Fin 2))",
         "abbrev RigidMotion := AffineIsometryEquiv ℝ Plane Plane",
         "",
-        "/-- A set `Ω` has the **Pompeiu property** if the only continuous `f : ℝ^2 → ℝ` whose integral over every rigid-motion image `σ(Ω)` vanishes is the zero function. -/",
+        "/-- A set `Ω` has the **Pompeiu property** if the only continuous",
+        "`f : ℝ^2 → ℝ` whose integral over every rigid-motion image `σ(Ω)`",
+        "vanishes is the zero function. -/",
         "",
         "def HasPompeiuProperty (Ω : Set (Plane)) : Prop :=",
         "  ∀ f : Plane → ℝ, Continuous f →",
         "    (∀ E : RigidMotion, (∫ x in  E '' Ω, f x) = 0) → (f = 0)",
       ].join("\n"),
     }),
+    "schiffer-property": Object.freeze({
+      title: "HasSchifferProperty",
+      source: [
+        "open Gradient Laplacian",
+        "",
+        "def HasSchifferProperty (Ω : Set (Plane)) : Prop :=",
+        "  ∃ (u : Plane → ℝ),",
+        "    ContDiff ℝ 2 u ∧",
+        "    (∀ x ∈ Ω, -(Δ u) x = u x) ∧",
+        "    (∀ x ∈ frontier Ω, u x = 1) ∧",
+        "    (∀ x ∈ frontier Ω, ∇ u x = 0)",
+      ].join("\n"),
+    }),
+    "schiffer-pompeiu-equivalence": Object.freeze({
+      title: "SchifferIffPompeiu",
+      source: [
+        "open Bornology Set MeasureTheory",
+        "",
+        "/-- `Ω` is an ordinary open Euclidean disk, with arbitrary center and radius. -/",
+        "def IsEuclideanDisk (Ω : Set Plane) : Prop :=",
+        "  ∃ (c : Plane) (r : ℝ), Ω = Metric.ball c r",
+        "",
+        "/-- `Ω` is a regular `C²` super-level set. In particular, `Ω` is open,",
+        "because a `C²` defining function is continuous. -/",
+        "def HasC2Boundary (Ω : Set Plane) : Prop :=",
+        "  ∃ (F : Plane → ℝ),",
+        "    ContDiff ℝ 2 F ∧",
+        "    Ω = {x | 0 < F x} ∧",
+        "    ∀ x, F x = 0 → ∇ F x ≠ 0",
+        "",
+        "theorem SchifferIffPompeiu",
+        "    {Ω : Set Plane} {u : Plane → ℝ}",
+        "    (hbounded : IsBounded Ω)",
+        "    (hC2 : HasC2Boundary Ω) :",
+        "    HasSchifferProperty Ω ↔ ¬ HasPompeiuProperty Ω := by",
+        "  sorry",
+      ].join("\n"),
+    }),
+    "schiffer-star-shaped": Object.freeze({
+      title: "Schiffer_Star_Shaped",
+      source: [
+        "theorem Schiffer_Star_Shaped :",
+        "  ∃ (Ω : Set Plane),",
+        "    IsBounded Ω ∧ Nonempty Ω ∧",
+        "    StarConvex ℝ 0 Ω ∧ HasC2Boundary Ω ∧",
+        "    ¬ IsEuclideanDisk Ω ∧",
+        "    HasSchifferProperty Ω := by",
+        "  sorry",
+      ].join("\n"),
+    }),
   });
+
+  // highlightjs-lean 1.2 ships the maintained Lean grammar, but its keyword
+  // list predates Lean 4's `abbrev`. Extend that grammar before the first
+  // block is tokenized; source markup remains entirely Highlight.js-owned.
+  const leanGrammar = window.hljs?.getLanguage?.("lean");
+  if (typeof leanGrammar?.keywords?.keyword === "string"
+      && !leanGrammar.keywords.keyword.split(/\s+/u).includes("abbrev")) {
+    leanGrammar.keywords.keyword += " abbrev";
+  }
 
   const highlight = (disclosure) => {
     if (!disclosure.open || typeof window.hljs?.highlightElement !== "function") return;

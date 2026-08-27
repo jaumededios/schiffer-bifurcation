@@ -27,6 +27,8 @@ The Tufte edition keeps content semantics separate from page geometry:
   pattern is the complete margin-note API;
 - `.math-statement` articles provide one grammar for definitions, problems,
   conjectures, propositions, lemmas, corollaries, and theorems;
+- `.formal-statement-pair` keeps a prose theorem and its direct Lean
+  counterpart on one shared reading measure when they live at section level;
 - `.paper-copy` is continuous exposition or derivation at reading measure;
 - `.small-multiples` is reserved for comparisons whose juxtaposition carries
   information, while `.figure-band` is reserved for actual wide visuals;
@@ -40,8 +42,10 @@ The Tufte edition keeps content semantics separate from page geometry:
 - `<lean-statement data-statement="…">` places a formal counterpart beside
   the corresponding prose statement. `lean-statements.js` owns the statement
   registry, renders the native disclosure, and invokes the maintained Lean
-  Highlight.js grammar lazily when it opens; article markup never duplicates
-  the disclosure shell or syntax tokens.
+  Highlight.js grammar lazily when it opens. The component extends that
+  grammar's pre-Lean-4 keyword table with `abbrev`; article markup never
+  duplicates the disclosure shell or syntax tokens. Its code viewport always
+  uses the disclosure width and scrolls only the source on narrow screens.
 
 The widths for these components live only in the measure tokens at the top of
 `tufte/tufte-port.css`; their instances need no per-item width classes or
