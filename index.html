@@ -92,8 +92,8 @@
         <details class="disk-sidequest">
           <summary><span><small>Optional digression</small>Why does the disk fail the Pompeiu property?</span><i>expand +</i></summary>
           <div class="disk-sidequest-body">
-            <figure class="line-probe-figure" id="lineProbeFigure">
-              <figcaption>
+            <figure class="measurement-figure line-probe-figure" id="lineProbeFigure">
+              <figcaption class="measurement-caption">
                 <p class="eyebrow">A one-dimensional model</p>
                 <h3>The Pompeiu operator for an interval.</h3>
                 <p>Let \(I_L=[-L/2,L/2]\) and \(f(x)=\cos x\). For the translate \(I_L+t\), direct integration gives</p>
@@ -104,21 +104,26 @@
                   =2\sin(L/2)\cos t.
                   \]
                 </div>
-                <p>Hence \(I_{2\pi}\) fails the one-dimensional Pompeiu property: the nonzero function \(\cos x\) belongs to the kernel for every translation. The panel below plots this identity as \(t\) varies.</p>
+                <p>Hence \(I_{2\pi}\) fails the one-dimensional Pompeiu property: the nonzero function \(\cos x\) belongs to the kernel for every translation. The panel below plots this identity as \(t\) and \(L\) vary.</p>
               </figcaption>
-              <div class="line-probe-panel">
-                <canvas id="lineProbeCanvas" tabindex="0" role="img" aria-label="An interval moving over the field cosine x"></canvas>
-                <div class="line-probe-side">
-                  <div class="pompeiu-controls" role="group" aria-label="Choose the interval length">
-                    <button type="button" class="pompeiu-choice" data-interval="short" aria-pressed="false"><span>\(\sin(L/2)\ne0\)</span><b>\(L=2\)</b></button>
-                    <button type="button" class="pompeiu-choice" data-interval="blind" aria-pressed="true"><span>\(\sin(L/2)=0\)</span><b>\(L=2\pi\)</b></button>
+              <div class="measurement-panel line-probe-panel">
+                <canvas class="measurement-canvas" id="lineProbeCanvas" tabindex="0" role="img" aria-label="An interval moving over the field cosine x"></canvas>
+                <div class="measurement-side line-probe-side">
+                  <div class="measurement-size-control">
+                    <label for="lineProbeLength"><span>Interval length</span><output id="lineProbeLengthValue" for="lineProbeLength">\(L=2\pi\)</output></label>
+                    <input id="lineProbeLength" type="range" min="0.5" max="12.5" step="0.01" value="6.2831853072" aria-label="Dilate the interval by changing its length">
+                    <div class="measurement-range-scale"><span>\(0.5\)</span><span>\(12.5\)</span></div>
+                    <div class="measurement-presets" role="group" aria-label="Notable interval lengths">
+                      <button type="button" data-interval-length="2" aria-pressed="false">\(L=2\)</button>
+                      <button type="button" data-interval-length="6.2831853072" aria-pressed="true">\(L=2\pi\)</button>
+                    </div>
                   </div>
-                  <div class="pompeiu-readout">
+                  <div class="measurement-readout pompeiu-readout">
                     <span>\(\int_{t-L/2}^{t+L/2}\cos x\,dx\)</span>
                     <strong id="lineProbeValue">0.000</strong>
                     <div class="pompeiu-meter"><i id="lineProbeMeterFill"></i></div>
                   </div>
-                  <p class="pompeiu-hint">drag to vary \(t\), or use the arrow keys</p>
+                  <p class="measurement-hint pompeiu-hint">Drag to vary \(t\). Move the slider to dilate \(I_L\).</p>
                 </div>
               </div>
             </figure>
@@ -133,25 +138,30 @@
               </div>
               <p>is nonzero and satisfies \(\int_{E(B_r)}f(x)\,dx=0\) for every rigid motion \(E\). Rotations give no additional domains because \(B_r\) is rotationally invariant.</p>
             </div>
-          <figure class="pompeiu-figure" id="pompeiuFigure">
-            <figcaption>
-              <p class="eyebrow">Numerical illustration</p>
+          <figure class="measurement-figure pompeiu-figure" id="pompeiuFigure">
+            <figcaption class="measurement-caption">
+              <p class="eyebrow">A two-dimensional model</p>
+              <h3>The Pompeiu operator for a disk.</h3>
               <p>Here \(f(x)=\cos(x_1)\), so the exceptional radius is the first positive zero \(r=3.8317\ldots\) of \(J_1\). The displayed value is the integral over the translated disk.</p>
             </figcaption>
-            <div class="pompeiu-panel">
-              <canvas id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
-              <div class="pompeiu-side">
-                <div class="pompeiu-controls" role="group" aria-label="Choose a radius">
-                  <button type="button" class="pompeiu-choice" data-disk="small" aria-pressed="false"><span>small</span><b>\(r=1.2\)</b></button>
-                  <button type="button" class="pompeiu-choice" data-disk="zero" aria-pressed="true"><span>zero of \(J_1\)</span><b>\(r=3.8317\ldots\)</b></button>
-                  <button type="button" class="pompeiu-choice" data-disk="large" aria-pressed="false"><span>large</span><b>\(r=5.4236\ldots\)</b></button>
+            <div class="measurement-panel pompeiu-panel">
+              <canvas class="measurement-canvas" id="pompeiuCanvas" tabindex="0" role="img" aria-label="A disk moving over the field cosine of x one"></canvas>
+              <div class="measurement-side pompeiu-side">
+                <div class="measurement-size-control">
+                  <label for="pompeiuRadius"><span>Disk radius</span><output id="pompeiuRadiusValue" for="pompeiuRadius">\(r=3.8317\ldots\)</output></label>
+                  <input id="pompeiuRadius" type="range" min="0.5" max="6.8" step="0.01" value="3.8317059702" aria-label="Dilate the disk by changing its radius">
+                  <div class="measurement-range-scale"><span>\(0.5\)</span><span>\(6.8\)</span></div>
+                  <div class="measurement-presets" role="group" aria-label="Notable disk radii">
+                    <button type="button" data-disk-radius="1.2" aria-pressed="false">\(r=1.2\)</button>
+                    <button type="button" data-disk-radius="3.8317059702" aria-pressed="true">\(r=\rho_1\)</button>
+                  </div>
                 </div>
-                <div class="pompeiu-readout">
+                <div class="measurement-readout pompeiu-readout">
                   <span>\(\int_{B_r(t)}\cos(x_1)\,dx\)</span>
                   <strong id="pompeiuValue">0.000</strong>
                   <div class="pompeiu-meter"><i id="pompeiuMeterFill"></i></div>
                 </div>
-                <p class="pompeiu-hint">drag the disk, or use the arrow keys</p>
+                <p class="measurement-hint pompeiu-hint">Drag to vary \(t\). Move the slider to dilate \(B_r\).</p>
               </div>
             </div>
           </figure>
