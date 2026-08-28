@@ -166,8 +166,7 @@
         .trim();
     });
     [
-      "The Schiffer property implies failure of the Pompeiu property",
-      "Failure of the Pompeiu property implies the Schiffer property",
+      "The Schiffer–Pompeiu equivalence",
       "Berenstein conjecture: What if we switch the Neumann and Dirichlet conditions?",
     ].forEach((title) => {
       if (!optionalTitles.includes(title)) errors.push(`missing optional digression: ${title}`);

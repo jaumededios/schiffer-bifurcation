@@ -559,6 +559,40 @@ body.tufte-site main .reading-figure {
 .measurement-side { min-height: 0; }
 .measurement-size-control { padding: .85rem 0; }
 .measurement-readout { margin-top: 0; padding: .85rem 0; }
+.pompeiu-identity-readout {
+  gap: .35rem;
+  color: var(--ink);
+}
+.measurement-identity {
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .12rem .34rem;
+  line-height: 1.28;
+}
+.measurement-identity-relation {
+  flex: 0 0 auto;
+}
+.measurement-identity-value {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.measurement-identity-secondary {
+  color: var(--muted);
+  line-height: 1.22;
+}
+body.tufte-site main .measurement-identity .katex {
+  font-size: var(--type-caption) !important;
+}
+body.tufte-site main .measurement-identity-secondary .katex {
+  font-size: var(--type-note) !important;
+}
+body.tufte-site main :is(#pompeiuValue, #pompeiuCoefficient) {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
 .measurement-hint { min-height: 0; padding: .75rem 0 0; font-family: var(--serif); font-style: italic; }
 .disk-sidequest figure.fullwidth { width: 100%; max-width: 100%; }
 .disk-sidequest .measurement-figure {

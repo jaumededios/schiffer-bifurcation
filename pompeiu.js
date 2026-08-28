@@ -119,7 +119,7 @@
  * inside it. For a disk of radius r centred at t,
  *     int_{B_r(t)} cos(x_1) dx = 2 pi r J_1(r) cos(t_1),
  * so the value is fixed by the amplitude 2 pi r J_1(r) and by the centre. The
- * figure never says so; the reader moves the disk and reads it off.
+ * live readout keeps both factors visible while the reader moves the disk.
  */
 (() => {
   "use strict";
@@ -129,6 +129,10 @@
 
   const canvas = root.querySelector("#pompeiuCanvas");
   const valueOut = root.querySelector("#pompeiuValue");
+  const coefficientOut = root.querySelector("#pompeiuCoefficient");
+  const identityReadout = root.querySelector(".pompeiu-identity-readout");
+  const primaryIdentity = root.querySelector("#pompeiuIdentity") || valueOut?.closest(".measurement-identity");
+  const secondaryIdentity = root.querySelector("#pompeiuCoefficientIdentity") || coefficientOut?.closest(".measurement-identity");
   const radiusInput = root.querySelector("#pompeiuRadius");
   const radiusOut = root.querySelector("#pompeiuRadiusValue");
   const context = canvas && canvas.getContext("2d");
@@ -178,6 +182,30 @@
   function diskAmplitude(radius) {
     if (Math.abs(radius - FIRST_ZERO) < 1e-9) return 0;
     return 2 * Math.PI * radius * besselJ1(radius);
+  }
+
+  function renderMath(element, source) {
+    if (!element) return;
+    if (window.SchifferMath?.render) {
+      window.SchifferMath.render(element, source);
+    } else {
+      element.textContent = source;
+    }
+  }
+
+  function renderIdentityParts(integralText, coefficientText) {
+    const parts = [
+      ["integral", "\\int_{B_r(t)}\\cos(x_1)\\,dx"],
+      ["factor", "C(r)\\cos(t_1)"],
+      ["coefficient", "C(r)"],
+      ["coefficient-formula", "2\\pi r J_1(r)"],
+    ];
+    parts.forEach(([name, source]) => {
+      root.querySelectorAll(`[data-pompeiu-math="${name}"]`).forEach((element) => renderMath(element, source));
+    });
+    root.querySelectorAll('[data-pompeiu-math="equals"]').forEach((element) => renderMath(element, "="));
+    renderMath(valueOut, integralText);
+    renderMath(coefficientOut, coefficientText);
   }
 
   function updateSliderTrack(input) {
@@ -288,9 +316,21 @@
     context.fill();
     context.restore();
 
-    const value = diskAmplitude(state.radius) * Math.cos(state.centre.x);
+    const coefficient = diskAmplitude(state.radius);
+    const value = coefficient * Math.cos(state.centre.x);
+    const shownCoefficient = Math.abs(coefficient) < 5e-4 ? 0 : coefficient;
     const shown = Math.abs(value) < 5e-4 ? 0 : value;
-    valueOut.textContent = `= ${shown.toFixed(3)}`;
+    const integralText = shown.toFixed(3);
+    const coefficientText = shownCoefficient.toFixed(3);
+    if (identityReadout) {
+      renderIdentityParts(integralText, coefficientText);
+      primaryIdentity?.setAttribute("aria-label",
+        `Integral over the translated disk equals C of r times cosine of t one, which is ${integralText}`);
+      secondaryIdentity?.setAttribute("aria-label",
+        `C of r equals two pi r times J one of r, which is ${coefficientText}`);
+    } else {
+      valueOut.textContent = `= ${integralText}`;
+    }
     canvas.setAttribute("aria-label",
       `Disk of radius ${state.radius.toFixed(3)} centred at (${state.centre.x.toFixed(2)}, ${state.centre.y.toFixed(2)}); the integral of cosine of x one over it is ${shown.toFixed(3)}`);
   }
@@ -348,6 +388,10 @@
   const disclosure = root.closest("details");
   if (disclosure) disclosure.addEventListener("toggle", () => {
     if (disclosure.open) requestAnimationFrame(resize);
+  });
+  const marginToggle = document.getElementById("pompeiu-model-note");
+  if (marginToggle) marginToggle.addEventListener("change", () => {
+    if (marginToggle.checked) requestAnimationFrame(resize);
   });
   if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
   window.addEventListener("resize", resize);

@@ -1095,6 +1095,8 @@ dialog p:not(.eyebrow) {
 
 .intro-proof { margin: 40px 0 0 70px; max-width: 960px; }
 .intro-proof + .intro-proof { margin-top: 0; border-top: 0; }
+.optional-digression > summary > span { display: grid; gap: 5px; }
+.optional-digression > summary small { color: var(--orange); font: inherit; }
 .intro-proof-body { max-width: 830px; padding: 10px 0 32px; color: var(--muted); font-size: var(--type-proof); line-height: 1.82; }
 .intro-proof-body p { margin: 0 0 16px; }
 .intro-proof-body .tex-display { margin: 22px 0; color: var(--ink); }
@@ -1201,6 +1203,14 @@ dialog p:not(.eyebrow) {
 .measurement-range-mark { left: var(--measurement-mark); color: var(--orange); transform: translateX(-50%); }
 .measurement-readout { display: grid; gap: 9px; margin-top: auto; padding: 18px; color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: var(--type-caption); }
 .measurement-value-line { display: flex; align-items: baseline; gap: .5em; white-space: nowrap; }
+.pompeiu-identity-readout { gap: 7px; }
+.measurement-identity { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .08em .42em; color: var(--ink); line-height: 1.52; }
+.measurement-identity > span { min-width: 0; max-width: 100%; }
+.measurement-identity .katex { white-space: normal; }
+.measurement-identity-relation { flex: 0 0 auto; }
+.measurement-identity-value { color: var(--ink); font-variant-numeric: tabular-nums; }
+.measurement-identity-secondary { color: var(--muted); font-size: .9em; line-height: 1.4; }
+.measurement-identity-secondary .katex { font-size: .88em; }
 .pompeiu-readout strong { color: var(--ink); font: 500 19px var(--mono); font-variant-numeric: tabular-nums; }
 .measurement-hint { min-height: 63px; margin: 0; padding: 13px 18px; color: var(--muted); font: 400 var(--type-label)/1.65 var(--mono); letter-spacing: .025em; }
 
