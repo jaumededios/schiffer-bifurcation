@@ -2412,16 +2412,15 @@ if (debyeData) {
     return values ? debyeInterpolateColumn(values, radius) : 0;
   }
 
-  // Two geometries at two scales.  The top row is the fixed five-unit collar
-  // used in the limit theorem.  The lower row reaches far enough inward to
-  // cross the k=1 turning radius, making the genuinely local nature of that
-  // comparison visible.  A small complete-disk locator remains in the margin
-  // controls rather than occupying a fifth comparison panel.
+  // The original three views are kept unchanged: a flat collar, the
+  // corresponding planar sector, and the complete N-fold disk.  A fourth view
+  // places a long half-cylinder beside the disk at the same geometric scale.
   const collarFieldState = { fold: 28, mode: 1, trig: "cos" };
-  const COLLAR_WIDE_DEPTH = 13;
   const COLLAR_BACKGROUND = SCHIFFER_VISUAL_THEME.backgroundRgb;
-  const COLLAR_LOCAL_ACCENT = SCHIFFER_VISUAL_THEME.paperEdition ? "#287b7b" : "#72c9c6";
-  const COLLAR_WIDE_ACCENT = SCHIFFER_VISUAL_THEME.paperEdition ? "#a00000" : "#ff7449";
+  const COLLAR_ZOOM_ACCENT = getComputedStyle(document.documentElement).getPropertyValue("--teal").trim() || "#4da2a3";
+  const COLLAR_ZOOM_FILL = SCHIFFER_VISUAL_THEME.paperEdition
+    ? "rgba(40,123,123,.16)"
+    : "rgba(77,162,163,.18)";
 
   function collarAngularValue(psi) {
     if (collarFieldState.mode === 0) return 1;
@@ -2501,10 +2500,10 @@ if (debyeData) {
     context.restore();
   }
 
-  function renderCollarCylinder(canvasSelector, depth) {
-    const canvas = $(canvasSelector);
+  function renderCollarCylinder() {
+    const canvas = $("#collarCylinderCanvas");
     const { context, width, height } = collarRaster(canvas, (u, v) => {
-      const x = -depth + u * depth;
+      const x = -debyeData.depth + u * debyeData.depth;
       const psi = Math.PI - v * TWO_PI;
       return colorFor(collarCylinderRadial(x) * collarAngularValue(psi));
     });
@@ -2516,73 +2515,100 @@ if (debyeData) {
     context.moveTo(width - .7, 0);
     context.lineTo(width - .7, height);
     context.stroke();
-    if (depth > debyeData.depth && collarFieldState.mode === 1) {
-      const lambda = debyeLambdaAt(collarFieldState.fold);
-      const turningDepth = collarFieldState.fold - collarFieldState.fold / Math.sqrt(lambda);
-      const turningX = (depth - turningDepth) / depth * width;
-      context.setLineDash([5, 5]);
-      context.strokeStyle = COLLAR_WIDE_ACCENT;
-      context.lineWidth = 1.25;
-      context.beginPath();
-      context.moveTo(turningX, 0);
-      context.lineTo(turningX, height);
-      context.stroke();
-    }
     context.restore();
     canvas.setAttribute(
       "aria-label",
       collarFieldState.mode === 0
-        ? `Radial cylinder mode k 0 on the collar from x minus ${depth} to zero, with Cauchy data matched to the regular Bessel profile at the rim.`
-        : `Cylinder mode k ${collarFieldState.mode} with ${collarFieldState.trig} angular data on the collar from x minus ${depth} to zero.`
+        ? "Radial cylinder mode k 0 on the collar from x minus five to zero, with Cauchy data matched to the regular Bessel profile at the rim."
+        : `Cylinder mode k ${collarFieldState.mode} with ${collarFieldState.trig} angular data on the collar from x minus five to zero.`
     );
   }
 
-  function collarPatchBounds(depth) {
+  function renderCollarHalfCylinder() {
+    const canvas = $("#collarHalfCylinderCanvas");
+    const wrap = canvas.parentElement;
+    const cell = wrap.parentElement;
+    const diskWrap = $("#collarDiskCanvas").parentElement;
     const fold = collarFieldState.fold;
-    const edgeAngle = Math.PI / fold;
-    const innerX = (fold - depth) * Math.cos(edgeAngle) - fold;
-    const outerY = fold * Math.sin(edgeAngle);
-    return { xMin: innerX - .3, xMax: .3, yMin: -outerY - .3, yMax: outerY + .3 };
+    const depth = 2 * fold;
+
+    // The disk renderer uses 81% of the smaller canvas dimension for its
+    // diameter.  Give the cylinder the same number of pixels for the physical
+    // length 2N, and scale its 2π circumference by that identical factor.
+    const diskDiameter = .81 * Math.min(diskWrap.clientWidth || 300, diskWrap.clientHeight || 300);
+    const width = Math.max(1, Math.round(Math.min(cell.clientWidth || diskDiameter, diskDiameter)));
+    const height = Math.max(1, Math.round(width * Math.PI / fold));
+    wrap.style.width = `${width}px`;
+    wrap.style.height = `${height}px`;
+
+    const raster = collarRaster(canvas, (u, v) => {
+      const x = -depth + u * depth;
+      const psi = Math.PI - v * TWO_PI;
+      return colorFor(collarCylinderRadial(x) * collarAngularValue(psi));
+    });
+    const context = raster.context;
+    const cropWidth = raster.width * debyeData.depth / depth;
+    context.save();
+    context.fillStyle = COLLAR_ZOOM_FILL;
+    context.fillRect(raster.width - cropWidth, 0, cropWidth, raster.height);
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
+    context.lineWidth = 1;
+    context.strokeRect(.5, .5, raster.width - 1, raster.height - 1);
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.background;
+    context.lineWidth = 5;
+    context.strokeRect(raster.width - cropWidth + 2.5, 2.5, cropWidth - 5, raster.height - 5);
+    context.strokeStyle = COLLAR_ZOOM_ACCENT;
+    context.lineWidth = 2.8;
+    context.strokeRect(raster.width - cropWidth + 2.5, 2.5, cropWidth - 5, raster.height - 5);
+    context.restore();
+    canvas.setAttribute(
+      "aria-label",
+      `Cylinder mode k ${collarFieldState.mode} on x from minus ${depth} to zero; its circumference is drawn at the same scale as one wavelength on the ${fold}-fold disk, and its five-unit rim collar is outlined.`
+    );
   }
 
-  function collarPatchPoint(x, psi, width, height, depth) {
+  function collarPatchBounds() {
+    return { xMin: -5.42, xMax: .28, yMin: -3.42, yMax: 3.42 };
+  }
+
+  function collarPatchPoint(x, psi, width, height) {
     const fold = collarFieldState.fold;
     const radius = fold + x;
     const localX = radius * Math.cos(psi / fold) - fold;
     const localY = radius * Math.sin(psi / fold);
-    const bounds = collarPatchBounds(depth);
+    const bounds = collarPatchBounds();
     return {
       x: (localX - bounds.xMin) / (bounds.xMax - bounds.xMin) * width,
       y: (bounds.yMax - localY) / (bounds.yMax - bounds.yMin) * height,
     };
   }
 
-  function collarTracePatchBoundary(context, width, height, depth) {
+  function collarTracePatchBoundary(context, width, height) {
     context.beginPath();
     for (let index = 0; index <= 90; index++) {
       const psi = -Math.PI + index / 90 * TWO_PI;
-      const point = collarPatchPoint(0, psi, width, height, depth);
+      const point = collarPatchPoint(0, psi, width, height);
       if (index === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 50; index++) {
-      const point = collarPatchPoint(-index / 50 * depth, Math.PI, width, height, depth);
+      const point = collarPatchPoint(-index / 50 * debyeData.depth, Math.PI, width, height);
       context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 90; index++) {
       const psi = Math.PI - index / 90 * TWO_PI;
-      const point = collarPatchPoint(-depth, psi, width, height, depth);
+      const point = collarPatchPoint(-debyeData.depth, psi, width, height);
       context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 50; index++) {
-      const point = collarPatchPoint(-depth + index / 50 * depth, -Math.PI, width, height, depth);
+      const point = collarPatchPoint(-debyeData.depth + index / 50 * debyeData.depth, -Math.PI, width, height);
       context.lineTo(point.x, point.y);
     }
     context.closePath();
   }
 
-  function renderCollarConePatch(canvasSelector, depth) {
-    const canvas = $(canvasSelector);
-    const bounds = collarPatchBounds(depth);
+  function renderCollarConePatch() {
+    const canvas = $("#collarConeCanvas");
+    const bounds = collarPatchBounds();
     const fold = collarFieldState.fold;
     const { context, width, height } = collarRaster(canvas, (u, v) => {
       const localX = bounds.xMin + u * (bounds.xMax - bounds.xMin);
@@ -2590,32 +2616,14 @@ if (debyeData) {
       const radius = Math.hypot(fold + localX, localY);
       const psi = fold * Math.atan2(localY, fold + localX);
       const x = radius - fold;
-      if (x < -depth || x > 0 || Math.abs(psi) > Math.PI) return COLLAR_BACKGROUND;
-      const radial = depth <= debyeData.depth
-        ? collarExactRadial(x)
-        : collarGlobalRadial(radius / fold);
-      return colorFor(radial * collarAngularValue(psi));
+      if (x < -debyeData.depth || x > 0 || Math.abs(psi) > Math.PI) return COLLAR_BACKGROUND;
+      return colorFor(collarExactRadial(x) * collarAngularValue(psi));
     });
     context.save();
-    collarTracePatchBoundary(context, width, height, depth);
+    collarTracePatchBoundary(context, width, height);
     context.strokeStyle = SCHIFFER_VISUAL_THEME.ink;
     context.lineWidth = 1.4;
     context.stroke();
-    if (depth > debyeData.depth && collarFieldState.mode === 1) {
-      const lambda = debyeLambdaAt(fold);
-      const turningDepth = fold - fold / Math.sqrt(lambda);
-      context.setLineDash([5, 5]);
-      context.strokeStyle = COLLAR_WIDE_ACCENT;
-      context.lineWidth = 1.25;
-      context.beginPath();
-      for (let index = 0; index <= 90; index++) {
-        const psi = -Math.PI + index / 90 * TWO_PI;
-        const point = collarPatchPoint(-turningDepth, psi, width, height, depth);
-        if (index === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
-      }
-      context.stroke();
-      context.setLineDash([]);
-    }
     if (!SCHIFFER_VISUAL_THEME.paperEdition) {
       context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
       context.font = SCHIFFER_VISUAL_THEME.labelFont;
@@ -2625,7 +2633,7 @@ if (debyeData) {
     context.restore();
     canvas.setAttribute(
       "aria-label",
-      `Exact Bessel mode k ${collarFieldState.mode} on one unfolded sector of an ${fold}-fold disk, from r equals N minus ${depth} to r equals N.`
+      `Exact Bessel mode k ${collarFieldState.mode} on one magnified sector of an ${fold}-fold disk, from r equals N minus five to r equals N.`
     );
   }
 
@@ -2638,25 +2646,62 @@ if (debyeData) {
     };
   }
 
-  function collarTraceDiskCrop(context, plot, depth) {
+  function collarTraceDiskCrop(context, plot) {
     context.beginPath();
     for (let index = 0; index <= 70; index++) {
       const point = collarDiskPoint(0, -Math.PI + index / 70 * TWO_PI, plot);
       if (index === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 30; index++) {
-      const point = collarDiskPoint(-index / 30 * depth, Math.PI, plot);
+      const point = collarDiskPoint(-index / 30 * debyeData.depth, Math.PI, plot);
       context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 70; index++) {
-      const point = collarDiskPoint(-depth, Math.PI - index / 70 * TWO_PI, plot);
+      const point = collarDiskPoint(-debyeData.depth, Math.PI - index / 70 * TWO_PI, plot);
       context.lineTo(point.x, point.y);
     }
     for (let index = 1; index <= 30; index++) {
-      const point = collarDiskPoint(-depth + index / 30 * depth, -Math.PI, plot);
+      const point = collarDiskPoint(-debyeData.depth + index / 30 * debyeData.depth, -Math.PI, plot);
       context.lineTo(point.x, point.y);
     }
     context.closePath();
+  }
+
+  function renderCollarZoomConnectors(plot) {
+    const svg = $("#collarZoomConnectors");
+    const laboratory = svg?.parentElement;
+    const patchCanvas = $("#collarConeCanvas");
+    const diskCanvas = $("#collarDiskCanvas");
+    if (!svg || !laboratory || !patchCanvas || !diskCanvas || window.innerWidth <= 760) return;
+
+    const laboratoryRect = laboratory.getBoundingClientRect();
+    const patchRect = patchCanvas.getBoundingClientRect();
+    const diskRect = diskCanvas.getBoundingClientRect();
+    const toLaboratoryPoint = (rect, point) => ({
+      x: rect.left - laboratoryRect.left + point.x,
+      y: rect.top - laboratoryRect.top + point.y,
+    });
+
+    const diskTop = toLaboratoryPoint(diskRect, collarDiskPoint(0, Math.PI, plot));
+    const diskBottom = toLaboratoryPoint(diskRect, collarDiskPoint(0, -Math.PI, plot));
+    const patchTop = toLaboratoryPoint(
+      patchRect,
+      collarPatchPoint(0, Math.PI, patchRect.width, patchRect.height)
+    );
+    const patchBottom = toLaboratoryPoint(
+      patchRect,
+      collarPatchPoint(0, -Math.PI, patchRect.width, patchRect.height)
+    );
+
+    svg.setAttribute("viewBox", `0 0 ${laboratoryRect.width} ${laboratoryRect.height}`);
+    [["#collarZoomConnectorTop", patchTop, diskTop], ["#collarZoomConnectorBottom", patchBottom, diskBottom]]
+      .forEach(([selector, from, to]) => {
+        const line = $(selector);
+        line.setAttribute("x1", from.x.toFixed(2));
+        line.setAttribute("y1", from.y.toFixed(2));
+        line.setAttribute("x2", to.x.toFixed(2));
+        line.setAttribute("y2", to.y.toFixed(2));
+      });
   }
 
   function renderCollarDisk() {
@@ -2691,13 +2736,14 @@ if (debyeData) {
     context.beginPath();
     context.arc(plot.cx, plot.cy, plot.radius, 0, TWO_PI);
     context.stroke();
-    collarTraceDiskCrop(context, plot, COLLAR_WIDE_DEPTH);
-    context.strokeStyle = COLLAR_WIDE_ACCENT;
-    context.lineWidth = 1.7;
+    collarTraceDiskCrop(context, plot);
+    context.fillStyle = COLLAR_ZOOM_FILL;
+    context.fill();
+    context.strokeStyle = SCHIFFER_VISUAL_THEME.background;
+    context.lineWidth = 5.5;
     context.stroke();
-    collarTraceDiskCrop(context, plot, debyeData.depth);
-    context.strokeStyle = COLLAR_LOCAL_ACCENT;
-    context.lineWidth = 2.1;
+    context.strokeStyle = COLLAR_ZOOM_ACCENT;
+    context.lineWidth = 3.2;
     context.stroke();
     if (!SCHIFFER_VISUAL_THEME.paperEdition) {
       context.fillStyle = SCHIFFER_VISUAL_THEME.muted;
@@ -2705,9 +2751,10 @@ if (debyeData) {
       context.fillText(`${collarFieldState.fold}-fold disk`, 10, 17);
     }
     context.restore();
+    renderCollarZoomConnectors(plot);
     canvas.setAttribute(
       "aria-label",
-      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; cyan and red sector outlines locate the five-unit and thirteen-unit comparisons.`
+      `Whole ${collarFieldState.fold}-fold disk carrying the exact Bessel mode of angular order ${collarFieldState.fold * collarFieldState.mode}; an outlined sector identifies the collar enlarged in the adjacent panel.`
     );
   }
 
@@ -2719,20 +2766,16 @@ if (debyeData) {
     $("#collarKValue").textContent = String(mode);
     $("#collarTrigValue").textContent = mode === 0 ? "constant" : trig;
     $("#collarAngularOrder").textContent = String(angularOrder);
-    const turningDepth = fold - fold / Math.sqrt(lambda);
-    setMath("#collarTurningValue", mode === 1 ? `${turningDepth.toFixed(2)}` : "\\text{not used}", { serif: true });
     if (mode === 0) {
       setMath("#collarCylinderTitle", "u_0^{\\mathrm{cyl}}(x)", { serif: true });
       setMath("#collarConeTitle", "u_0^{\\mathrm{cone}}(r)\\propto J_0(q_Nr)", { serif: true });
       setMath("#collarDiskTitle", "\\text{radial mode, angular order }0", { serif: true });
-      setMath("#collarCylinderWideTitle", "u_0^{\\mathrm{cyl}}(x)", { serif: true });
-      setMath("#collarConeWideTitle", "J_0(q_Nr)", { serif: true });
+      setMath("#collarHalfCylinderTitle", "u_0^{\\mathrm{cyl}}(x)", { serif: true });
     } else {
       setMath("#collarCylinderTitle", `u_${mode}^{\\mathrm{cyl}}\\;${trig}(${mode === 1 ? "\\theta" : `${mode}\\theta`})`, { serif: true });
       setMath("#collarConeTitle", `u_${mode}^{\\mathrm{cone}}\\;J_{${angularOrder}}(q_Nr)\\;${trig}(${mode === 1 ? "\\psi" : `${mode}\\psi`})`, { serif: true });
       setMath("#collarDiskTitle", `\\text{angular order }${angularOrder}`, { serif: true });
-      setMath("#collarCylinderWideTitle", `u_${mode}^{\\mathrm{cyl}}`, { serif: true });
-      setMath("#collarConeWideTitle", `J_{${angularOrder}}(q_Nr)`, { serif: true });
+      setMath("#collarHalfCylinderTitle", `u_${mode}^{\\mathrm{cyl}}`, { serif: true });
     }
     setMath("#collarLambdaValue", `\\lambda_N=${lambda.toFixed(4)}`);
     if (mode === 0) {
@@ -2748,25 +2791,14 @@ if (debyeData) {
       button.setAttribute("aria-pressed", String(active));
       button.disabled = mode === 0;
     });
-    document.querySelectorAll("[data-collar-regime]").forEach((paragraph) => {
-      const regime = mode === 0 ? "0" : mode === 1 ? "1" : "higher";
-      const active = paragraph.dataset.collarRegime === regime;
-      paragraph.classList.toggle("is-active", active);
-      if (active) paragraph.setAttribute("aria-current", "true");
-      else paragraph.removeAttribute("aria-current");
-    });
-    document.querySelectorAll(".collar-turning-key").forEach((key) => {
-      key.hidden = mode !== 1;
-    });
   }
 
   function updateCollarFieldComparison() {
     updateCollarFieldReadouts();
-    renderCollarCylinder("#collarCylinderCanvas", debyeData.depth);
-    renderCollarConePatch("#collarConeCanvas", debyeData.depth);
-    renderCollarCylinder("#collarCylinderWideCanvas", COLLAR_WIDE_DEPTH);
-    renderCollarConePatch("#collarConeWideCanvas", COLLAR_WIDE_DEPTH);
+    renderCollarCylinder();
+    renderCollarConePatch();
     renderCollarDisk();
+    renderCollarHalfCylinder();
   }
 
   setRangeFill($("#collarNRange"));
