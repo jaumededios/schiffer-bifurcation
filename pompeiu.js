@@ -356,7 +356,14 @@
 
   canvas.addEventListener("pointerdown", (event) => {
     state.dragging = true;
-    if (canvas.setPointerCapture) canvas.setPointerCapture(event.pointerId);
+    if (canvas.setPointerCapture) {
+      try {
+        canvas.setPointerCapture(event.pointerId);
+      } catch {
+        // Synthetic pointer events used by layout tests do not create an
+        // active browser pointer, so capture is best-effort.
+      }
+    }
     pointerTo(event);
     event.preventDefault();
   });
@@ -364,7 +371,11 @@
   const release = (event) => {
     state.dragging = false;
     if (canvas.hasPointerCapture && canvas.hasPointerCapture(event.pointerId)) {
-      canvas.releasePointerCapture(event.pointerId);
+      try {
+        canvas.releasePointerCapture(event.pointerId);
+      } catch {
+        // Matching the capture guard above, release is best-effort for tests.
+      }
     }
   };
   canvas.addEventListener("pointerup", release);
