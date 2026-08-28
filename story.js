@@ -423,6 +423,12 @@
       cy: height * .54,
       half: options.half ?? Math.min(118, height * .23),
       fold: options.fold ?? 1,
+      // `cylinder` changes the embedding, not the material coordinates.  At
+      // one, every longitudinal generator is parallel and every transverse
+      // section has the same radius: this is an exact cylinder rather than a
+      // cone whose tip merely happens to be outside the viewport.
+      cylinder: options.cylinder ?? 0,
+      axisLeft: options.axisLeft ?? tip,
       flatOpening: options.flatOpening ?? Math.PI / 28,
       wave: options.wave ?? 0,
       // The cone order grows in proportion to its displayed radial length.
@@ -445,8 +451,17 @@
     const flatAngle = sheet.flatOpening * angular;
     const flatX = sheet.tip + materialRadius * sheet.length * Math.cos(flatAngle);
     const flatY = sheet.cy + materialRadius * sheet.length * Math.sin(flatAngle);
-    const foldedX = sheet.tip + materialRadius * (sheet.length + sheet.rimDepth * Math.cos(theta));
-    const foldedY = sheet.cy + materialRadius * sheet.half * Math.sin(theta);
+    const coneX = sheet.tip + materialRadius * (sheet.length + sheet.rimDepth * Math.cos(theta));
+    const coneY = sheet.cy + materialRadius * sheet.half * Math.sin(theta);
+    const cylinderLength = sheet.right - sheet.axisLeft;
+    const wallPixels = cylinderLength / 28;
+    const cylinderX = sheet.axisLeft
+      + radial * cylinderLength
+      - radial * wall * wallPixels
+      + sheet.rimDepth * Math.cos(theta);
+    const cylinderY = sheet.cy + sheet.half * Math.sin(theta);
+    const foldedX = lerp(coneX, cylinderX, sheet.cylinder);
+    const foldedY = lerp(coneY, cylinderY, sheet.cylinder);
     return {
       x: lerp(flatX, foldedX, sheet.fold),
       y: lerp(flatY, foldedY, sheet.fold),
@@ -579,14 +594,15 @@
 
   function drawConeCylinder(context, width, height, cylinderAmount, waveAmount, returning = false) {
     const t = ease(cylinderAmount);
-    const tip = lerp(width * .16, -width * 2.6, t);
-    const surfaceLeft = Math.max(-width * .12, tip);
+    const tip = lerp(width * .16, width * .08, t);
     const sheet = geometrySheetState(width, height, {
       tip,
       right: width * .84,
-      surfaceLeft,
+      surfaceLeft: tip,
       half: Math.min(118, height * .23),
       fold: 1,
+      cylinder: t,
+      axisLeft: width * .08,
       wave: waveAmount,
     });
     drawGeometrySheet(context, sheet);
@@ -747,7 +763,7 @@
   const geometryState = { progress: 0, playing: false, frame: null };
   const geometryNames = ["start with rotational symmetry", "choose one fundamental sector", "identify the radial sides", "take the large-order limit", "bifurcate on the half-cylinder", "return to finite order", "lift the integral-order cone to the plane"];
   const geometryStates = ["the field is repeated around the disk", "one fundamental sector in rescaled coordinates", "identifying the radial sides gives the cone quotient", "a fixed boundary collar converges to the half-cylinder", "the rim follows the bifurcating boundary graph", "the half-cylinder branch determines a branch on finite cones", "the sectors fit exactly in the plane"];
-  const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the cone point moves to the left", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "adjacent copies open in order; each boundary profile stays on its sector"];
+  const geometryCaptions = ["the same angular profile repeats N times", "follow one material sector", "the radial sides meet along the quotient seam", "the boundary collar straightens into an exact cylinder", "the rim acquires the Schiffer deformation", "the same deformed surface returns to finite radius", "adjacent copies open in order; each boundary profile stays on its sector"];
 
   function drawGeometryNarrative() {}
 
@@ -775,9 +791,8 @@
 
     if (cylinderAmount !== null) {
       const t = ease(cylinderAmount);
-      const tip = lerp(width * .16, -width * 2.6, t);
-      const surfaceLeft = Math.max(-width * .12, tip);
-      const sheetOrder = 28 * (width * .84 - tip) / (width * .68);
+      const surfaceLeft = lerp(width * .16, width * .08, t);
+      const sheetOrder = 28 / Math.max(.035, 1 - t);
       const half = Math.min(118, height * .23);
       const orderOpacity = ease(t / .12);
       const orderX = width < 620 ? 24 : width * .08 + 92;

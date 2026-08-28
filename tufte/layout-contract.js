@@ -174,11 +174,11 @@
     });
 
     const expectedLeanStatements = [
+      "schiffer-star-shaped",
       "pompeiu-property",
       "disk-not-pompeiu",
       "schiffer-property",
       "schiffer-pompeiu-equivalence",
-      "schiffer-star-shaped",
     ];
     const actualLeanStatements = Array.from(document.querySelectorAll("details.lean-statement"), (statement) => statement.dataset.statement);
     if (actualLeanStatements.length !== expectedLeanStatements.length
@@ -219,7 +219,7 @@
     }
 
     const expectedHeadingContract = [
-      ["I", "When does a moving measuring probe lose information?", "#introduction", "section"],
+      ["I", "Pompeiu’s problem: When does a measuring probe lose information?", "#introduction", "section"],
       ["I.1", "Schiffer’s problem: Can a membrane vibrate with constant amplitude along its boundary?", "#schiffer-problem", "subsection"],
       ["II", "The disk counterexample admits no first-order perturbations.", "#linear-rigidity", "section"],
       ["II.1", "Changing the ambient geometry: what if linear rigidity fails?", "#borrow-flexibility", "subsection"],

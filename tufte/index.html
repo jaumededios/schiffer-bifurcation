@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260828.2">
-    <link rel="stylesheet" href="tufte-port.css?v=20260828.7">
+    <link rel="stylesheet" href="tufte-port.css?v=20260828.8">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -45,11 +45,22 @@
           <p>We explain two ways to construct counterexamples. In the first, we search numerically for an almost-counterexample with extremely high precision, and then use a computer-assisted proof to show that an exact counterexample lies nearby. In the second, we begin with the bifurcating counterexamples on the flat cylinder constructed in 2023 by <a href="https://arxiv.org/abs/2303.17036" target="_blank" rel="noreferrer">Fall, Minlend and Weth</a>. We repeat the same boundary pattern periodically around a large disk. Cone quotients make this comparison precise: we temporarily allow the number of repetitions to be a real parameter, and vary it until the pattern closes to form an exact planar domain.</p>
           <p class="edition-link"><a href="../paper/">Read the proof-guided paper edition →</a></p>
         </div>
+
+        <div class="formal-statement-pair intro-main-result">
+          <article class="math-statement math-statement-theorem" aria-labelledby="mainResultTitle">
+            <header class="math-statement-header"><span>Theorem</span><small>Main result</small></header>
+            <div class="math-statement-body">
+              <h3 id="mainResultTitle">A noncircular star-shaped planar Schiffer domain exists.</h3>
+              <p>There is a bounded, nonempty planar domain with a regular \(C^2\) boundary, star-shaped with respect to the origin, which is not a disk and has the Schiffer property.</p>
+            </div>
+          </article>
+          <lean-statement data-statement="schiffer-star-shaped"></lean-statement>
+        </div>
       </section>
 
       <section id="introduction" class="story-intro">
-        <header class="section-heading light-section-heading" data-number="I" data-title="When does a moving measuring probe lose information?" data-toc="section">
-          <h2>When does a moving measuring probe lose information?</h2>
+        <header class="section-heading light-section-heading" data-number="I" data-title="Pompeiu’s problem: When does a measuring probe lose information?" data-toc="section">
+          <h2>Pompeiu’s problem: When does a measuring probe lose information?</h2>
         </header>
 
         <div class="intro-copy intro-copy-wide intro-pompeiu-copy">
@@ -335,12 +346,10 @@
         <div class="intro-copy intro-copy-wide">
           <p>One reason to expect Schiffer's conjecture to hold is that the disk is rigid at the formal, infinitesimal level: every linearized deformation through Schiffer solutions comes from a translation or a dilation, and therefore produces no nearby noncircular domain.</p>
           <p>Consider \(\Omega,u,\lambda\) solving the Schiffer problem, and suppose we have another solution close by, with eigenfunction \(u+\delta u\) and domain \(\Omega+\delta\Omega\,\nu\), where \(\delta\Omega\colon\partial\Omega\to\mathbb R\) measures the small perturbation in the normal direction.</p>
-        </div>
 
-        <figure class="fullwidth shape-variation-figure intro-variation-figure interactive-plate figure-band" id="shapeVariationFigure">
-          <header class="shape-variation-heading">
-            <p>Write \(f=\delta\Omega\colon\partial\Omega\to\mathbb R\) for the normal velocity. The family \(\Omega_t\) is obtained, to first order, by moving each boundary point \(p\) a signed distance \(t f(p)\) along the outward normal. Move the slider through \(t=0\) to see this variation.</p>
-          </header>
+          <label for="shape-variation-note" class="margin-toggle" aria-label="Show the normal-variation diagram">&#8853;</label>
+          <input type="checkbox" id="shape-variation-note" class="margin-toggle">
+          <figure class="marginnote side-figure side-applet shape-variation-figure intro-variation-figure" id="shapeVariationFigure">
             <section class="shape-variation-stage">
               <svg id="shapeVariationSvg" viewBox="0 0 620 390" role="img" aria-label="A reference domain, a moving normally perturbed boundary, and visible arrows for the normal velocity">
                 <defs><marker id="shapeVariationArrow" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.5" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z"/></marker></defs>
@@ -354,18 +363,18 @@
                 <foreignObject x="270" y="171" width="80" height="48"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationDomainLabel" class="variation-domain-math">\(\Omega_0\)</div></foreignObject>
                 <foreignObject id="shapeVariationPointLabelBox" x="446" y="174" width="54" height="32"><div xmlns="http://www.w3.org/1999/xhtml" id="shapeVariationPointLabel" class="variation-point-math">\(p_0\)</div></foreignObject>
               </svg>
-              <div class="variation-stage-caption"><i aria-hidden="true"></i><span>the arrows show the velocity \(f\nu\) at \(t=0\)</span></div>
             </section>
             <aside class="shape-variation-controls paper-demo-controls">
-              <div class="variation-control-label"><label for="shapeVariationSlider">deformation parameter</label><output id="shapeVariationValue" for="shapeVariationSlider">\(t=0\)</output></div>
+              <div class="variation-control-label"><label for="shapeVariationSlider">normal displacement</label><output id="shapeVariationValue" for="shapeVariationSlider">\(t=0\)</output></div>
               <div class="variation-slider-track">
                 <input id="shapeVariationSlider" type="range" min="-1" max="1" step="0.01" value="0" aria-label="Move the signed deformation parameter t from minus epsilon to plus epsilon">
                 <i aria-hidden="true"></i>
               </div>
               <div class="variation-slider-scale"><span>\(-\varepsilon\)</span><span>\(0\)</span><span>\(+\varepsilon\)</span></div>
             </aside>
-          <figcaption>The slider displays \(t/\varepsilon\in[-1,1]\) for one fixed smooth velocity \(f=\delta\Omega\). Positive values follow \(f\nu\); negative values reverse the motion. The diagram records the first-order normal variation used in the linearized problem below.</figcaption>
-        </figure>
+            <figcaption>The slider shows \(t/\varepsilon\in[-1,1]\) for one smooth velocity \(f=\delta\Omega\). Positive values follow \(f\nu\); negative values reverse the motion.</figcaption>
+          </figure>
+        </div>
 
         <div class="intro-copy intro-copy-wide">
           <p>Then, if we impose that \((u+\delta u,\ \Omega+\delta\Omega\,\nu)\) also solves Schiffer, at the linear level we read:</p>
@@ -694,10 +703,10 @@
           <p>In this subsection we will show that the cylinder solution can be perturbed independently of the eigenvalue <span class="formula">\(\lambda\in[2,3]\)</span>: the same interval in the bifurcation parameter <span class="formula">\(s\)</span> works for every <span class="formula">\(\lambda\)</span> in this range.</p>
         </div>
 
-        <article class="math-statement cylinder-theorem">
+        <article class="math-statement math-statement-theorem cylinder-theorem" aria-labelledby="halfCylinderTheoremTitle">
           <header class="math-statement-header"><span>Theorem</span><small>4.1 · uniform half-cylinder branch</small></header>
           <div class="math-statement-body theorem-statement">
-            <p>Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
+            <p id="halfCylinderTheoremTitle">Fix <span class="formula">\(0&lt;\alpha&lt;1\)</span>. There is an <span class="formula">\(\varepsilon&gt;0\)</span> and a <span class="formula">\(C^3\)</span> family <span class="formula">\((\Omega_{\lambda,s},u_{\lambda,s})\)</span>, indexed by <span class="formula">\((\lambda,s)\in[2,3]\times(-\varepsilon,\varepsilon)\)</span>, such that <span class="formula">\(\Omega_{\lambda,s}=\{(x,\theta):x&lt;h_{\lambda,s}(\theta)\}\)</span> for some <span class="formula">\(h_{\lambda,s}\in C^{2,\alpha}(S^1)\)</span>, and</p>
             <div class="theorem-system tex-display">
               \[
               \begin{cases}
@@ -707,24 +716,7 @@
               \end{cases}
               \]
             </div>
-            <p>Use rotation in <span class="formula">\(\theta\)</span> to choose the cosine direction, axial translation to impose <span class="formula">\(\int_{S^1}h_{\lambda,s}=0\)</span>, and the first Fourier coefficient of <span class="formula">\(h_{\lambda,s}\)</span> as the branch parameter <span class="formula">\(s\)</span>. In this gauge, put <span class="formula">\(\beta=\sqrt{\lambda-1}\)</span> and <span class="formula">\(\alpha_2=\sqrt{4-\lambda}\)</span>. Then the boundary and field have the forced expansion</p>
-            <div class="theorem-expansion tex-display">
-              \[
-              h_{\lambda,s}(\theta)
-              =s\cos\theta-\frac{\alpha_2}{4}s^2\cos2\theta+O(s^3),
-              \]
-              \[\begin{aligned}
-              u_{\lambda,s}(x,\theta)&amp;=\cos(\sqrt\lambda\,x)\\
-              &amp;\quad+s\frac{\lambda}{\beta}\sin(\beta x)\cos\theta\\
-              &amp;\quad-\frac{\lambda s^2}{4}\cos(\sqrt\lambda\,x)\\
-              &amp;\quad-\frac{\lambda s^2}{4}e^{\alpha_2x}\cos2\theta\\
-              &amp;\quad+O(s^3).
-              \end{aligned}\]
-            </div>
-            <div class="cylinder-needed-later">
-              <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. This coefficient will reappear in the cone calculation, where the exponential derivative is replaced by the corresponding Bessel logarithmic derivative and has the same large-radius limit <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
-            </div>
-            <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
+            <p>After fixing rotation and axial translation, the branch may be parametrized so that \(h_{\lambda,s}(\theta)=s\cos\theta+O(s^2)\). The family and its remainders are uniform in \(\lambda\in[2,3]\) on every fixed boundary collar.</p>
           </div>
         </article>
 
@@ -1319,21 +1311,9 @@
           <h3>Landing and planar lift: the cone branch reaches integer order and unfolds into the plane</h3>
         </header>
 
-        <div class="formal-statement-pair main-result-pair">
-          <article class="math-statement math-statement-theorem" aria-labelledby="mainResultTitle">
-            <header class="math-statement-header"><span>Theorem</span><small>Main result</small></header>
-            <div class="math-statement-body">
-              <h3 id="mainResultTitle">A noncircular star-shaped planar Schiffer domain exists.</h3>
-              <p>There is a bounded, nonempty planar domain with a regular \(C^2\) boundary, star-shaped with respect to the origin, which is not a disk and has the Schiffer property.</p>
-            </div>
-          </article>
-          <lean-statement data-statement="schiffer-star-shaped"></lean-statement>
-        </div>
-
         <div class="abundance-conclusion paper-copy editorial-conclusion">
-          <h3>The landing argument: the uniform decrease crosses the next integer.</h3>
           <div>
-            <p>Apply Theorem 4.4 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Subsection 4.3. Along the resulting cone branch,</p>
+            <p>We now prove the theorem stated in the introduction. Apply Theorem 4.4 with \(\delta&lt;\eta_*\), where \(\eta_*\) is the uniform decrease from Subsection 4.3. Along the resulting cone branch,</p>
             <div class="tex-display">
               \[
               R(0)=R_*&gt;N,\qquad
@@ -1549,10 +1529,10 @@
     <script defer src="../cone-data.js"></script>
     <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260828.2"></script>
-    <script defer src="../story.js?v=20260828.2"></script>
+    <script defer src="../app.js?v=20260828.3"></script>
+    <script defer src="../story.js?v=20260828.3"></script>
     <script defer src="../abundance.js?v=20260828.2"></script>
     <script defer src="../pompeiu.js?v=20260828.3"></script>
-    <script defer src="layout-contract.js?v=20260828.8"></script>
+    <script defer src="layout-contract.js?v=20260828.9"></script>
   </body>
 </html>

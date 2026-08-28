@@ -549,8 +549,11 @@ function resizeThreeRenderer() {
   const height = Math.max(1, wrap.clientHeight || 580);
   threeState.renderer.setSize(width, height, false);
   threeState.camera.aspect = width / height;
-  const portraitFit = Math.max(1, THREE_CAMERA_FIT_ASPECT / threeState.camera.aspect);
-  const cameraScale = portraitFit * threeState.zoom;
+  // Keep the cylinder's horizontal scale stable when the paper layout crops
+  // the viewport vertically.  Fitting only portrait canvases made a shallower
+  // landscape viewport shrink the model along with its empty background.
+  const aspectFit = THREE_CAMERA_FIT_ASPECT / threeState.camera.aspect;
+  const cameraScale = aspectFit * threeState.zoom;
   threeState.camera.position.set(
     THREE_CAMERA_TARGET_X + THREE_CAMERA_OFFSET.x * cameraScale,
     THREE_CAMERA_OFFSET.y * cameraScale,

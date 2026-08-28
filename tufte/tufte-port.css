@@ -10,6 +10,7 @@
  *   main details                 prose disclosure (automatic)
  *   .marginnote                  marginalia (native Tufte pattern)
  *   .side-figure                 true aside-size visual, not a full rail
+ *   .side-applet                 interactive figure using that same measure
  *   .paper-copy                  continuous exposition or derivation
  *   .math-statement              named mathematical statement
  *   .small-multiples             a comparison that needs shared width
@@ -226,7 +227,11 @@ body.tufte-site main #experiment > :is(.debye-experiment, .phase-story, .abundan
 body.tufte-site main #experiment > .modes-experiment { padding-bottom: 0; }
 
 /* Canonical Tufte type scale and text measure. */
-.intro { padding-top: 5rem; }
+.intro {
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: 5rem;
+}
+.intro > * { min-width: 0; }
 .intro-index {
   width: var(--measure-reading);
   color: var(--muted);
@@ -688,61 +693,33 @@ body.tufte-site main .marginnote.intro-shapes {
   text-align: center;
 }
 
-.shape-variation-figure figcaption {
+/* A side applet is marginalia with controls.  It inherits the same width and
+   offset as every other native Tufte note; only its contents stack locally. */
+body.tufte-site main .marginnote.side-applet {
+  width: var(--measure-side-figure-in-reading);
+  max-width: var(--measure-side-figure-in-reading);
+  display: block;
+  margin-top: .5rem;
+  padding: 0;
+  background: transparent !important;
+  border: 0 !important;
+}
+body.tufte-site main .side-applet > :is(section, aside, figcaption) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+body.tufte-site main .side-applet > section { min-height: 0; border: 0; }
+body.tufte-site main .side-applet > section > :is(svg, canvas) { width: 100%; height: auto; }
+body.tufte-site main .side-applet > aside { padding: .7rem 0 0; border: 0; }
+body.tufte-site main .side-applet > figcaption {
   float: none;
-  width: var(--measure-margin);
-  max-width: none;
-  margin: 0 5% 0 auto;
-}
-
-/* The normal-variation applet is an apparatus, not a bespoke two-card row. */
-body.tufte-site main .shape-variation-figure {
-  width: var(--measure-figure);
-  max-width: var(--measure-figure);
-  grid-template-areas:
-    "heading heading"
-    "visual controls"
-    "caption caption";
-  margin: 4rem 0;
-  border: 0;
-}
-body.tufte-site main .shape-variation-figure > header {
-  grid-area: heading;
-  width: var(--measure-reading-in-figure);
-  display: block;
-  padding: 0 0 1.5rem;
-  border: 0;
-}
-body.tufte-site main .shape-variation-heading > span {
-  display: block;
-  margin-bottom: .65rem;
-  color: var(--orange);
-  font: var(--type-label)/1.3 var(--serif);
-  font-variant: small-caps;
-  letter-spacing: .055em;
-  text-transform: none;
-}
-body.tufte-site main .shape-variation-heading p {
+  padding: .75rem 0 0;
   color: var(--muted);
   font-size: var(--type-caption) !important;
-  line-height: var(--leading-caption);
-}
-body.tufte-site main .shape-variation-stage {
-  grid-area: visual;
-  min-height: 0;
-  border: 0;
-}
-body.tufte-site main .shape-variation-stage svg { aspect-ratio: 620 / 390; }
-body.tufte-site main .shape-variation-controls { grid-area: controls; min-height: 0; }
-body.tufte-site main .shape-variation-controls > p { display: none; }
-body.tufte-site main .shape-variation-figure > figcaption {
-  grid-area: caption;
-  width: var(--measure-reading-in-figure);
-  max-width: var(--measure-reading-in-figure);
-  margin: 0;
-  padding: 1rem 0 0;
-  color: var(--muted);
-  border-top: 0;
+  font-style: italic;
+  line-height: var(--leading-caption) !important;
 }
 
 .membrane-figure {
@@ -1167,15 +1144,6 @@ body.tufte-site main .control-heading-reset {
   justify-content: flex-end;
 }
 
-body.tufte-site main .shape-variation-figure {
-  grid-template-columns: minmax(0, var(--measure-reading)) minmax(0, var(--measure-aside));
-  grid-template-areas:
-    "heading heading"
-    "visual controls"
-    "caption caption";
-  column-gap: var(--measure-gutter);
-}
-
 /* The continuation was historically hidden, so its legacy dark-theme ink
    never passed through the paper normalization. Treat its explanatory
    pieces as the same prose, apparatus and caption roles used elsewhere. */
@@ -1229,7 +1197,7 @@ body.tufte-site main .cone-note p {
 .laboratory { min-height: 0; }
 .canvas-panel { min-height: 0; grid-template-rows: 48px clamp(300px, 39vw, 550px) 30px; }
 body.tufte-site main .laboratory:not(.cone-laboratory) .canvas-panel {
-  grid-template-rows: clamp(300px, 39vw, 550px);
+  grid-template-rows: clamp(230px, 22vw, 320px);
 }
 .canvas-toolbar { padding-right: 1rem; padding-left: 1rem; }
 .geometry-stages button small { display: none; }
@@ -2321,6 +2289,22 @@ body > footer {
   }
   body.tufte-site main input.margin-toggle:checked + .marginnote.side-figure,
   body.tufte-site main input.margin-toggle:checked + .marginnote.intro-shapes {
+    display: block;
+    width: var(--measure-mobile-note);
+    max-width: var(--measure-mobile-note);
+    margin-right: var(--measure-mobile-note-inset);
+    margin-left: var(--measure-mobile-note-inset);
+  }
+  body.tufte-site main .marginnote.side-applet {
+    display: none;
+    float: none;
+    clear: both;
+    left: 0;
+    width: var(--measure-mobile-note);
+    max-width: var(--measure-mobile-note);
+    margin: 1rem var(--measure-mobile-note-inset);
+  }
+  body.tufte-site main input.margin-toggle:checked + .marginnote.side-applet {
     display: block;
     width: var(--measure-mobile-note);
     max-width: var(--measure-mobile-note);
