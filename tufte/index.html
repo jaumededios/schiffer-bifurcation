@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260828.2">
-    <link rel="stylesheet" href="tufte-port.css?v=20260828.5">
+    <link rel="stylesheet" href="tufte-port.css?v=20260828.6">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -258,7 +258,7 @@
               <button type="button" data-radial-mode="2" aria-pressed="false">mode 2</button>
               <button type="button" data-radial-mode="3" aria-pressed="true">mode 3</button>
             </div>
-            <p class="membrane-model-note">The photograph illustrates nodal patterns for a thin elastic plate. The shallow surface and the radial trace evaluate the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
+            <p class="membrane-model-note">The applet illustrates the corresponding radial nodal patterns. The shallow surface and radial trace evaluate the scalar membrane modes \(J_0(\rho_n r)\cos(\rho_n t)\) appearing in Schiffer's equation, with \(J_1(\rho_n)=0\).</p>
           </div>
         </figure>
 
@@ -735,15 +735,14 @@
           </div>
         </article>
 
-        <div class="cylinder-spectral-seed small-multiples">
+        <div class="cylinder-spectral-seed paper-copy">
           <div class="cylinder-seed-copy">
-            <h3>Separation of variables makes the linearized kernel explicit.</h3>
-            <p>Let <span class="formula">\(\mathcal C_-=(-\infty,0]\times S^1\)</span> and <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span>. The undeformed Schiffer solution is independent of <span class="formula">\(\theta\)</span>. By the linearization above, a first-order deformation of the boundary must come from a nonradial Dirichlet solution at the same eigenvalue. Separation of variables gives the two functions below.</p>
+            <p>Let <span class="formula">\(\mathcal C_-=(-\infty,0]\times S^1\)</span> and <span class="formula">\(\Delta=\partial_x^2+\partial_\theta^2\)</span>. The undeformed Schiffer solution is independent of <span class="formula">\(\theta\)</span>. By the linearization above, a first-order deformation of the boundary must come from a nonradial Dirichlet solution at the same eigenvalue. Separation of variables makes both functions explicit.</p>
           </div>
 
           <div class="cylinder-mode-pair">
             <article>
-              <span>the undeformed solution</span>
+              <p>The undeformed solution is</p>
               <div class="tex-display">
                 \[
                 u_0(x)=\cos(\sqrt\lambda\,x),
@@ -754,10 +753,10 @@
                 \end{cases}
                 \]
               </div>
-              <p>This is the undeformed Schiffer solution: it is constant on the boundary and has zero normal derivative there.</p>
+              <p>It is constant on the boundary and has zero normal derivative there.</p>
             </article>
             <article>
-              <span>the linearized deformation</span>
+              <p>The corresponding nonradial kernel direction is</p>
               <div class="tex-display">
                 \[
                 v_1(x,\theta)=\sin(\sqrt{\lambda-1}\,x)\cos\theta,
@@ -768,14 +767,13 @@
                 \end{cases}
                 \]
               </div>
-              <p>This is the nonradial kernel direction. The angular eigenvalue <span class="formula">\(1\)</span> leaves the normal frequency <span class="formula">\(\sqrt{\lambda-1}\)</span>.</p>
+              <p>The angular eigenvalue <span class="formula">\(1\)</span> leaves the normal frequency <span class="formula">\(\sqrt{\lambda-1}\)</span>.</p>
             </article>
           </div>
 
           <div class="cylinder-kernel-bridge">
-            <strong>Recovering the boundary displacement.</strong>
             <div>
-              <p>Write <span class="formula">\(h_s=s f+O(s^2)\)</span> and <span class="formula">\(u_s=u_0+s v+O(s^2)\)</span>. Linearizing the two boundary conditions at <span class="formula">\(x=0\)</span> gives</p>
+              <p>To recover the boundary displacement, write <span class="formula">\(h_s=s f+O(s^2)\)</span> and <span class="formula">\(u_s=u_0+s v+O(s^2)\)</span>. Linearizing the two boundary conditions at <span class="formula">\(x=0\)</span> gives</p>
               <div class="tex-display">
                 \[
                 v(0,\theta)=0,
@@ -788,8 +786,7 @@
           </div>
 
           <div class="cylinder-journal-note">
-            <strong>Existence of the nonlinear branch.</strong>
-            <p>Fall, Minlend and Weth prove the corresponding bifurcation theorem for compact flat cylinders. The half-cylinder statement used here follows from the same separation-of-variables and local-bifurcation argument: the boundary condition at the second end is replaced by boundedness as <span class="formula">\(x\to-\infty\)</span>. For <span class="formula">\(2\leq\lambda\leq3\)</span>, the inverses on the complementary Fourier modes are bounded uniformly in <span class="formula">\(\lambda\)</span>. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
+            <p>Fall, Minlend and Weth prove the corresponding nonlinear bifurcation theorem for compact flat cylinders. The half-cylinder statement used here follows from the same separation-of-variables and local-bifurcation argument: the boundary condition at the second end is replaced by boundedness as <span class="formula">\(x\to-\infty\)</span>. For <span class="formula">\(2\leq\lambda\leq3\)</span>, the inverses on the complementary Fourier modes are bounded uniformly in <span class="formula">\(\lambda\)</span>. <a href="https://ems.press/journals/jems/articles/14298635" target="_blank" rel="noreferrer">Fall–Minlend–Weth, <em>JEMS</em> (2025) ↗</a></p>
           </div>
         </div>
 
@@ -1123,7 +1120,7 @@
           </div>
         </div>
 
-        <div class="debye-laboratory interactive-plate figure-band">
+        <figure class="debye-laboratory interactive-plate figure-band">
           <aside class="debye-controls paper-demo-controls" aria-label="Large-radius Bessel comparison controls">
             <div class="control-heading" hidden aria-hidden="true">
               <button id="debyeResetButton" type="button" hidden aria-hidden="true">Reset</button>
@@ -1146,23 +1143,17 @@
           </aside>
 
           <section class="debye-plot-panel" aria-label="Bessel and cylinder radial profile comparison">
-            <div class="debye-plot-toolbar">
-              <div class="passive-script-targets" hidden aria-hidden="true"><strong id="debyePlotState">three radial channels on \([r_0-5,r_0]\)</strong></div>
-              <div class="debye-legend" aria-label="Bessel and cylinder plot legend">
-                <span><i class="legend-cyan"></i>exact regular Bessel mode</span>
-                <span><i class="legend-orange"></i>matching cylinder mode</span>
-              </div>
-            </div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><strong id="debyePlotState">three radial channels on \([r_0-5,r_0]\)</strong></div>
             <div id="debyeCanvasWrap" class="debye-canvas-wrap">
               <canvas id="debyeCanvas" role="img" aria-label="Three linear-scale plots comparing Bessel profiles with oscillatory and exponential half-cylinder modes"></canvas>
             </div>
-            <div class="axis-footer"><span>\(r=r_0-5\)</span><span>radial profile</span><span>\(r=r_0\)</span></div>
           </section>
-        </div>
+          <figcaption>The exact regular Bessel profiles are compared with their half-cylinder limits on the fixed collar \(r_0-5\le r\le r_0\): cyan is the Bessel mode and orange its cylinder limit.</figcaption>
+        </figure>
 
-        <div class="debye-conclusion paper-copy editorial-conclusion">
-          <article><span>Neumann oscillatory profiles</span><strong>Both \(k=1\) curves satisfy the boundary condition.</strong><p>The Bessel profile is rescaled by choosing \(q_RR=\rho_R\), where \(J_R'(\rho_R)=0\), and is normalized to equal one at the rim. Its cylinder comparison is therefore the cosine with the same Neumann Cauchy data: \(C_R(0)=1\) and \(C_R'(0)=0\).</p></article>
-          <article><span>The three radial regimes</span><strong>One oscillatory mode and two exponential modes.</strong><p>The \(k=1\) panel compares the Neumann Bessel profile with \(\cos(\sqrt{\lambda_R-1}\,x)\). The \(k=2,3\) panels use the same \(\lambda_R\) and a linear vertical scale, on which the Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\).</p></article>
+        <div class="debye-conclusion paper-copy">
+          <p>Both \(k=1\) curves satisfy the Neumann boundary condition. The Bessel profile is rescaled by choosing \(q_RR=\rho_R\), where \(J_R'(\rho_R)=0\), and is normalized to equal one at the rim. Its cylinder comparison is therefore the cosine with the same Cauchy data: \(C_R(0)=1\) and \(C_R'(0)=0\).</p>
+          <p>The other two channels are exponential. With the same \(\lambda_R\), the \(k=2,3\) Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\) on the fixed collar.</p>
         </div>
 
         <section class="real-order-bridge statement-sequence" aria-labelledby="realOrderTheoremTitle">
@@ -1253,39 +1244,26 @@
             <p>Because both factors on the right are negative, \(\Delta\xi(s)>0\): the cone radius decreases while the local cylinder phase advances. There is a linear relation between phase and \(R-R_*\), and a quadratic relation between either of them and \(s\).</p>
           </article>
         </div>
-        <div class="motion-split small-multiples" aria-label="Linear boundary motion versus quadratic radius motion">
-          <article>
-            <span>the visible boundary wave · order \(s\)</span>
-            <div class="tex-display">\[r_{\partial}(\psi;s)=R(s)-s\cos\psi+O(s^2).\]</div>
-            <p>The two opposite points \(\psi=0,\pi\) move in opposite directions at speed one. This is the first-order boundary deformation shown in the cylinder and cone figures.</p>
-          </article>
-          <article>
-            <span>the mean cone radius · order \(s^2\)</span>
-            <div class="tex-display">\[\frac1{2\pi}\int_0^{2\pi}r_{\partial}(\psi;s)\,d\psi=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
-            <p>The cosine has zero average. Consequently, the first nonzero variation of the cone parameter \(R\) is the negative quadratic term computed above.</p>
-          </article>
+        <div class="motion-split paper-copy" aria-label="Linear boundary motion versus quadratic radius motion">
+          <p>The visible boundary wave moves at first order:</p>
+          <div class="tex-display">\[r_{\partial}(\psi;s)=R(s)-s\cos\psi+O(s^2).\]</div>
+          <p>The opposite points \(\psi=0,\pi\) move in opposite directions at speed one. The cosine has zero average, however, so the mean radius moves only at second order:</p>
+          <div class="tex-display">\[\frac1{2\pi}\int_0^{2\pi}r_{\partial}(\psi;s)\,d\psi=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
+          <p>Thus the first nonzero variation of the cone parameter \(R\) is the negative quadratic term computed above.</p>
         </div>
-        <div class="phase-story-lab interactive-plate figure-band">
+        <figure class="phase-story-lab interactive-plate figure-band">
           <aside class="paper-demo-controls">
             <div class="control-heading"><button id="phaseStoryResetButton" type="button">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
             <div class="phase-story-readout" hidden aria-hidden="true"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
           </aside>
-          <section class="phase-story-plot" aria-label="Cone order and Debye phase along the branch"><div class="geometry-toolbar"><div class="passive-script-targets" hidden aria-hidden="true"><strong id="phaseStoryState">quadratic variation from the crossing</strong></div><span class="phase-story-legend">cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
-        </div>
-        <p class="phase-story-example-note"><em>Numerical illustration.</em> The applet uses the continued crossing \(R_*=28.026397\ldots\), with \(\lambda_*=3.317011\ldots\), because that branch has been computed all the way to an integer. The uniform proof uses the crossings in \(2\le\lambda_*\le3\) supplied by Subsection 4.4; the formulas above apply in both cases.</p>
-        <section class="phase-family figure-band figure-with-caption" aria-labelledby="phaseFamilyTitle">
-          <header>
-            <span>What the calculation predicts across real order</span>
-            <div>
-              <h3 id="phaseFamilyTitle">The quadratic approximation predicts a decrease in \(R\) at every displayed crossing.</h3>
-              <p>The orange points mark the crossings in the exhaustive search with \(6\le R_*\le30\) and \(2\le\lambda_*\le3\). The outlined point is the running example used above, computed in a separate spectral window. From each point, the cyan curve shows the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\).</p>
-            </div>
-          </header>
+          <section class="phase-story-plot" aria-label="Cone order and Debye phase along the branch"><div class="passive-script-targets" hidden aria-hidden="true"><strong id="phaseStoryState">quadratic variation from the crossing</strong></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div></section>
+          <figcaption>The continued branch is cyan and its quadratic approximation orange. This numerical illustration uses \(R_*=28.026397\ldots\) and \(\lambda_*=3.317011\ldots\), a branch computed all the way to an integer; the uniform proof uses the crossings in \(2\le\lambda_*\le3\) supplied by Subsection 4.4.</figcaption>
+        </figure>
+        <figure class="phase-family reading-figure" aria-labelledby="phaseFamilyTitle">
           <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real order from 6 to 30, with integer values corresponding to planar fold symmetries, fourteen computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
-          <footer><span>\(R=6\)</span><span>order \(R\) (fold symmetry) · integer \(R\) corresponds to a planar solution</span><span>\(R=30\)</span></footer>
-          <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the two branches of each parabola in the \((R,s)\)-plane. The proof uses the fact that the decrease in \(R\) is bounded below uniformly at all sufficiently large crossings. Subsection 4.4 finds crossings whose distance from an integer is smaller than this uniform bound.</p>
-        </section>
+          <figcaption id="phaseFamilyTitle"><strong>The quadratic approximation predicts a decrease in \(R\) at every displayed crossing.</strong> The points mark crossings with \(6\le R_*\le30\) and \(2\le\lambda_*\le3\); each curve is the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\). The proof uses a uniform lower bound for this decrease, while Subsection 4.4 finds crossings closer to an integer than that bound.</figcaption>
+        </figure>
       </section>
 
       <section id="abundance-experiment" class="abundance-experiment">
@@ -1346,7 +1324,7 @@
             <p>For fixed \(m\), the map \(\nu\mapsto j_{\nu,m}\) is strictly increasing. Increasing the order continuously from \(N\) therefore produces a unique \(R_*&gt;N\) for which \(j_{R_*,m}=j_{1,n}=:\rho\). Uniform control of the order derivative in this compact \(q\)-window converts the small zero gap into \(0&lt;R_*-N&lt;\delta\); and \(\rho/R_*\to q_*\in(\sqrt2,\sqrt3)\), which gives \(2&lt;\rho^2/R_*^2&lt;3\) for sufficiently large \(N\). <span class="qed" aria-label="end of proof sketch">□</span></p>
           </div>
         </details>
-        <div class="abundance-laboratory reading-figure">
+        <figure class="abundance-laboratory reading-figure">
           <section class="abundance-plot-panel" aria-label="Finite modulo-one sample of near-integer common Bessel zero crossings">
             <div class="passive-script-targets" hidden aria-hidden="true">
               <strong id="abundancePlotState">common-zero crossing sample</strong>
@@ -1354,12 +1332,11 @@
               <strong id="abundanceBestValue"></strong>
             </div>
             <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
-            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>large \(R\)</span></div>
           </section>
-        </div>
+          <figcaption>Each point has horizontal coordinate \(\log R\) and vertical coordinate \(\{R\}\). Points near the baseline are crossings whose real order lies close to an integer.</figcaption>
+        </figure>
         <section class="abundance-examples data-table" aria-labelledby="abundanceExamplesTitle">
           <header>
-            <span>Five examples from the full search</span>
             <h3 id="abundanceExamplesTitle">Five particularly close examples.</h3>
           </header>
           <div class="abundance-examples-table-wrap">
@@ -1407,19 +1384,19 @@
         </div>
 
         <div class="cone-lead">
-          <p>For the visualization, choose the computed crossing <span class="formula">\(R_*=28.026397\ldots\)</span>. At this value, twenty-eight copies leave a narrow angular gap. Along its branch, \(R\) decreases to \(28\); at that value the copies fit exactly and define the planar domain promised by the general landing argument above.</p>
-          <div class="candidate-stamp">
-            <small>illustrative crossing</small>
-            <strong>\(N=28\)</strong>
-            <span>\(\rho_*=j_{1,16}\)</span>
-            <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">paper / figure 1 ↗</a>
-          </div>
+          <p>For the visualization, choose the computed crossing <span class="formula">\(R_*=28.026397\ldots\)</span>, with <span class="formula">\(\rho_*=j_{1,16}\)</span>. At this value, twenty-eight copies leave a narrow angular gap. Along its branch, \(R\) decreases to \(28\); at that value the copies fit exactly and define the planar domain promised by the general landing argument above. This is the numerical example shown in <a href="https://arxiv.org/abs/2608.05114" target="_blank" rel="noreferrer">Figure 1 of the paper</a>.</p>
         </div>
 
-        <div class="laboratory cone-laboratory interactive-plate figure-band">
+        <figure class="laboratory cone-laboratory interactive-plate figure-band">
           <aside class="controls paper-demo-controls" aria-label="Cone simulation controls">
             <div class="control-heading" hidden aria-hidden="true">
               <button id="coneResetButton" type="button" hidden aria-hidden="true">Reset</button>
+            </div>
+
+            <div class="view-switch cone-view-switch" role="group" aria-label="Cone visualization view">
+              <button class="view-button cone-view-button active" data-cone-view="slice" type="button" aria-pressed="true">Boundary collar</button>
+              <button class="view-button cone-view-button" data-cone-view="cone" type="button" aria-pressed="false">3D cone</button>
+              <button class="view-button cone-view-button" data-cone-view="unfolded" type="button" aria-pressed="false">Planar lift</button>
             </div>
 
             <div class="crossing-card" aria-label="Numerically selected cone crossing" hidden aria-hidden="true">
@@ -1459,43 +1436,17 @@
           </aside>
 
           <section class="canvas-panel cone-canvas-panel" aria-label="Cone branch and planar lift visualization">
-            <div class="canvas-toolbar cone-toolbar">
-              <div class="passive-script-targets" hidden aria-hidden="true">
-                <strong id="coneDomainState">nonintegral crossing · angular gap present</strong>
-              </div>
-              <div class="view-switch cone-view-switch" role="group" aria-label="Cone visualization view">
-                <button class="view-button cone-view-button active" data-cone-view="slice" type="button" aria-pressed="true">Boundary collar</button>
-                <button class="view-button cone-view-button" data-cone-view="cone" type="button" aria-pressed="false">3D cone</button>
-                <button class="view-button cone-view-button" data-cone-view="unfolded" type="button" aria-pressed="false">Planar lift ×28</button>
-              </div>
-              <div class="legend" role="img" aria-label="Cone scalar field color scale truncated from minus two to plus two">
-                <span>−2</span><i></i><span>+2</span>
-              </div>
-            </div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><strong id="coneDomainState">nonintegral crossing · angular gap present</strong></div>
             <div id="coneCanvasWrap" class="canvas-wrap cone-canvas-wrap">
               <canvas id="coneCanvas" role="img" aria-label="Numerical field on a cone boundary collar or its planar sectors"></canvas>
               <div id="coneThreeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional cone colored by the numerical field" hidden>
                 <div id="coneThreeLoading" class="three-loading">loading 3D renderer…</div>
               </div>
             </div>
-            <div class="axis-footer"><span id="coneAxisLeft">\(x=-5\)</span><span id="coneAxisDescription">\(\psi\in[-\pi,\pi]\)</span><span id="coneAxisRight">\(x=0\) (boundary)</span></div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><span id="coneAxisLeft">\(x=-5\)</span><span id="coneAxisDescription">\(\psi\in[-\pi,\pi]\)</span><span id="coneAxisRight">\(x=0\) (boundary)</span></div>
           </section>
-        </div>
-
-        <div class="cone-view-notes" aria-label="Three ways to read the cone construction">
-          <button class="cone-note active" type="button" data-cone-target="slice">
-            <span>01</span><strong>Fixed boundary collar</strong>
-            <p>The final five radial units are displayed in quotient coordinates. Since \(R\approx28\), the cone operator differs from the flat-cylinder operator by terms of order \(1/R\).</p>
-          </button>
-          <button class="cone-note" type="button" data-cone-target="cone">
-            <span>02</span><strong>Embedding as a cone</strong>
-            <p>The same data are displayed on the corresponding cone. The depth control extends the view from the nearly cylindrical boundary collar toward the cone point.</p>
-          </button>
-          <button class="cone-note" type="button" data-cone-target="unfolded">
-            <span>03</span><strong>Planar lift at integral order</strong>
-            <p>Each sector subtends \(2\pi/R\). At \(R_*\), 28 copies leave an angular gap. At \(R=28\), they fit exactly and the resulting field is 28-fold symmetric.</p>
-          </button>
-        </div>
+          <figcaption>The boundary-collar view uses the quotient coordinates \(x=r-R\) and \(\psi\in[-\pi,\pi]\). The cone view embeds the same data; the planar view repeats its fundamental sector twenty-eight times, exposing the seam until \(R=28\).</figcaption>
+        </figure>
       </section>
 
       <section id="modes-experiment" class="modes-experiment">
@@ -1513,7 +1464,7 @@
           <p>This is a coordinate comparison, not a second proof of the limiting machinery. Subsection 4.2 established the separated cone-to-cylinder limit and Subsection 4.3 established the phase motion; the applet now uses both to annotate the same branch as it closes its seam.</p>
         </div>
 
-        <div class="modes-laboratory interactive-plate figure-band">
+        <figure class="modes-laboratory interactive-plate figure-band">
           <aside class="modes-controls light-controls paper-demo-controls" aria-label="Nested angular zoom controls">
             <div class="control-heading" hidden aria-hidden="true">
               <button id="modesResetButton" type="button" hidden aria-hidden="true">Reset</button>
@@ -1564,20 +1515,13 @@
           </aside>
 
           <section class="modes-plot-panel" aria-label="Global 28-sector field and one-wavelength collar zoom">
-            <div class="modes-plot-toolbar">
-              <div class="passive-script-targets" hidden aria-hidden="true"><strong id="modesPlotState">28 copies · one wavelength selected</strong></div>
-              <div class="modes-legend" aria-label="Mode plot legend">
-                <span><i class="legend-cyan"></i>one-wavelength crop</span>
-                <span><i class="legend-orange"></i>seam / mismatch</span>
-                <span><i class="legend-white"></i>free boundary</span>
-              </div>
-            </div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><strong id="modesPlotState">28 copies · one wavelength selected</strong></div>
             <div id="modesCanvasWrap" class="modes-canvas-wrap">
               <canvas id="modesCanvas" role="img" aria-label="A 28-fold global domain and a seam-centered one-wavelength flat collar zoom"></canvas>
             </div>
-            <div class="axis-footer"><span>complete 28-fold field</span><span>one wavelength → flat collar</span><span>seam centered</span></div>
           </section>
-        </div>
+          <figcaption>The complete \(D_{28}\)-symmetric field and its seam-centred one-wavelength collar are two coordinate views of the same landed solution.</figcaption>
+        </figure>
 
         <div class="landing-close paper-copy">
           <p><strong>At the landed endpoint \(R=N\), the seam is closed.</strong> The complete field at left consists of \(N\) copies of the quotient solution; the boundary-collar view at right is one wavelength of that same field in the coordinates established in Subsection 4.2. Together they are the promised noncircular \(N\)-fold planar Schiffer domain.</p>
@@ -1653,6 +1597,6 @@
     <script defer src="../story.js?v=20260828.2"></script>
     <script defer src="../abundance.js?v=20260828.2"></script>
     <script defer src="../pompeiu.js?v=20260828.3"></script>
-    <script defer src="layout-contract.js?v=20260828.5"></script>
+    <script defer src="layout-contract.js?v=20260828.6"></script>
   </body>
 </html>

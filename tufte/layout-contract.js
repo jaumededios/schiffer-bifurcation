@@ -58,7 +58,8 @@
     const page = document.documentElement.getBoundingClientRect();
     const rootStyle = getComputedStyle(document.documentElement);
     const reading = parseFloat(rootStyle.getPropertyValue("--measure-reading")) / 100;
-    const margin = parseFloat(rootStyle.getPropertyValue("--measure-margin")) / 100;
+    const aside = parseFloat(rootStyle.getPropertyValue("--measure-aside")) / 100;
+    const noteInReading = parseFloat(rootStyle.getPropertyValue("--measure-note-in-reading")) / 100;
     const gutter = parseFloat(rootStyle.getPropertyValue("--measure-gutter")) / 100;
     const figure = parseFloat(rootStyle.getPropertyValue("--measure-figure")) / 100;
     const readingInFigure = parseFloat(rootStyle.getPropertyValue("--measure-reading-in-figure")) / 100;
@@ -68,6 +69,10 @@
     const typeLabel = parseFloat(rootStyle.getPropertyValue("--type-label")) * parseFloat(rootStyle.fontSize);
     const typeControlValue = parseFloat(rootStyle.getPropertyValue("--type-control-value")) * parseFloat(rootStyle.fontSize);
     const typeCode = parseFloat(rootStyle.getPropertyValue("--type-code")) * parseFloat(rootStyle.fontSize);
+
+    if (!narrow && Math.abs(aside - reading * noteInReading) > .001) {
+      errors.push("the apparatus aside measure has drifted from native Tufte marginalia");
+    }
 
     const sectionMeasure = (element, ratio) => {
       const section = element.closest("main > section");
@@ -659,7 +664,9 @@
       if (visibleParagraphs.length) errors.push(`paper control rail ${index + 1} keeps explanatory prose in the rail`);
       const directActions = Array.from(controls.querySelectorAll(":scope button:not([hidden])")).filter((button) => {
         if (!visible(button)) return false;
-        return !button.closest(".geometry-stages") && !button.closest(".collar-trig-switch");
+        return !button.closest(".geometry-stages")
+          && !button.closest(".collar-trig-switch")
+          && !button.closest(".cone-view-switch");
       });
       if (directActions.length > 1) errors.push(`paper control rail ${index + 1} has ${directActions.length} visible actions`);
       const manipulators = Array.from(controls.querySelectorAll("input, button:not([hidden]), summary")).filter(visible);
@@ -701,16 +708,16 @@
         if (controlBox.left < visualBox.right - 1) errors.push(`interactive plate ${index + 1} controls are not to the right of its visual`);
         if (Math.abs(controlBox.top - visualBox.top) > 1) errors.push(`interactive plate ${index + 1} control and visual tops do not align`);
         const expectedVisualWidth = plateBox.width * reading;
-        const expectedControlWidth = plateBox.width * margin;
+        const expectedControlWidth = plateBox.width * aside;
         const expectedGap = plateBox.width * gutter;
         if (Math.abs(visualBox.width - expectedVisualWidth) > 2) {
           errors.push(`interactive plate ${index + 1} visual is not on the reading measure`);
         }
         if (Math.abs(controlBox.width - expectedControlWidth) > 2) {
-          errors.push(`interactive plate ${index + 1} controls are not on the margin measure`);
+          errors.push(`interactive plate ${index + 1} controls are not on the canonical aside measure`);
         }
         if (Math.abs(controlBox.left - (visualBox.right + expectedGap)) > 2) {
-          errors.push(`interactive plate ${index + 1} does not preserve the reading-gutter-margin rhythm`);
+          errors.push(`interactive plate ${index + 1} does not preserve the reading-gutter-aside rhythm`);
         }
       }
 
