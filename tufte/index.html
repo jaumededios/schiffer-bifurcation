@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260828.2">
-    <link rel="stylesheet" href="tufte-port.css?v=20260828.6">
+    <link rel="stylesheet" href="tufte-port.css?v=20260828.7">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -645,10 +645,9 @@
       <section id="geometric-escape" class="geometric-escape">
         <header class="section-heading experiment-header geometry-header" data-number="III" data-title="From the plane to the limiting geometry: bifurcating when it’s impossible" data-toc="section">
           <h2>From the plane to the limiting geometry: bifurcating when it&rsquo;s impossible</h2>
-          <div class="equations"><span>\(\mathbb R^2/C_N\)</span><span>\(g_R=dr^2+(r^2/R^2)d\psi^2\)</span><small>\(R=N\) only at the planar lift</small></div>
         </header>
-        <div class="geometry-lead"><h3>The quotient of an \(N\)-fold domain approaches a half-cylinder.</h3><p>We seek a noncircular planar Schiffer domain with \(N\)-fold rotational symmetry, for a large integer \(N\). Quotienting by the rotations and rescaling the angular coordinate to have period \(2\pi\) gives a cone with parameter \(R=N\). As \(N\to\infty\), the distance from the boundary to the cone point tends to infinity, and every fixed boundary collar converges to the half-cylinder \(({-\infty},0]\times S^1\). The figure displays the quotient construction, the half-cylinder limit, the bifurcation on the cone, and the lift back to the plane.</p></div>
-        <div class="geometry-laboratory interactive-plate figure-band">
+        <div class="geometry-lead"><p>An \(N\)-fold domain can be divided by its rotations and its angular coordinate rescaled to period \(2\pi\). The quotient is a cone with metric \(g_R=dr^2+(r^2/R^2)d\psi^2\), where the planar case requires \(R=N\). As \(N\to\infty\), the cone point recedes and every fixed boundary collar approaches the half-cylinder \(({-\infty},0]\times S^1\). The applet follows this quotient, its cylindrical limit, the bifurcation, and the lift back to the plane.</p></div>
+        <figure class="geometry-laboratory interactive-plate figure-band">
           <aside class="geometry-controls paper-demo-controls">
             <div class="control-heading control-heading-reset" hidden aria-hidden="true"><button id="storyGeometryResetButton" type="button" hidden aria-hidden="true">Reset</button></div>
             <div class="geometry-stages" aria-label="Seven stages of the quotient construction">
@@ -674,22 +673,17 @@
               </div>
             </div>
           </section>
-        </div>
+          <figcaption>Each stage uses the same angular profile: first on an \(N\)-fold disk, then on its cone quotient, in the limiting half-cylinder, and finally in the closed planar lift.</figcaption>
+        </figure>
       </section>
 
       <section id="experiment" class="experiment">
         <header class="section-heading experiment-header" data-number="IV" data-title="The bifurcation proof" data-toc="section">
           <h2>The bifurcation proof</h2>
-          <div class="equations" role="group" aria-label="Model equations">
-            <span>half-cylinder \(\longrightarrow\) cone</span>
-            <span>real \(R_*\longrightarrow R(s)=N\)</span>
-            <small>planar \(N\)-fold lift</small>
-          </div>
         </header>
 
         <div class="proof-strategy-lead">
-          <h3>The construction is carried out in five steps.</h3>
-          <p><strong>Subsection 4.1</strong> constructs a bifurcating Schiffer family on the half-cylinder. <strong>Subsection 4.2</strong> transfers this construction uniformly to cones of large real order by comparing their Bessel modes with the separated cylinder modes. <strong>Subsection 4.3</strong> computes the first nonzero variation of the cone parameter and proves that it decreases by an amount independent of the initial large crossing. <strong>Subsection 4.4</strong> supplies common Bessel zeros arbitrarily close above integers. <strong>Subsection 4.5</strong> combines that arithmetic input with the uniform decrease: the cone order crosses an integer, the branch lands there, and the cone unfolds to a planar domain.</p>
+          <p>The construction has five steps. <strong>Subsection 4.1</strong> constructs a bifurcating Schiffer family on the half-cylinder. <strong>Subsection 4.2</strong> transfers this construction uniformly to cones of large real order by comparing their Bessel modes with the separated cylinder modes. <strong>Subsection 4.3</strong> computes the first nonzero variation of the cone parameter and proves that it decreases by an amount independent of the initial large crossing. <strong>Subsection 4.4</strong> supplies common Bessel zeros arbitrarily close above integers. <strong>Subsection 4.5</strong> combines that arithmetic input with the uniform decrease: the cone order crosses an integer, the branch lands there, and the cone unfolds to a planar domain.</p>
         </div>
 
         <header id="half-cylinder-strategy" class="section-heading proof-strategy-subheading" data-number="4.1" data-title="Uniform half-cylinder bifurcation for 2 ≤ λ ≤ 3" data-toc="proof-subsection">
@@ -728,8 +722,7 @@
               \end{aligned}\]
             </div>
             <div class="cylinder-needed-later">
-              <span>Something we will need later</span>
-              <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. In the cone calculation, the exponential derivative is replaced by the corresponding Bessel logarithmic derivative, whose large-radius limit is <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
+              <p>The quadratic term <span class="formula">\(\cos^2\theta=\tfrac12(1+\cos2\theta)\)</span> produces a second harmonic. Its bounded cylinder profile is <span class="formula">\(e^{\sqrt{4-\lambda}\,x}\)</span>, so the coefficient of <span class="formula">\(\cos2\theta\)</span> in the boundary graph is <span class="formula">\(-\tfrac14\sqrt{4-\lambda}\)</span>. This coefficient will reappear in the cone calculation, where the exponential derivative is replaced by the corresponding Bessel logarithmic derivative and has the same large-radius limit <span class="formula">\(\sqrt{4-\lambda}\)</span>.</p>
             </div>
             <p class="theorem-note">The remainders are uniform in <span class="formula">\(\lambda\in[2,3]\)</span> on every fixed boundary collar. For this range of <span class="formula">\(\lambda\)</span>, the first angular mode is oscillatory and every mode <span class="formula">\(k\ge2\)</span> has the bounded profile <span class="formula">\(e^{\sqrt{k^2-\lambda}\,x}\)</span> as <span class="formula">\(x\to-\infty\)</span>.</p>
           </div>
@@ -741,7 +734,6 @@
           </div>
 
           <div class="cylinder-mode-pair">
-            <article>
               <p>The undeformed solution is</p>
               <div class="tex-display">
                 \[
@@ -754,8 +746,6 @@
                 \]
               </div>
               <p>It is constant on the boundary and has zero normal derivative there.</p>
-            </article>
-            <article>
               <p>The corresponding nonradial kernel direction is</p>
               <div class="tex-display">
                 \[
@@ -768,7 +758,6 @@
                 \]
               </div>
               <p>The angular eigenvalue <span class="formula">\(1\)</span> leaves the normal frequency <span class="formula">\(\sqrt{\lambda-1}\)</span>.</p>
-            </article>
           </div>
 
           <div class="cylinder-kernel-bridge">
@@ -878,7 +867,7 @@
           <p>The applet below computes a finite Fourier approximation to the family in Theorem 4.1. For each <span class="formula">\((\lambda,s)\in[2,3]\times[-0.85,0.85]\)</span>, it solves simultaneously for the boundary graph and the Helmholtz field. The flat and three-dimensional panels display the same numerical solution in two coordinate systems.</p>
         </div>
 
-        <div class="laboratory interactive-plate figure-band">
+        <figure class="laboratory interactive-plate figure-band">
           <aside class="controls paper-demo-controls" aria-label="Simulation controls">
             <div class="control-heading" hidden aria-hidden="true">
               <button id="resetButton" type="button" hidden aria-hidden="true">Reset</button>
@@ -904,7 +893,12 @@
 
             <button id="playButton" class="play-button" type="button"><span id="playIcon">▶</span><span id="playLabel">Animate</span></button>
 
-            <details class="secondary-controls">
+            <div class="view-switch" role="group" aria-label="Visualization view">
+              <button class="view-button" data-view="flat" type="button" aria-pressed="false">Unwrapped</button>
+              <button class="view-button active" data-view="cylinder" type="button" aria-pressed="true">3D half-cylinder</button>
+            </div>
+
+            <details class="secondary-controls" hidden aria-hidden="true">
               <summary>Options <span>+</span></summary>
               <div class="control-block compact">
                 <div class="control-label">
@@ -933,18 +927,7 @@
           </aside>
 
           <section class="canvas-panel" aria-label="Half-cylinder free-boundary solve">
-            <div class="canvas-toolbar">
-              <div class="passive-script-targets" hidden aria-hidden="true">
-                <strong id="domainState">trivial cylinder at the branch origin</strong>
-              </div>
-              <div class="view-switch" role="group" aria-label="Visualization view">
-                <button class="view-button" data-view="flat" type="button" aria-pressed="false">Unwrapped</button>
-                <button class="view-button active" data-view="cylinder" type="button" aria-pressed="true">3D half-cylinder</button>
-              </div>
-              <div class="legend" role="img" aria-label="Scalar field color scale from minus one to plus one">
-                <span>−1</span><i></i><span>+1</span>
-              </div>
-            </div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><strong id="domainState">trivial cylinder at the branch origin</strong></div>
             <div id="canvasWrap" class="canvas-wrap">
               <canvas id="fieldCanvas" role="img" aria-label="Heat map of the scalar field on a half-cylinder with a moving right boundary" hidden></canvas>
               <div id="threeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional half-cylinder colored by the scalar field">
@@ -952,9 +935,10 @@
               </div>
               <div id="solverBadge" class="solver-badge" hidden aria-hidden="true">solving boundary + field…</div>
             </div>
-            <div class="axis-footer"><span>\(x\to-\infty\)</span><span id="axisDescription">cylindrical surface \((x,\cos\theta,\sin\theta)\)</span><span>boundary \(x=h(\theta)\)</span></div>
+            <div class="passive-script-targets" hidden aria-hidden="true"><span>\(x\to-\infty\)</span><span id="axisDescription">cylindrical surface \((x,\cos\theta,\sin\theta)\)</span><span>boundary \(x=h(\theta)\)</span></div>
           </section>
-        </div>
+          <figcaption>The unwrapped and three-dimensional views show the same computed Helmholtz field. Colour runs from teal at \(-1\), through the paper colour at zero, to orange at \(+1\).</figcaption>
+        </figure>
 
         <div class="readout-strip figure-band" hidden aria-hidden="true">
           <div class="readout-copy">
@@ -974,11 +958,6 @@
       <section id="debye-experiment" class="debye-experiment">
         <header class="section-heading experiment-header debye-header" data-number="4.2" data-title="Large-radius Bessel modes converge to cylinder modes on fixed boundary collars" data-toc="proof-subsection">
           <h3>Large-radius Bessel modes converge to cylinder modes on fixed boundary collars</h3>
-          <div class="equations" role="group" aria-label="Fixed collar coordinates">
-            <span>\(x=r-r_0\)</span>
-            <span>\(r_0-5\le r\le r_0\)</span>
-            <small>\(J_{r_0}'(\rho_{r_0})=0\)</small>
-          </div>
         </header>
 
         <div class="debye-lead paper-copy">
@@ -1041,10 +1020,10 @@
           </div>
         </div>
 
-        <div class="collar-field-laboratory interactive-plate figure-band" aria-label="Two-dimensional cylinder and cone mode comparison">
+        <figure class="collar-field-laboratory interactive-plate figure-band" aria-label="Two-dimensional cylinder and cone mode comparison">
           <aside class="collar-field-controls paper-demo-controls">
-            <div class="control-heading">
-              <button id="collarFieldResetButton" type="button">Reset</button>
+            <div class="control-heading" hidden aria-hidden="true">
+              <button id="collarFieldResetButton" type="button" hidden aria-hidden="true">Reset</button>
             </div>
 
             <div class="collar-field-control-block">
@@ -1077,22 +1056,22 @@
 
           <section class="collar-field-visual">
             <article class="collar-field-panel collar-global-panel">
-              <header><span>02 / complete disk</span><strong id="collarDiskTitle">angular order 28</strong></header>
+              <header><span>complete disk</span><strong id="collarDiskTitle">angular order 28</strong></header>
               <div class="collar-field-canvas-wrap"><canvas id="collarDiskCanvas" role="img" aria-label="Selected Bessel mode on the whole disk with its magnified sector outlined"></canvas></div>
             </article>
 
             <article class="collar-field-panel">
-              <header><span>03 / magnified planar collar</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
+              <header><span>planar collar</span><strong id="collarConeTitle">\(u_1^{\mathrm{cone}}\)</strong></header>
               <div class="collar-field-canvas-wrap"><canvas id="collarConeCanvas" role="img" aria-label="Selected Bessel mode on a magnified collar of one planar sector"></canvas></div>
             </article>
 
             <article class="collar-field-panel collar-half-cylinder-panel">
-              <header><span>04 / half-cylinder at disk scale</span><strong id="collarHalfCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <header><span>half-cylinder</span><strong id="collarHalfCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
               <div class="collar-field-canvas-cell"><div class="collar-field-canvas-wrap collar-half-cylinder-wrap"><canvas id="collarHalfCylinderCanvas" role="img" aria-label="A long thin half-cylinder drawn at the same geometric scale as the complete disk"></canvas></div></div>
             </article>
 
             <article class="collar-field-panel">
-              <header><span>05 / magnified cylinder collar</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
+              <header><span>cylinder collar</span><strong id="collarCylinderTitle">\(u_1^{\mathrm{cyl}}\)</strong></header>
               <div class="collar-field-canvas-wrap"><canvas id="collarCylinderCanvas" role="img" aria-label="Selected separated mode on a flat cylinder collar"></canvas></div>
             </article>
 
@@ -1101,9 +1080,9 @@
               <line id="collarZoomConnectorBottom"></line>
             </svg>
 
-            <p class="collar-field-caption">Left: the disk and half-cylinder at one geometric scale. Their outlined five-unit collars are magnified on the right, where the same local coordinates and colour scale are used.</p>
           </section>
-        </div>
+          <figcaption class="collar-field-caption">The disk and half-cylinder are shown at one geometric scale. Their outlined five-unit collars are magnified in the neighbouring views, using the same local coordinates and colour scale.</figcaption>
+        </figure>
 
         <div class="angular-quotient-note paper-copy">
           <span>What happens to sine and cosine?</span>
@@ -1156,14 +1135,10 @@
           <p>The other two channels are exponential. With the same \(\lambda_R\), the \(k=2,3\) Bessel profiles approach \(e^{\sqrt{k^2-\lambda_R}\,x}\) on the fixed collar.</p>
         </div>
 
-        <section class="real-order-bridge statement-sequence" aria-labelledby="realOrderTheoremTitle">
-          <header>
-            <span>Transfer theorem</span>
-            <div>
-              <h3 id="realOrderTheoremTitle">The cylinder branch persists on large real-order cones.</h3>
-              <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
-            </div>
-          </header>
+        <div class="real-order-setup paper-copy">
+          <p>The cone metric \(g_R=dr^2+(r^2/R^2)d\psi^2\) and its regular separated modes \(J_{kR}\) are defined for every real \(R&gt;0\). A planar \(N\)-fold quotient is obtained at an integer value \(R=N\), when the cone is unfolded into the plane.</p>
+        </div>
+        <section class="real-order-bridge" aria-label="Uniform cone bifurcation theorem">
           <article class="math-statement real-order-theorem">
             <header class="math-statement-header"><span>Theorem</span><small>4.2 · uniform cone bifurcation</small></header>
             <div class="math-statement-body">
@@ -1221,28 +1196,20 @@
             <p>The number \(\eta_*\) may be small, but it is independent of \(R_*\) for all sufficiently large crossings. This is the estimate needed to reach an integer value of \(R\).</p>
           </div>
         </article>
-        <div class="phase-derivation-grid paper-copy derivation-sequence">
-          <article>
-            <span>01 / compute the variation of \(R\)</span>
-            <h3>The second harmonic determines the sign.</h3>
-            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\) and the first variation of \(R\) is quadratic in \(s\). The quadratic product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) leaves only the modes \(0\) and \(2\) standing, so the sign is decided by the second harmonic. Two pieces of notation: \(t=r/R_*\in[0,1]\) is the radius normalized to the boundary, so that \(\sqrt{\lambda_*}\,r=\rho t\); and \(j_{\nu,m}\) is the \(m\)-th positive zero of \(J_\nu\), with \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\) its derivative in the order. Zeros of \(J_\nu\) increase with \(\nu\), so \(d_*&gt;0\). The regular second harmonic and its boundary slope are</p>
+        <div class="phase-derivation paper-copy">
+            <p>Half-turn symmetry gives \(R(-s)=R(s)\), so \(R'(0)=0\) and the first variation of \(R\) is quadratic in \(s\). The product \(\cos^2\theta=\tfrac12(1+\cos2\theta)\) leaves only the modes \(0\) and \(2\), so the second harmonic decides the sign. Here \(t=r/R_*\in[0,1]\) is the radius normalized to the boundary, so that \(\sqrt{\lambda_*}\,r=\rho t\); and \(j_{\nu,m}\) is the \(m\)-th positive zero of \(J_\nu\), with \(d_*=(\partial_\nu j_{\nu,m})|_{\nu=R_*}\) its derivative in the order. Zeros of \(J_\nu\) increase with \(\nu\), so \(d_*&gt;0\). The regular second harmonic and its boundary slope are</p>
             <div class="tex-display phase-tex">\[W_2(t)=-\frac{\rho^2}{4}\frac{J_{2R_*}(\rho t)}{J_{2R_*}(\rho)},\qquad S_2=W_2'(1)=-\frac{\rho^3}{4}\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}.\]</div>
             <p>At cubic order the mode-1 component has to be solvable again, and that forces a single scalar condition. Write \(V_1\) for the mode-1 radial profile generated at this order and \(Q\) for the mode-1 profile carrying the derivative in the Bessel order, whose boundary value is \(Q(1)=-\rho d_*\), and let \(\mu=R_*^2R''(0)/2\) be the coefficient with which the order moves along the branch. The condition reads \(V_1(1)=\rho^2/4-S_2/2=\mu Q(1)\), a scalar equation whose solution is the exact curvature</p>
             <div class="tex-display phase-tex boxed-equation">\[R''(0)=-\frac{\sqrt{\lambda_*}}{4R_*d_*}\left(2+\rho\frac{J'_{2R_*}(\rho)}{J_{2R_*}(\rho)}\right).\]</div>
             <p>Both factors on the right have a definite sign: \(d_*&gt;0\) as noted, and the bracket is positive — at the crossing displayed below it equals \(27.1\) — so \(R''(0)&lt;0\) and the cone radius does decrease. For large \(R_*\), the order derivative and the mode-2 logarithmic derivative have Debye limits. Hence</p>
             <div class="tex-display phase-tex">\[R''(0)=-\Gamma(\lambda_*)+O(R_*^{-1}),\qquad \Gamma(\lambda)=\frac{\sqrt{(\lambda-1)(4-\lambda)}}{4\arccos(\lambda^{-1/2})}>0.\]</div>
-          </article>
-          <article>
-            <span>02 / compute the induced phase variation</span>
-            <h3>The phase variation is explicit.</h3>
-            <p>Along this branch \(\rho\) is fixed. The oscillatory Debye phase at the boundary is</p>
+            <p>Along this branch \(\rho\) is fixed, so the oscillatory Debye phase at the boundary is</p>
             <div class="tex-display phase-tex">\[\xi(R;\rho)=\sqrt{\rho^2-R^2}-R\arccos\!\left(\frac R\rho\right)-\frac\pi4,\qquad \partial_R\xi=-\arccos\!\left(\frac R\rho\right).\]</div>
             <p>Thus \(R\mapsto\xi\) is locally linear and invertible. The signed branch parameter enters through an even function,</p>
             <div class="tex-display phase-tex">\[R(s)=R_*+\frac12R''(0)s^2+O(s^4).\]</div>
             <p>The chain rule now gives the motion seen in the second graph:</p>
             <div class="tex-display phase-tex boxed-equation">\[\Delta\xi(s)=-\frac12\arccos\!\left(\frac{R_*}{\rho}\right)R''(0)s^2+O(s^4).\]</div>
             <p>Because both factors on the right are negative, \(\Delta\xi(s)>0\): the cone radius decreases while the local cylinder phase advances. There is a linear relation between phase and \(R-R_*\), and a quadratic relation between either of them and \(s\).</p>
-          </article>
         </div>
         <div class="motion-split paper-copy" aria-label="Linear boundary motion versus quadratic radius motion">
           <p>The visible boundary wave moves at first order:</p>
@@ -1253,7 +1220,7 @@
         </div>
         <figure class="phase-story-lab interactive-plate figure-band">
           <aside class="paper-demo-controls">
-            <div class="control-heading"><button id="phaseStoryResetButton" type="button">Reset</button></div>
+            <div class="control-heading" hidden aria-hidden="true"><button id="phaseStoryResetButton" type="button" hidden aria-hidden="true">Reset</button></div>
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
             <div class="phase-story-readout" hidden aria-hidden="true"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
           </aside>
@@ -1269,7 +1236,6 @@
       <section id="abundance-experiment" class="abundance-experiment">
         <header class="section-heading experiment-header abundance-header" data-number="4.4" data-title="Near-integer Bessel crossings make the common-zero condition arbitrarily close to integer order" data-toc="proof-subsection">
           <h3>Near-integer Bessel crossings make the common-zero condition arbitrarily close to integer order</h3>
-          <div class="equations" role="group" aria-label="Near-integer crossing equations"><span>\(J_1(\rho)=J_R(\rho)=0\)</span><span>\(\{R\}=R-\lfloor R\rfloor\)</span><small>sample through \(N=200\)</small></div>
         </header>
         <div class="abundance-lead paper-copy">
           <p><strong>The spectral coincidence.</strong> The condition \(J_1(\rho)=0\) gives the radial Schiffer solution on the undeformed cone, for the reason met in Section I: the radial profile is \(J_0(\sqrt\lambda\,r)\), constant on the boundary because it is radial, and \(J_0'=-J_1\) makes its boundary normal derivative a multiple of \(J_1(\rho)\). The second condition \(J_R(\rho)=0\) says that the first nonradial angular channel is also Dirichlet at the same frequency. Their coincidence gives the one-dimensional kernel from which the cone branch bifurcates.</p>
@@ -1351,11 +1317,6 @@
       <section id="cone-experiment" class="experiment cone-experiment">
         <header class="section-heading experiment-header cone-header" data-number="4.5" data-title="Landing and planar lift: the cone branch reaches integer order and unfolds into the plane" data-toc="proof-subsection">
           <h3>Landing and planar lift: the cone branch reaches integer order and unfolds into the plane</h3>
-          <div class="equations" role="group" aria-label="Cone model equations">
-            <span>\(\Delta_R=\partial_r^2+r^{-1}\partial_r+R^2r^{-2}\partial_\psi^2\)</span>
-            <span>\(J_1(\rho_*)=J_{R_*}(\rho_*)=0\)</span>
-            <small>\(R_*\to N\)</small>
-          </div>
         </header>
 
         <div class="formal-statement-pair main-result-pair">
@@ -1452,11 +1413,6 @@
       <section id="modes-experiment" class="modes-experiment">
         <header class="section-heading experiment-header modes-header" data-number="4.5.2" data-title="One-wavelength zoom: read the landed solution globally and on its boundary collar">
           <h3>One-wavelength zoom: read the landed solution globally and on its boundary collar</h3>
-          <div class="equations" role="group" aria-label="Angular wavelength and seam equations">
-            <span>\(\psi=R\phi\)</span>
-            <span>one wavelength: \(\Delta\phi=2\pi/R\)</span>
-            <span>seam: \(2\pi(1-28/R)\)</span>
-          </div>
         </header>
 
         <div class="modes-lead">
@@ -1597,6 +1553,6 @@
     <script defer src="../story.js?v=20260828.2"></script>
     <script defer src="../abundance.js?v=20260828.2"></script>
     <script defer src="../pompeiu.js?v=20260828.3"></script>
-    <script defer src="layout-contract.js?v=20260828.6"></script>
+    <script defer src="layout-contract.js?v=20260828.7"></script>
   </body>
 </html>

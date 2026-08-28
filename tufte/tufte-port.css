@@ -676,8 +676,11 @@ body.tufte-site main .marginnote.intro-shapes {
 .intro-shape-media[data-focal-x="left"] { --gallery-object-left: 0; }
 .intro-shape-media[data-focal-x="right"] { --gallery-object-right: 0; }
 .intro-shape-media[data-gallery-crop="biscuit"] { --gallery-object-scale: 200%; }
-.intro-shape-media[data-gallery-crop="coin"] { --gallery-object-scale: 228%; }
+.intro-shape-media[data-gallery-crop="coin"] {
+  --gallery-object-scale: 200%;
+}
 .intro-shape-media[data-focal-y="lower"] { --gallery-object-y: 60%; }
+.intro-shape-media[data-gallery-crop="coin"][data-focal-y="lower"] { --gallery-object-y: 54.5%; }
 .intro-shape-kicker,
 .intro-shape small { display: none; }
 .intro-shape b {
@@ -1225,6 +1228,9 @@ body.tufte-site main .cone-note p {
 
 .laboratory { min-height: 0; }
 .canvas-panel { min-height: 0; grid-template-rows: 48px clamp(300px, 39vw, 550px) 30px; }
+body.tufte-site main .laboratory:not(.cone-laboratory) .canvas-panel {
+  grid-template-rows: clamp(300px, 39vw, 550px);
+}
 .canvas-toolbar { padding-right: 1rem; padding-left: 1rem; }
 .geometry-stages button small { display: none; }
 .geometry-stages {
@@ -1379,11 +1385,12 @@ body.tufte-site main .collar-field-controls :is(label, span, strong, button) { c
 }
 .collar-field-panel > footer { border-top: 1px solid var(--line); }
 .collar-field-caption {
-  grid-column: 1 / -1;
-  width: var(--measure-reading-in-figure);
-  padding: 1rem 0 0;
+  grid-column: auto;
+  width: 100%;
+  max-width: 100%;
+  padding: .8rem 0 0;
   color: var(--muted) !important;
-  background: var(--paper) !important;
+  background: transparent !important;
   border: 0;
   font-family: var(--serif);
   font-style: italic;
@@ -2157,7 +2164,7 @@ body > footer {
     grid-template-areas: "visual" "controls" "caption";
     column-gap: 0;
   }
-  body.tufte-site main .interactive-plate > :is(section, aside) {
+  body.tufte-site main .interactive-plate > :is(section, aside, figcaption) {
     width: 100%;
     max-width: 100%;
   }

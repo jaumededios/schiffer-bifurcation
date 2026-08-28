@@ -44,6 +44,45 @@
 
   renderTableOfContents();
 
+  /* Display mathematics is authored semantically; the layout layer fits the
+     rendered KaTeX to whichever editorial measure contains it.  Resetting to
+     the canonical size before every measurement prevents resize history from
+     becoming part of the result. */
+  let mathFitFrame = 0;
+  const fitDisplayMath = () => {
+    mathFitFrame = 0;
+    const displays = Array.from(document.querySelectorAll("body.tufte-site main .tex-display"))
+      .filter((display) => display.querySelector(".katex"));
+    displays.forEach((display) => {
+      display.classList.remove("math-fitted");
+      display.style.removeProperty("--math-size");
+    });
+    requestAnimationFrame(() => {
+      const rootStyle = getComputedStyle(document.documentElement);
+      const baseSize = parseFloat(rootStyle.getPropertyValue("--type-math"))
+        * parseFloat(rootStyle.fontSize);
+      displays.forEach((display) => {
+        const available = display.clientWidth;
+        const required = display.scrollWidth;
+        if (available <= 1 || required <= available + 1) return;
+        const fittedSize = baseSize * Math.min(1, (available - 2) / required) * .99;
+        display.style.setProperty("--math-size", `${fittedSize}px`);
+        display.classList.add("math-fitted");
+      });
+    });
+  };
+  const scheduleMathFit = () => {
+    if (mathFitFrame) cancelAnimationFrame(mathFitFrame);
+    mathFitFrame = requestAnimationFrame(fitDisplayMath);
+  };
+
+  scheduleMathFit();
+  window.addEventListener("load", scheduleMathFit);
+  window.addEventListener("resize", scheduleMathFit);
+  document.fonts?.ready.then(scheduleMathFit);
+  const main = document.querySelector("main");
+  if (main) new MutationObserver(scheduleMathFit).observe(main, { childList: true, subtree: true });
+
   if (!new URLSearchParams(window.location.search).has("layout-check")) return;
 
   const rounded = (value) => Math.round(value * 10) / 10;
@@ -226,6 +265,9 @@
     }
     document.querySelectorAll(".section-heading").forEach((heading) => {
       if (heading.querySelector(".eyebrow")) errors.push("section heading contains a redundant eyebrow");
+      if (heading.querySelector(":scope > :not(h2):not(h3)")) {
+        errors.push("section heading contains decoration in addition to its title");
+      }
       heading.querySelectorAll(":scope > :is(span, small, p)").forEach((label) => {
         if (/^(?:[IVX]+|\d+(?:\.\d+)*)\s*[·.)-]/i.test(normalizeText(label.textContent))) {
           errors.push("section heading contains hand-authored numbering text");
@@ -666,6 +708,7 @@
         if (!visible(button)) return false;
         return !button.closest(".geometry-stages")
           && !button.closest(".collar-trig-switch")
+          && !button.closest(".view-switch")
           && !button.closest(".cone-view-switch");
       });
       if (directActions.length > 1) errors.push(`paper control rail ${index + 1} has ${directActions.length} visible actions`);
@@ -675,12 +718,17 @@
 
     document.querySelectorAll(".interactive-plate").forEach((plate, index) => {
       if (getComputedStyle(plate).display === "none" || !plate.getClientRects().length) return;
+      if (plate.localName !== "figure") {
+        errors.push(`interactive plate ${index + 1} is not a semantic figure`);
+      }
       const controls = plate.querySelector(":scope > aside");
       const visual = plate.querySelector(":scope > section");
+      const caption = plate.querySelector(":scope > figcaption");
       if (!controls || !visual) {
         errors.push(`interactive plate ${index + 1} is missing a direct control or visual child`);
         return;
       }
+      if (!caption) errors.push(`interactive plate ${index + 1} has no direct caption`);
       const plateStyle = getComputedStyle(plate);
       if ([plateStyle.borderTopWidth, plateStyle.borderRightWidth, plateStyle.borderBottomWidth, plateStyle.borderLeftWidth]
         .some((value) => parseFloat(value) > 0)) {
@@ -783,7 +831,7 @@
   window.addEventListener("load", () => {
     requestAnimationFrame(() => requestAnimationFrame(runLayoutContract));
   });
-  window.addEventListener("resize", () => requestAnimationFrame(runLayoutContract));
+  window.addEventListener("resize", () => requestAnimationFrame(() => requestAnimationFrame(runLayoutContract)));
   document.addEventListener("toggle", (event) => {
     if (event.target instanceof HTMLDetailsElement) requestAnimationFrame(runLayoutContract);
   }, true);
