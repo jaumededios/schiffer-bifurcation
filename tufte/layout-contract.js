@@ -833,6 +833,9 @@
   });
   window.addEventListener("resize", () => requestAnimationFrame(() => requestAnimationFrame(runLayoutContract)));
   document.addEventListener("toggle", (event) => {
-    if (event.target instanceof HTMLDetailsElement) requestAnimationFrame(runLayoutContract);
+    if (event.target instanceof HTMLDetailsElement) {
+      scheduleMathFit();
+      requestAnimationFrame(() => requestAnimationFrame(runLayoutContract));
+    }
   }, true);
 })();
