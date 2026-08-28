@@ -50,6 +50,16 @@
       && getComputedStyle(element).visibility !== "hidden"
     );
 
+    const directVisibleText = (root) => Array.from(root.querySelectorAll("*"))
+      .filter(visible)
+      .map((element) => Array.from(element.childNodes)
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
+        .map((node) => node.textContent)
+        .join(" "))
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+
     const canonicalSideWidth = () => {
       if (narrow) return null;
       const source = Array.from(document.querySelectorAll(
@@ -283,6 +293,7 @@
               errors.push(`Lean statement ${index + 1} code viewport collapsed inside its disclosure`);
             }
             if (code.textContent.includes("abbrev")
+                && code.querySelectorAll("span").length
                 && !Array.from(code.querySelectorAll(".hljs-keyword"), (token) => token.textContent).includes("abbrev")) {
               errors.push(`Lean statement ${index + 1} does not highlight Lean 4 abbrev declarations`);
             }
@@ -370,6 +381,55 @@
         .some((value) => parseFloat(value) > 0)) {
         errors.push(`visual role ${index + 1} regained an outer card border`);
       }
+    });
+
+    document.querySelectorAll("body.tufte-site main .passive-script-targets").forEach((target, index) => {
+      if (visible(target)) errors.push(`passive script target ${index + 1} is visible`);
+      if (!target.hidden && getComputedStyle(target).display !== "none") {
+        errors.push(`passive script target ${index + 1} occupies layout space`);
+      }
+    });
+    document.querySelectorAll("body.tufte-site main :is(.live-dot, .abundance-toolbar, .abundance-readout, .phase-family-toolbar, .cone-data-badge, .three-help, .solver-badge)").forEach((element) => {
+      if (visible(element)) errors.push(`passive figure chrome is visible: ${element.className || element.id}`);
+    });
+    [
+      "domainState",
+      "debyePlotState",
+      "phaseStoryState",
+      "abundancePlotState",
+      "abundanceCountValue",
+      "abundanceBestValue",
+      "coneDomainState",
+      "modesPlotState",
+    ].forEach((id) => {
+      const target = document.getElementById(id);
+      if (visible(target)) errors.push(`passive applet readout #${id} is visible`);
+    });
+    [
+      "modesGlobalFormula",
+      "modesPatchFormula",
+      "modesRadialFormula",
+      "debyeRateFormula1",
+      "debyeRateFormula2",
+      "debyeRateFormula3",
+      "debyeErrorFormula1",
+      "debyeErrorFormula2",
+      "debyeErrorFormula3",
+    ].forEach((id) => {
+      const label = document.getElementById(id);
+      if (visible(label)) errors.push(`passive canvas annotation #${id} is visible`);
+    });
+    [
+      { selector: ".abundance-plot-panel", patterns: [/crossings visible/i, /smallest sample/i, /hover a point/i, /within 0\.01 of an integer/i, /573 crossings/i, /9\.73\s*[×x]/i] },
+      { selector: ".phase-family", patterns: [/thirteen orange points/i, /real crossing order versus branch parameter/i, /spectral ratio/i, /unit-amplitude quadratic drop/i] },
+      { selector: ".interactive-plate", patterns: [/interior PDE residual/i, /dirichlet normalized/i, /neumann normalized/i, /solving boundary/i, /\d+\s*fit angles/i, /\d+-point validation/i] },
+    ].forEach(({ selector, patterns }) => {
+      document.querySelectorAll(`body.tufte-site main ${selector}`).forEach((root) => {
+        const text = directVisibleText(root);
+        patterns.forEach((pattern) => {
+          if (pattern.test(text)) errors.push(`passive applet text remains visible in ${selector}: ${pattern}`);
+        });
+      });
     });
 
     document.querySelectorAll("body.tufte-site main .data-table").forEach((table, index) => {

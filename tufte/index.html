@@ -19,7 +19,7 @@
     <script defer src="../math.js?v=20260827.9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tufte-css@1.9.0/tufte.min.css">
     <link rel="stylesheet" href="../styles.css?v=20260827.11">
-    <link rel="stylesheet" href="tufte-port.css?v=20260827.20">
+    <link rel="stylesheet" href="tufte-port.css?v=20260828.2">
   </head>
   <body class="tufte-site">
     <div class="noise" aria-hidden="true"></div>
@@ -950,10 +950,9 @@
             </div>
           </aside>
 
-          <section class="canvas-panel" aria-labelledby="domainState">
+          <section class="canvas-panel" aria-label="Half-cylinder free-boundary solve">
             <div class="canvas-toolbar">
-              <div>
-                <span class="live-dot"></span>
+              <div class="passive-script-targets" hidden aria-hidden="true">
                 <strong id="domainState">trivial cylinder at the branch origin</strong>
               </div>
               <div class="view-switch" role="group" aria-label="Visualization view">
@@ -968,9 +967,8 @@
               <canvas id="fieldCanvas" role="img" aria-label="Heat map of the scalar field on a half-cylinder with a moving right boundary" hidden></canvas>
               <div id="threeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional half-cylinder colored by the scalar field">
                 <div id="threeLoading" class="three-loading">loading 3D renderer…</div>
-                <div class="three-help">drag to rotate · scroll to zoom</div>
               </div>
-              <div id="solverBadge" class="solver-badge">solving boundary + field…</div>
+              <div id="solverBadge" class="solver-badge" hidden aria-hidden="true">solving boundary + field…</div>
             </div>
             <div class="axis-footer"><span>\(x\to-\infty\)</span><span id="axisDescription">cylindrical surface \((x,\cos\theta,\sin\theta)\)</span><span>boundary \(x=h(\theta)\)</span></div>
           </section>
@@ -1168,9 +1166,9 @@
             </div>
           </aside>
 
-          <section class="debye-plot-panel" aria-labelledby="debyePlotState">
+          <section class="debye-plot-panel" aria-label="Bessel and cylinder radial profile comparison">
             <div class="debye-plot-toolbar">
-              <div><span class="live-dot"></span><strong id="debyePlotState">three radial channels on \([r_0-5,r_0]\)</strong></div>
+              <div class="passive-script-targets" hidden aria-hidden="true"><strong id="debyePlotState">three radial channels on \([r_0-5,r_0]\)</strong></div>
               <div class="debye-legend" aria-label="Bessel and cylinder plot legend">
                 <span><i class="legend-cyan"></i>exact regular Bessel mode</span>
                 <span><i class="legend-orange"></i>matching cylinder mode</span>
@@ -1295,7 +1293,7 @@
             <div class="phase-story-control"><div class="control-label"><label for="phaseStoryRange">branch amplitude</label><output id="phaseStorySValue">\(s=0\)</output></div><input id="phaseStoryRange" type="range" min="0" max="1" value="0" step="0.002"><div class="range-scale"><span>crossing</span><span>\(R=28\)</span></div></div>
             <div class="phase-story-readout" hidden aria-hidden="true"><div><span>real order \(R(s)\)</span><strong id="phaseStoryRValue">28.026397</strong></div><div><span>Debye phase \(\Delta\xi(s)\)</span><strong id="phaseStoryPhaseValue">\(0^\circ\)</strong></div><div><span>stored branch curvature</span><strong>\(R''(0)=-0.372069\)</strong></div><div><span>cylinder-limit prediction</span><strong id="phaseStoryGammaValue">\(-\Gamma(\lambda)=-0.317815\)</strong></div></div>
           </aside>
-          <section class="phase-story-plot"><div class="geometry-toolbar"><span class="live-dot"></span><strong id="phaseStoryState">quadratic variation from the crossing</strong><span>cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
+          <section class="phase-story-plot" aria-label="Cone order and Debye phase along the branch"><div class="geometry-toolbar"><div class="passive-script-targets" hidden aria-hidden="true"><strong id="phaseStoryState">quadratic variation from the crossing</strong></div><span class="phase-story-legend">cyan: continued branch · orange: quadratic law</span></div><div id="phaseStoryCanvasWrap"><canvas id="phaseStoryCanvas" role="img" aria-label="Plots of cone order decrease and Debye phase increase versus branch amplitude, with solid quadratic comparison curves"></canvas></div><div class="axis-footer"><span>\(s=0\)</span><span>same branch, two coordinates</span><span>\(R=28\)</span></div></section>
         </div>
         <p class="phase-story-example-note"><em>Numerical illustration.</em> The applet uses the continued crossing \(R_*=28.026397\ldots\), with \(\lambda_*=3.317011\ldots\), because that branch has been computed all the way to an integer. The uniform proof uses the crossings in \(2\le\lambda_*\le3\) supplied by Subsection 4.4; the formulas above apply in both cases.</p>
         <section class="phase-family figure-band figure-with-caption" aria-labelledby="phaseFamilyTitle">
@@ -1303,10 +1301,9 @@
             <span>What the calculation predicts across real order</span>
             <div>
               <h3 id="phaseFamilyTitle">The quadratic approximation predicts a decrease in \(R\) at every displayed crossing.</h3>
-              <p>Thirteen orange points are all the crossings in the exhaustive search with \(6\le R_*\le30\) and \(2\le\lambda_*\le3\). The outlined point is the running example \(R_*=28.026397\ldots\), computed separately at \(\lambda_*=3.317011\ldots\). From each point, the cyan curve shows the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\).</p>
+              <p>The orange points mark the crossings in the exhaustive search with \(6\le R_*\le30\) and \(2\le\lambda_*\le3\). The outlined point is the running example used above, computed in a separate spectral window. From each point, the cyan curve shows the local two-jet \(R(s)=R_*-\tfrac12\Gamma(\lambda_*)s^2\).</p>
             </div>
           </header>
-          <div class="phase-family-toolbar"><strong>real crossing order versus branch parameter</strong><span>orange: \([2,3]\) search · outlined: \(R_*=28.026397\) · cyan: two-jet</span></div>
           <div id="phaseFamilyCanvasWrap" class="phase-family-canvas-wrap"><canvas id="phaseFamilyCanvas" role="img" aria-label="Real order from 6 to 30, with integer values corresponding to planar fold symmetries, fourteen computed Bessel crossings at branch parameter zero, and their predicted left-opening quadratic branch curves"></canvas></div>
           <footer><span>\(R=6\)</span><span>order \(R\) (fold symmetry) · integer \(R\) corresponds to a planar solution</span><span>\(R=30\)</span></footer>
           <p class="phase-family-note">The symmetry \(R(-s)=R(s)\) produces the two branches of each parabola in the \((R,s)\)-plane. The proof uses the fact that the decrease in \(R\) is bounded below uniformly at all sufficiently large crossings. Subsection 4.4 finds crossings whose distance from an integer is smaller than this uniform bound.</p>
@@ -1372,15 +1369,14 @@
           </div>
         </details>
         <div class="abundance-laboratory reading-figure">
-          <section class="abundance-plot-panel" aria-labelledby="abundancePlotState">
-            <div class="abundance-toolbar"><div><span class="live-dot"></span><strong id="abundancePlotState">common-zero crossings through \(N=200\)</strong></div><div><span>hover a point for \((n,m,\rho)\)</span></div></div>
-            <div class="abundance-readout abundance-readout-inline">
-              <div><span>crossings visible</span><strong id="abundanceCountValue">—</strong></div>
-              <div><span>smallest sample \(R-\lfloor R\rfloor\)</span><strong id="abundanceBestValue">—</strong></div>
-              <div><span>spectral window</span><strong>\(2\le\rho^2/R^2\le3\)</strong></div>
+          <section class="abundance-plot-panel" aria-label="Finite modulo-one sample of near-integer common Bessel zero crossings">
+            <div class="passive-script-targets" hidden aria-hidden="true">
+              <strong id="abundancePlotState">common-zero crossing sample</strong>
+              <strong id="abundanceCountValue"></strong>
+              <strong id="abundanceBestValue"></strong>
             </div>
             <div id="abundanceCanvasWrap" class="abundance-canvas-wrap"><canvas id="abundanceCanvas" role="img" aria-label="Modulo-one plot of real Bessel crossing orders"></canvas></div>
-            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>\(N=200\)</span></div>
+            <div class="axis-footer"><span>small \(R\)</span><span>logarithmic \(R\) · vertical coordinate \(\{R\}\)</span><span>large \(R\)</span></div>
           </section>
         </div>
         <section class="abundance-examples data-table" aria-labelledby="abundanceExamplesTitle">
@@ -1491,10 +1487,9 @@
             </div>
           </aside>
 
-          <section class="canvas-panel cone-canvas-panel" aria-labelledby="coneDomainState">
+          <section class="canvas-panel cone-canvas-panel" aria-label="Cone branch and planar lift visualization">
             <div class="canvas-toolbar cone-toolbar">
-              <div>
-                <span class="live-dot"></span>
+              <div class="passive-script-targets" hidden aria-hidden="true">
                 <strong id="coneDomainState">nonintegral crossing · angular gap present</strong>
               </div>
               <div class="view-switch cone-view-switch" role="group" aria-label="Cone visualization view">
@@ -1510,9 +1505,7 @@
               <canvas id="coneCanvas" role="img" aria-label="Numerical field on a cone boundary collar or its planar sectors"></canvas>
               <div id="coneThreeWrap" class="three-wrap" role="img" aria-label="Rotatable three-dimensional cone colored by the numerical field" hidden>
                 <div id="coneThreeLoading" class="three-loading">loading 3D renderer…</div>
-                <div class="three-help">drag to rotate · scroll to zoom · depth slider extends toward the cone point</div>
               </div>
-              <div class="cone-data-badge">13 Bessel modes · 112 fit angles · 512-point validation</div>
             </div>
             <div class="axis-footer"><span id="coneAxisLeft">\(x=-5\)</span><span id="coneAxisDescription">\(\psi\in[-\pi,\pi]\)</span><span id="coneAxisRight">\(x=0\) (boundary)</span></div>
           </section>
@@ -1605,9 +1598,9 @@
             </div>
           </aside>
 
-          <section class="modes-plot-panel" aria-labelledby="modesPlotState">
+          <section class="modes-plot-panel" aria-label="Global 28-sector field and one-wavelength collar zoom">
             <div class="modes-plot-toolbar">
-              <div><span class="live-dot"></span><strong id="modesPlotState">28 copies · one wavelength selected</strong></div>
+              <div class="passive-script-targets" hidden aria-hidden="true"><strong id="modesPlotState">28 copies · one wavelength selected</strong></div>
               <div class="modes-legend" aria-label="Mode plot legend">
                 <span><i class="legend-cyan"></i>one-wavelength crop</span>
                 <span><i class="legend-orange"></i>seam / mismatch</span>
@@ -1690,10 +1683,10 @@
     <script defer src="../cone-data.js"></script>
     <script defer src="../debye-data.js?v=20260827.3"></script>
     <script defer src="../abundance-data.js"></script>
-    <script defer src="../app.js?v=20260828.1"></script>
-    <script defer src="../story.js?v=20260827.10"></script>
-    <script defer src="../abundance.js?v=20260827.9"></script>
+    <script defer src="../app.js?v=20260828.2"></script>
+    <script defer src="../story.js?v=20260828.2"></script>
+    <script defer src="../abundance.js?v=20260828.2"></script>
     <script defer src="../pompeiu.js?v=20260827.8"></script>
-    <script defer src="layout-contract.js?v=20260827.15"></script>
+    <script defer src="layout-contract.js?v=20260828.2"></script>
   </body>
 </html>

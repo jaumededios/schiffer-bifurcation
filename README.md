@@ -62,6 +62,11 @@ The Tufte edition keeps content semantics separate from page geometry:
   grammar's pre-Lean-4 keyword table with `abbrev`; article markup never
   duplicates the disclosure shell or syntax tokens. Its code viewport always
   uses the disclosure width and scrolls only the source on narrow screens.
+- `.paper-demo-controls` and applet toolbars keep only direct variables,
+  actions, and essential legends. Passive solver status, KPI strips, hover
+  telemetry, diagnostic counts, and duplicated formulas stay out of the visible
+  paper edition; if existing scripts need an ID target, place it inside
+  `.passive-script-targets[hidden][aria-hidden="true"]`.
 
 The widths for these components live only in the measure tokens at the top of
 `tufte/tufte-port.css`; their instances need no per-item width classes or
@@ -71,7 +76,8 @@ automatically. It also rejects ambiguous role combinations and verifies that
 prose, proof, caption, and apparatus-label text resolve to the canonical type
 tokens rather than inherited component sizes.
 For figures, small multiples, and applets it also rejects decorative outer
-card borders, so rules remain reserved for formal statements and Lean source.
+card borders plus passive dashboard readouts, so rules remain reserved for
+formal statements and Lean source.
 
 To add another formal statement, add its title and plain Lean source to the
 registry in `lean-statements.js`, then place only the declarative

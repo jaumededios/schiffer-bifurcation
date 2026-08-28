@@ -26,6 +26,7 @@
     lineStrong: "rgba(241,238,229,0.28)",
     labelFont: "11px 'DM Mono', monospace",
   };
+  const paperEdition = Boolean(visualTheme.paperEdition || document.body.classList.contains("tufte-site"));
   const COLORS = {
     background: visualTheme.background,
     backgroundTop: visualTheme.backgroundAlt,
@@ -320,7 +321,7 @@
       if (elements.playButton) elements.playButton.setAttribute("aria-pressed", "false");
       if (elements.playIcon) elements.playIcon.textContent = "▶";
       if (elements.playLabel) elements.playLabel.textContent = "Play";
-      if (elements.plotState) elements.plotState.setAttribute("aria-live", "polite");
+      if (elements.plotState && !paperEdition) elements.plotState.setAttribute("aria-live", "polite");
     }
 
     function updatePlayControl() {
@@ -459,7 +460,7 @@
         context.font = visualTheme.labelFont;
         context.textAlign = "left";
         context.textBaseline = "bottom";
-        context.fillText("WITHIN 0.1 ABOVE AN INTEGER", plot.left + 7, plot.bottom - 7);
+        context.fillText(paperEdition ? "NEAR AN INTEGER" : "WITHIN 0.1 ABOVE AN INTEGER", plot.left + 7, plot.bottom - 7);
       }
     }
 
@@ -585,6 +586,7 @@
     }
 
     function drawTooltip(plot) {
+      if (paperEdition) return;
       const lines = tooltipLines();
       if (!lines) return;
 
@@ -631,6 +633,13 @@
 
     function updateAccessibleDescription() {
       if (!state.visibleCount) return;
+      if (paperEdition) {
+        elements.canvas.setAttribute(
+          "aria-label",
+          "Modulo-one scatter plot of common Bessel zero crossings. The horizontal axis is crossing order on a logarithmic scale, the vertical coordinate is the fractional part of R, orange points lie near an integer, and the diamond marks the running example. Use the left and right arrow keys to move focus among plotted points."
+        );
+        return;
+      }
       const bestGap = model.fractional[state.bestIndex];
       const nearHundredth = model.prefixNearHundredth[state.visibleCount - 1];
       let description = "Modulo-one scatter plot showing "
@@ -663,13 +672,15 @@
       const nearThousandth = count ? model.prefixNearThousandth[count - 1] : 0;
 
       if (elements.cutoffValue) setMath(elements.cutoffValue, `N\\le ${state.cutoff}`);
-      if (elements.countValue) elements.countValue.textContent = formatInteger(count);
-      if (elements.bestValue) elements.bestValue.textContent = formatGap(bestGap, false);
+      if (elements.countValue) elements.countValue.textContent = paperEdition ? "" : formatInteger(count);
+      if (elements.bestValue) elements.bestValue.textContent = paperEdition ? "" : formatGap(bestGap, false);
       if (elements.plotState) {
-        elements.plotState.textContent = formatInteger(count)
-          + " crossings · "
-          + formatInteger(nearHundredth)
-          + " within 0.01 of an integer";
+        elements.plotState.textContent = paperEdition
+          ? "common-zero crossing sample"
+          : formatInteger(count)
+            + " crossings · "
+            + formatInteger(nearHundredth)
+            + " within 0.01 of an integer";
       }
       if (elements.cutoffRange) {
         elements.cutoffRange.value = String(cutoffToSlider(state.cutoff));
@@ -682,9 +693,11 @@
           "Show crossings with integer part N up to " + state.cutoff
         );
       }
-      elements.canvas.dataset.nearTenth = String(nearTenth);
-      elements.canvas.dataset.nearHundredth = String(nearHundredth);
-      elements.canvas.dataset.nearThousandth = String(nearThousandth);
+      if (!paperEdition) {
+        elements.canvas.dataset.nearTenth = String(nearTenth);
+        elements.canvas.dataset.nearHundredth = String(nearHundredth);
+        elements.canvas.dataset.nearThousandth = String(nearThousandth);
+      }
       updateAccessibleDescription();
     }
 
@@ -766,7 +779,7 @@
       state.playing = true;
       state.playFrom = state.cutoff;
       state.playStartedAt = 0;
-      if (elements.plotState) elements.plotState.setAttribute("aria-live", "off");
+      if (elements.plotState && !paperEdition) elements.plotState.setAttribute("aria-live", "off");
       updatePlayControl();
       state.playFrame = global.requestAnimationFrame(playTick);
     }
@@ -874,7 +887,7 @@
     elements.canvas.tabIndex = 0;
     elements.canvas.setAttribute("role", "img");
 
-    if (elements.plotState) {
+    if (elements.plotState && !paperEdition) {
       elements.plotState.setAttribute("role", "status");
       elements.plotState.setAttribute("aria-live", "polite");
       elements.plotState.setAttribute("aria-atomic", "true");

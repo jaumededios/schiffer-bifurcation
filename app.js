@@ -83,6 +83,10 @@ function setCanvasFormula(wrapSelector, id, source, position = {}) {
   return label;
 }
 
+function removeCanvasFormula(id) {
+  document.getElementById(id)?.remove();
+}
+
 const state = {
   lambda: 2.4,
   s: 0,
@@ -2184,17 +2188,21 @@ function modesDrawPatch(context, rect, solution, fieldValue, options) {
 
 function updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, comparison, containsSeam) {
   const formulaColor = SCHIFFER_VISUAL_THEME.muted;
-  setCanvasFormula("#modesCanvasWrap", "modesGlobalFormula", `R=${solution.R.toFixed(6)},\\quad s=${solution.s.toFixed(4)}`, {
-    left: globalRect.left + 10, top: globalRect.top + 20, color: formulaColor,
-  });
-  setCanvasFormula("#modesCanvasWrap", "modesPatchFormula", containsSeam
-    ? `\\Delta\\xi=${comparison.phaseDegrees.toFixed(2)}^{\\circ}`
-    : "\\psi\\in[-\\pi,\\pi]", {
-    left: patchRect.left + patchRect.width - 12,
-    top: patchRect.top + 8,
-    transform: "translateX(-100%)",
-    color: formulaColor,
-  });
+  if (SCHIFFER_VISUAL_THEME.paperEdition) {
+    ["modesGlobalFormula", "modesPatchFormula", "modesRadialFormula"].forEach(removeCanvasFormula);
+  } else {
+    setCanvasFormula("#modesCanvasWrap", "modesGlobalFormula", `R=${solution.R.toFixed(6)},\\quad s=${solution.s.toFixed(4)}`, {
+      left: globalRect.left + 10, top: globalRect.top + 20, color: formulaColor,
+    });
+    setCanvasFormula("#modesCanvasWrap", "modesPatchFormula", containsSeam
+      ? `\\Delta\\xi=${comparison.phaseDegrees.toFixed(2)}^{\\circ}`
+      : "\\psi\\in[-\\pi,\\pi]", {
+      left: patchRect.left + patchRect.width - 12,
+      top: patchRect.top + 8,
+      transform: "translateX(-100%)",
+      color: formulaColor,
+    });
+  }
   setCanvasFormula("#modesCanvasWrap", "modesPatchLeftFormula", `x=-${modesState.depth.toFixed(1)}`, {
     left: patchPlot.left, top: patchPlot.top + patchPlot.height + 5, color: formulaColor,
   });
@@ -2203,7 +2211,7 @@ function updateModesCanvasFormulas(globalRect, patchRect, patchPlot, solution, c
     transform: "translateX(-100%)", color: formulaColor,
   });
   const comparisonRect = patchPlot.comparisonRect;
-  if (comparisonRect) {
+  if (comparisonRect && !SCHIFFER_VISUAL_THEME.paperEdition) {
     setCanvasFormula("#modesCanvasWrap", "modesRadialFormula", `\\Delta\\xi=${comparison.phaseDegrees.toFixed(3)}^{\\circ},\\quad\\delta=${comparison.exactPhaseDegrees.toFixed(3)}^{\\circ}`, {
       left: comparisonRect.left + comparisonRect.width,
       top: comparisonRect.top + comparisonRect.height - 14,
@@ -2269,7 +2277,9 @@ function renderModesNestedZoom() {
   }
 
   const gapDegrees = Math.max(0, 360 * (1 - coneNumerics.targetN / solution.R));
-  canvas.setAttribute("aria-label", `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies, a seam-centered one-wavelength flat collar crop showing a ${gapDegrees.toFixed(3)} degree mismatch, and a comparison of the regular Bessel radial mode with its Debye sine-cosine cylinder mode at phase shift ${comparison.phaseDegrees.toFixed(2)} degrees.`);
+  canvas.setAttribute("aria-label", SCHIFFER_VISUAL_THEME.paperEdition
+    ? "The cone quotient assembled in 28 copies, a seam-centered one-wavelength flat collar crop, and a comparison of the regular Bessel radial mode with its Debye sine-cosine cylinder mode."
+    : `The cone quotient at order ${solution.R.toFixed(6)} assembled in 28 copies, a seam-centered one-wavelength flat collar crop showing a ${gapDegrees.toFixed(3)} degree mismatch, and a comparison of the regular Bessel radial mode with its Debye sine-cosine cylinder mode at phase shift ${comparison.phaseDegrees.toFixed(2)} degrees.`);
 }
 
 function updateModesReadouts() {
@@ -2963,15 +2973,20 @@ if (debyeData) {
       setCanvasFormula("#debyeCanvasWrap", `debyeModeFormula${series.mode}`, `k=${series.mode}`, {
         left: panel.left + 14, top: panel.top + 25, color: formulaColor,
       });
-      setCanvasFormula("#debyeCanvasWrap", `debyeRateFormula${series.mode}`, series.mode === 1
-        ? `\\omega_R=${series.omega.toFixed(4)},\\quad C'(0)=0`
-        : `\\alpha_${series.mode}=${series.alpha.toFixed(4)},\\quad e^{\\alpha_${series.mode}x}`, {
-        left: panel.left + 14, top: panel.top + 39, color: formulaColor,
-      });
-      setCanvasFormula("#debyeCanvasWrap", `debyeErrorFormula${series.mode}`, `\\lVert B-C\\rVert_\\infty=${series.maxMismatch.toExponential(1)}`, {
-        left: panel.left + panel.width - 14, top: panel.top + 54,
-        transform: "translateX(-100%)", color: MODES_COLORS.orange,
-      });
+      if (SCHIFFER_VISUAL_THEME.paperEdition) {
+        removeCanvasFormula(`debyeRateFormula${series.mode}`);
+        removeCanvasFormula(`debyeErrorFormula${series.mode}`);
+      } else {
+        setCanvasFormula("#debyeCanvasWrap", `debyeRateFormula${series.mode}`, series.mode === 1
+          ? `\\omega_R=${series.omega.toFixed(4)},\\quad C'(0)=0`
+          : `\\alpha_${series.mode}=${series.alpha.toFixed(4)},\\quad e^{\\alpha_${series.mode}x}`, {
+          left: panel.left + 14, top: panel.top + 39, color: formulaColor,
+        });
+        setCanvasFormula("#debyeCanvasWrap", `debyeErrorFormula${series.mode}`, `\\lVert B-C\\rVert_\\infty=${series.maxMismatch.toExponential(1)}`, {
+          left: panel.left + panel.width - 14, top: panel.top + 54,
+          transform: "translateX(-100%)", color: MODES_COLORS.orange,
+        });
+      }
       setCanvasFormula("#debyeCanvasWrap", `debyeLeftFormula${series.mode}`, "r_0-5", {
         left: plotLeft, top: plotTop + plotHeight + 5, color: formulaColor,
       });

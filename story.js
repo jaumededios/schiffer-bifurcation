@@ -63,6 +63,7 @@
     titleFont: "italic 400 25px Georgia, serif",
     serifFamily: "Georgia, serif",
   };
+  const paperEdition = Boolean(visualTheme.paperEdition || document.body.classList.contains("tufte-site"));
   const colors = {
     ink: visualTheme.background,
     paper: visualTheme.ink,
@@ -1079,7 +1080,7 @@
       context.lineWidth = active ? 1.8 : (row.reference ? 1.5 : 1);
       context.stroke();
 
-      if (row.reference && !compact) {
+      if (row.reference && !compact && !paperEdition) {
         context.fillStyle = colors.paper;
         context.font = visualTheme.labelFont;
         context.textAlign = "center";
@@ -1088,7 +1089,7 @@
       }
     });
 
-    if (!compact) {
+    if (!compact && !paperEdition) {
       context.fillStyle = colors.orange;
       context.font = visualTheme.labelFont;
       context.textAlign = "left";
@@ -1099,7 +1100,7 @@
       context.fillText("white rings mark a two-jet reaching an integer within |s| ≤ 1", plot.left + 8, plot.top + 26);
     }
 
-    if (phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
+    if (!paperEdition && phaseFamilyState.hoverIndex >= 0 && pointGeometry[phaseFamilyState.hoverIndex]) {
       const point = pointGeometry[phaseFamilyState.hoverIndex];
       const boxWidth = compact ? 174 : 205;
       const boxHeight = point.row.reference ? 82 : 66;
@@ -1129,7 +1130,9 @@
 
     phaseFamilyState.geometry = { pointGeometry, width, height };
     const windowRows = rows.filter((row) => !row.reference).length;
-    canvas.setAttribute("aria-label", `${windowRows} computed crossings with real order between 6 and 30 and spectral ratio between 2 and 3, together with the separately computed running example at order 28.026397. Every displayed quadratic branch jet bends toward smaller real order as the magnitude of s increases.`);
+    canvas.setAttribute("aria-label", paperEdition
+      ? "Real-order crossing plot with integer fold symmetries, common-zero crossings at the branch origin, and predicted quadratic branch jets bending toward smaller real order."
+      : `${windowRows} computed crossings with real order between 6 and 30 and spectral ratio between 2 and 3, together with the separately computed running example at order 28.026397. Every displayed quadratic branch jet bends toward smaller real order as the magnitude of s increases.`);
   }
 
   function drawPhasePanel(context, rect, options) {
