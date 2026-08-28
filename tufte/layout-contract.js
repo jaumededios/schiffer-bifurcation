@@ -1,6 +1,49 @@
 (() => {
   "use strict";
 
+  const headingSelector = "body.tufte-site main .section-heading[data-number][data-title]";
+  const tocClassByLevel = {
+    section: "",
+    subsection: "toc-nested",
+    "proof-subsection": "toc-subsection",
+  };
+
+  const normalizeText = (value) => (value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const headingTarget = (heading) => {
+    if (heading.dataset.target) return document.querySelector(heading.dataset.target);
+    if (heading.id) return heading;
+    return heading.closest("[id]") || heading.querySelector("[id]");
+  };
+
+  const headingTitleElement = (heading) => heading.querySelector(":scope > :is(h2, h3)");
+
+  const tocHeadings = () => Array.from(document.querySelectorAll(headingSelector))
+    .filter((heading) => Object.prototype.hasOwnProperty.call(tocClassByLevel, heading.dataset.toc || ""));
+
+  function renderTableOfContents() {
+    const nav = document.querySelector(".site-toc nav[data-toc-nav]");
+    if (!nav) return;
+    nav.replaceChildren(...tocHeadings().map((heading) => {
+      const link = document.createElement("a");
+      const level = heading.dataset.toc;
+      const target = headingTarget(heading);
+      const className = tocClassByLevel[level];
+      if (className) link.classList.add(className);
+      link.href = target ? `#${target.id}` : "#";
+      const number = document.createElement("b");
+      number.textContent = heading.dataset.number;
+      const title = document.createElement("span");
+      title.textContent = heading.dataset.title;
+      link.append(number, title);
+      return link;
+    }));
+  }
+
+  renderTableOfContents();
+
   if (!new URLSearchParams(window.location.search).has("layout-check")) return;
 
   const rounded = (value) => Math.round(value * 10) / 10;
@@ -131,22 +174,73 @@
       errors.push("Section IV proof subsections do not follow source reading order");
     }
 
-    const expectedProofContents = [
-      ["4.1", "#half-cylinder-strategy"],
-      ["4.2", "#debye-experiment"],
-      ["4.3", "#phase-story"],
-      ["4.4", "#abundance-experiment"],
-      ["4.5", "#cone-experiment"],
+    const expectedHeadingContract = [
+      ["I", "When does a moving measuring probe lose information?", "#introduction", "section"],
+      ["I.1", "Schiffer’s problem: Can a membrane vibrate with constant amplitude along its boundary?", "#schiffer-problem", "subsection"],
+      ["II", "The disk counterexample admits no first-order perturbations.", "#linear-rigidity", "section"],
+      ["II.1", "Changing the ambient geometry: what if linear rigidity fails?", "#borrow-flexibility", "subsection"],
+      ["III", "From the plane to the limiting geometry: bifurcating when it’s impossible", "#geometric-escape", "section"],
+      ["IV", "The bifurcation proof", "#experiment", "section"],
+      ["4.1", "Uniform half-cylinder bifurcation for 2 ≤ λ ≤ 3", "#half-cylinder-strategy", "proof-subsection"],
+      ["4.2", "Large-radius Bessel modes converge to cylinder modes on fixed boundary collars", "#debye-experiment", "proof-subsection"],
+      ["4.3", "Computing along the branch: the variation of R determines the Debye phase", "#phase-story", "proof-subsection"],
+      ["4.4", "Near-integer Bessel crossings make the common-zero condition arbitrarily close to integer order", "#abundance-experiment", "proof-subsection"],
+      ["4.5", "Landing and planar lift: the cone branch reaches integer order and unfolds into the plane", "#cone-experiment", "proof-subsection"],
+      ["4.5.2", "One-wavelength zoom: read the landed solution globally and on its boundary collar", "#modes-experiment", ""],
+      ["R", "References", "#references", "section"],
     ];
-    const actualProofContents = Array.from(document.querySelectorAll(".site-toc .toc-subsection"), (link) => [
-      link.querySelector("b")?.textContent.trim(),
+    const headingContract = Array.from(document.querySelectorAll(headingSelector), (heading) => {
+      const title = headingTitleElement(heading);
+      const target = headingTarget(heading);
+      return [
+        heading.dataset.number,
+        heading.dataset.title,
+        target ? `#${target.id}` : "",
+        heading.dataset.toc || "",
+        normalizeText(title?.textContent),
+        heading.querySelectorAll(":scope > :is(h2, h3)").length,
+      ];
+    });
+    expectedHeadingContract.forEach(([number, title, href, toc], index) => {
+      const actual = headingContract[index];
+      if (!actual || actual[0] !== number || actual[1] !== title || actual[2] !== href || actual[3] !== toc) {
+        errors.push(`section heading ${number} does not match the shared data contract`);
+      }
+      if (actual && actual[1] !== actual[4]) {
+        errors.push(`section heading ${number} visible title drifts from data-title`);
+      }
+      if (actual && actual[5] !== 1) {
+        errors.push(`section heading ${number} does not expose exactly one h2/h3 title`);
+      }
+    });
+    if (headingContract.length !== expectedHeadingContract.length) {
+      errors.push("section heading registry has unexpected entries");
+    }
+    if (document.querySelector(".section-number, .subsection-number")) {
+      errors.push("legacy hand-authored section number spans returned");
+    }
+    document.querySelectorAll(".section-heading").forEach((heading) => {
+      if (heading.querySelector(".eyebrow")) errors.push("section heading contains a redundant eyebrow");
+      heading.querySelectorAll(":scope > :is(span, small, p)").forEach((label) => {
+        if (/^(?:[IVX]+|\d+(?:\.\d+)*)\s*[·.)-]/i.test(normalizeText(label.textContent))) {
+          errors.push("section heading contains hand-authored numbering text");
+        }
+      });
+    });
+    const expectedTocContents = expectedHeadingContract
+      .filter(([, , , toc]) => toc)
+      .map(([number, title, href, toc]) => [number, title, href, tocClassByLevel[toc]]);
+    const actualTocContents = Array.from(document.querySelectorAll(".site-toc nav[data-toc-nav] a"), (link) => [
+      normalizeText(link.querySelector("b")?.textContent),
+      normalizeText(link.querySelector("span")?.textContent),
       link.getAttribute("href"),
+      link.className,
     ]);
-    if (expectedProofContents.some(([number, href], index) => {
-      const actual = actualProofContents[index];
-      return !actual || actual[0] !== number || actual[1] !== href;
-    })) {
-      errors.push("proof contents do not match the authored dependency order");
+    if (expectedTocContents.some(([number, title, href, className], index) => {
+      const actual = actualTocContents[index];
+      return !actual || actual[0] !== number || actual[1] !== title || actual[2] !== href || actual[3] !== className;
+    }) || actualTocContents.length !== expectedTocContents.length) {
+      errors.push("table of contents does not match the shared heading contract");
     }
 
     document.querySelectorAll("details.optional-digression").forEach((details, index) => {

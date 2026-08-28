@@ -303,15 +303,38 @@ body.tufte-site h3 {
   letter-spacing: 0;
 }
 
-.story-heading,
-.experiment-header {
+.section-heading {
   width: var(--measure-reading);
   display: grid;
-  grid-template-columns: 2.2rem minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: .85rem;
   align-items: start;
   margin: 0;
-  padding: 0 0 2rem;
+  padding: 0 0 1.35rem;
+}
+
+.section-heading::before {
+  content: attr(data-number);
+  padding-top: .16rem;
+  color: var(--muted);
+  font: 400 var(--type-note)/1 et-book-roman-old-style, var(--serif);
+}
+
+body.tufte-site main .section-heading :is(h2, h3) {
+  max-width: none;
+  margin: 0;
+}
+
+body.tufte-site main .section-heading h2 {
+  font: italic 400 var(--type-section)/1.06 var(--serif);
+}
+
+body.tufte-site main .section-heading h3 {
+  font: italic 400 var(--type-subsection)/1.12 var(--serif);
+}
+
+:is(.intro-copy, .paper-copy) > .section-heading {
+  width: 100%;
 }
 
 /* Vertical rhythm belongs to the section shell, not to whichever content
@@ -319,7 +342,7 @@ body.tufte-site h3 {
    and prevents legacy component margins from stacking with section padding. */
 body.tufte-site main > .intro { padding-bottom: 2rem; }
 body.tufte-site main > .intro + .story-intro { padding-top: 2.75rem; }
-body.tufte-site main :is(.story-heading, .experiment-header) + :is(
+body.tufte-site main .section-heading + :is(
   .intro-copy,
   .intro-copy-wide,
   .borrow-lead,
@@ -334,21 +357,6 @@ body.tufte-site main :is(.story-heading, .experiment-header) + :is(
   .abundance-lead,
   .proof-strategy-subheading
 ) { margin-top: 0; }
-
-.experiment-header > div:first-child { display: contents; }
-.story-heading h2, .experiment-header h2 { max-width: none; margin-top: 0; }
-.section-number,
-.subsection-number {
-  width: auto;
-  height: auto;
-  display: block;
-  padding-top: .18rem;
-  color: var(--muted);
-  border: 0;
-  border-radius: 0;
-  font: 400 var(--type-note)/1 et-book-roman-old-style, var(--serif);
-  opacity: 1;
-}
 
 body.tufte-site .cone-experiment { padding-bottom: 2.5rem; }
 body.tufte-site .modes-experiment { padding-top: 2.5rem; border-top: 0; }
@@ -405,7 +413,7 @@ body.tufte-site main .phase-story-example-note {
 
 .intro-copy { color: var(--ink); }
 .intro-copy h3 { max-width: none; }
-.intro-chapter-heading { margin-top: 6rem; padding-top: 3rem; }
+.intro-chapter-heading { margin-top: 4rem; padding-top: 0; }
 
 .story-intro .intro-lead,
 .modes-lead,
@@ -1585,8 +1593,7 @@ body.tufte-site main .paper-demo-controls .collar-trig-switch button.active {
 }
 
 .proof-strategy-lead { padding-left: 0; border-left: 0; }
-.proof-strategy-subheading { grid-template-columns: var(--measure-half-reading) 1fr; gap: var(--measure-gutter); }
-.phase-story .story-heading { margin-left: 0; }
+.phase-story .section-heading { margin-left: 0; }
 
 /* -----------------------------------------------------------------------
    Editorial roles
@@ -2172,7 +2179,7 @@ body > footer {
   ) { padding: 3.5rem 0 4.5rem; }
 
   .intro-index, .intro h1, .intro-bottom,
-  .story-heading, .experiment-header,
+  .section-heading,
   :is(.intro-copy, .intro-copy-wide, .borrow-lead, .geometry-lead, .proof-strategy-lead, .half-cylinder-introduction, .experiment-story-lead, .cone-lead, .modes-lead, .phase-story-lead, .debye-lead, .abundance-lead, .proof-strategy-subheading),
   .disk-sidequest .intro-copy,
   .disk-sidequest-proof, .disk-sidequest-history,
